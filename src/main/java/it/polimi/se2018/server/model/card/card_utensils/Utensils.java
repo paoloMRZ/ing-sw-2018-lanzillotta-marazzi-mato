@@ -5,17 +5,20 @@ public abstract class Utensils{
     private int number;
     private String description;
 
+    Utensils(int numb, String color, String desc){
+        number=numb;
+        squareColor=color;
+        description=desc;
+    }
     public abstract void accept(VisitorCard visitor);
 
 //metodi con implementazione ancora da chiarire
 //ritorna le reference, tanto gli attributi sono immutabili
     public String getSquareColor(){
-        //  System.out.println(squareColor);
         return squareColor;
     }
 
     public String getDesciption(){
-      //  System.out.println(description);
         return description;
     }
 }
