@@ -26,6 +26,7 @@ public class Objective {
         return favours;
     }
 
-    public int useAlgorithm(Player player){ return myObjective.use();
+    public int useAlgorithm(Player player){
+        return myObjective.use();
     }
 }

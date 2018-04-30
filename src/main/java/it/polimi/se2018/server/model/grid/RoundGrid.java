@@ -1,5 +1,7 @@
 package it.polimi.se2018.server.model.grid;
 
+import it.polimi.se2018.server.model.dice_sachet.Dice;
+
 import java.util.ArrayList;
 
 public class RoundGrid {
