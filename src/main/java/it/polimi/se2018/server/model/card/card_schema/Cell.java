@@ -14,9 +14,14 @@ public class Cell {
     private int number; //Eventuale restrizione sulla sfumatura.
 
     //Costruttore.
-    public Cell(String color, int number){
+    public Cell(String color, int number) throws Exception{
+
+        if(number>= 0 && number<=6)
+            this.number = number;
+        else
+            throw new Exception();
+
         this.color = color;
-        this.number = number; //TODO Effettuare un controllo su number e lanciare un'eccezione in caso di errore (oppure settare un valore di default).
         this.dice = null;
     }
 
