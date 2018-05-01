@@ -16,9 +16,14 @@ public class Side {
     celle che compongono la matrice devono essere passate al momento della creazione, quindi il costruttore dovrebbe
     prevedere anche un terzo parametro, cioè la lista delle celle che compongono la matrice*/
 
-    public Side(String name, int favours){
+    public Side(String name, int favours) throws Exception{
+
+        if(favours > 0)
+            this.favours = favours;
+        else
+            throw new Exception();
+
         this.name = name;
-        this.favours = favours; //TODO: effettuare un controllo si favours. In caso di errore sollevare un'eccezione!
         matrix = new Cell[4][5];
         isEmpty = true;
     }
@@ -26,6 +31,7 @@ public class Side {
 
 
 
+    //La funzione controlla che la coppia di coordinate non esca dai limiti della matrice.
 
     private boolean areValidcoordinates(int row, int col){
         return row >= 0 && row <= 3 && col >= 0 && col <= 4;
@@ -41,27 +47,30 @@ public class Side {
     }
 
     //Questo metodo effettua il controllo delle celle confinanti alla cella selezionata per l'inserimento.
-    //Quando controlla anche le celle ortogonali verifica eventuali uguaglienze nei dadi.
+    //Il controllo consiste nel verificare se è presente almeno un dado in una delle celle adiacenti a quella selezionata
+    //per l'inserimento.
+    //In più, quando si controllano le celle ortogonali si verifica la presenza di eventuali uguaglienze nei dadi.
 
-    private void controlNeighbor(int row, int col, Dice d) throws  Exception{
-        int counter = 0;
+    private void controlNeighbor(int row, int col, Dice d) throws  Exception {
+        int counter = 0; //Conta quanti dadi sono stati trovati nelle celle adiacenti.
 
-        for(int y = -1; y<=1; y++){
-            for(int x = -1; x<=1; x++){
+        for (int y = -1; y <= 1; y++) {
+            for (int x = -1; x <= 1; x++) {
+
                 //Non voglio controllare la cella selezionata dal giocatore per inserire il dado (x=0, y=0)
-                if( (x != 0 && y != 0) && areValidcoordinates(row+x, col+y) && matrix[row+x][row+y].showDice() != null){
+                if ((x != 0 && y != 0) && areValidcoordinates(row + x, col + y) && matrix[row + x][row + y].showDice() != null) {
+
+                    counter++; //E' presente un dado, quindi incremento il contatore.
 
                     //Se si sta lavorando su una cella ortogonale a quella scelta (questo avviene quando x=0 o y=0) allora controlla anche le caratteristiche di un eventuale dado.
-                    if(x == 0 || y == 0){
-                        compareDices(row+x, col+y, d);
+                    if (x == 0 || y == 0) {
+                        compareDices(row + x, col + y, d); //Questo metodo lancia un'eccezione se trova un'uguaglianza nei dadi.
                     }
-
-                    counter++;
                 }
             }
         }
 
-        if( counter == 0)
+        if (counter == 0) //Se non è stato trovato nessun dado lacio un'eccezione.
             throw new Exception();
     }
 
@@ -87,17 +96,22 @@ public class Side {
 
     public void put(int row, int col, Dice d) throws Exception {
 
-        //Se non è il primo inserimento controlla i vicini.
-        if(!isEmpty)
-            controlNeighbor(row, col, d);
+        if(areValidcoordinates(row,col)) { //Controllo se le coordinate sono valide. Se non lo sono lancio un'eccezione.
 
-        //Se è il primo inserimento puoi inserire solo nella cornice più esterna. Non è necessario controllare i vicini.
-        if(isEmpty && ( !(row == 0 || row == 3) || !(col == 0 || col == 4)) )
+            //Se non è il primo inserimento controlla i vicini.
+            if (!isEmpty)
+                controlNeighbor(row, col, d);
+
+            //Se è il primo inserimento puoi inserire solo nella cornice più esterna. Non è necessario controllare i vicini.
+            if (isEmpty && (!(row == 0 || row == 3) || !(col == 0 || col == 4)))
+                throw new Exception();
+
+            matrix[row][col].putDice(d);
+
+            isEmpty = false; //Questa istruzione deve sempre essere l'ultima di questo metodo.
+        }
+        else
             throw new Exception();
-
-        matrix[row][col].putDice(d);
-
-        isEmpty = false; //Questa istruzione deve sempre essere l'ultima di questo metodo.
     }
 
     public int getFavours() {
@@ -120,7 +134,7 @@ public class Side {
     //Il metodo restituisce la sfumatura della cella selezionata.
 
     public int getNumber(int row, int col) throws  Exception{
-        if(row >= 0 && row <= 3 && col >= 0 && col <= 4)
+        if(areValidcoordinates(row,col))
             return matrix[row][col].getNumber();
         else
             throw new Exception();
