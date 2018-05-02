@@ -15,7 +15,6 @@ public class Cell {
 
     //Costruttore.
     public Cell(String color, int number) throws Exception{
-
         if(number>= 0 && number<=6)
             this.number = number;
         else
@@ -37,13 +36,14 @@ public class Cell {
     //che la cella perde il riferimento al dado.
 
     public Dice pickDice(){
-
         Dice tmp = this.dice;
         this.dice = null;
         return  tmp;
     }
 
-    public void putDice(Dice d) throws Exception{ // TODO Dobbiamo decidere cosa fare con le eccezioni. Per ora lancio un'eccezione generica (che è una cosa sbagliata).
+    //TODO Dobbiamo decidere cosa fare con le eccezioni. Per ora lancio un'eccezione generica (che è una cosa sbagliata).
+
+    public void putDice(Dice d) throws Exception{
 
         //Controlla se la cella è già occupata, se si lancia un'eccezione.
         if(this.dice != null) throw new Exception();
@@ -57,6 +57,32 @@ public class Cell {
         //Se non è stata sollevata nessuna eccezione posiziona il dado.
         //Dichiaro un nuovo dice con i valori di quello passato per non esporre il riferimento.
         this.dice = new Dice(d.getColor(), d.getNumber());
+    }
+
+
+    /*
+        REALIZZATA MODIFICA DEL METODO showDice()
+
+        Nell'algoritmo 1 e 2 delle carte obbiettivo, ho utilizzato inizialmente i metodi getter di Side per il controllo dei colori, ma
+        successivamente mi sono accorto che il metodo non funziona correttamente in presenza di celle prive di colore.
+
+        Pertanto un modo univoco di controllo è quello di verificare che tutti i dadi disposti sulla riga abbiano colori diversi, però
+        nella classe Cell non ho visto metodi getter per questo tipo di utilizzo ma solo showDice(). Visto che mi sembrava eccessivo creare
+        una raffica di nuovi oggetti Dice solo per estrarre l'informazione del colore, ho inserito ilmetodo getColorDice().
+
+        Secondo me è più comodo, però non elimino il metodo così ne discutiamo insieme.
+
+     */
+
+
+    public String getCellsDiceColor(){
+        if(this.dice != null) return dice.getColor();
+        else return null;
+    }
+
+    public int getCellsDiceNumber(){
+        if(this.dice != null) return dice.getNumber();
+        else return 0;
     }
 
     //Il metodo restituisce ( ma non rimuove ) l'eventuale dado contenuto nella cella. Se nessun dado è presente

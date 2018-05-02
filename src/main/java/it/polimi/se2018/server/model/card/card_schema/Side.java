@@ -10,13 +10,67 @@ public class Side {
     private Cell [][] matrix;
     private int favours;
     private String name;
-    private boolean isEmpty; //Indica se lo schema contiene dadi. La griglia non potrà mai ritornare vuota.
+    private boolean isEmpty;    //Indica se lo schema contiene dadi. La griglia non potrà mai ritornare vuota.
 
-    /*TODO: definire bene il costruttore. Side non deve possedere nessun metodo addCell, quindi vuol dire che tutte le
-    celle che compongono la matrice devono essere passate al momento della creazione, quindi il costruttore dovrebbe
-    prevedere anche un terzo parametro, cioè la lista delle celle che compongono la matrice*/
+    /*
+        REALIZZATA LA MODIFICA DEL COSTRUTTORE.
+        Sono d'accordo sul fatto che non ci debba essere un metodo del tipo addCell, ma che si debba dare come ingresso anche
+        un parametro che indichi come comporre Side.
+        Il parametro da dare in ingresso potrebbe essere una Array di Stringhe. Essendo matrix interpretato a livello di memoria
+        come un array, le stringhe possono essere interpretate nel modo seguente:
 
-    public Side(String name, int favours) throws Exception{
+            -> RESTRIZIONE COLORE RESTRIZIONE NUMERO (esempio: Rosso, 3 - Giallo, 6)
+
+        Pertanto l'array passato come parametro indicherà le caratteristiche che, tramite i getter della classe Cell, creano le
+        varie celle. In caso sia richiesta una cella senza restrizioni, basterà semplicemente non inserire nessuna stringa all'indice
+        corrispondente.
+
+            ESEMPIO:
+
+                Array di stringhe in input
+                    Rosso 3                 Cella [1][1] -> Rossa con restrizione di numero 3
+                    Giallo 6                Cella [1][2] -> Gialla con restrizione di numero 6
+                    NULL                    Cella [1][3] -> Nessuna Restrizione
+                    Blu                     Cella [1][4] -> Restrizione di Colore Blu
+                    5                       Cella [1][5] -> Restrizione di Numero 5
+
+
+       In questo modo potremmo anche già definire il modo tramite il quale i giocatori possono utilizzare delle proprie PatternCard
+       personalizzate. In un file di testo (che verrà caricato sul server prima dell'inizio della partita) il giocatore scriverà
+       in ordine, partendo dall'angolo in alto a sinistra della PatternCard, la lista di Restrizioni che vorrà introdurre nel modo
+       che ho illustrato sopra.
+
+       Secondo voi è accettabile come idea?
+
+    */
+
+
+    //TODO: definire il tipo di eccezioni sollevate
+
+    public Side(String name, int favours, String[] settings) throws Exception{          //settings rappresenta l'array di stringhe per settare Side
+
+        String colorRestriction;
+        String numberRestriction;
+        int space = 0;
+        int i=0;
+
+        //Controlla inizialmente se le dimensione dell'array soddisfano le dimensioni della PatternCard, quindi procede a visitare l'array
+        if(settings.length == 20) {
+            matrix = new Cell[4][5];
+
+            while(i<20) {
+                for (int j=0; j<4; j++) {
+                    for (int k=0; k<5; k++) {
+                        space = settings[i].indexOf(' ');
+                        colorRestriction = settings[i].substring(0, space);                                         //Estrae la restrizione del colore -> Rosso
+                        numberRestriction = settings[i].substring(space + 1, space + 2);                            //Estrae la restrizione del numero -> 3
+                        matrix[j][k] = new Cell(colorRestriction, Integer.parseInt(numberRestriction));
+                        i++;
+                    }
+                }
+            }
+        }
+        else throw new Exception();
 
         if(favours > 0)
             this.favours = favours;
@@ -24,11 +78,8 @@ public class Side {
             throw new Exception();
 
         this.name = name;
-        matrix = new Cell[4][5];
         isEmpty = true;
     }
-
-
 
 
     //La funzione controlla che la coppia di coordinate non esca dai limiti della matrice.
@@ -75,10 +126,6 @@ public class Side {
     }
 
 
-
-
-
-
     //Il metodo preleva un dado dalla cella indicata, questo implica che la cella perde il riferimento al dado prelevato.
     //Se la cella non contiene un dado viene restituito null.
     //La cella in alto a sx ha coordinate (0,0).
@@ -122,6 +169,8 @@ public class Side {
         return name;
     }
 
+
+
     //Il metodo restituisce il colore della cella selezionata.
 
     public String getColor(int row, int col) throws  Exception{
@@ -138,6 +187,21 @@ public class Side {
             return matrix[row][col].getNumber();
         else
             throw new Exception();
+    }
+
+
+
+    // I metodi richiedono l'informazione del colore e del numero dell'eventuale dado posizionato sulla cella (row,col)
+    public String getCellsDiceColorInformation(int row, int col) throws Exception{
+        if(areValidcoordinates(row,col))
+            return matrix[row][col].getCellsDiceColor();
+        else throw new Exception();
+    }
+
+    public int getCellsDiceNumberInformation(int row, int col) throws Exception{
+        if(areValidcoordinates(row,col))
+            return matrix[row][col].getCellsDiceNumber();
+        else throw new Exception();
     }
 }
 
