@@ -9,12 +9,7 @@ import it.polimi.se2018.server.model.card.card_objective.objAlgos.StrategyAlgori
     Punti Favore: 4
 */
 
-public class Algorithm4 implements StrategyAlgorithm{
-
-    //Metodo di supporto: setta a 0 tutti gli elementi di un array
-    public void setZero(int[] array){
-        for(int i=0; i<array.length; i++) array[i]=0;
-    }
+public class ColumnShadeVariety extends VarietyAlgorithm implements StrategyAlgorithm{
 
     @Override
     public int use(Player player) throws Exception {
