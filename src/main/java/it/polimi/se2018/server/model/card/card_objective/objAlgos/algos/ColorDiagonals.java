@@ -10,7 +10,7 @@ import it.polimi.se2018.server.model.card.card_objective.objAlgos.StrategyAlgori
     Punti Favore: #
 */
 
-public class Algorithm9 implements StrategyAlgorithm{
+public class ColorDiagonals implements StrategyAlgorithm{
     private int favours;
 
     @Override
