@@ -1,6 +1,14 @@
 package it.polimi.se2018.server.model.card.card_schema;
 
+import it.polimi.se2018.server.exceptions.*;
+import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.NearDiceInvalidException;
+import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.NoDicesNearException;
+import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
+import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
+import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
+
+import java.util.List;
 
 public class Side {
 
@@ -12,70 +20,23 @@ public class Side {
     private String name;
     private boolean isEmpty;    //Indica se lo schema contiene dadi. La griglia non potrà mai ritornare vuota.
 
-    /*
-        REALIZZATA LA MODIFICA DEL COSTRUTTORE.
-        Sono d'accordo sul fatto che non ci debba essere un metodo del tipo addCell, ma che si debba dare come ingresso anche
-        un parametro che indichi come comporre Side.
-        Il parametro da dare in ingresso potrebbe essere una Array di Stringhe. Essendo matrix interpretato a livello di memoria
-        come un array, le stringhe possono essere interpretate nel modo seguente:
 
-            -> RESTRIZIONE COLORE RESTRIZIONE NUMERO (esempio: Rosso, 3 - Giallo, 6)
+    public Side(String name, int favours, List<Cell> cells) throws InvalidFavoursValueException, InvalidShadeValueException {          //settings rappresenta l'array di stringhe per settare Side
 
-        Pertanto l'array passato come parametro indicherà le caratteristiche che, tramite i getter della classe Cell, creano le
-        varie celle. In caso sia richiesta una cella senza restrizioni, basterà semplicemente non inserire nessuna stringa all'indice
-        corrispondente.
+        matrix = new Cell[4][5];
+        int k = 0;
 
-            ESEMPIO:
-
-                Array di stringhe in input
-                    Rosso 3                 Cella [1][1] -> Rossa con restrizione di numero 3
-                    Giallo 6                Cella [1][2] -> Gialla con restrizione di numero 6
-                    NULL                    Cella [1][3] -> Nessuna Restrizione
-                    Blu                     Cella [1][4] -> Restrizione di Colore Blu
-                    5                       Cella [1][5] -> Restrizione di Numero 5
-
-
-       In questo modo potremmo anche già definire il modo tramite il quale i giocatori possono utilizzare delle proprie PatternCard
-       personalizzate. In un file di testo (che verrà caricato sul server prima dell'inizio della partita) il giocatore scriverà
-       in ordine, partendo dall'angolo in alto a sinistra della PatternCard, la lista di Restrizioni che vorrà introdurre nel modo
-       che ho illustrato sopra.
-
-       Secondo voi è accettabile come idea?
-
-    */
-
-
-    //TODO: definire il tipo di eccezioni sollevate
-
-    public Side(String name, int favours, String[] settings) throws Exception{          //settings rappresenta l'array di stringhe per settare Side
-
-        String colorRestriction;
-        String numberRestriction;
-        int space = 0;
-        int i=0;
-
-        //Controlla inizialmente se le dimensione dell'array soddisfano le dimensioni della PatternCard, quindi procede a visitare l'array
-        if(settings.length == 20) {
-            matrix = new Cell[4][5];
-
-            while(i<20) {
-                for (int j=0; j<4; j++) {
-                    for (int k=0; k<5; k++) {
-                        space = settings[i].indexOf(' ');
-                        colorRestriction = settings[i].substring(0, space);                                         //Estrae la restrizione del colore -> Rosso
-                        numberRestriction = settings[i].substring(space + 1, space + 2);                            //Estrae la restrizione del numero -> 3
-                        matrix[j][k] = new Cell(colorRestriction, Integer.parseInt(numberRestriction));
-                        i++;
-                    }
-                }
+        for(int i=0; i<4; i++){
+            for(int j=0; j<5; j++){
+                matrix[i][j] = new Cell(cells.get(k).getColor(), cells.get(k).getNumber());
+                k++;
             }
         }
-        else throw new Exception();
 
         if(favours > 0)
             this.favours = favours;
         else
-            throw new Exception();
+            throw new InvalidFavoursValueException();
 
         this.name = name;
         isEmpty = true;
@@ -91,9 +52,9 @@ public class Side {
     //Metodo di appoggio per l'inserimento di un nuovo dado in una cella. Il suo scopo è quello di controllare se il dado
     //'d' coincide con l'eventuale dado contenuto in (row, col) per colore o sfumatura.
 
-    private void compareDices(int row, int col, Dice d) throws Exception{
+    private void compareDices(int row, int col, Dice d) throws NearDiceInvalidException {
         if (matrix[row][col].showDice().getNumber() == d.getNumber() || matrix[row][col].showDice().getColor().equals(d.getColor())) {
-            throw new Exception();
+            throw new NearDiceInvalidException();
         }
     }
 
@@ -102,14 +63,14 @@ public class Side {
     //per l'inserimento.
     //In più, quando si controllano le celle ortogonali si verifica la presenza di eventuali uguaglienze nei dadi.
 
-    private void controlNeighbor(int row, int col, Dice d) throws  Exception {
+    private void controlNeighbor(int row, int col, Dice d) throws InvalidCellException {
         int counter = 0; //Conta quanti dadi sono stati trovati nelle celle adiacenti.
 
         for (int y = -1; y <= 1; y++) {
             for (int x = -1; x <= 1; x++) {
 
                 //Non voglio controllare la cella selezionata dal giocatore per inserire il dado (x=0, y=0)
-                if ((x != 0 && y != 0) && areValidcoordinates(row + x, col + y) && matrix[row + x][row + y].showDice() != null) {
+                if ((x != 0 || y != 0) && areValidcoordinates(row + x, col + y) && matrix[row + x][row + y].showDice() != null) {
 
                     counter++; //E' presente un dado, quindi incremento il contatore.
 
@@ -122,7 +83,7 @@ public class Side {
         }
 
         if (counter == 0) //Se non è stato trovato nessun dado lacio un'eccezione.
-            throw new Exception();
+            throw new NoDicesNearException();
     }
 
 
@@ -130,18 +91,18 @@ public class Side {
     //Se la cella non contiene un dado viene restituito null.
     //La cella in alto a sx ha coordinate (0,0).
 
-    public Dice pick(int row, int col) throws Exception {
+    public Dice pick(int row, int col) throws InvalidCoordinatesException {
         if(areValidcoordinates(row, col))
             return matrix[row][col].pickDice();
         else
-            throw new Exception();
+            throw new InvalidCoordinatesException();
     }
 
     //Il metodo posiziona il dado 'd' nella cella indicata dai parametri (row, col) solo se quest'ultima non è occupata
     //da un'altro dado e se le condizioni con i dadi confinanti sono rispettate.
 
 
-    public void put(int row, int col, Dice d) throws Exception {
+    public void put(int row, int col, Dice d) throws InvalidCellException, InvalidCoordinatesException {
 
         if(areValidcoordinates(row,col)) { //Controllo se le coordinate sono valide. Se non lo sono lancio un'eccezione.
 
@@ -149,16 +110,17 @@ public class Side {
             if (!isEmpty)
                 controlNeighbor(row, col, d);
 
-            //Se è il primo inserimento puoi inserire solo nella cornice più esterna. Non è necessario controllare i vicini.
+            //Se è il primo inserimento puoi inserire solo nella cornice più esterna. Non è necessario controllare i vicini, bastas controllare che le coordinate
+            //passate si riferiscano ad una cella della corretta per il primo inserimento.
             if (isEmpty && (!(row == 0 || row == 3) || !(col == 0 || col == 4)))
-                throw new Exception();
+                throw new InvalidCoordinatesException();
 
             matrix[row][col].putDice(d);
 
             isEmpty = false; //Questa istruzione deve sempre essere l'ultima di questo metodo.
         }
         else
-            throw new Exception();
+            throw new InvalidCoordinatesException();
     }
 
     public int getFavours() {
@@ -173,35 +135,35 @@ public class Side {
 
     //Il metodo restituisce il colore della cella selezionata.
 
-    public String getColor(int row, int col) throws  Exception{
+    public String getColor(int row, int col) throws  InvalidCoordinatesException{
         if(areValidcoordinates(row, col))
             return matrix[row][col].getColor();
         else
-            throw new Exception();
+            throw new InvalidCoordinatesException();
     }
 
     //Il metodo restituisce la sfumatura della cella selezionata.
 
-    public int getNumber(int row, int col) throws  Exception{
+    public int getNumber(int row, int col) throws  InvalidCoordinatesException{
         if(areValidcoordinates(row,col))
             return matrix[row][col].getNumber();
         else
-            throw new Exception();
+            throw new InvalidCoordinatesException();
     }
 
 
 
     // I metodi richiedono l'informazione del colore e del numero dell'eventuale dado posizionato sulla cella (row,col)
-    public String getCellsDiceColorInformation(int row, int col) throws Exception{
+    public String getCellsDiceColorInformation(int row, int col) throws InvalidCoordinatesException{
         if(areValidcoordinates(row,col))
             return matrix[row][col].getCellsDiceColor();
-        else throw new Exception();
+        else throw new InvalidCoordinatesException();
     }
 
-    public int getCellsDiceNumberInformation(int row, int col) throws Exception{
+    public int getCellsDiceNumberInformation(int row, int col) throws InvalidCoordinatesException{
         if(areValidcoordinates(row,col))
             return matrix[row][col].getCellsDiceNumber();
-        else throw new Exception();
+        else throw new InvalidCoordinatesException();
     }
 }
 
