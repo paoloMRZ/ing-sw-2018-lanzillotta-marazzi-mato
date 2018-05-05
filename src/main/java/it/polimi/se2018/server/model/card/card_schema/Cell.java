@@ -1,5 +1,10 @@
 package it.polimi.se2018.server.model.card.card_schema;
 
+import it.polimi.se2018.server.exceptions.*;
+import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.InvalidColorException;
+import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.InvalidShadeException;
+import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.NotEmptyCellException;
+import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 public class Cell {
@@ -14,11 +19,12 @@ public class Cell {
     private int number; //Eventuale restrizione sulla sfumatura.
 
     //Costruttore.
-    public Cell(String color, int number) throws Exception{
+    public Cell(String color, int number) throws InvalidShadeValueException {
+
         if(number>= 0 && number<=6)
             this.number = number;
         else
-            throw new Exception();
+            throw new InvalidShadeValueException();
 
         this.color = color;
         this.dice = null;
@@ -41,18 +47,16 @@ public class Cell {
         return  tmp;
     }
 
-    //TODO Dobbiamo decidere cosa fare con le eccezioni. Per ora lancio un'eccezione generica (che è una cosa sbagliata).
-
-    public void putDice(Dice d) throws Exception{
+    public void putDice(Dice d) throws InvalidCellException {
 
         //Controlla se la cella è già occupata, se si lancia un'eccezione.
-        if(this.dice != null) throw new Exception();
+        if(this.dice != null) throw new NotEmptyCellException();
 
         //Controlla se c'è una restrizione di colore. Se è violata lancia un'eccesione.
-        if(this.color != "withe" && d.getColor() != this.color) throw new Exception();
+        if(!this.color.equals("withe") && !d.getColor().equals(this.color)) throw new InvalidColorException();
 
         //Controlla se c'è una restrizione di sfumatura. Se è violata lancia un'eccezione.
-        if(this.number != 0 && d.getNumber() != this.number) throw  new Exception();
+        if(this.number != 0 && d.getNumber() != this.number) throw  new InvalidShadeException();
 
         //Se non è stata sollevata nessuna eccezione posiziona il dado.
         //Dichiaro un nuovo dice con i valori di quello passato per non esporre il riferimento.
