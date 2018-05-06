@@ -11,4 +11,8 @@ public class ScoreGrid {
     public void updatePoints(int player, int howMuch){
         scoreLines[player] = scoreLines[player]+howMuch;
     }
+
+    public int getPlayersPoint(int playersnumber){
+        return scoreLines[playersnumber];
+    }
 }

@@ -1,5 +1,6 @@
 package it.polimi.se2018.server.model.card.card_utensils;
 
+import it.polimi.se2018.server.controller.Visitor;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 public class PinzaSgrossatrice extends Utensils {
@@ -11,6 +12,8 @@ public class PinzaSgrossatrice extends Utensils {
 
     }
     //TODO fare metodi di sostegno
+
+
     public void function(){
         //Ipotesi di come sarebbe il prototipo
     }

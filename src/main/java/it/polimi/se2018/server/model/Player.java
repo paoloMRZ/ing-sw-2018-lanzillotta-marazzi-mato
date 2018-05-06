@@ -1,7 +1,10 @@
 package it.polimi.se2018.server.model;
 
+import it.polimi.se2018.server.exceptions.InvalidCellException;
+import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
 import it.polimi.se2018.server.model.card.card_schema.Side;
+import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 
 /*
@@ -15,32 +18,40 @@ import it.polimi.se2018.server.model.card.card_schema.Side;
 */
 
 public class Player {
-    private Side choisePattern;
+    private String name;
+    private Side choicePattern;
     private Objective obj;
     private int favours;
+    private boolean isMyTurn;
 
-    public Player(Side choisePattern, Objective obj, int favours) {
-        this.choisePattern = choisePattern;
+    public Player(Side choicePattern, Objective obj, int favours, String nomine) {
+        this.choicePattern = choicePattern;
         this.obj = obj;
         this.favours = favours;
+        this.name=nomine;
     }
 
     public String getColorCell(int i, int j) throws Exception{
-        return choisePattern.getColor(i,j);
+        return choicePattern.getColor(i,j);
     }
 
     public int getNumberCell(int i, int j)  throws Exception{
-        return choisePattern.getNumber(i,j);
+        return choicePattern.getNumber(i,j);
     }
 
 
     //Ritorna il colore del dado posizionato nella cella (i,j), se esiste
     public String getDiceColor(int i, int j) throws Exception{
-        return choisePattern.getCellsDiceColorInformation(i,j);
+        return choicePattern.getCellsDiceColorInformation(i,j);
     }
 
     //Ritorna il numero del dado posizionato nella cella (i,j), se esiste
     public int getDiceNumber(int i, int j) throws Exception{
-        return choisePattern.getCellsDiceNumberInformation(i,j);
+        return choicePattern.getCellsDiceNumberInformation(i,j);
     }
+
+    public void putDice(Dice d, int row, int col) throws InvalidCellException, InvalidCoordinatesException{
+        this.choicePattern.put(row,col,d);
+    }
+
 }

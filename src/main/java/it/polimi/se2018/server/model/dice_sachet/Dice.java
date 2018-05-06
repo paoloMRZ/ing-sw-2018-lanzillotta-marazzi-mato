@@ -1,5 +1,7 @@
 package it.polimi.se2018.server.model.dice_sachet;
 
+import it.polimi.se2018.server.exceptions.InvalidValueException;
+
 import java.util.Random;
 
 public class Dice {
@@ -10,11 +12,15 @@ public class Dice {
     private String color;
     private Random extractor = new Random();
 
-    public Dice(String color, int number){
+    public Dice(String color){
         this.color = color;
-        this.number = number; //TODO Controllare se il valore è corretto in caso contrario sollevare un'eccezione
+        rollDice(); //TODO Controllare  se il valore è corretto in caso contrario sollevare un'eccezione
     }
 
+    public Dice(String color, int number){
+        this.color= color;
+        this.number=number;
+    }
     public String getColor() {
         return color;
     }
@@ -25,7 +31,13 @@ public class Dice {
 
     //Il metodo assegna un valore casuale al dado (number) e ritorna questo valore al chiamante.
     public int rollDice(){
-        number = extractor.nextInt(6) + 1; //nextInt estrae un numero tra 0(incluso) e 6(escluso), per questo sommo 1.
+        this.number = extractor.nextInt(6) + 1; //nextInt estrae un numero tra 0(incluso) e 6(escluso), per questo sommo 1.
         return number;
+    }
+    public void manualSet(int decision) throws InvalidValueException {
+
+        if(decision>6 || decision<1){ throw new InvalidValueException();}
+        else{ this.number=decision;}
+
     }
 }
