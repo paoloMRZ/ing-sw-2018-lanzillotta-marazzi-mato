@@ -1,6 +1,6 @@
-package it.polimi.se2018.server.model.card.card_objective.objAlgos.algos;
+package it.polimi.se2018.server.model.card.card_objective.obj_algos.algos;
 import it.polimi.se2018.server.model.Player;
-import it.polimi.se2018.server.model.card.card_objective.objAlgos.StrategyAlgorithm;
+import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
 
 /*
     Algoritmo4:
@@ -28,23 +28,18 @@ public class ColumnShadeVariety extends VarietyAlgorithm implements StrategyAlgo
                     case 1:
                         contNumber[0]++;
                         break;
-
                     case 2:
                         contNumber[1]++;
                         break;
-
                     case 3:
                         contNumber[2]++;
                         break;
-
                     case 4:
                         contNumber[3]++;
                         break;
-
                     case 5:
                         contNumber[4]++;
                         break;
-
                     case 6:
                         contNumber[5]++;
                         break;

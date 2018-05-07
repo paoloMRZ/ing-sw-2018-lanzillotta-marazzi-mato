@@ -1,4 +1,4 @@
-package it.polimi.se2018.server.model.card.card_objective.objAlgos;
+package it.polimi.se2018.server.model.card.card_objective.obj_algos;
 
 
 import it.polimi.se2018.server.model.Player;

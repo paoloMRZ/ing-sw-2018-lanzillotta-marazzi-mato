@@ -1,4 +1,4 @@
-package it.polimi.se2018.server.model.card.card_objective.objAlgos.algos;
+package it.polimi.se2018.server.model.card.card_objective.obj_algos.algos;
 
  /*
     Questa classe rappresenta  una sorta di raccolta per tutti i metodi comuni agli algoritmi cosiddetti Variety.

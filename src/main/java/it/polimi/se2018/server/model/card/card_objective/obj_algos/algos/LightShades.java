@@ -1,6 +1,6 @@
-package it.polimi.se2018.server.model.card.card_objective.objAlgos.algos;
+package it.polimi.se2018.server.model.card.card_objective.obj_algos.algos;
 import it.polimi.se2018.server.model.Player;
-import it.polimi.se2018.server.model.card.card_objective.objAlgos.StrategyAlgorithm;
+import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
 
 /*
     Algoritmo5:

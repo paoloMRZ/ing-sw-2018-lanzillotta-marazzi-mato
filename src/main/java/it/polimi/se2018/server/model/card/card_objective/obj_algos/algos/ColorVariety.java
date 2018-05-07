@@ -1,7 +1,7 @@
-package it.polimi.se2018.server.model.card.card_objective.objAlgos.algos;
+package it.polimi.se2018.server.model.card.card_objective.obj_algos.algos;
 
 import it.polimi.se2018.server.model.Player;
-import it.polimi.se2018.server.model.card.card_objective.objAlgos.StrategyAlgorithm;
+import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
 
 /*
     Algoritm10:
@@ -23,19 +23,19 @@ public class ColorVariety extends VarietyAlgorithm implements StrategyAlgorithm 
 
                 tempColor = player.getDiceColor(i, j);
                 switch (tempColor) {
-                    case "Rosso":
+                    case "Red":
                         contColor[0]++;
                         break;
-                    case "Giallo":
+                    case "Yellow":
                         contColor[1]++;
                         break;
-                    case "Verde":
+                    case "Green":
                         contColor[2]++;
                         break;
-                    case "Viola":
+                    case "Purple":
                         contColor[3]++;
                         break;
-                    case "Blu":
+                    case "Blue":
                         contColor[4]++;
                         break;
                 }

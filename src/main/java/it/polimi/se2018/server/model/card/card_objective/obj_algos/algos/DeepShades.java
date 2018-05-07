@@ -1,15 +1,15 @@
-package it.polimi.se2018.server.model.card.card_objective.objAlgos.algos;
+package it.polimi.se2018.server.model.card.card_objective.obj_algos.algos;
 import it.polimi.se2018.server.model.Player;
-import it.polimi.se2018.server.model.card.card_objective.objAlgos.StrategyAlgorithm;
+import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
 
 /*
-    Algoritmo6:
-    Nome: "Sfumature Medie"
-    Effetto: "Set di 3 & 4 ovunque"
+    Algoritmo7:
+    Nome: "Sfumature Scure"
+    Effetto: "Set di 5 & 6 ovunque"
     Punti Favore: 2
 */
 
-public class MediumShades implements StrategyAlgorithm{
+public class DeepShades implements StrategyAlgorithm{
 
     @Override
     public int use(Player player) throws Exception {
@@ -24,9 +24,9 @@ public class MediumShades implements StrategyAlgorithm{
                 tempNumber = player.getDiceNumber(i,j);
                 switch (tempNumber){
 
-                    case 3: contOne++;
+                    case 5: contOne++;
                         break;
-                    case 4: contTwo++;
+                    case 6: contTwo++;
                         break;
 
                     default: break;

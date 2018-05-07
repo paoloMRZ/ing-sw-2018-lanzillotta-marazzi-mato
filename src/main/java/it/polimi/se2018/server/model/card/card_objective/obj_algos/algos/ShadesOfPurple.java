@@ -1,16 +1,16 @@
-package it.polimi.se2018.server.model.card.card_objective.objAlgos.algos;
+package it.polimi.se2018.server.model.card.card_objective.obj_algos.algos;
 
 import it.polimi.se2018.server.model.Player;
-import it.polimi.se2018.server.model.card.card_objective.objAlgos.StrategyAlgorithm;
+import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
 
 /*
-    Algoritm12:
-    Nome: "Sfumature Gialle - Privata"
-    Effetto: "Somma dei valori su tutti i dadi gialli"
+    Algoritm15:
+    Nome: "Sfumature Viola - Privata"
+    Effetto: "Somma dei valori su tutti i dadi viola"
     Punti Favore: #
 */
 
-public class ShadesOfYellow implements StrategyAlgorithm{
+public class ShadesOfPurple implements StrategyAlgorithm{
     @Override
     public int use(Player player) throws Exception {
         int favours =0;
@@ -20,7 +20,7 @@ public class ShadesOfYellow implements StrategyAlgorithm{
             for (int j=0; j<5; j++) {
                 tempColor = player.getDiceColor(i,j);
                 tempNumber = player.getDiceNumber(i,j);
-                if(tempColor=="Giallo") favours = favours+tempNumber;
+                if(tempColor=="Purple") favours = favours+tempNumber;
             }
         }
         return favours;
