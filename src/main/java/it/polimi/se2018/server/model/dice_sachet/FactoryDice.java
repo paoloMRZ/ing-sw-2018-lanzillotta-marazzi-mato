@@ -14,7 +14,7 @@ public class FactoryDice {
     public FactoryDice(){
         this.colors= new ArrayList<>();
         colors.add("Red");
-        colors.add("Azure");
+        colors.add("Blue");
         colors.add("Purple");
         colors.add("Yellow");
         colors.add("Green");
@@ -30,8 +30,8 @@ public class FactoryDice {
     public Dice createDice(){
         return new Dice(giveTheColor());
     }
-    //metodo di supporto per dirmi se il colore scelto è ancora pescabile.
-    //
+
+    //Metodo di supporto per dirmi se il colore scelto è ancora pescabile.
     private String isOkCol(int picked){
                     if(numbers.get(picked)>0){
 
@@ -45,6 +45,7 @@ public class FactoryDice {
                         return giveTheColor();
                     }
     }
+
     //estrae un colore correto da assegnare al dado che verrà creato
     private String giveTheColor(){
         Random extractor= new Random();
