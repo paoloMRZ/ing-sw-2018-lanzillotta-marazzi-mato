@@ -15,6 +15,9 @@ public class Side {
     //OVERVIEW: La classe rappresenta una facciata di una carta schema, cioè una griglia su cui posizionare i dadi, il
     //suo nome ed il numero di segnalini favore ad essa associati.
 
+    private static final int MAX_ROW = 3;
+    private static final int MAX_COL = 4;
+
     private Cell [][] matrix;
     private int favours;
     private String name;
@@ -23,11 +26,11 @@ public class Side {
 
     public Side(String name, int favours, List<Cell> cells) throws InvalidFavoursValueException, InvalidShadeValueException {          //settings rappresenta l'array di stringhe per settare Side
 
-        matrix = new Cell[4][5];
+        matrix = new Cell[MAX_ROW +1][MAX_COL +1];
         int k = 0;
 
-        for(int i=0; i<4; i++){
-            for(int j=0; j<5; j++){
+        for(int i=0; i<MAX_COL; i++){
+            for(int j=0; j<MAX_ROW; j++){
                 matrix[i][j] = new Cell(cells.get(k).getColor(), cells.get(k).getNumber());
                 k++;
             }
@@ -46,7 +49,7 @@ public class Side {
     //La funzione controlla che la coppia di coordinate non esca dai limiti della matrice.
 
     private boolean areValidcoordinates(int row, int col){
-        return row >= 0 && row <= 3 && col >= 0 && col <= 4;
+        return row >= 0 && row <= MAX_ROW && col >= 0 && col <= MAX_COL;
     }
 
     //Metodo di appoggio per l'inserimento di un nuovo dado in una cella. Il suo scopo è quello di controllare se il dado
@@ -58,32 +61,37 @@ public class Side {
         }
     }
 
-    //Questo metodo effettua il controllo delle celle confinanti alla cella selezionata per l'inserimento.
-    //Il controllo consiste nel verificare se è presente almeno un dado in una delle celle adiacenti a quella selezionata
-    //per l'inserimento.
-    //In più, quando si controllano le celle ortogonali si verifica la presenza di eventuali uguaglienze nei dadi.
+    //Questo metodo effettua il controllo delle celle confinanti ortogonalmente alla cella selezionata per l'inserimento.
+    //Se una di queste celle posside un dado con sfumatura o colore uguale a quella del dado passato viene sollevata un'eccezione.
 
-    private void controlNeighbor(int row, int col, Dice d) throws InvalidCellException {
-        int counter = 0; //Conta quanti dadi sono stati trovati nelle celle adiacenti.
+    private void controlOrtogonalNeighbor(int row, int col, Dice d) throws InvalidCellException {
 
         for (int y = -1; y <= 1; y++) {
             for (int x = -1; x <= 1; x++) {
 
                 //Non voglio controllare la cella selezionata dal giocatore per inserire il dado (x=0, y=0)
-                if ((x != 0 || y != 0) && areValidcoordinates(row + x, col + y) && matrix[row + x][row + y].showDice() != null) {
+                //Se si sta lavorando su una cella ortogonale a quella scelta (questo avviene quando x=0 o y=0) allora controlla anche le caratteristiche di un eventuale dado.
+                if ((x*x != y*y) && areValidcoordinates(row + x, col + y) && matrix[row + x][row + y].showDice() != null) {
 
-                    counter++; //E' presente un dado, quindi incremento il contatore.
-
-                    //Se si sta lavorando su una cella ortogonale a quella scelta (questo avviene quando x=0 o y=0) allora controlla anche le caratteristiche di un eventuale dado.
-                    if (x == 0 || y == 0) {
-                        compareDices(row + x, col + y, d); //Questo metodo lancia un'eccezione se trova un'uguaglianza nei dadi.
-                    }
+                    compareDices(row + x, col + y, d); //Questo metodo lancia un'eccezione se trova un'uguaglianza nei dadi.
                 }
             }
         }
+    }
 
-        if (counter == 0) //Se non è stato trovato nessun dado lacio un'eccezione.
-            throw new NoDicesNearException();
+    //Il metodo ritorna il numero di dadi confinanti alla cella passata.
+
+    private int numberOfNeighbor(int row, int col){
+        int counter = 0; //Conta quanti dadi sono stati trovati nelle celle adiacenti.
+        for (int y = -1; y <= 1; y++) {
+            for (int x = -1; x <= 1; x++) {
+                //Non voglio controllare la cella selezionata dal giocatore per inserire il dado (x=0, y=0)
+                if ((x != 0 || y != 0) && areValidcoordinates(row + x, col + y) && matrix[row + x][row + y].showDice() != null) {
+                    counter++; //E' presente un dado, quindi incremento il contatore.
+                    }
+                }
+            }
+        return counter;
     }
 
 
@@ -106,20 +114,100 @@ public class Side {
         if(areValidcoordinates(row,col)) { //Controllo se le coordinate sono valide. Se non lo sono lancio un'eccezione.
 
             //Se non è il primo inserimento controlla i vicini.
-            if (!isEmpty)
-                controlNeighbor(row, col, d);
+            if (!isEmpty) {
+                controlOrtogonalNeighbor(row, col, d);
+                if(numberOfNeighbor(row,col) == 0) throw new NoDicesNearException();
+            }
+            else {
 
-            //Se è il primo inserimento puoi inserire solo nella cornice più esterna. Non è necessario controllare i vicini, bastas controllare che le coordinate
-            //passate si riferiscano ad una cella della corretta per il primo inserimento.
-            if (isEmpty && (!(row == 0 || row == 3) || !(col == 0 || col == 4)))
-                throw new InvalidCoordinatesException();
-
+                //Se è il primo inserimento puoi inserire solo nella cornice più esterna. Non è necessario controllare i vicini, bastas controllare che le coordinate
+                //passate si riferiscano ad una cella della corretta per il primo inserimento.
+                if (!(row == 0 || row == MAX_ROW) || !(col == 0 || col == MAX_COL))
+                    throw new InvalidCoordinatesException();
+            }
             matrix[row][col].putDice(d);
 
             isEmpty = false; //Questa istruzione deve sempre essere l'ultima di questo metodo.
         }
         else
             throw new InvalidCoordinatesException();
+    }
+
+    //Il metodo inserisce un dado nella cella selezionata ignorando le restrizioni di colore della cella,
+    //ma tenendo in considerazione le restrizioni che riguardano i vicini.
+
+    public void putIgnoringColor(int row, int col, Dice d) throws InvalidCellException, InvalidCoordinatesException {
+        if(areValidcoordinates(row,col)){
+
+            //Se non è il primo inserimento controlla i vicini.
+            if (!isEmpty) {
+                controlOrtogonalNeighbor(row, col, d);
+                if(numberOfNeighbor(row,col) == 0) throw new NoDicesNearException();
+            }
+            else {
+
+                //Se è il primo inserimento puoi inserire solo nella cornice più esterna. Non è necessario controllare i vicini, bastas controllare che le coordinate
+                //passate si riferiscano ad una cella della corretta per il primo inserimento.
+                if (!(row == 0 || row == MAX_ROW) || !(col == 0 || col == MAX_COL))
+                    throw new InvalidCoordinatesException();
+            }
+            matrix[row][col].putDiceIgnoringColor(d);
+
+            isEmpty = false; //Questa istruzione deve sempre essere l'ultima di questo metodo.
+        }
+        else
+            throw new InvalidCoordinatesException();
+
+    }
+
+    //Il metodo inserisce un dado nella cella selezionata ignorando le restrizioni di sfumatura della cella,
+    //ma tenendo in considerazione le restrizioni che riguardano i vicini.
+
+    public void putIgnoringShade(int row, int col, Dice d) throws InvalidCoordinatesException, InvalidCellException {
+        if(areValidcoordinates(row,col)){
+            //Se non è il primo inserimento controlla i vicini.
+            if (!isEmpty) {
+                controlOrtogonalNeighbor(row, col, d);
+                if(numberOfNeighbor(row,col) == 0) throw new NoDicesNearException();
+            }
+            else{
+
+                //Se è il primo inserimento puoi inserire solo nella cornice più esterna. Non è necessario controllare i vicini, basta controllare che le coordinate
+                //passate si riferiscano ad una cella della corretta per il primo inserimento.
+                if (!(row == 0 || row == MAX_ROW) || !(col == 0 || col == MAX_COL))
+                    throw new InvalidCoordinatesException();
+            }
+
+            matrix[row][col].putDiceIgnoringShade(d);
+
+            isEmpty = false; //Questa istruzione deve sempre essere l'ultima di questo metodo.
+        }
+        else
+            throw new InvalidCoordinatesException();
+
+
+    }
+
+    //Il metodo inserisce un dado rispettando le condizioni di colore e sfumatura in una cella che non possiede dadi confinanti.
+
+    public void putWithoutDicesNear(int row, int col, Dice d) throws InvalidCoordinatesException, InvalidCellException {
+        if(areValidcoordinates(row, col)){
+            if(!isEmpty && numberOfNeighbor(row,col) != 0)
+                throw new InvalidCoordinatesException();
+            else{
+
+                //Se è il primo inserimento puoi inserire solo nella cornice più esterna. Non è necessario controllare i vicini, basta controllare che le coordinate
+                //passate si riferiscano ad una cella della corretta per il primo inserimento.
+                if (isEmpty && !(row == 0 || row == MAX_ROW) || !(col == 0 || col == MAX_COL))
+                    throw new InvalidCoordinatesException();
+            }
+
+            matrix[row][col].putDice(d);
+            isEmpty = false; //Questa istruzione deve sempre essere l'ultima di questo metodo.
+        }
+        else
+            throw new InvalidCoordinatesException();
+
     }
 
     public int getFavours() {
@@ -146,14 +234,6 @@ public class Side {
         else
             throw new InvalidCoordinatesException();
     }
-
-
-
-
-
-
-
-
 
 
     //Il metodo restituisce una copia del riferimento alla cella corrispondente alle coordinate. Poichè una cella può avere
