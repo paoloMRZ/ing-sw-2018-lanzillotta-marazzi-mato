@@ -9,6 +9,7 @@ import it.polimi.se2018.server.model.grid.ScoreGrid;
 import it.polimi.se2018.server.model.reserve.Reserve;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Table {
 
@@ -20,15 +21,15 @@ public class Table {
    private ScoreGrid scoreGrid;
    private RoundGrid roundGrid;
 
-
-   public Table(ArrayList<Utensils> utensilsDeck, ArrayList<Objective> objectiveDeck, ArrayList<Player> playersList, DiceSachet diceSachet, Reserve reserve, ScoreGrid scoreGrid, RoundGrid roundGrid) {
+//todo parlare della modifica al prototipo: tolto riserva dal costruttore
+   public Table(ArrayList<Utensils> utensilsDeck, ArrayList<Objective> objectiveDeck, ArrayList<Player> playersList, DiceSachet diceSachet, ScoreGrid scoreGrid, RoundGrid roundGrid) {
         this.utensilsDeck = utensilsDeck;
         this.objectiveDeck = objectiveDeck;
         this.playersList = playersList;
         this.diceSachet = diceSachet;
-        this.reserve = reserve;
         this.scoreGrid = scoreGrid;
         this.roundGrid = roundGrid;
+       this.reserve = createReserve(); //todo discutere se assegnabile a costruttore
    }
 
 
@@ -69,4 +70,30 @@ public class Table {
    public Utensils getUtensils(int cardPosition){
         return utensilsDeck.get(cardPosition);
    }
+
+    //metodo che serve a a cambiare la riserva se ci sono stati cambiamenti al suo interno
+    //fonadmentale per le carte utensile
+   public ArrayList<Dice>  setReserve(Reserve toStore){
+       ArrayList<Dice> preStored= toStore.getDices();
+       ArrayList<Dice> ritorno = new ArrayList<>();
+       Iterator<Dice> el = preStored.iterator();
+
+       while(el.hasNext()){
+           Dice tmp =el.next();
+           Dice toPass= new Dice(tmp.getColor(),tmp.getNumber());
+           ritorno.add(toPass);
+       }
+       return ritorno;
+
+   }
+
+   //metodo che crea una nuova riserva da zero
+    public Reserve createReserve(){
+       //estraggo tanti dadi in base a quanti giocatori ho
+        ArrayList<Dice> giveTo= new ArrayList<>();
+        for(Player i : playersList){
+            giveTo.add(diceSachet.getDiceFromSachet());
+        }
+        return new Reserve(giveTo);
+    }
 }

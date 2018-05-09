@@ -33,6 +33,4 @@ public interface Visitor {
 
     public void visit(TenagliaARotelle ItemTe);
 
-    public void visit(StripCutter ItemStripcutter);
-
 }

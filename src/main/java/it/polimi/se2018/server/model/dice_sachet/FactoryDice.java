@@ -53,4 +53,12 @@ public class FactoryDice {
         return isOkCol(pickedCol);
     }
 
+
+    //metodo che verrà usato nell'uso di una carta utensile
+    //rimettendolo dentro significa che il relativo colore avrà un elemnto in più
+    public void reput(Dice D){
+        int picked= colors.indexOf(D.getColor());
+        numbers.set(picked,(numbers.get(picked)+1));
+    }
+
 }

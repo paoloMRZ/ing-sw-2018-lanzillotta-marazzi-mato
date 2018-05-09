@@ -11,5 +11,8 @@ public class DiceSachet{
     public Dice getDiceFromSachet(){
         return factory.createDice();
     }
+    public void reput(Dice D){
+        factory.reput(D);
+    }
 
 }

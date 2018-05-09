@@ -13,10 +13,10 @@ public class RoundGrid {
     private int actualRound;
 
 
-    public RoundGrid(ArrayList<Dice> roundD, int actualRound) {
+    public RoundGrid() {
+        //metto valori di default
         this.roundDices =   new ArrayList<>();
-        roundDices.add(roundD);
-        this.actualRound = actualRound;
+        this.actualRound = 1;
     }
 
     /*
