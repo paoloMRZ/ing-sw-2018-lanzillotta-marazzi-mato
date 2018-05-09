@@ -63,21 +63,34 @@ public class Cell {
         this.dice = new Dice(d.getColor(), d.getNumber());
     }
 
+    //Il metodo restituisce ( ma non rimuove ) l'eventuale dado contenuto nella cella. Se nessun dado è presente
+    //restituisce null.
+    public Dice showDice(){
+        if(this.dice != null)
+            return new Dice(this.dice.getColor(), this.dice.getNumber()); //Faccio in questo modo per non esporre l'oggetto privato.
+        else
+            return null;
+    }
 
-    /*
-        REALIZZATA MODIFICA DEL METODO showDice()
 
-        Nell'algoritmo 1 e 2 delle carte obbiettivo, ho utilizzato inizialmente i metodi getter di Side per il controllo dei colori, ma
-        successivamente mi sono accorto che il metodo non funziona correttamente in presenza di celle prive di colore.
 
-        Pertanto un modo univoco di controllo è quello di verificare che tutti i dadi disposti sulla riga abbiano colori diversi, però
-        nella classe Cell non ho visto metodi getter per questo tipo di utilizzo ma solo showDice(). Visto che mi sembrava eccessivo creare
-        una raffica di nuovi oggetti Dice solo per estrarre l'informazione del colore, ho inserito ilmetodo getColorDice().
 
-        Secondo me è più comodo, però non elimino il metodo così ne discutiamo insieme.
 
-     */
 
+
+
+    //Costruttore che prende in ingresso anche un dice
+    //TODO: aggiungere controllo sul Dice in ingresso ed eventualemente salvare unacopia del Dice passato come argomento
+    public Cell(String color, int number, Dice d) throws InvalidShadeValueException {
+
+        if(number>= 0 && number<=6)
+            this.number = number;
+        else
+            throw new InvalidShadeValueException();
+
+        this.color = color;
+        this.dice = d;
+    }
 
     public String getCellsDiceColor(){
         if(this.dice != null) return dice.getColor();
@@ -89,13 +102,7 @@ public class Cell {
         else return 0;
     }
 
-    //Il metodo restituisce ( ma non rimuove ) l'eventuale dado contenuto nella cella. Se nessun dado è presente
-    //restituisce null.
 
-    public Dice showDice(){
-        if(this.dice != null)
-            return new Dice(this.dice.getColor(), this.dice.getNumber()); //Faccio in questo modo per non esporre l'oggetto privato.
-        else
-            return null;
-    }
+
+
 }
