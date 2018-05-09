@@ -101,7 +101,6 @@ public class Side {
     //Il metodo posiziona il dado 'd' nella cella indicata dai parametri (row, col) solo se quest'ultima non è occupata
     //da un'altro dado e se le condizioni con i dadi confinanti sono rispettate.
 
-
     public void put(int row, int col, Dice d) throws InvalidCellException, InvalidCoordinatesException {
 
         if(areValidcoordinates(row,col)) { //Controllo se le coordinate sono valide. Se non lo sono lancio un'eccezione.
@@ -132,10 +131,8 @@ public class Side {
     }
 
 
-
     //Il metodo restituisce il colore della cella selezionata.
-
-    public String getColor(int row, int col) throws  InvalidCoordinatesException{
+    public String getColor(int row, int col) throws InvalidCoordinatesException{
         if(areValidcoordinates(row, col))
             return matrix[row][col].getColor();
         else
@@ -143,8 +140,7 @@ public class Side {
     }
 
     //Il metodo restituisce la sfumatura della cella selezionata.
-
-    public int getNumber(int row, int col) throws  InvalidCoordinatesException{
+    public int getNumber(int row, int col) throws InvalidCoordinatesException{
         if(areValidcoordinates(row,col))
             return matrix[row][col].getNumber();
         else
@@ -153,7 +149,26 @@ public class Side {
 
 
 
-    // I metodi richiedono l'informazione del colore e del numero dell'eventuale dado posizionato sulla cella (row,col)
+
+
+
+
+
+
+
+    //Il metodo restituisce una copia del riferimento alla cella corrispondente alle coordinate. Poichè una cella può avere
+    //eventualmente un dado associato, creo anche la copia del riferimento al dado stesso
+
+    public Cell showCell(int row, int col) throws InvalidShadeValueException, InvalidCoordinatesException {
+        if(areValidcoordinates(row,col)) {
+            Dice dice = matrix[row][col].showDice();
+            return new Cell(matrix[row][col].getColor(), matrix[row][col].getNumber(), dice);
+        }
+        else
+            throw new InvalidCoordinatesException();
+    }
+
+    // I metodi restituiscono l'informazione del colore e del numero dell'eventuale dado posizionato sulla cella (row,col)
     public String getCellsDiceColorInformation(int row, int col) throws InvalidCoordinatesException{
         if(areValidcoordinates(row,col))
             return matrix[row][col].getCellsDiceColor();
