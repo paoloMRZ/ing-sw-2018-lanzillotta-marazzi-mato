@@ -5,6 +5,7 @@ import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordin
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
+import it.polimi.se2018.server.model.card.card_schema.Cell;
 import it.polimi.se2018.server.model.card.card_schema.Side;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
@@ -57,5 +58,9 @@ public class Player {
 
     public void putDice(Dice d, int row, int col) throws InvalidCellException, InvalidCoordinatesException{
         this.mySide.put(row,col,d);
+    }
+
+    public Cell showSelectedCell(int row, int col) throws InvalidShadeValueException, InvalidCoordinatesException {
+        return mySide.showCell(row,col);
     }
 }
