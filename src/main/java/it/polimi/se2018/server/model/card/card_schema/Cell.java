@@ -47,6 +47,7 @@ public class Cell {
         return  tmp;
     }
 
+    //Il metodo inserisce un dado alla cella controllando le restrizioni di colore e sfumatura.
     public void putDice(Dice d) throws InvalidCellException {
 
         //Controlla se la cella è già occupata, se si lancia un'eccezione.
@@ -57,6 +58,35 @@ public class Cell {
 
         //Controlla se c'è una restrizione di sfumatura. Se è violata lancia un'eccezione.
         if(this.number != 0 && d.getNumber() != this.number) throw  new InvalidShadeException();
+
+        //Se non è stata sollevata nessuna eccezione posiziona il dado.
+        //Dichiaro un nuovo dice con i valori di quello passato per non esporre il riferimento.
+        this.dice = new Dice(d.getColor(), d.getNumber());
+    }
+
+
+    //Il metodo aggiunge un dado alla cella ignorando le restrizini di colore.
+    public void putDiceIgnoringColor(Dice d) throws InvalidCellException {
+
+        //Controlla se la cella è già occupata, se si lancia un'eccezione.
+        if(this.dice != null) throw new NotEmptyCellException();
+
+        //Controlla se c'è una restrizione di sfumatura. Se è violata lancia un'eccezione.
+        if(this.number != 0 && d.getNumber() != this.number) throw  new InvalidShadeException();
+
+        //Se non è stata sollevata nessuna eccezione posiziona il dado.
+        //Dichiaro un nuovo dice con i valori di quello passato per non esporre il riferimento.
+        this.dice = new Dice(d.getColor(), d.getNumber());
+
+    }
+
+    public void putDiceIgnoringShade(Dice d) throws InvalidCellException{
+
+        //Controlla se la cella è già occupata, se si lancia un'eccezione.
+        if(this.dice != null) throw new NotEmptyCellException();
+
+        //Controlla se c'è una restrizione di colore. Se è violata lancia un'eccesione.
+        if(!this.color.equals("withe") && !d.getColor().equals(this.color)) throw new InvalidColorException();
 
         //Se non è stata sollevata nessuna eccezione posiziona il dado.
         //Dichiaro un nuovo dice con i valori di quello passato per non esporre il riferimento.
