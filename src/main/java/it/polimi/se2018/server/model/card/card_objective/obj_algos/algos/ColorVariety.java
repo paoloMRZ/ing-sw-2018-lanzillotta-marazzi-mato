@@ -20,24 +20,25 @@ public class ColorVariety extends VarietyAlgorithm implements StrategyAlgorithm 
 
         for (int i=0; i<4; i++) {
             for (int j=0; j<5; j++) {
-
-                tempColor = player.getDiceColor(i, j);
-                switch (tempColor) {
-                    case "Red":
-                        contColor[0]++;
-                        break;
-                    case "Yellow":
-                        contColor[1]++;
-                        break;
-                    case "Green":
-                        contColor[2]++;
-                        break;
-                    case "Purple":
-                        contColor[3]++;
-                        break;
-                    case "Blue":
-                        contColor[4]++;
-                        break;
+                if(player.showSelectedCell(i,j).showDice()!= null) {
+                    tempColor = player.getDiceColor(i, j);
+                    switch (tempColor) {
+                        case "Red":
+                            contColor[0]++;
+                            break;
+                        case "Yellow":
+                            contColor[1]++;
+                            break;
+                        case "Green":
+                            contColor[2]++;
+                            break;
+                        case "Purple":
+                            contColor[3]++;
+                            break;
+                        case "Blue":
+                            contColor[4]++;
+                            break;
+                    }
                 }
             }
         }

@@ -18,24 +18,33 @@ public class ShadeVariety extends VarietyAlgorithm implements StrategyAlgorithm{
         int tempNumber=0;
 
         for(int i=0; i<4; i++){
-            for(int j=0; j<5; j++){
+            for(int j=0; j<5; j++) {
 
-                tempNumber = player.getDiceNumber(i,j);
-                switch (tempNumber){
+                if (player.showSelectedCell(i, j).showDice() != null) {
+                    tempNumber = player.getDiceNumber(i, j);
+                    switch (tempNumber) {
 
-                    case 1: contNumber[0]++;
-                        break;
-                    case 2: contNumber[1]++;
-                        break;
-                    case 3: contNumber[2]++;
-                        break;
-                    case 4: contNumber[3]++;
-                        break;
-                    case 5: contNumber[4]++;
-                        break;
-                    case 6: contNumber[5]++;
-                        break;
-                    default: break;
+                        case 1:
+                            contNumber[0]++;
+                            break;
+                        case 2:
+                            contNumber[1]++;
+                            break;
+                        case 3:
+                            contNumber[2]++;
+                            break;
+                        case 4:
+                            contNumber[3]++;
+                            break;
+                        case 5:
+                            contNumber[4]++;
+                            break;
+                        case 6:
+                            contNumber[5]++;
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }

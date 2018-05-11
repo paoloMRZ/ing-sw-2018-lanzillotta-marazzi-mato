@@ -23,45 +23,46 @@ public class ColumnShadeVariety extends VarietyAlgorithm implements StrategyAlgo
         for (int i=0; i<5; i++) {
             for (int j=0; j<4; j++) {
 
-                tempNumber = player.getDiceNumber(j,i);
-                switch (tempNumber){
-                    case 1:
-                        contNumber[0]++;
-                        break;
-                    case 2:
-                        contNumber[1]++;
-                        break;
-                    case 3:
-                        contNumber[2]++;
-                        break;
-                    case 4:
-                        contNumber[3]++;
-                        break;
-                    case 5:
-                        contNumber[4]++;
-                        break;
-                    case 6:
-                        contNumber[5]++;
-                        break;
-
-                }
-
-                if(j==3){
-                    int k=0;
-                    while(k<6){
-                        if(contNumber[k]>1) {
-                            setZero(contNumber);
-                            temp=0;
+                if (player.showSelectedCell(i, j).showDice() != null) {
+                    tempNumber = player.getDiceNumber(j, i);
+                    switch (tempNumber) {
+                        case 1:
+                            contNumber[0]++;
                             break;
-                        }
-                        else if(contNumber[k]==1){
-                            temp++;
-                            k++;
-                        }
+                        case 2:
+                            contNumber[1]++;
+                            break;
+                        case 3:
+                            contNumber[2]++;
+                            break;
+                        case 4:
+                            contNumber[3]++;
+                            break;
+                        case 5:
+                            contNumber[4]++;
+                            break;
+                        case 6:
+                            contNumber[5]++;
+                            break;
+
                     }
-                    if(temp==4) cont++;
-                    setZero(contNumber);
-                    temp=0;
+
+                    if (j == 3) {
+                        int k = 0;
+                        while (k < 6) {
+                            if (contNumber[k] > 1) {
+                                setZero(contNumber);
+                                temp = 0;
+                                break;
+                            } else if (contNumber[k] == 1) {
+                                temp++;
+                                k++;
+                            }
+                        }
+                        if (temp == 4) cont++;
+                        setZero(contNumber);
+                        temp = 0;
+                    }
                 }
             }
         }

@@ -23,41 +23,42 @@ public class ColumnColorVariety extends VarietyAlgorithm implements StrategyAlgo
         for (int i=0; i<5; i++) {
             for (int j=0; j<4; j++) {
 
-                tempColor = player.getDiceColor(j,i);
-                switch (tempColor){
-                    case "Red":
-                        contColor[0]++;
-                        break;
-                    case "Yellow":
-                        contColor[1]++;
-                        break;
-                    case "Green":
-                        contColor[2]++;
-                        break;
-                    case "Purple":
-                        contColor[3]++;
-                        break;
-                    case "Blue":
-                        contColor[4]++;
-                        break;
-                }
-
-                if(j==3){
-                    int k=0;
-                    while(k<5){
-                        if(contColor[k]>1) {
-                            setZero(contColor);
-                            temp=0;
+                if(player.showSelectedCell(i,j).showDice()!= null) {
+                    tempColor = player.getDiceColor(j, i);
+                    switch (tempColor) {
+                        case "Red":
+                            contColor[0]++;
                             break;
-                        }
-                        else if(contColor[k]==1){
-                            temp++;
-                            k++;
-                        }
+                        case "Yellow":
+                            contColor[1]++;
+                            break;
+                        case "Green":
+                            contColor[2]++;
+                            break;
+                        case "Purple":
+                            contColor[3]++;
+                            break;
+                        case "Blue":
+                            contColor[4]++;
+                            break;
                     }
-                    if(temp==4) cont++;
-                    setZero(contColor);
-                    temp=0;
+
+                    if (j == 3) {
+                        int k = 0;
+                        while (k < 5) {
+                            if (contColor[k] > 1) {
+                                setZero(contColor);
+                                temp = 0;
+                                break;
+                            } else if (contColor[k] == 1) {
+                                temp++;
+                                k++;
+                            }
+                        }
+                        if (temp == 4) cont++;
+                        setZero(contColor);
+                        temp = 0;
+                    }
                 }
             }
         }
