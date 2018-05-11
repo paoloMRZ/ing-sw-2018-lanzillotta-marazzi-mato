@@ -241,8 +241,9 @@ public class Side {
 
     public Cell showCell(int row, int col) throws InvalidShadeValueException, InvalidCoordinatesException {
         if(areValidcoordinates(row,col)) {
-            Dice dice = matrix[row][col].showDice();
-            return new Cell(matrix[row][col].getColor(), matrix[row][col].getNumber(), dice);
+            Dice die = matrix[row][col].showDice();
+            if(die!=null) return new Cell(matrix[row][col].getColor(), matrix[row][col].getNumber(), die);
+            else return new Cell(matrix[row][col].getColor(), matrix[row][col].getNumber());
         }
         else
             throw new InvalidCoordinatesException();
