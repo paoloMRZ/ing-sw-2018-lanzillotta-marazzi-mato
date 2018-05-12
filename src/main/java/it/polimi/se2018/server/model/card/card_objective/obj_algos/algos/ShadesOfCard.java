@@ -2,6 +2,7 @@ package it.polimi.se2018.server.model.card.card_objective.obj_algos.algos;
 
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
+import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 
 /*
@@ -52,10 +53,11 @@ public class ShadesOfCard implements StrategyAlgorithm{
             int tempNumber;
             for (int i=0; i<4; i++) {
                 for (int j=0; j<5; j++) {
-                    if (player.showSelectedCell(i, j).showDice() != null) {
-                        tempColor = player.getDiceColor(i, j);
-                        tempNumber = player.getDiceNumber(i, j);
-                        if (tempColor == color) favours = favours + tempNumber;
+                    Dice die = player.showSelectedCell(i,j).showDice();
+                    if (die!= null) {
+                        tempColor = die.getColor();
+                        tempNumber = die.getNumber();
+                        if (tempColor.equals(color)) favours = favours + tempNumber;
                     }
                 }
             }
