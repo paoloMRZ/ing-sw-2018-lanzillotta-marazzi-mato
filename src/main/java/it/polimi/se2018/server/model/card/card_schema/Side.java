@@ -29,8 +29,8 @@ public class Side {
         matrix = new Cell[MAX_ROW +1][MAX_COL +1];
         int k = 0;
 
-        for(int i=0; i<MAX_COL; i++){
-            for(int j=0; j<MAX_ROW; j++){
+        for(int i=0; i<MAX_ROW+1; i++){
+            for(int j=0; j<MAX_COL+1; j++){
                 matrix[i][j] = new Cell(cells.get(k).getColor(), cells.get(k).getNumber());
                 k++;
             }
@@ -44,7 +44,6 @@ public class Side {
         this.name = name;
         isEmpty = true;
     }
-
 
     //La funzione controlla che la coppia di coordinate non esca dai limiti della matrice.
 
@@ -241,8 +240,7 @@ public class Side {
 
     public Cell showCell(int row, int col) throws InvalidShadeValueException, InvalidCoordinatesException {
         if(areValidcoordinates(row,col)) {
-            Dice die = matrix[row][col].showDice();
-            if(die!=null) return new Cell(matrix[row][col].getColor(), matrix[row][col].getNumber(), die);
+            if(matrix[row][col].showDice()!=null) return new Cell(matrix[row][col].getColor(), matrix[row][col].getNumber(), matrix[row][col].showDice());
             else return new Cell(matrix[row][col].getColor(), matrix[row][col].getNumber());
         }
         else
