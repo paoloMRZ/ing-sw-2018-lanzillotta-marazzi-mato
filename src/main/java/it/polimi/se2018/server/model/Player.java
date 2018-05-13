@@ -1,8 +1,9 @@
 package it.polimi.se2018.server.model;
 
 import it.polimi.se2018.server.exceptions.InvalidCellException;
+import it.polimi.se2018.server.exceptions.InvalidValueException;
+import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
-import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
 import it.polimi.se2018.server.model.card.card_schema.Cell;
@@ -62,11 +63,11 @@ public class Player {
         return mySide.getCellsDiceNumberInformation(i,j);
     }
 
-    public void putDice(Dice d, int row, int col) throws InvalidCellException, InvalidCoordinatesException{
+    public void putDice(Dice d, int row, int col) throws InvalidCellException, InvalidCoordinatesException {
         this.mySide.put(row,col,d);
     }
 
-    public Cell showSelectedCell(int row, int col) throws InvalidShadeValueException, InvalidCoordinatesException {
+    public Cell showSelectedCell(int row, int col) throws InvalidShadeValueException, InvalidCoordinatesException, InvalidColorValueException {
         return mySide.showCell(row,col);
     }
 
