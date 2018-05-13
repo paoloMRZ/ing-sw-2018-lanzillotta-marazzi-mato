@@ -23,7 +23,6 @@ import it.polimi.se2018.server.model.dice_sachet.Dice;
     Effetto: "Somma dei valori su tutti i dadi blu"
     Punti Favore: #
 
-
     Algoritm13:
     Nome: "Sfumature Verdi - Privata"
     Effetto: "Somma dei valori su tutti i dadi verdi"
