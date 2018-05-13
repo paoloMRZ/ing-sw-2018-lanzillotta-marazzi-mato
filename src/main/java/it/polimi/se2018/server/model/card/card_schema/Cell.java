@@ -1,9 +1,9 @@
 package it.polimi.se2018.server.model.card.card_schema;
 
-import it.polimi.se2018.server.exceptions.*;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.InvalidColorException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.InvalidShadeException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.NotEmptyCellException;
+import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
@@ -19,22 +19,39 @@ public class Cell {
     private int number; //Eventuale restrizione sulla sfumatura.
 
     //Costruttore.
-    public Cell(String color, int number) throws InvalidShadeValueException {
+    public Cell(String color, int number) throws InvalidShadeValueException, InvalidColorValueException {
 
         if(number>= 0 && number<=6)
             this.number = number;
         else
             throw new InvalidShadeValueException();
 
-        this.color = color;
+        if(color.equals("white") || color.equals("yellow") || color.equals("green") || color.equals("red") || color.equals("purple") || color.equals("blue"))
+            this.color = color;
+        else
+            throw new InvalidColorValueException();
+
         this.dice = null;
     }
 
-    public Cell(){
-        super();
+    //Costruttore che prende in ingresso anche un dice
+    public Cell(String color, int number, Dice d) throws InvalidShadeValueException, InvalidColorValueException {
+
+        if(number>= 0 && number<=6)
+            this.number = number;
+        else
+            throw new InvalidShadeValueException();
+
+        if(color.equals("white") || color.equals("yellow") || color.equals("green") || color.equals("red") || color.equals("purple") || color.equals("blue"))
+            this.color = color;
+        else
+            throw new InvalidColorValueException();
+
+        if(d != null)
+            this.dice = new Dice(d.getColor(), d.getNumber());
+        else
+            throw new NullPointerException();
     }
-
-
 
     public String getColor() {
         return color;
@@ -54,13 +71,14 @@ public class Cell {
     }
 
     //Il metodo inserisce un dado alla cella controllando le restrizioni di colore e sfumatura.
-    public void putDice(Dice d) throws InvalidCellException {
+    public void putDice(Dice d) throws NotEmptyCellException, InvalidColorException, InvalidShadeException {
 
         //Controlla se la cella è già occupata, se si lancia un'eccezione.
         if(this.dice != null) throw new NotEmptyCellException();
 
         //Controlla se c'è una restrizione di colore. Se è violata lancia un'eccesione.
-        if(!this.color.equals("white") && !d.getColor().equals(this.color)) throw new InvalidColorException();
+        if(!this.color.equals("white") && !d.getColor().equals(this.color))
+            throw new InvalidColorException();
 
         //Controlla se c'è una restrizione di sfumatura. Se è violata lancia un'eccezione.
         if(this.number != 0 && d.getNumber() != this.number) throw  new InvalidShadeException();
@@ -72,7 +90,7 @@ public class Cell {
 
 
     //Il metodo aggiunge un dado alla cella ignorando le restrizini di colore.
-    public void putDiceIgnoringColor(Dice d) throws InvalidCellException {
+    public void putDiceIgnoringColor(Dice d) throws NotEmptyCellException, InvalidShadeException {
 
         //Controlla se la cella è già occupata, se si lancia un'eccezione.
         if(this.dice != null) throw new NotEmptyCellException();
@@ -86,13 +104,13 @@ public class Cell {
 
     }
 
-    public void putDiceIgnoringShade(Dice d) throws InvalidCellException{
+    public void putDiceIgnoringShade(Dice d) throws NotEmptyCellException, InvalidColorException {
 
         //Controlla se la cella è già occupata, se si lancia un'eccezione.
         if(this.dice != null) throw new NotEmptyCellException();
 
         //Controlla se c'è una restrizione di colore. Se è violata lancia un'eccesione.
-        if(!this.color.equals("withe") && !d.getColor().equals(this.color)) throw new InvalidColorException();
+        if(!this.color.equals("white") && !d.getColor().equals(this.color)) throw new InvalidColorException();
 
         //Se non è stata sollevata nessuna eccezione posiziona il dado.
         //Dichiaro un nuovo dice con i valori di quello passato per non esporre il riferimento.
@@ -106,21 +124,6 @@ public class Cell {
             return new Dice(this.dice.getColor(), this.dice.getNumber()); //Faccio in questo modo per non esporre l'oggetto privato.
         else
             return null;
-    }
-
-
-
-
-    //Costruttore che prende in ingresso anche un dice
-    public Cell(String color, int number, Dice d) throws InvalidShadeValueException {
-
-        if(number>= 0 && number<=6)
-            this.number = number;
-        else
-            throw new InvalidShadeValueException();
-
-        this.color = color;
-        this.dice = d;
     }
 
 
