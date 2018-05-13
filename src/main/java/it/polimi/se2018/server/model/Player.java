@@ -30,12 +30,18 @@ public class Player {
     private Objective myobjective;
     private int favours;
     private boolean isMyTurn;
+    private int howManyTurns;
+    private boolean didPlayDie;
+    private boolean didPlayCard;
 
     public Player(Side choicePattern, Objective objective, int favours, String nomine) {
         this.mySide = choicePattern;
         this.myobjective = objective;
         this.favours = favours;
         this.name=nomine;
+        this.howManyTurns=2;
+        this.didPlayCard=false;
+        this.didPlayCard=false;
     }
 
     public String getColorCell(int i, int j) throws Exception{
@@ -62,5 +68,32 @@ public class Player {
 
     public Cell showSelectedCell(int row, int col) throws InvalidShadeValueException, InvalidCoordinatesException {
         return mySide.showCell(row,col);
+    }
+
+    public int getHowManyTurns(){
+        return howManyTurns;
+    }
+    public boolean getDidPlayDie(){
+        return didPlayDie;
+    }
+    public boolean getDidPlayCard(){
+        return didPlayCard;
+    }
+    public void setDidPlayCard(){
+        if(didPlayCard) didPlayCard=false;
+        else didPlayCard=true;
+    }
+    public void setDidPlayDie(){
+        if(didPlayDie) didPlayDie=false;
+        else didPlayDie=true;
+    }
+    public void reductor()throws Exception{//todo determinare la eccezione
+        if(howManyTurns>0) howManyTurns=howManyTurns-1;
+        else throw new Exception();
+    }
+    public void restoreValues(){
+        this.howManyTurns=2;
+        this.didPlayCard=false;
+        this.didPlayDie=false;
     }
 }
