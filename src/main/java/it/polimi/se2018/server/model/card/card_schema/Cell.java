@@ -30,6 +30,12 @@ public class Cell {
         this.dice = null;
     }
 
+    public Cell(){
+        super();
+    }
+
+
+
     public String getColor() {
         return color;
     }
@@ -54,7 +60,7 @@ public class Cell {
         if(this.dice != null) throw new NotEmptyCellException();
 
         //Controlla se c'è una restrizione di colore. Se è violata lancia un'eccesione.
-        if(!this.color.equals("withe") && !d.getColor().equals(this.color)) throw new InvalidColorException();
+        if(!this.color.equals("white") && !d.getColor().equals(this.color)) throw new InvalidColorException();
 
         //Controlla se c'è una restrizione di sfumatura. Se è violata lancia un'eccezione.
         if(this.number != 0 && d.getNumber() != this.number) throw  new InvalidShadeException();
@@ -105,12 +111,7 @@ public class Cell {
 
 
 
-
-
-
-
     //Costruttore che prende in ingresso anche un dice
-    //TODO: aggiungere controllo sul Dice in ingresso ed eventualemente salvare unacopia del Dice passato come argomento
     public Cell(String color, int number, Dice d) throws InvalidShadeValueException {
 
         if(number>= 0 && number<=6)
@@ -121,6 +122,7 @@ public class Cell {
         this.color = color;
         this.dice = d;
     }
+
 
     public String getCellsDiceColor(){
         if(this.dice != null) return dice.getColor();
