@@ -1,7 +1,7 @@
 package it.polimi.se2018.server.controller;
 
-import it.polimi.se2018.server.events.Activate;
-import it.polimi.se2018.server.events.Move;
+import it.polimi.se2018.server.events.EventMVC;
+import it.polimi.se2018.server.events.tool_mex.Activate;
 import it.polimi.se2018.server.events.Observer;
 import it.polimi.se2018.server.events.SimpleMove;
 import it.polimi.se2018.server.model.Player;
@@ -21,7 +21,7 @@ public class Controller implements Observer {
     private ControllerAction cAction;
     private ControllerPoints cPoints;
     private ControllerTurn cTurn;
-    private Move event;
+    private EventMVC event;
 
     //TODO TABLE DA CHIARIRE IN CHE ORDINE COSTRUIRE LE COSE
     public Controller(ArrayList<Player> players){
