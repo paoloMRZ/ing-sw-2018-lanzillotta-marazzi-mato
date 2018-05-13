@@ -70,7 +70,7 @@ public class Side {
 
                 //Non voglio controllare la cella selezionata dal giocatore per inserire il dado (x=0, y=0)
                 //Se si sta lavorando su una cella ortogonale a quella scelta (questo avviene quando x=0 o y=0) allora controlla anche le caratteristiche di un eventuale dado.
-                if ((x*x != y*y) && areValidcoordinates(row + x, col + y) && matrix[row + x][row + y].showDice() != null) {
+                if ((x*x != y*y) && areValidcoordinates(row + x, col + y) && matrix[row + x][col + y].showDice() != null) {
 
                     compareDices(row + x, col + y, d); //Questo metodo lancia un'eccezione se trova un'uguaglianza nei dadi.
                 }
@@ -85,7 +85,7 @@ public class Side {
         for (int y = -1; y <= 1; y++) {
             for (int x = -1; x <= 1; x++) {
                 //Non voglio controllare la cella selezionata dal giocatore per inserire il dado (x=0, y=0)
-                if ((x != 0 || y != 0) && areValidcoordinates(row + x, col + y) && matrix[row + x][row + y].showDice() != null) {
+                if ((x != 0 || y != 0) && areValidcoordinates(row + x, col + y) && matrix[row + x][col + y].showDice() != null) {
                     counter++; //E' presente un dado, quindi incremento il contatore.
                     }
                 }
@@ -121,11 +121,9 @@ public class Side {
 
                 //Se è il primo inserimento puoi inserire solo nella cornice più esterna. Non è necessario controllare i vicini, bastas controllare che le coordinate
                 //passate si riferiscano ad una cella della corretta per il primo inserimento.
-                if (!(row == 0 || row == MAX_ROW) || !(col == 0 || col == MAX_COL))
-                    throw new InvalidCoordinatesException();
+                if (!(row == 0 || row == MAX_ROW) || !(col == 0 || col == MAX_COL)) throw new InvalidCoordinatesException();
             }
             matrix[row][col].putDice(d);
-
             isEmpty = false; //Questa istruzione deve sempre essere l'ultima di questo metodo.
         }
         else
