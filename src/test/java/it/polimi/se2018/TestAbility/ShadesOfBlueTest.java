@@ -1,5 +1,6 @@
 package it.polimi.se2018.TestAbility;
 
+import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
@@ -26,7 +27,7 @@ public class ShadesOfBlueTest {
         //Prima di lanciare il metodo, setta la Pattern Card
 
         @BeforeClass
-        public static void setup() throws InvalidShadeValueException {
+        public static void setup() throws InvalidShadeValueException, InvalidColorValueException {
             casualList.add(new Cell("white", 0));
             casualList.add(new Cell("white", 0));
             casualList.add(new Cell("white", 0));
