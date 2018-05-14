@@ -49,7 +49,7 @@ public class ShadeVariety extends VarietyAlgorithm implements StrategyAlgorithm{
             }
         }
 
-        if(!asZeroElement(contNumber)) return favours*(sumArray(contNumber)/6);
+        if(!hasZeroElement(contNumber)) return favours*(sumArray(contNumber)/6);
         else return 0;
     }
 }

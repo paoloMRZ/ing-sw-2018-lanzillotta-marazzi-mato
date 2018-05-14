@@ -2,6 +2,7 @@ package it.polimi.se2018.server.model.card.card_objective.obj_algos.algos;
 
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
+import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 /*
     Algoritm10:
@@ -20,29 +21,30 @@ public class ColorVariety extends VarietyAlgorithm implements StrategyAlgorithm 
 
         for (int i=0; i<4; i++) {
             for (int j=0; j<5; j++) {
-                if(player.showSelectedCell(i,j).showDice()!= null) {
-                    tempColor = player.getDiceColor(i, j);
+                Dice die = player.showSelectedCell(i,j).showDice();
+                if(die != null) {
+                    tempColor = die.getColor();
                     switch (tempColor) {
-                        case "Red":
+                        case "red":
                             contColor[0]++;
                             break;
-                        case "Yellow":
+                        case "yellow":
                             contColor[1]++;
                             break;
-                        case "Green":
+                        case "green":
                             contColor[2]++;
                             break;
-                        case "Purple":
+                        case "purple":
                             contColor[3]++;
                             break;
-                        case "Blue":
+                        case "blue":
                             contColor[4]++;
                             break;
                     }
                 }
             }
         }
-        if (!asZeroElement(contColor)) return favours * (sumArray(contColor) / 5);
+        if (!hasZeroElement(contColor)) return favours * (sumArray(contColor) / 5);
         else return 0;
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.se2018.server.model.card.card_objective.obj_algos.algos;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
+import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 /*
     Lista carte Ability raggruppate
@@ -39,13 +40,13 @@ public class CoupleOfShades implements StrategyAlgorithm{
         int favours = 2;
         int contOne=0;
         int contTwo=0;
-        int tempNumber=0;
+        int tempNumber;
 
         for(int i=0; i<4; i++){
             for(int j=0; j<5; j++) {
-
-                if (player.showSelectedCell(i, j).showDice() != null) {
-                    tempNumber = player.getDiceNumber(i, j);
+                Dice die = player.showSelectedCell(i,j).showDice();
+                if (die != null) {
+                    tempNumber = die.getNumber();
 
                     if(tempNumber==firstShade) contOne++;
                     if(tempNumber==secondShade) contTwo++;
