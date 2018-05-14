@@ -8,6 +8,7 @@ import it.polimi.se2018.server.model.card.card_objective.obj_algos.algos.ShadesO
 import it.polimi.se2018.server.model.card.card_schema.Cell;
 import it.polimi.se2018.server.model.card.card_schema.Side;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -22,8 +23,8 @@ public class ShadesOfCardTest {
     private static Player player;
     private static Objective obj;
 
-    @BeforeClass
-    public static void setup() throws InvalidShadeValueException, InvalidFavoursValueException {
+    @Before
+    public void setup() throws InvalidShadeValueException, InvalidFavoursValueException {
         casualList.add(new Cell("red", 0));
         casualList.add(new Cell("white", 0));
         casualList.add(new Cell("green", 0));
