@@ -1,5 +1,6 @@
 package it.polimi.se2018.test_card_ability;
 
+import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
 import it.polimi.se2018.server.model.Player;
@@ -23,7 +24,7 @@ public class ShadesOfCardTest {
     private static Objective obj;
 
     @Before
-    public void setup() throws InvalidShadeValueException, InvalidFavoursValueException {
+    public void setup() throws InvalidShadeValueException, InvalidFavoursValueException, InvalidColorValueException {
         casualList.add(new Cell("red", 0));
         casualList.add(new Cell("white", 0));
         casualList.add(new Cell("green", 0));

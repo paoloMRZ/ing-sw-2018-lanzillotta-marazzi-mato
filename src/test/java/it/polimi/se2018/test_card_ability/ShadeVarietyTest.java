@@ -1,5 +1,6 @@
 package it.polimi.se2018.test_card_ability;
 
+import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
 import it.polimi.se2018.server.model.Player;
@@ -24,7 +25,7 @@ public class ShadeVarietyTest {
 
 
     @Before
-    public void setup() throws InvalidShadeValueException, InvalidFavoursValueException {
+    public void setup() throws InvalidShadeValueException, InvalidFavoursValueException, InvalidColorValueException {
         casualList.add(new Cell("red", 0));
         casualList.add(new Cell("white", 0));
         casualList.add(new Cell("green", 0));
@@ -81,6 +82,20 @@ public class ShadeVarietyTest {
 
             casualSide.put(3,2, new Dice("green", 2));
             assertEquals(5,obj.useAlgorithm(player));
+
+        } catch (Exception e) { fail();}
+
+    }
+
+    @Test
+    public void noSetTest(){
+        try {
+            casualSide.put(0,0, new Dice("red", 1));
+            casualSide.put(1,1,new Dice("purple", 2));
+            casualSide.put(1,2,new Dice("yellow", 3));
+            casualSide.put(2,1,new Dice("red", 4));
+            casualSide.put(3,0,new Dice("green", 5));
+            assertEquals(0,obj.useAlgorithm(player));
 
         } catch (Exception e) { fail();}
 
