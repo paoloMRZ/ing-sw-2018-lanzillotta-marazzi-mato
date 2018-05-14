@@ -1,5 +1,6 @@
-package it.polimi.se2018.TestAbility;
+package it.polimi.se2018.test_card_ability;
 
+import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
 import it.polimi.se2018.server.model.Player;
@@ -8,9 +9,7 @@ import it.polimi.se2018.server.model.card.card_objective.obj_algos.algos.ShadesO
 import it.polimi.se2018.server.model.card.card_schema.Cell;
 import it.polimi.se2018.server.model.card.card_schema.Side;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ public class ShadesOfBlueTest {
         //Prima di lanciare il metodo, setta la Pattern Card
 
         @Before
-        public void setup() throws InvalidShadeValueException, InvalidFavoursValueException {
+        public void setup() throws InvalidShadeValueException, InvalidFavoursValueException, InvalidColorValueException {
             casualList.add(new Cell("white", 0));
             casualList.add(new Cell("white", 0));
             casualList.add(new Cell("white", 0));
