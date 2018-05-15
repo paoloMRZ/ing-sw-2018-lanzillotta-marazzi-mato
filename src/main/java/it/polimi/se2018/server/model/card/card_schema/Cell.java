@@ -5,6 +5,7 @@ import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.InvalidShadeExc
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.NotEmptyCellException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
+import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 
@@ -20,7 +21,7 @@ import it.polimi.se2018.server.model.dice_sachet.Dice;
 public class Cell {
 
     private Dice dice; //Eventuale dado posizionato sulla cella.
-    private String color; //Eventuale restrizione sul colore.
+    private Color color; //Eventuale restrizione sul colore.
     private int number; //Eventuale restrizione sulla sfumatura.
 
 
@@ -33,18 +34,14 @@ public class Cell {
      * @throws InvalidColorValueException viene lanciata se viene passato una restrizione di colore non valida.
      */
 
-    public Cell(String color, int number) throws InvalidShadeValueException, InvalidColorValueException {
+    public Cell(Color color, int number) throws InvalidShadeValueException, InvalidColorValueException {
 
         if(number>= 0 && number<=6)
             this.number = number;
         else
             throw new InvalidShadeValueException();
 
-        if(color.equals("white") || color.equals("yellow") || color.equals("green") || color.equals("red") || color.equals("purple") || color.equals("blue"))
-            this.color = color;
-        else
-            throw new InvalidColorValueException();
-
+        this.color = color;
         this.dice = null;
     }
 
@@ -57,17 +54,12 @@ public class Cell {
      * @throws InvalidShadeValueException viene lanciata se viene passato una restrizione di sfumatura non valida.
      * @throws InvalidColorValueException viene lanciata se viene passato una restrizione di colore non valida.
      */
-    public Cell(String color, int number, Dice d) throws InvalidShadeValueException, InvalidColorValueException {
+    public Cell(Color color, int number, Dice d) throws InvalidShadeValueException, InvalidColorValueException {
 
         if(number>= 0 && number<=6)
             this.number = number;
         else
             throw new InvalidShadeValueException();
-
-        if(color.equals("white") || color.equals("yellow") || color.equals("green") || color.equals("red") || color.equals("purple") || color.equals("blue"))
-            this.color = color;
-        else
-            throw new InvalidColorValueException();
 
         if(d != null)
             this.dice = new Dice(d.getColor(), d.getNumber());
@@ -92,7 +84,7 @@ public class Cell {
         if(this.dice != null) throw new NotEmptyCellException();
 
         //Controlla se c'è una restrizione di colore. Se è violata lancia un'eccesione.
-        if(!this.color.equals("white") && !d.getColor().equals(this.color))
+        if(this.color != Color.WHITE && d.getColor() != this.color)
             throw new InvalidColorException();
 
         //Controlla se c'è una restrizione di sfumatura. Se è violata lancia un'eccezione.
@@ -139,7 +131,7 @@ public class Cell {
         if(this.dice != null) throw new NotEmptyCellException();
 
         //Controlla se c'è una restrizione di colore. Se è violata lancia un'eccesione.
-        if(!this.color.equals("white") && !d.getColor().equals(this.color)) throw new InvalidColorException();
+        if(this.color != Color.WHITE && d.getColor() != this.color) throw new InvalidColorException();
 
         //Se non è stata sollevata nessuna eccezione posiziona il dado.
         //Dichiaro un nuovo dice con i valori di quello passato per non esporre il riferimento.
@@ -175,16 +167,16 @@ public class Cell {
     /**
      *Il metodo restituisce la restrizione di colore della cella.
      *
-     * @return String.
+     * @return colore della cella.
      */
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 
     /**
      * Il metodo restituisce la restrizione di sfumatura della cella.
      *
-     * @return int
+     * @return sfumatura della cella.
      */
     public int getNumber() {
         return number;
@@ -197,7 +189,7 @@ public class Cell {
      * @deprecated
      * @return String colore.
      */
-    public String getCellsDiceColor(){
+    public Color getCellsDiceColor(){
         if(this.dice != null) return dice.getColor();
         else return null;
     }

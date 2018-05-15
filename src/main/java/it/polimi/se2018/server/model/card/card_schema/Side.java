@@ -6,6 +6,7 @@ import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorVa
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
+import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 import java.util.List;
@@ -227,7 +228,7 @@ public class Side {
 
 
     //Il metodo restituisce il colore della cella selezionata.
-    public String getColor(int row, int col) throws InvalidCoordinatesException{
+    public Color getColor(int row, int col) throws InvalidCoordinatesException{
         if(areValidcoordinates(row, col))
             return matrix[row][col].getColor();
         else
@@ -258,12 +259,14 @@ public class Side {
     }
 
     // I metodi restituiscono l'informazione del colore e del numero dell'eventuale dado posizionato sulla cella (row,col)
-    public String getCellsDiceColorInformation(int row, int col) throws InvalidCoordinatesException{
+    @Deprecated
+    public Color getCellsDiceColorInformation(int row, int col) throws InvalidCoordinatesException{
         if(areValidcoordinates(row,col))
             return matrix[row][col].getCellsDiceColor();
         else throw new InvalidCoordinatesException();
     }
 
+    @Deprecated
     public int getCellsDiceNumberInformation(int row, int col) throws InvalidCoordinatesException{
         if(areValidcoordinates(row,col))
             return matrix[row][col].getCellsDiceNumber();
