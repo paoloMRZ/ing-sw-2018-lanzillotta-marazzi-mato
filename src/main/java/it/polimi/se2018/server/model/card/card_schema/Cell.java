@@ -26,6 +26,15 @@ public class Cell {
 
 
     /**
+     * Costruttore di Default necessario per la lettura da file Json
+     *
+     */
+     public Cell(){
+         super();
+     }
+
+
+    /**
      * Costruttore della classe. Crea una cella che non contiene nessun dado.
      *
      * @param color restrizione di colore della cella.

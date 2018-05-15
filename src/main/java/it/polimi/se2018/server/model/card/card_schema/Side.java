@@ -1,5 +1,6 @@
 package it.polimi.se2018.server.model.card.card_schema;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.se2018.server.exceptions.*;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.*;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
@@ -19,10 +20,20 @@ public class Side {
     private static final int MAX_ROW = 3;
     private static final int MAX_COL = 4;
 
-    private Cell [][] matrix;
-    private int favours;
-    private String name;
+    @JsonProperty private Cell [][] matrix;
+    @JsonProperty private int favours;
+    @JsonProperty private String name;
     private boolean isEmpty;    //Indica se lo schema contiene dadi. La griglia non potrà mai ritornare vuota.
+
+
+    /**
+     * Costruttore di Default necessario per la lettura da file Json
+     *
+     */
+    public Side(){
+        super();
+    }
+
 
 
     public Side(String name, int favours, List<Cell> cells) throws InvalidFavoursValueException, InvalidColorValueException, InvalidShadeValueException {          //settings rappresenta l'array di stringhe per settare Side
