@@ -1,10 +1,9 @@
 package it.polimi.se2018.server.model.card.card_objective.obj_algos.algos;
 
-import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
-import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
-import it.polimi.se2018.server.model.card.card_schema.Cell;
+import it.polimi.se2018.server.model.dice_sachet.Dice;
+
 
 /*
     Algoritmo9:
@@ -15,52 +14,48 @@ import it.polimi.se2018.server.model.card.card_schema.Cell;
 
 public class ColorDiagonals implements StrategyAlgorithm{
 
-    //Metodo supporto -> Restituisce se, alal cella indicata, sia presente un dado o meno
-    private boolean checkDie(Player player,int row, int col) throws InvalidCoordinatesException, InvalidShadeValueException {
-        return player.showSelectedCell(row,col).showDice()==null;
-    }
     //Metodo supporto -> Riconosce le Celle Corner della carta schema
     private boolean isCornerCell(int row, int col){
         boolean corner = false;
-        switch(col){
-            case 0: if(row==0 || row==3) corner = true;
-                break;
-            case 4: if(row==0 || row==3) corner = true;
+        switch(row){
+            case 0: if(col==0 || col==4) corner = true;
                 break;
         }
         return corner;
     }
 
     //Metodo supporto -> riconosce le Celle Frame (Ovvero i lati destro e sinistro) della carta schema che non siano anche Celle Corner
-    private boolean isFrameCell(int col){
+    private boolean isFrameCell(int row, int col){
         boolean frame = false;
-            if(col==0 || col==4) frame = true;
+            if(col==0 || col==4 && row!=0) frame = true;
         return frame;
     }
 
-    //Metodo supporto -> a seconda del tipo di Corner Cell, ritorna il numero di vicini con lo stesso colore
+    //Metodo supporto -> a seconda del tipo di Corner Cell, se questo ha un vicino, ritorna 2 (se stesso e l'eventuale vicino), altrimenti 0
     private int hasCornerNeighbors(Player player, int row, int col) throws Exception {
 
-        int neighbors = 1;
-        String tempColor1 = player.getDiceColor(row, col);
+        int neighbors =0;
+        Dice die;
+        String tempColor1;
         String tempColor2;
 
-        //Mi trovo sulla prima riga
-        if (row == 0) {
+        Dice dieRoot = player.showSelectedCell(row,col).showDice();
+        if(dieRoot != null) {
+            tempColor1 = dieRoot.getColor();
             switch (col) {
                 case 0:
-                    if (!checkDie(player,row+1,col+1)) {
-                        tempColor2 = player.getDiceColor(row+1, col+1);
-                        if (tempColor1.equals(tempColor2)) neighbors++;
-                        else neighbors--;
+                    die = player.showSelectedCell(row + 1, col + 1).showDice();
+                    if (die != null) {
+                        tempColor2 = die.getColor();
+                        if (tempColor1.equals(tempColor2))neighbors++;
                     }
                     break;
 
                 case 4:
-                    if (!checkDie(player, row+1,col-1)) {
-                        tempColor2 = player.getDiceColor(row+1, col-1);
+                    die = player.showSelectedCell(row + 1, col - 1).showDice();
+                    if (die != null) {
+                        tempColor2 = die.getColor();
                         if (tempColor1.equals(tempColor2)) neighbors++;
-                        else neighbors--;
                     }
                     break;
             }
@@ -71,23 +66,30 @@ public class ColorDiagonals implements StrategyAlgorithm{
     //Metodo supporto -> sia per il lato destro che sinistro controlla se ci sono vicini e ne ritorna il numero
     private int hasFrameNeighbors(Player player, int row, int col) throws Exception {
 
-        String tempColor1 = player.getDiceColor(row,col);
+        String tempColor1;
         String tempColor2;
-        int neighbors = 1;
+        int neighbors = 0;
+        Dice die;
 
-        switch(col){
-            case 0: if(!checkDie(player,row+1,col+1)) {
-                       tempColor2 = player.getDiceColor(row + 1, col + 1);
-                       if (tempColor2.equals(tempColor1)) neighbors++;
-                       else neighbors--;
+        Dice dieRoot = player.showSelectedCell(row,col).showDice();
+        if(dieRoot != null) {
+            tempColor1 = dieRoot.getColor();
+            switch (col) {
+                case 0:
+                    die = player.showSelectedCell(row + 1, col + 1).showDice();
+                    if (die != null) {
+                        tempColor2 = die.getColor();
+                        if (tempColor2.equals(tempColor1)) neighbors++;
                     }
                     break;
-            case 4: if(!checkDie(player,row+1,col-1)) {
-                       tempColor2 = player.getDiceColor(row + 1, col - 1);
-                       if (tempColor2.equals(tempColor1)) neighbors++;
-                       else neighbors--;
+                case 4:
+                    die = player.showSelectedCell(row + 1, col - 1).showDice();
+                    if (die != null) {
+                        tempColor2 = die.getColor();
+                        if (tempColor2.equals(tempColor1)) neighbors++;
                     }
                     break;
+            }
         }
         return neighbors;
     }
@@ -96,7 +98,6 @@ public class ColorDiagonals implements StrategyAlgorithm{
     public int use(Player player) throws Exception {
 
         int favours=1;
-
         String tempColor1;
         String tempColor2;
         String tempColor3;
@@ -104,15 +105,24 @@ public class ColorDiagonals implements StrategyAlgorithm{
         for (int i=0; i<3; i++) {
             for (int j=0; j<5; j++){
                     if(isCornerCell(i,j)) favours = favours + hasCornerNeighbors(player,i,j);
-                    else if (isFrameCell(j)) favours = favours + hasFrameNeighbors(player,i,j);
+                    else if (isFrameCell(i,j)) favours = favours + hasFrameNeighbors(player,i,j);
                     else {
-                        tempColor1 = player.getDiceColor(i, j);
-                        tempColor2 = player.getDiceColor(i+1, j+1);
-                        tempColor3 = player.getDiceColor(i+1, j-1);
 
-                        if (tempColor1.equals(tempColor2)) favours++;
-                        else if (tempColor1.equals(tempColor3)) favours++;
-                        else favours--;
+                        Dice dieTemp1 = player.showSelectedCell(i,j).showDice();
+                        Dice dieTemp2 = player.showSelectedCell(i+1,j+1).showDice();
+                        Dice dieTemp3 = player.showSelectedCell(i+1,j-1).showDice();
+
+                        if(dieTemp1!=null){
+                            tempColor1 = dieTemp1.getColor();
+                            if(dieTemp2!=null) {
+                                tempColor2 = dieTemp2.getColor();
+                                if (tempColor1.equals(tempColor2)) favours++;
+                            }
+                            if(dieTemp3!=null){
+                                tempColor3 = dieTemp3.getColor();
+                                if (tempColor1.equals(tempColor3)) favours++;
+                            }
+                        }
                     }
                 }
             }
