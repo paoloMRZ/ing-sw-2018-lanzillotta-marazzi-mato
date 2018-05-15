@@ -1,0 +1,73 @@
+[
+  {
+    "name": "Kaleidoscopic Dream",
+    "favours": 4,
+    "matrix": [[{"color": "YELLOW", "number" : 0}, {"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 1}],
+               [{"color": "GREEN", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 4}],
+               [{"color": "WHITE", "number" : 3}, {"color": "WHITE", "number" : 0}, {"color": "RED", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "GREEN", "number" : 0}],
+               [{"color": "WHITE", "number" : 2}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "BLUE", "number" : 0}, {"color": "YELLOW", "number" : 0}]]
+  },
+
+  {
+    "name": "Virtus",
+    "favours": 5,
+    "matrix": [[{"color": "WHITE", "number" : 4}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 2}, {"color": "WHITE", "number" : 5}, {"color": "GREEN", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 6}, {"color": "GREEN", "number" : 0}, {"color": "WHITE", "number" : 2}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 3}, {"color": "GREEN", "number" : 0}, {"color": "WHITE", "number" : 4}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 5}, {"color": "GREEN", "number" : 0}, {"color": "WHITE", "number" : 1}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}]]
+  },
+
+  {
+    "name": "Aurorae Magnificus",
+    "favours": 5,
+    "matrix": [[{"color": "WHITE", "number" : 5}, {"color": "GREEN", "number" : 0}, {"color": "BLUE", "number" : 0}, {"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 2}],
+               [{"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "YELLOW", "number" : 0}],
+               [{"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 6}, {"color": "WHITE", "number" : 0}, {"color": "PURPLE", "number" : 0}],
+               [{"color": "WHITE", "number" : 1}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "GREEN", "number" : 0}, {"color": "WHITE", "number" : 4}]]
+  },
+
+  {
+    "name": "Via Lux",
+    "favours": 4,
+    "matrix": [[{"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 6}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 1}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 2}],
+               [{"color": "WHITE", "number" : 3}, {"color": "YELLOW", "number" : 0}, {"color": "RED", "number" : 0}, {"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 4}, {"color": "WHITE", "number" : 3}, {"color": "RED", "number" : 0}]]
+  },
+
+  {
+    "name": "Sun Catcher",
+    "favours": 3,
+    "matrix": [[{"color": "WHITE", "number" : 0}, {"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 2}, {"color": "WHITE", "number" : 0}, {"color": "YELLOW", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 4}, {"color": "WHITE", "number" : 0}, {"color": "RED", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "GREEN", "number" : 0}, {"color": "WHITE", "number" : 3}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "PURPLE", "number" : 0}]]
+  },
+
+  {
+    "name": "Bellesguard",
+    "favours": 3,
+    "matrix": [[{"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 6}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "YELLOW", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 3}, {"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 6}, {"color": "WHITE", "number" : 2}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 4}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 1}, {"color": "GREEN", "number" : 0}]]
+  },
+
+  {
+    "name": "Firmitas",
+    "favours": 5,
+    "matrix": [[{"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 6}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 3}],
+               [{"color": "WHITE", "number" : 5}, {"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 3}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 2}, {"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 1}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 1}, {"color": "WHITE", "number" : 5}, {"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 4}]]
+  },
+
+  {
+    "name": "Symphony of Light",
+    "favours": 6,
+    "matrix": [[{"color": "WHITE", "number" : 2}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 1}],
+               [{"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 6}, {"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 2}, {"color": "RED", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 4}, {"color": "GREEN", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 3}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 0}]]
+  }
+]
