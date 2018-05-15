@@ -61,6 +61,8 @@ public class Cell {
         else
             throw new InvalidShadeValueException();
 
+        this.color = color;
+
         if(d != null)
             this.dice = new Dice(d.getColor(), d.getNumber());
         else
