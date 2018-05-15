@@ -1,5 +1,6 @@
 package it.polimi.se2018.server.model.card.card_objective.obj_algos.algos;
 
+import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
@@ -38,17 +39,17 @@ import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 public class ShadesOfCard implements StrategyAlgorithm{
 
-    private String color;
+    private Color color;
 
         //Costruttore
-        public ShadesOfCard(String color){
+        public ShadesOfCard(Color color){
             this.color = color;
         }
 
         @Override
         public int use(Player player) throws Exception {
             int favours =0;
-            String tempColor;
+            Color tempColor;
             int tempNumber;
             for (int i=0; i<4; i++) {
                 for (int j=0; j<5; j++) {
@@ -56,7 +57,7 @@ public class ShadesOfCard implements StrategyAlgorithm{
                     if (die!= null) {
                         tempColor = die.getColor();
                         tempNumber = die.getNumber();
-                        if (tempColor.equals(color)) favours = favours + tempNumber;
+                        if (tempColor ==  color) favours = favours + tempNumber;
                     }
                 }
             }

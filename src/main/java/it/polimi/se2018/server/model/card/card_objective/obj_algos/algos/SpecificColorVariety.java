@@ -18,6 +18,7 @@ package it.polimi.se2018.server.model.card.card_objective.obj_algos.algos;
 */
 
 
+import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
@@ -38,7 +39,7 @@ public class SpecificColorVariety extends VarietyAlgorithm implements StrategyAl
 
         int[] contArray = new int[5];
         int cont = 0;
-        String tempColor;
+        Color tempColor;
         Dice die;
 
         for (int i=0; i<maxRow; i++) {
@@ -49,19 +50,19 @@ public class SpecificColorVariety extends VarietyAlgorithm implements StrategyAl
                 if (die != null) {
                     tempColor = die.getColor();
                     switch (tempColor) {
-                        case "red":
+                        case RED:
                             contArray[0]++;
                             break;
-                        case "yellow":
+                        case YELLOW:
                             contArray[1]++;
                             break;
-                        case "green":
+                        case GREEN:
                             contArray[2]++;
                             break;
-                        case "purple":
+                        case PURPLE:
                             contArray[3]++;
                             break;
-                        case "blue":
+                        case BLUE:
                             contArray[4]++;
                             break;
                     }
