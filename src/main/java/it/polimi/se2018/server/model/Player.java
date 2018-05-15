@@ -45,7 +45,7 @@ public class Player {
         this.didPlayCard=false;
     }
 
-    public String getColorCell(int i, int j) throws Exception{
+    public Color getColorCell(int i, int j) throws Exception{
         return mySide.getColor(i,j);
     }
 
@@ -54,7 +54,7 @@ public class Player {
     }
 
     //Ritorna il colore del dado posizionato nella cella (i,j), se esiste
-    public String getDiceColor(int i, int j) throws Exception{
+    public Color getDiceColor(int i, int j) throws Exception{
         return mySide.getCellsDiceColorInformation(i,j);
     }
 
