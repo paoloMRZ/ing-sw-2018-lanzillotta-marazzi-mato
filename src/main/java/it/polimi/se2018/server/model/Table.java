@@ -8,8 +8,10 @@ import it.polimi.se2018.server.model.grid.RoundGrid;
 import it.polimi.se2018.server.model.grid.ScoreGrid;
 import it.polimi.se2018.server.model.reserve.Reserve;
 
+
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class Table {
 
@@ -31,7 +33,6 @@ public class Table {
         this.roundGrid = roundGrid;
        this.reserve = createReserve(); //todo discutere se assegnabile a costruttore
    }
-
 
    //Metodo che simula l'estrazione della riserva. Per ogni giocatore, vanno estratti 2 dadi +1 al risultato complessivo
    //Quindi alla collezione contenuta in riservca devo aggiungere (put) un dado estratto dal sacchetto dei dadi (getDiceFromSachet)
@@ -56,16 +57,15 @@ public class Table {
 
    //TODO: da discutere sull'utilità dei due metodi
 
-   public ArrayList<Utensils> getDeckUtensils(){
+   public List<Utensils> getDeckUtensils(){
         ArrayList<Utensils> temp = (ArrayList<Utensils>) utensilsDeck.clone();
         return temp;
    }
 
-    public ArrayList<Objective> getDeckObjective(){
-        ArrayList<Objective> temp = (ArrayList<Objective>) utensilsDeck.clone();
+    public List<Objective> getDeckObjective(){
+        ArrayList<Objective> temp = (ArrayList<Objective>)utensilsDeck.clone();
         return temp;
    }
-
 
    public Utensils getUtensils(int cardPosition){
         return utensilsDeck.get(cardPosition);
@@ -96,4 +96,5 @@ public class Table {
         }
         return new Reserve(giveTo);
     }
+
 }

@@ -1,6 +1,9 @@
 package it.polimi.se2018.server.model.dice_sachet;
 
 
+import it.polimi.se2018.server.model.Color;
+
+import java.lang.reflect.GenericSignatureFormatError;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -8,16 +11,16 @@ import java.util.Random;
 
 public class FactoryDice {
 
-    private ArrayList<String> colors;
+    private ArrayList<Color> colors;
     private ArrayList<Integer> numbers;
 
     public FactoryDice(){
         this.colors= new ArrayList<>();
-        colors.add("Red");
-        colors.add("Blue");
-        colors.add("Purple");
-        colors.add("Yellow");
-        colors.add("Green");
+        colors.add(Color.RED);
+        colors.add(Color.BLUE);
+        colors.add(Color.PURPLE);
+        colors.add(Color.YELLOW);
+        colors.add(Color.GREEN);
 
         this.numbers= new ArrayList<>();
         numbers.add(18);
@@ -32,7 +35,7 @@ public class FactoryDice {
     }
 
     //Metodo di supporto per dirmi se il colore scelto è ancora pescabile.
-    private String isOkCol(int picked){
+    private Color isOkCol(int picked){
                     if(numbers.get(picked)>0){
 
                         numbers.set(picked,(numbers.get(picked)-1));
@@ -47,7 +50,7 @@ public class FactoryDice {
     }
 
     //estrae un colore correto da assegnare al dado che verrà creato
-    private String giveTheColor(){
+    private Color giveTheColor(){
         Random extractor= new Random();
         int pickedCol= extractor.nextInt(colors.size());
         return isOkCol(pickedCol);
