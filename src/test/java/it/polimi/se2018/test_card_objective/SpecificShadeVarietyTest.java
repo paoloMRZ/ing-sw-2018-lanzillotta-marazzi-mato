@@ -3,6 +3,7 @@ package it.polimi.se2018.test_card_objective;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
+import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
 import it.polimi.se2018.server.model.card.card_objective.obj_algos.algos.SpecificShadeVariety;
@@ -24,26 +25,26 @@ public class SpecificShadeVarietyTest {
 
     @Before
     public void setup() throws InvalidShadeValueException, InvalidFavoursValueException, InvalidColorValueException {
-        casualList.add(new Cell("yellow", 0));
-        casualList.add(new Cell("blue", 0));
-        casualList.add(new Cell("white", 0));
-        casualList.add(new Cell("white", 0));
-        casualList.add(new Cell("white", 1));
-        casualList.add(new Cell("green", 0));
-        casualList.add(new Cell("white", 0));
-        casualList.add(new Cell("white", 5));
-        casualList.add(new Cell("white", 0));
-        casualList.add(new Cell("white", 4));
-        casualList.add(new Cell("white", 3));
-        casualList.add(new Cell("white", 0));
-        casualList.add(new Cell("red", 0));
-        casualList.add(new Cell("white", 0));
-        casualList.add(new Cell("green", 0));
-        casualList.add(new Cell("white", 0));
-        casualList.add(new Cell("white", 0));
-        casualList.add(new Cell("white", 0));
-        casualList.add(new Cell("blue", 0));
-        casualList.add(new Cell("yellow", 0));
+        casualList.add(new Cell(Color.YELLOW , 0));
+        casualList.add(new Cell(Color.BLUE, 0));
+        casualList.add(new Cell(Color.WHITE, 0));
+        casualList.add(new Cell(Color.WHITE, 0));
+        casualList.add(new Cell(Color.WHITE, 1));
+        casualList.add(new Cell(Color.GREEN, 0));
+        casualList.add(new Cell(Color.WHITE, 0));
+        casualList.add(new Cell(Color.WHITE, 5));
+        casualList.add(new Cell(Color.WHITE, 0));
+        casualList.add(new Cell(Color.WHITE, 4));
+        casualList.add(new Cell(Color.WHITE, 3));
+        casualList.add(new Cell(Color.WHITE, 0));
+        casualList.add(new Cell(Color.RED, 0));
+        casualList.add(new Cell(Color.WHITE, 0));
+        casualList.add(new Cell(Color.GREEN, 0));
+        casualList.add(new Cell(Color.WHITE, 0));
+        casualList.add(new Cell(Color.WHITE, 0));
+        casualList.add(new Cell(Color.WHITE, 0));
+        casualList.add(new Cell(Color.BLUE, 0));
+        casualList.add(new Cell(Color.YELLOW, 0));
 
         casualSide = new Side("test", 4, casualList);
 
@@ -58,10 +59,10 @@ public class SpecificShadeVarietyTest {
             obj = new Objective("TestName", "TestDescription", 4, columnShadeVarietyTest, false);
             player = new Player(casualSide, obj, 4, "Tester");
 
-            casualSide.put(0,0,new Dice("yellow", 4));
-            casualSide.put(1,0,new Dice("green", 5));
-            casualSide.put(2,0,new Dice("red", 3));
-            casualSide.put(3,0,new Dice("blue", 2));
+            casualSide.put(0,0,new Dice(Color.YELLOW, 4));
+            casualSide.put(1,0,new Dice(Color.GREEN, 5));
+            casualSide.put(2,0,new Dice(Color.RED, 3));
+            casualSide.put(3,0,new Dice(Color.BLUE, 2));
 
             assertEquals(4,obj.useAlgorithm(player));
 
@@ -77,30 +78,30 @@ public class SpecificShadeVarietyTest {
             obj = new Objective("TestName", "TestDescription", 4, columnShadeVarietyTest, false);
             player = new Player(casualSide, obj, 4, "Tester");
 
-            casualSide.put(0,0,new Dice("yellow", 4));
-            casualSide.put(1,0,new Dice("green", 5));
-            casualSide.put(2,0,new Dice("red", 3));
-            casualSide.put(3,0,new Dice("blue", 2));
+            casualSide.put(0,0,new Dice(Color.YELLOW, 4));
+            casualSide.put(1,0,new Dice(Color.GREEN, 5));
+            casualSide.put(2,0,new Dice(Color.RED, 3));
+            casualSide.put(3,0,new Dice(Color.BLUE, 2));
 
-            casualSide.put(0,1,new Dice("blue", 2));
-            casualSide.put(1,1,new Dice("purple", 3));
-            casualSide.put(2,1,new Dice("yellow", 1));
-            casualSide.put(3,1,new Dice("green", 6));
+            casualSide.put(0,1,new Dice(Color.BLUE, 2));
+            casualSide.put(1,1,new Dice(Color.PURPLE, 3));
+            casualSide.put(2,1,new Dice(Color.YELLOW, 1));
+            casualSide.put(3,1,new Dice(Color.GREEN, 6));
 
-            casualSide.put(0,2,new Dice("red", 1));
-            casualSide.put(1,2,new Dice("blue", 5));
-            casualSide.put(2,2,new Dice("red", 4));
-            casualSide.put(3,2,new Dice("purple", 2));
+            casualSide.put(0,2,new Dice(Color.RED, 1));
+            casualSide.put(1,2,new Dice(Color.BLUE, 5));
+            casualSide.put(2,2,new Dice(Color.RED, 4));
+            casualSide.put(3,2,new Dice(Color.PURPLE, 2));
 
-            casualSide.put(0,3,new Dice("yellow", 3));
-            casualSide.put(1,3,new Dice("purple", 2));
-            casualSide.put(2,3,new Dice("yellow", 6));
-            casualSide.put(3,3,new Dice("blue", 1));
+            casualSide.put(0,3,new Dice(Color.YELLOW, 3));
+            casualSide.put(1,3,new Dice(Color.PURPLE, 2));
+            casualSide.put(2,3,new Dice(Color.YELLOW, 6));
+            casualSide.put(3,3,new Dice(Color.BLUE, 1));
 
-            casualSide.put(0,4,new Dice("green", 1));
-            casualSide.put(1,4,new Dice("blue", 4));
-            casualSide.put(2,4,new Dice("green", 2));
-            casualSide.put(3,4,new Dice("yellow", 3));
+            casualSide.put(0,4,new Dice(Color.GREEN, 1));
+            casualSide.put(1,4,new Dice(Color.BLUE, 4));
+            casualSide.put(2,4,new Dice(Color.GREEN, 2));
+            casualSide.put(3,4,new Dice(Color.YELLOW, 3));
 
             assertEquals(20,obj.useAlgorithm(player));
 
@@ -116,10 +117,10 @@ public class SpecificShadeVarietyTest {
             obj = new Objective("TestName", "TestDescription", 4, columnShadeVarietyTest, false);
             player = new Player(casualSide, obj, 4, "Tester");
 
-            casualSide.put(0,0,new Dice("yellow", 4));
-            casualSide.put(1,0,new Dice("green", 5));
-            casualSide.put(2,0,new Dice("red", 3));
-            casualSide.put(3,0,new Dice("blue", 5));
+            casualSide.put(0,0,new Dice(Color.YELLOW, 4));
+            casualSide.put(1,0,new Dice(Color.GREEN, 5));
+            casualSide.put(2,0,new Dice(Color.RED, 3));
+            casualSide.put(3,0,new Dice(Color.BLUE, 5));
 
             assertEquals(0,obj.useAlgorithm(player));
 
@@ -136,11 +137,11 @@ public class SpecificShadeVarietyTest {
             obj = new Objective("TestName", "TestDescription", 4, rowShadeVarietyTest, false);
             player = new Player(casualSide, obj, 4, "Tester");
 
-            casualSide.put(0,0,new Dice("yellow", 4));
-            casualSide.put(0,1,new Dice("blue", 2));
-            casualSide.put(0,2,new Dice("red", 6));
-            casualSide.put(0,3,new Dice("green", 3));
-            casualSide.put(0,4,new Dice("purple", 1));
+            casualSide.put(0,0,new Dice(Color.YELLOW, 4));
+            casualSide.put(0,1,new Dice(Color.BLUE, 2));
+            casualSide.put(0,2,new Dice(Color.RED, 6));
+            casualSide.put(0,3,new Dice(Color.GREEN, 3));
+            casualSide.put(0,4,new Dice(Color.PURPLE, 1));
 
             assertEquals(5,obj.useAlgorithm(player));
 
@@ -156,29 +157,29 @@ public class SpecificShadeVarietyTest {
             obj = new Objective("TestName", "TestDescription", 4, rowShadeVarietyTest, false);
             player = new Player(casualSide, obj, 4, "Tester");
 
-            casualSide.put(0,0,new Dice("yellow", 4));
-            casualSide.put(0,1,new Dice("blue", 2));
-            casualSide.put(0,2,new Dice("red", 6));
-            casualSide.put(0,3,new Dice("green", 3));
-            casualSide.put(0,4,new Dice("purple", 1));
+            casualSide.put(0,0,new Dice(Color.YELLOW, 4));
+            casualSide.put(0,1,new Dice(Color.BLUE, 2));
+            casualSide.put(0,2,new Dice(Color.RED, 6));
+            casualSide.put(0,3,new Dice(Color.GREEN, 3));
+            casualSide.put(0,4,new Dice(Color.PURPLE, 1));
 
-            casualSide.put(1,0,new Dice("green", 2));
-            casualSide.put(1,1,new Dice("purple", 3));
-            casualSide.put(1,2,new Dice("blue", 5));
-            casualSide.put(1,3,new Dice("red", 1));
-            casualSide.put(1,4,new Dice("yellow", 4));
+            casualSide.put(1,0,new Dice(Color.GREEN, 2));
+            casualSide.put(1,1,new Dice(Color.PURPLE, 3));
+            casualSide.put(1,2,new Dice(Color.BLUE, 5));
+            casualSide.put(1,3,new Dice(Color.RED, 1));
+            casualSide.put(1,4,new Dice(Color.YELLOW, 4));
 
-            casualSide.put(2,0,new Dice("blue", 3));
-            casualSide.put(2,1,new Dice("yellow", 6));
-            casualSide.put(2,2,new Dice("red", 2));
-            casualSide.put(2,3,new Dice("purple", 5));
-            casualSide.put(2,4,new Dice("green", 1));
+            casualSide.put(2,0,new Dice(Color.BLUE, 3));
+            casualSide.put(2,1,new Dice(Color.YELLOW, 6));
+            casualSide.put(2,2,new Dice(Color.RED, 2));
+            casualSide.put(2,3,new Dice(Color.PURPLE, 5));
+            casualSide.put(2,4,new Dice(Color.GREEN, 1));
 
-            casualSide.put(3,0,new Dice("yellow", 2));
-            casualSide.put(3,1,new Dice("green", 1));
-            casualSide.put(3,2,new Dice("yellow", 5));
-            casualSide.put(3,3,new Dice("blue", 4));
-            casualSide.put(3,4,new Dice("yellow", 6));
+            casualSide.put(3,0,new Dice(Color.YELLOW, 2));
+            casualSide.put(3,1,new Dice(Color.GREEN, 1));
+            casualSide.put(3,2,new Dice(Color.YELLOW, 5));
+            casualSide.put(3,3,new Dice(Color.BLUE, 4));
+            casualSide.put(3,4,new Dice(Color.YELLOW, 6));
 
             assertEquals(20,obj.useAlgorithm(player));
 
@@ -194,11 +195,11 @@ public class SpecificShadeVarietyTest {
             obj = new Objective("TestName", "TestDescription", 4, rowShadeVarietyTest, false);
             player = new Player(casualSide, obj, 4, "Tester");
 
-            casualSide.put(0,0,new Dice("yellow", 4));
-            casualSide.put(0,1,new Dice("blue", 5));
-            casualSide.put(0,2,new Dice("red", 6));
-            casualSide.put(0,3,new Dice("green", 5));
-            casualSide.put(0,4,new Dice("purple", 1));
+            casualSide.put(0,0,new Dice(Color.YELLOW, 4));
+            casualSide.put(0,1,new Dice(Color.BLUE, 5));
+            casualSide.put(0,2,new Dice(Color.RED, 6));
+            casualSide.put(0,3,new Dice(Color.GREEN, 5));
+            casualSide.put(0,4,new Dice(Color.PURPLE, 1));
 
             assertEquals(0,obj.useAlgorithm(player));
 

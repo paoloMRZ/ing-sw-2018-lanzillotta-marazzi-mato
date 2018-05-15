@@ -3,6 +3,7 @@ package it.polimi.se2018.test_card_objective;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
+import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
 import it.polimi.se2018.server.model.card.card_objective.obj_algos.algos.ShadeVariety;
@@ -26,26 +27,26 @@ public class ShadeVarietyTest {
 
     @Before
     public void setup() throws InvalidShadeValueException, InvalidFavoursValueException, InvalidColorValueException {
-        casualList.add(new Cell("red", 0));
-        casualList.add(new Cell("white", 0));
-        casualList.add(new Cell("green", 0));
-        casualList.add(new Cell("white", 0));
-        casualList.add(new Cell("yellow", 0));
-        casualList.add(new Cell("white", 0));
-        casualList.add(new Cell("purple", 0));
-        casualList.add(new Cell("yellow", 0));
-        casualList.add(new Cell("white", 0));
-        casualList.add(new Cell("red", 0));
-        casualList.add(new Cell("yellow", 0));
-        casualList.add(new Cell("red", 0));
-        casualList.add(new Cell("white", 0));
-        casualList.add(new Cell("white", 0));
-        casualList.add(new Cell("purple", 0));
-        casualList.add(new Cell("green", 0));
-        casualList.add(new Cell("white", 0));
-        casualList.add(new Cell("green", 0));
-        casualList.add(new Cell("purple", 0));
-        casualList.add(new Cell("yellow", 0));
+        casualList.add(new Cell(Color.RED, 0));
+        casualList.add(new Cell(Color.WHITE, 0));
+        casualList.add(new Cell(Color.GREEN, 0));
+        casualList.add(new Cell(Color.WHITE, 0));
+        casualList.add(new Cell(Color.YELLOW, 0));
+        casualList.add(new Cell(Color.WHITE, 0));
+        casualList.add(new Cell(Color.PURPLE, 0));
+        casualList.add(new Cell(Color.YELLOW, 0));
+        casualList.add(new Cell(Color.WHITE, 0));
+        casualList.add(new Cell(Color.RED, 0));
+        casualList.add(new Cell(Color.YELLOW, 0));
+        casualList.add(new Cell(Color.RED, 0));
+        casualList.add(new Cell(Color.WHITE, 0));
+        casualList.add(new Cell(Color.WHITE, 0));
+        casualList.add(new Cell(Color.PURPLE, 0));
+        casualList.add(new Cell(Color.GREEN, 0));
+        casualList.add(new Cell(Color.WHITE, 0));
+        casualList.add(new Cell(Color.GREEN, 0));
+        casualList.add(new Cell(Color.PURPLE, 0));
+        casualList.add(new Cell(Color.YELLOW, 0));
 
         casualSide = new Side("test", 4, casualList);
         ShadeVariety shadesVarietyTest = new ShadeVariety();
@@ -58,12 +59,12 @@ public class ShadeVarietyTest {
     @Test
     public void singleSetTest(){
         try {
-            casualSide.put(0,0, new Dice("red", 1));
-            casualSide.put(1,1,new Dice("purple", 2));
-            casualSide.put(1,2,new Dice("yellow", 3));
-            casualSide.put(2,1,new Dice("red", 4));
-            casualSide.put(3,0,new Dice("green", 5));
-            casualSide.put(2,0,new Dice("yellow", 6));
+            casualSide.put(0,0, new Dice(Color.RED, 1));
+            casualSide.put(1,1,new Dice(Color.PURPLE, 2));
+            casualSide.put(1,2,new Dice(Color.YELLOW, 3));
+            casualSide.put(2,1,new Dice(Color.RED, 4));
+            casualSide.put(3,0,new Dice(Color.GREEN, 5));
+            casualSide.put(2,0,new Dice(Color.YELLOW, 6));
             assertEquals(5,obj.useAlgorithm(player));
 
         } catch (Exception e) { fail();}
@@ -73,14 +74,14 @@ public class ShadeVarietyTest {
     @Test
     public void singleSetModifiedTest(){
         try {
-            casualSide.put(0,0, new Dice("red", 1));
-            casualSide.put(1,1,new Dice("purple", 2));
-            casualSide.put(1,2,new Dice("yellow", 3));
-            casualSide.put(2,1,new Dice("red", 4));
-            casualSide.put(3,0,new Dice("green", 5));
-            casualSide.put(2,0,new Dice("yellow", 6));
+            casualSide.put(0,0, new Dice(Color.RED, 1));
+            casualSide.put(1,1,new Dice(Color.PURPLE, 2));
+            casualSide.put(1,2,new Dice(Color.YELLOW, 3));
+            casualSide.put(2,1,new Dice(Color.RED, 4));
+            casualSide.put(3,0,new Dice(Color.GREEN, 5));
+            casualSide.put(2,0,new Dice(Color.YELLOW, 6));
 
-            casualSide.put(3,2, new Dice("green", 2));
+            casualSide.put(3,2, new Dice(Color.GREEN, 2));
             assertEquals(5,obj.useAlgorithm(player));
 
         } catch (Exception e) { fail();}
@@ -90,11 +91,11 @@ public class ShadeVarietyTest {
     @Test
     public void noSetTest(){
         try {
-            casualSide.put(0,0, new Dice("red", 1));
-            casualSide.put(1,1,new Dice("purple", 2));
-            casualSide.put(1,2,new Dice("yellow", 3));
-            casualSide.put(2,1,new Dice("red", 4));
-            casualSide.put(3,0,new Dice("green", 5));
+            casualSide.put(0,0, new Dice(Color.RED, 1));
+            casualSide.put(1,1,new Dice(Color.PURPLE, 2));
+            casualSide.put(1,2,new Dice(Color.YELLOW, 3));
+            casualSide.put(2,1,new Dice(Color.RED, 4));
+            casualSide.put(3,0,new Dice(Color.GREEN, 5));
             assertEquals(0,obj.useAlgorithm(player));
 
         } catch (Exception e) { fail();}
