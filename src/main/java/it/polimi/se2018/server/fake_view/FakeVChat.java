@@ -6,7 +6,7 @@ import it.polimi.se2018.server.events.Observer;
 import it.polimi.se2018.server.model.Table;
 
 
-public class FakeVChat  implements Observer, Observable {
+public class FakeVChat {
     private Controller controller;
     private Table table;
 
