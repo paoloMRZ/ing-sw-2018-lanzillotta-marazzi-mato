@@ -1,7 +1,9 @@
 package it.polimi.se2018.server.model;
 
 import it.polimi.se2018.server.exceptions.InvalidCellException;
+import it.polimi.se2018.server.exceptions.InvalidHowManyTimes;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
+import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.*;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
@@ -80,6 +82,7 @@ public class Player {
     public boolean getDidPlayCard(){
         return didPlayCard;
     }
+
     public void setDidPlayCard(){
         if(didPlayCard) didPlayCard=false;
         else didPlayCard=true;
@@ -88,13 +91,25 @@ public class Player {
         if(didPlayDie) didPlayDie=false;
         else didPlayDie=true;
     }
-    public void reductor()throws Exception{//todo determinare la eccezione
+    public void reductor()throws InvalidHowManyTimes {
         if(howManyTurns>0) howManyTurns=howManyTurns-1;
-        else throw new Exception();
+        else throw new InvalidHowManyTimes();
     }
     public void restoreValues(){
         this.howManyTurns=2;
         this.didPlayCard=false;
         this.didPlayDie=false;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public void putDiceIgnoreColor(int oldRow, int oldCol,int newRow, int newCol) throws InvalidColorValueException, InvalidCoordinatesException, InvalidShadeValueException, NoDicesNearException, NotEmptyCellException, InvalidShadeException, NearDiceInvalidException {
+        mySide.putIgnoringColor(newRow,  newCol,    mySide.showCell(oldRow,oldCol).pickDice());
+    }
+
+    public void putDiceIgnoreValue(int oldRow, int oldCol,int newRow, int newCol) throws InvalidColorValueException, InvalidCoordinatesException, InvalidShadeValueException, NoDicesNearException, NotEmptyCellException, InvalidColorException, NearDiceInvalidException {
+        mySide.putIgnoringShade(newRow,  newCol,    mySide.showCell(oldRow,oldCol).pickDice());
     }
 }

@@ -21,6 +21,7 @@ public class MoreThanSimple extends ToolMultiParam{
 
 
     }
+
     public ArrayList<Integer> getAttributes(){
         return new ArrayList<>(Arrays.asList(die,row,col));
     }

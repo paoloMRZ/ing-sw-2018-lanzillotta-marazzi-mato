@@ -1,6 +1,9 @@
 package it.polimi.se2018.server.model.card.card_utensils;
 
+import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.controller.Visitor;
+import it.polimi.se2018.server.events.EventMVC;
+import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.card.Visitable;
 
 public abstract class Utensils implements Visitable{
@@ -9,14 +12,16 @@ public abstract class Utensils implements Visitable{
     //i metodi comuni a tutte vengono dichiarati qui
 
     //TODO riflettere se serva un attributo cost e un metodo per cambiarlo
-    private String squareColor;
+    private Color squareColor;
+    private String myType;
     private int number;
     private String description;
     private int cost;
     private boolean isFirstTime;
 
-    public Utensils(int numb, String color, String desc){
+    public Utensils(int numb, String typo, Color color, String desc){
         this.number=numb;
+        this.myType=typo;
         this.squareColor=color;
         this.description=desc;
         this.cost=1;
@@ -31,7 +36,7 @@ public abstract class Utensils implements Visitable{
         return cost;
     }
 
-    public String getSquareColor(){
+    public Color getSquareColor(){
         return squareColor;
     }
 
@@ -48,5 +53,5 @@ public abstract class Utensils implements Visitable{
        }
     }
 
-    //public abstract void function();
+    //public abstract void function(Controller controller, EventMVC mvc);
 }

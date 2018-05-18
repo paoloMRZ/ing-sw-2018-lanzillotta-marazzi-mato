@@ -1,9 +1,5 @@
 package it.polimi.se2018.server.controller;
 
-import it.polimi.se2018.server.events.EventMVC;
-import it.polimi.se2018.server.events.tool_mex.Activate;
-import it.polimi.se2018.server.events.Observer;
-import it.polimi.se2018.server.events.SimpleMove;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.Table;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
@@ -15,13 +11,14 @@ import it.polimi.se2018.server.model.grid.ScoreGrid;
 import java.util.ArrayList;
 
 
-public class Controller implements Observer {
-    private Table lobby;
-    private ControllerCard cCard;
-    private ControllerAction cAction;
-    private ControllerPoints cPoints;
-    private ControllerTurn cTurn;
-    private EventMVC event;
+public class Controller{
+
+    private final Table lobby;
+    private final ControllerCard cCard;
+    private final ControllerAction cAction;
+    private final ControllerPoints cPoints;
+    private final ControllerTurn cTurn;
+
 
     //TODO TABLE DA CHIARIRE IN CHE ORDINE COSTRUIRE LE COSE
     public Controller(ArrayList<Player> players){
@@ -41,11 +38,10 @@ public class Controller implements Observer {
         //todo
         return null;
     }
-//TODO utilizzare overload oer ogni tipo di evento
-    public void update(SimpleMove message){
 
+    public ControllerAction getcAction(){
+        return cAction;
     }
-    public void update(Activate message){
 
-    }
+
 }

@@ -11,4 +11,10 @@ public class SuccessColor extends Success {
         this.value=new String(color);
         this.die=die;
     }
+    public int getDie(){
+        return die;
+    }
+    public String getValue(){
+        return value;
+    }
 }

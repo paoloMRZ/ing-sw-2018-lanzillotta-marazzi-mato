@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class SimpleMove extends EventMVC{
     private int dieIndex;
-    private Integer row;
-    private Integer col;
+    private int row;
+    private int col;
 
     public SimpleMove(int dieI, int row, int col, String player){
         super(player);

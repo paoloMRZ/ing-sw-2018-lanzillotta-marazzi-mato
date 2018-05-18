@@ -18,6 +18,9 @@ public class ControllerCard implements Visitor {
     }
 /////////////////////////////////////////////////////////////////////////
 
+    //todo gestire eccezione in alto
+
+
     @Override
     public void visit(Utensils ItemUtensil) {
         //todo?NOTHING T O D O puro obbligo di intellij

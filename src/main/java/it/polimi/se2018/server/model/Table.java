@@ -1,5 +1,7 @@
 package it.polimi.se2018.server.model;
 
+
+import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
 import it.polimi.se2018.server.model.card.card_utensils.Utensils;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
@@ -13,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Table {
+public class Table{
 
    private ArrayList<Utensils> utensilsDeck;
    private ArrayList<Objective> objectiveDeck;
@@ -22,6 +24,7 @@ public class Table {
    private Reserve reserve;
    private ScoreGrid scoreGrid;
    private RoundGrid roundGrid;
+
 
 //todo parlare della modifica al prototipo: tolto riserva dal costruttore
    public Table(ArrayList<Utensils> utensilsDeck, ArrayList<Objective> objectiveDeck, ArrayList<Player> playersList, DiceSachet diceSachet, ScoreGrid scoreGrid, RoundGrid roundGrid) {
@@ -67,12 +70,14 @@ public class Table {
         return temp;
    }
 
+
    public Utensils getUtensils(int cardPosition){
         return utensilsDeck.get(cardPosition);
    }
 
     //metodo che serve a a cambiare la riserva se ci sono stati cambiamenti al suo interno
     //fonadmentale per le carte utensile
+
    public ArrayList<Dice>  setReserve(Reserve toStore){
        ArrayList<Dice> preStored= toStore.getDices();
        ArrayList<Dice> ritorno = new ArrayList<>();
@@ -86,15 +91,22 @@ public class Table {
        return ritorno;
 
    }
-
+    //todo ma serviva sto metodo che ho fatto??? o avevate altri propositi per
    //metodo che crea una nuova riserva da zero
+
     public Reserve createReserve(){
-       //estraggo tanti dadi in base a quanti giocatori ho
         ArrayList<Dice> giveTo= new ArrayList<>();
-        for(Player i : playersList){
+        for(int i=(playersList.size()*2+1);i>0;i--){
             giveTo.add(diceSachet.getDiceFromSachet());
         }
         return new Reserve(giveTo);
     }
 
+    //todo è lagale questa return?
+    public Player callPlayerByName(String name) throws InvalidValueException{
+       for(Player p : playersList){
+           if(p.getName().equals(name)) return p;
+       }
+       throw new InvalidValueException();
+    }
 }

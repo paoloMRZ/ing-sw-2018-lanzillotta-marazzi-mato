@@ -11,4 +11,10 @@ public class SuccessValue extends Success {
         this.value=value;
         this.die=die;
     }
+    public int getDie(){
+        return die;
+    }
+    public int getValue(){
+        return value;
+    }
 }

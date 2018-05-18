@@ -19,6 +19,11 @@ public class ToolCard4 extends ToolCard2{
 
     @Override
     public ArrayList<Integer> getAttributes() {
-        return new ArrayList<>(Arrays.asList(row2,col2,row2New,col2New));
+        ArrayList<Integer> toRet= new ArrayList<>(super.getAttributes());
+        toRet.add(row2);
+        toRet.add(col2);
+        toRet.add(row2New);
+        toRet.add(col2New);
+    return toRet;
     }
 }
