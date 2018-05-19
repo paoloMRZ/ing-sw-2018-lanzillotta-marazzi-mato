@@ -3,7 +3,6 @@ package it.polimi.se2018.server.model.card.card_schema;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.InvalidColorException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.InvalidShadeException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.NotEmptyCellException;
-import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
@@ -40,10 +39,9 @@ public class Cell {
      * @param color restrizione di colore della cella.
      * @param number restrizione di sfumatura della cella.
      * @throws InvalidShadeValueException viene lanciata se viene passato una restrizione di sfumatura non valida.
-     * @throws InvalidColorValueException viene lanciata se viene passato una restrizione di colore non valida.
      */
 
-    public Cell(Color color, int number) throws InvalidShadeValueException, InvalidColorValueException {
+    public Cell(Color color, int number) throws InvalidShadeValueException {
 
         if(number>= 0 && number<=6)
             this.number = number;
@@ -61,9 +59,8 @@ public class Cell {
      * @param number restrizione di sfumatura della cella.
      * @param d dado contenuto nella cella.
      * @throws InvalidShadeValueException viene lanciata se viene passato una restrizione di sfumatura non valida.
-     * @throws InvalidColorValueException viene lanciata se viene passato una restrizione di colore non valida.
      */
-    public Cell(Color color, int number, Dice d) throws InvalidShadeValueException, InvalidColorValueException {
+    public Cell(Color color, int number, Dice d) throws InvalidShadeValueException {
 
         if(number>= 0 && number<=6)
             this.number = number;
@@ -197,9 +194,10 @@ public class Cell {
      * Restituisce il colore del dado contenuto nella cella.
      * Se nessun dado è presente restituisce null.
      *
-     * @deprecated
+     * @deprecated fornisce un'informazione che si può ricavare tramite il metodo showDice.
      * @return String colore.
      */
+    @Deprecated
     public Color getCellsDiceColor(){
         if(this.dice != null) return dice.getColor();
         else return null;
@@ -210,9 +208,10 @@ public class Cell {
      * Restituisce il numero del dado contenuto nella cella.
      * Se nessun dado è presente restituisce null.
      *
-     * @deprecated
+     * @deprecated fornisce un'informazione che si può ricavare tramite il metodo showDice.
      * @return int valore.
      */
+    @Deprecated
     public int getCellsDiceNumber(){
         if(this.dice != null) return dice.getNumber();
         else return 0;
