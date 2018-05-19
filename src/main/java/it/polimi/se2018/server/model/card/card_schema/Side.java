@@ -1,7 +1,6 @@
 package it.polimi.se2018.server.model.card.card_schema;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.se2018.server.exceptions.*;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.*;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
@@ -12,10 +11,13 @@ import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 import java.util.List;
 
+/**
+ * La classe rappresenta una facciata di una carta schema, cioè una griglia su cui posizionare i dadi, il
+ * suo nome ed il numero di segnalini favore ad essa associati.
+ *
+ * @author Marazzi Paolo
+ */
 public class Side {
-
-    //OVERVIEW: La classe rappresenta una facciata di una carta schema, cioè una griglia su cui posizionare i dadi, il
-    //suo nome ed il numero di segnalini favore ad essa associati.
 
     private static final int MAX_ROW = 3;
     private static final int MAX_COL = 4;
@@ -34,9 +36,17 @@ public class Side {
         super();
     }
 
+    /**
+     * Costruttore della classe.
+     *
+     * @param name nome della carta.
+     * @param favours numero di segnalini favore che la carta assegna al giocatore.
+     * @param cells celle che compongono la griglia (vetrata) di gioco.
+     * @throws InvalidFavoursValueException viene lanciata se si passa un valore minore o uguale a zero di segnlini favore assegnati alla carta.
+     * @throws InvalidShadeValueException viene lanciata se una cella contiene un valore errato di sfumatura.
+     */
 
-
-    public Side(String name, int favours, List<Cell> cells) throws InvalidFavoursValueException, InvalidColorValueException, InvalidShadeValueException {          //settings rappresenta l'array di stringhe per settare Side
+    public Side(String name, int favours, List<Cell> cells) throws InvalidFavoursValueException, InvalidShadeValueException {          //settings rappresenta l'array di stringhe per settare Side
 
         matrix = new Cell[MAX_ROW +1][MAX_COL +1];
         int k = 0;
@@ -57,22 +67,39 @@ public class Side {
         isEmpty = true;
     }
 
-    //La funzione controlla che la coppia di coordinate non esca dai limiti della matrice.
-
+    /**
+     * La funzione controlla che la coppia di coordinate non esca dai limiti della matrice.
+     *
+     * @param row coordinata relativa alla riga.
+     * @param col coordinata relativa alla colonna.
+     * @return viene restituito true se le coordinate sono valide, in caso contrario false.
+     */
     private boolean areValidcoordinates(int row, int col){
         return row >= 0 && row <= MAX_ROW && col >= 0 && col <= MAX_COL;
     }
 
-    //Metodo di appoggio per l'inserimento di un nuovo dado in una cella. Il suo scopo è quello di controllare se il dado
-    //'d' coincide con l'eventuale dado contenuto in (row, col) per colore o sfumatura.
-
+    /**
+     * Metodo di appoggio per l'inserimento di un nuovo dado in una cella. Il suo scopo è quello di controllare se il dado
+     * 'd' coincide con l'eventuale dado contenuto in (row, col) per colore o sfumatura.
+     *
+     * @param row coordinata relativa alla riga.
+     * @param col coordinata relativa alla colonna.
+     * @param d dado da confrontare.
+     * @return restituisce true se il dado passato conincide per colore o per sfumatura al dado contenuto nella cella indicata dalle coordinate.
+     */
     private boolean areSimilarDice(int row, int col, Dice d) {
         return matrix[row][col].showDice().getNumber() == d.getNumber() || matrix[row][col].showDice().getColor().equals(d.getColor());
     }
 
-    //Questo metodo effettua il controllo delle celle confinanti ortogonalmente alla cella selezionata per l'inserimento.
-    //Se una di queste celle posside un dado con sfumatura o colore uguale a quella del dado passato viene restituito false.
-
+    /**
+     * Questo metodo effettua il controllo delle celle confinanti ortogonalmente alla cella selezionata per l'inserimento.
+     * Se una di queste celle posside un dado con sfumatura o colore uguale a quella del dado passato viene restituito false.
+     *
+     * @param row coordinata relativa alla riga.
+     * @param col coordinata relativa alla colonna.
+     * @param d dado da confrontare.
+     * @return viene restuito true se il dado passato rispetta le condizioni imposte dalle celle confinanti alla cella indicata dalle coordinate passate.
+     */
     private boolean checkOrtogonalNeighbor(int row, int col, Dice d) {
 
         for (int y = -1; y <= 1; y++) {
@@ -92,8 +119,13 @@ public class Side {
         return true;
     }
 
-    //Il metodo ritorna true se trova un dado confinante alla cella passata.
-
+    /**
+     * Il metodo controlla la presenza di dadi confinati alla cella indicata dalle coordinate passate.
+     *
+     * @param row coordinata relativa alla riga.
+     * @param col coordinata relativa alla colonna.
+     * @return viene restituito true se è stato trovato almeno un dado in una cella confinante.
+     */
     private boolean isThereNeighbor(int row, int col){
 
         for (int y = -1; y <= 1; y++) {
@@ -106,11 +138,16 @@ public class Side {
         return false; //Non ho trovato nessun dado.
     }
 
-
-    //Il metodo preleva un dado dalla cella indicata, questo implica che la cella perde il riferimento al dado prelevato.
-    //Se la cella non contiene un dado viene restituito null.
-    //La cella in alto a sx ha coordinate (0,0).
-
+    /**
+     * Il metodo preleva un dado dalla cella indicata, questo implica che la cella perde il riferimento al dado prelevato.
+     * Se la cella non contiene un dado viene restituito null.
+     * La cella in alto a sx ha coordinate (0,0).
+     *
+     * @param row coordinata relativa alla riga.
+     * @param col coordinata relativa alla colonna.
+     * @return viene restituito il riferimento al dado prelevato.
+     * @throws InvalidCoordinatesException viene sollevata se vengono passate delle coordinate non valide.
+     */
     public Dice pick(int row, int col) throws InvalidCoordinatesException {
         if(areValidcoordinates(row, col))
             return matrix[row][col].pickDice();
@@ -118,9 +155,20 @@ public class Side {
             throw new InvalidCoordinatesException();
     }
 
-    //Il metodo posiziona il dado 'd' nella cella indicata dai parametri (row, col) solo se quest'ultima non è occupata
-    //da un'altro dado e se le condizioni con i dadi confinanti sono rispettate.
-
+    /**
+     * Il metodo posiziona il dado 'd' nella cella indicata dai parametri (row, col) solo se quest'ultima non è occupata
+     * da un'altro dado e se le condizioni con i dadi confinanti sono rispettate.
+     *
+     * @param row coordinata relativa alla riga.
+     * @param col coordinata relativa alla colonna.
+     * @param d dado da inserire nella cella.
+     * @throws InvalidCoordinatesException viene sollevata se le coordinate passate non sono valide.
+     * @throws NearDiceInvalidException viene sollevata se il dado da inserire non rispetta le restrizioni imposte dei dadi contenuti nelle celle ortogonalmente confinanti.
+     * @throws NoDicesNearException viene sollevata se le cella selezionata per l'inserimento non confina con almeno una cella contente un dado.
+     * @throws InvalidShadeException viene sollevata se il dado non rispetta la restrizione di sfumatura imposta dalla cella.
+     * @throws NotEmptyCellException viene sollevata se la cella selezionata contiene già un dado.
+     * @throws InvalidColorException viene sollevata se il dado non rispetta la restrizione di colore imposta dalla cella.
+     */
     public void put(int row, int col, Dice d) throws InvalidCoordinatesException, NearDiceInvalidException, NoDicesNearException, InvalidShadeException, NotEmptyCellException, InvalidColorException {
 
         if(areValidcoordinates(row,col)) { //Controllo se le coordinate sono valide. Se non lo sono lancio un'eccezione.
@@ -146,9 +194,19 @@ public class Side {
             throw new InvalidCoordinatesException();
     }
 
-    //Il metodo inserisce un dado nella cella selezionata ignorando le restrizioni di colore della cella,
-    //ma tenendo in considerazione le restrizioni che riguardano i vicini.
-
+    /**
+     * Il metodo inserisce un dado nella cella selezionata ignorando la sua restrizione di colore
+     * ma tenendo in considerazione le restrizioni che riguardano i vicini.
+     *
+     * @param row coordinata relativa alla riga.
+     * @param col coordinata relativa alla colonna.
+     * @param d dado da inserire nella cella.
+     * @throws InvalidCoordinatesException viene sollevata se le coordinate passate non sono valide.
+     * @throws NearDiceInvalidException viene sollevata se il dado da inserire non rispetta le restrizioni imposte dei dadi contenuti nelle celle ortogonalmente confinanti.
+     * @throws NoDicesNearException viene sollevata se le cella selezionata per l'inserimento non confina con almeno una cella contente un dado.
+     * @throws InvalidShadeException viene sollevata se il dado non rispetta la restrizione di sfumatura imposta dalla cella.
+     * @throws NotEmptyCellException viene sollevata se la cella selezionata contiene già un dado.
+     */
     public void putIgnoringColor(int row, int col, Dice d) throws InvalidCoordinatesException, NearDiceInvalidException, NoDicesNearException, NotEmptyCellException, InvalidShadeException {
         if(areValidcoordinates(row,col)){
 
@@ -176,9 +234,20 @@ public class Side {
 
     }
 
-    //Il metodo inserisce un dado nella cella selezionata ignorando le restrizioni di sfumatura della cella,
-    //ma tenendo in considerazione le restrizioni che riguardano i vicini.
 
+    /**
+     * Il metodo inserisce un dado nella cella selezionata ignorando la sua restrizione di sfumatura
+     * ma tenendo in considerazione le restrizioni che riguardano i vicini.
+     *
+     * @param row coordinata relativa alla riga.
+     * @param col coordinata relativa alla colonna.
+     * @param d dado da inserire nella cella.
+     * @throws InvalidCoordinatesException viene sollevata se le coordinate passate non sono valide.
+     * @throws NearDiceInvalidException viene sollevata se il dado da inserire non rispetta le restrizioni imposte dei dadi contenuti nelle celle ortogonalmente confinanti.
+     * @throws NoDicesNearException viene sollevata se le cella selezionata per l'inserimento non confina con almeno una cella contente un dado.
+     * @throws NotEmptyCellException viene sollevata se la cella selezionata contiene già un dado.
+     * @throws InvalidColorException viene sollevata se il dado non rispetta la restrizione di colore imposta dalla cella.
+     */
     public void putIgnoringShade(int row, int col, Dice d) throws InvalidCoordinatesException, NearDiceInvalidException, NoDicesNearException, NotEmptyCellException, InvalidColorException {
         if(areValidcoordinates(row,col)){
             //Se non è il primo inserimento controlla i vicini.
@@ -207,8 +276,17 @@ public class Side {
 
     }
 
-    //Il metodo inserisce un dado rispettando le condizioni di colore e sfumatura in una cella che non possiede dadi confinanti.
-
+    /**
+     * Il metodo inserisce un dado in una cella che non possiede dadi confinanti ma rispettando le sue restrizioni di colore e sfumatura.
+     *
+     * @param row coordinata relativa alla riga.
+     * @param col coordinata relativa alla colonna.
+     * @param d dado da inserire nella cella.
+     * @throws InvalidCoordinatesException viene sollevata se le coordinate passate non sono valide.
+     * @throws InvalidShadeException viene sollevata se il dado non rispetta la restrizione di sfumatura imposta dalla cella.
+     * @throws NotEmptyCellException viene sollevata se la cella selezionata contiene già un dado.
+     * @throws InvalidColorException viene sollevata se il dado non rispetta la restrizione di colore imposta dalla cella.
+     */
     public void putWithoutDicesNear(int row, int col, Dice d) throws InvalidCoordinatesException, InvalidShadeException, NotEmptyCellException, InvalidColorException {
         if(areValidcoordinates(row, col)){
             if(!isEmpty && isThereNeighbor(row,col))
@@ -229,16 +307,31 @@ public class Side {
 
     }
 
+    /**
+     * Il metodo restituisce il numero di segnalini favore associati alla carta.
+     *
+     * @return numero di segnalini favore.
+     */
     public int getFavours() {
         return favours;
     }
 
+    /**
+     * Il metodo restituisce il nome della carta.
+     * @return nome della carta.
+     */
     public String getName() {
         return name;
     }
 
-
-    //Il metodo restituisce il colore della cella selezionata.
+    /**
+     * Il metodo restituisce il colore della cella selezionata.
+     *
+     * @param row coordinata relativa alla riga.
+     * @param col coordinata relativa alla colonna.
+     * @return colore della cella.
+     * @throws InvalidCoordinatesException viene sollevata se le coordinate passate non sono valide.
+     */
     public Color getColor(int row, int col) throws InvalidCoordinatesException{
         if(areValidcoordinates(row, col))
             return matrix[row][col].getColor();
@@ -246,7 +339,14 @@ public class Side {
             throw new InvalidCoordinatesException();
     }
 
-    //Il metodo restituisce la sfumatura della cella selezionata.
+    /**
+     * Il metodo restituisce la sfumatura della cella selezionata.
+     *
+     * @param row coordinata relativa alla riga.
+     * @param col coordinata relativa alla colonna.
+     * @return la sfumatura della cella.
+     * @throws InvalidCoordinatesException viene sollevata se le coordinate passate non sono valide.
+     */
     public int getNumber(int row, int col) throws InvalidCoordinatesException{
         if(areValidcoordinates(row,col))
             return matrix[row][col].getNumber();
@@ -255,10 +355,17 @@ public class Side {
     }
 
 
-    //Il metodo restituisce una copia del riferimento alla cella corrispondente alle coordinate. Poichè una cella può avere
-    //eventualmente un dado associato, creo anche la copia del riferimento al dado stesso
 
-    public Cell showCell(int row, int col) throws InvalidCoordinatesException, InvalidColorValueException, InvalidShadeValueException {
+    /**
+     *
+     * Il metodo restituisce una copia del riferimento alla cella indicata dalle coordinate (row, col). Poichè una cella può avere
+     * eventualmente un dado associato, creo anche la copia del riferimento al dado stesso.
+     *
+     * @param row coordinata relativa alla riga.
+     * @param col coordinata relativa alla colonna.
+     * @throws InvalidCoordinatesException viene sollevata se le coordinate passate non sono valide.
+     */
+    public Cell showCell(int row, int col) throws InvalidCoordinatesException, InvalidShadeValueException {
         if(areValidcoordinates(row,col)) {
             if(matrix[row][col].showDice()!=null)
                 return new Cell(matrix[row][col].getColor(), matrix[row][col].getNumber(), matrix[row][col].showDice());
