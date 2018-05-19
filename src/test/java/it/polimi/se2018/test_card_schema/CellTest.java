@@ -5,15 +5,14 @@ import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.InvalidColorException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.InvalidShadeException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.NotEmptyCellException;
-import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.card.card_schema.Cell;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -21,314 +20,237 @@ import static org.junit.Assert.fail;
 
 public class CellTest {
 
+    private Cell cellaLibera;
+    private Cell cellaOccupata;
+    private ArrayList<Dice> dadi;
+
     //Il metodo testa il costruttore che non accetta dice come parametro.
-    @Test
-    public void createCellWithoutDiceTest(){
-        Cell cella;
+    @Before
+    public void createCellWithoutDice() {
 
         //Testo passando parametri accettabili.
-        try{
-            for(Color colore: Color.values()) {
-                for (int i = 0; i <= 6; i++) {
-                    cella = new Cell(colore, i);
-                    assertTrue(cella.getColor() == colore &&
-                                        cella.getNumber() == i &&
-                                        cella.showDice() == null );
-                }
-            }
-        }catch (InvalidValueException e){
+        try {
+            cellaLibera = new Cell(Color.RED, 5);
+            assertTrue(cellaLibera.getColor() == Color.RED && cellaLibera.getNumber() == 5);
+        } catch (InvalidValueException e) {
             fail();
         }
 
         //Testo passando parametri non accettabili.
-        try{
+        try {
             new Cell(Color.WHITE, -1);
             fail();
-        }catch (InvalidShadeValueException e){
+        } catch (InvalidShadeValueException e) {
             assertTrue(true);
-
-        } catch (InvalidColorValueException e) {
-            fail();
         }
 
-        try{
+        try {
             new Cell(Color.WHITE, 7);
             fail();
-        }catch (InvalidShadeValueException e){
+        } catch (InvalidShadeValueException e) {
             assertTrue(true);
 
-        } catch (InvalidColorValueException e) {
+        }
+    }
+
+    @Before
+    public void createCellWithDice() {
+
+        Dice dado = new Dice(Color.RED, 3);
+        //Testo passando parametri accettabili.
+        try {
+
+            cellaOccupata = new Cell(Color.WHITE, 0, dado);
+            assertTrue(cellaOccupata.getColor() == Color.WHITE &&
+                    cellaOccupata.getNumber() == 0 &&
+                    cellaOccupata.showDice() != null &&
+                    cellaOccupata.showDice().getColor() == dado.getColor() &&
+                    cellaOccupata.showDice().getNumber() == dado.getNumber());
+
+
+        } catch (InvalidValueException e) {
             fail();
         }
+
+        //Testo passando parametri non accettabili.
+        try {
+            new Cell(Color.WHITE, -1, dado);
+            fail();
+        } catch (InvalidShadeValueException e) {
+            assertTrue(true);
+        }
+
+        try {
+            new Cell(Color.WHITE, 7, dado);
+            fail();
+        } catch (InvalidShadeValueException e) {
+            assertTrue(true);
+        }
+
+        try {
+            new Cell(Color.WHITE, 0, null);
+            fail();
+        } catch (NullPointerException e) {
+            assertTrue(true);
+        } catch (InvalidShadeValueException e) {
+            fail();
+        }
+
 
     }
 
-    @Test
-    public void createCellWithDiceTest(){
-        Cell cella;
-        Dice dado = new Dice(Color.RED, 3);
-        //Testo passando parametri accettabili.
-        try{
-            for(Color colore: Color.values()) {
-                for (int i = 0; i <= 6; i++) {
-                    cella = new Cell(colore, i, dado);
-                    assertTrue(cella.getColor() == colore &&
-                                        cella.getNumber() == i &&
-                                        cella.showDice() != null &&
-                                        cella.showDice().getColor() == dado.getColor() &&
-                                        cella.showDice().getNumber() == dado.getNumber());
-                }
-            }
-        }catch (InvalidValueException e){
-            fail();
-        }
-
-        //Testo passando parametri non accettabili.
-        try{
-            new Cell(Color.WHITE, -1, dado);
-            fail();
-        }catch (InvalidShadeValueException e){
-            assertTrue(true);
-
-        } catch (InvalidColorValueException e) {
-            fail();
-        }
-
-        try{
-            new Cell(Color.WHITE, 7, dado);
-            fail();
-        }catch (InvalidShadeValueException e){
-            assertTrue(true);
-
-        } catch (InvalidColorValueException e) {
-            fail();
-        }
-        
-
-        try{
-            new Cell(Color.WHITE, 0, null);
-            fail();
-        }catch (NullPointerException e) {
-            assertTrue(true);
-        } catch (InvalidColorValueException | InvalidShadeValueException e) {
-            fail();
-        }
-
-
+    @Before
+    public void buildDice(){
+        dadi = new ArrayList<>();
+        dadi.add(new Dice(Color.RED, 5)); //Dado che rispetta le restrizioni della cella vuota.
+        dadi.add(new Dice(Color.BLUE, 5)); //Dado che viola le restrizioni di colore della cella vuota.
+        dadi.add(new Dice(Color.RED, 3)); //Dado che viola le restrizioni di sfumatura della cella vuota.
     }
 
     @Test
     public void putDiceTest() {
-        Dice dado = new Dice(Color.GREEN, 3);
-        List<Cell> celle;
-        Cell cella;
 
-        //Put che non sollevano eccezioni.
+        //Put che non solleva eccezioni.
         try {
-             cella = new Cell(Color.WHITE, 0);
 
+            cellaLibera.putDice(dadi.get(0));
+            assertTrue(cellaLibera.showDice().getColor().equals(dadi.get(0).getColor()) &&
+                    cellaLibera.showDice().getNumber() == dadi.get(0).getNumber());
 
-             cella.putDice(dado);
-             assertTrue(cella.showDice().getColor().equals(dado.getColor()) &&
-                                cella.showDice().getNumber() == dado.getNumber());
-
-        } catch (InvalidValueException | InvalidCellException e) {
+        } catch (InvalidCellException e) {
             fail();
         }
+
+        //Put che solleva l'eccezione della cella occupata.
+        try {
+            cellaLibera.putDice(dadi.get(1));
+            fail();
+        } catch (NotEmptyCellException e) {
+            assertTrue(cellaLibera.showDice() != null &&
+                    cellaLibera.showDice().getColor() == dadi.get(0).getColor() &&
+                    cellaLibera.showDice().getNumber() == dadi.get(0).getNumber());
+        } catch (InvalidColorException | InvalidShadeException e) {
+            fail();
+        }
+
+        //Svuoto la cella.
+        Dice dadoTolto = cellaLibera.pickDice();
+        assertTrue( cellaLibera.showDice() == null &&
+                dadoTolto.getNumber() == dadi.get(0).getNumber() &&
+                dadoTolto.getColor() == dadi.get(0).getColor());
 
         //Put che solleveno eccezioni riguardanti le restrizioni di cella.
-        try{
-            celle = Arrays.asList(new Cell(Color.WHITE, 4), new Cell(Color.RED, 0) );
-            for(Cell c: celle) {
-                try {
-                    c.putDice(dado);
-                    fail();
-                } catch (InvalidCellException e) {
-                    assertTrue(c.showDice() == null);
-                }
-            }
-        } catch (InvalidValueException  e) {
-            fail();
-        }
+        ArrayList<Dice> d = new ArrayList<>();
+        d.add(dadi.get(1));
+        d.add(dadi.get(2));
 
-        //Put con cella già occupata.
-        try {
-            cella = new Cell(Color.WHITE, 0, dado);
-            Dice tmp = cella.showDice();
-
+        for (Dice dado : d) {
             try {
-                cella.putDice(dado);
+                cellaLibera.putDice(dado);
                 fail();
-            } catch (NotEmptyCellException e) {
-                assertTrue(cella.showDice().getColor().equals(tmp.getColor()) &&
-                                    cella.showDice().getNumber() == tmp.getNumber());
-            } catch (InvalidShadeException | InvalidColorException e) {
-                fail();
+            } catch (InvalidCellException e) {
+                assertTrue(cellaLibera.showDice() == null);
             }
-        } catch (InvalidShadeValueException | InvalidColorValueException e) {
-            fail();
         }
     }
 
     @Test
     public void putDiceIgnoringColorTest(){
 
-        //Put che non sollevano eccezioni.
+        //Put che non solleva eccezioni.
         try {
-            List<Cell> celle = Arrays.asList(new Cell(Color.RED, 0), new Cell(Color.GREEN, 0), new Cell(Color.YELLOW, 1), new Cell(Color.BLUE, 1) );
-            Dice dado = new Dice(Color.PURPLE, 1);
+            cellaLibera.putDiceIgnoringColor(dadi.get(1));
+            assertTrue(cellaLibera.showDice() != null &&
+                                cellaLibera.showDice().getColor() == dadi.get(1).getColor() &&
+                                cellaLibera.showDice().getNumber() == dadi.get(1).getNumber());
 
-            for(Cell cella: celle){
-                cella.putDiceIgnoringColor(dado);
-                assertTrue( cella.showDice().getColor().equals(dado.getColor()) &&
-                                     cella.showDice().getNumber() == dado.getNumber());
-            }
-        } catch (NotEmptyCellException | InvalidShadeValueException | InvalidShadeException  | InvalidColorValueException e) {
+        } catch (NotEmptyCellException | InvalidShadeException  e) {
             fail();
         }
 
-        //Put che sollevano eccezioni.
+        //Put che solleva l'eccezione della cella occupata.
         try {
-            List<Cell> celle = Arrays.asList(new Cell(Color.RED, 2), new Cell(Color.GREEN, 3), new Cell(Color.YELLOW, 4) );
-            Dice dado = new Dice(Color.PURPLE, 1);
-
-            for(Cell cella : celle){
-                try {
-                    cella.putDiceIgnoringColor(dado);
-                    fail();
-                } catch (NotEmptyCellException e) {
-                    fail();
-                } catch (InvalidShadeException e) {
-                    assertTrue(cella.showDice() == null);
-                }
-            }
-        } catch (InvalidShadeValueException | InvalidColorValueException e) {
+            cellaLibera.putDiceIgnoringColor(dadi.get(0));
+            fail();
+        } catch (NotEmptyCellException e) {
+            assertTrue(cellaLibera.showDice() != null &&
+                                cellaLibera.showDice().getColor() == dadi.get(1).getColor() &&
+                                cellaLibera.showDice().getNumber() == dadi.get(1).getNumber());
+        } catch (InvalidShadeException e) {
             fail();
         }
 
-        Dice dado = new Dice(Color.PURPLE, 1);
+        //Svuoto la cella.
+         Dice dadoTolto = cellaLibera.pickDice();
+        assertTrue( cellaLibera.showDice() == null &&
+                            dadoTolto.getNumber() == dadi.get(1).getNumber() &&
+                            dadoTolto.getColor() == dadi.get(1).getColor());
+
+
+        //Put che sollevana l'eccezione riguardante la restrizione di sfumatura.
         try {
-            Cell cella = new Cell(Color.BLUE, 0, dado);
-            Dice tmp = cella.showDice();
-
-            try {
-                cella.putDiceIgnoringColor(dado);
-            } catch (NotEmptyCellException e) {
-                assertTrue((tmp.getColor().equals(cella.showDice().getColor())) && (tmp.getNumber() == cella.showDice().getNumber()));
-            }
-
-        } catch ( InvalidShadeException | InvalidShadeValueException | InvalidColorValueException  e) {
+            cellaLibera.putDiceIgnoringColor(dadi.get(2));
             fail();
+        } catch (NotEmptyCellException e) {
+            fail();
+        } catch (InvalidShadeException e){
+            assertTrue(cellaLibera.showDice() == null);
         }
     }
 
     @Test
     public void putDiceIgnoringShadeTest(){
-        try {
-            List<Cell> celle = Arrays.asList(new Cell(Color.WHITE, 1), new Cell(Color.WHITE, 2), new Cell(Color.RED, 3));
-            Dice dado = new Dice(Color.RED, 5);
 
-            for(Cell cella : celle){
-                try {
-                    cella.putDiceIgnoringShade(dado);
-                    assertTrue( cella.showDice().getColor().equals(dado.getColor()) &&
-                                        cella.showDice().getNumber() == dado.getNumber());
-                } catch (InvalidColorException | NotEmptyCellException e) {
-                    fail();
-                }
-            }
-        } catch (InvalidShadeValueException | InvalidColorValueException e) {
+        //Put che non solleva eccezioni.
+
+        try {
+            cellaLibera.putDiceIgnoringShade(dadi.get(2));
+            assertTrue(cellaLibera.showDice() != null &&
+                                cellaLibera.showDice().getNumber() == dadi.get(2).getNumber() &&
+                                cellaLibera.showDice().getColor() == dadi.get(2).getColor());
+        } catch (InvalidColorException | NotEmptyCellException e) {
             fail();
         }
 
-
+        //Put che solleva l'eccezione della cella occupata.
         try {
-            List<Cell> celle = Arrays.asList(new Cell(Color.PURPLE, 1), new Cell(Color.GREEN, 2), new Cell(Color.YELLOW, 3));
-            Dice dado = new Dice(Color.RED, 5);
-
-            for(Cell cella : celle){
-                try {
-                    cella.putDiceIgnoringShade(dado);
-                    fail();
-                } catch (InvalidColorException | NotEmptyCellException e) {
-                    assertTrue(cella.showDice() == null);
-                }
-            }
-        } catch (InvalidShadeValueException | InvalidColorValueException e) {
+            cellaLibera.putDiceIgnoringShade(dadi.get(0));
+            fail();
+        } catch (NotEmptyCellException e) {
+            assertTrue(cellaLibera.showDice() != null &&
+                    cellaLibera.showDice().getColor() == dadi.get(2).getColor() &&
+                    cellaLibera.showDice().getNumber() == dadi.get(2).getNumber());
+        } catch (InvalidColorException e) {
             fail();
         }
 
-        Dice dado = new Dice(Color.PURPLE, 1);
-        try {
-            Cell cella = new Cell(Color.PURPLE, 3, dado);
-            Dice tmp = cella.showDice();
+        //Svuoto la cella.
+        Dice dadoTolto = cellaLibera.pickDice();
+        assertTrue( cellaLibera.showDice() == null &&
+                dadoTolto.getNumber() == dadi.get(2).getNumber() &&
+                dadoTolto.getColor() == dadi.get(2).getColor());
 
-            try {
-                cella.putDiceIgnoringShade(dado);
-            } catch (NotEmptyCellException e) {
-                assertTrue((tmp.getColor().equals(cella.showDice().getColor())) && (tmp.getNumber() == cella.showDice().getNumber()));
-            }
-
-        } catch ( InvalidColorException | InvalidShadeValueException | InvalidColorValueException  e) {
+        //Put che solleva l'eccezione riguardante la restrizione di colore della cella.
+        try{
+            cellaLibera.putDiceIgnoringShade(dadi.get(1));
             fail();
-        }
-
-    }
-
-    @Test
-    public void pickDiceTest(){
-        try {
-            Cell cella = new Cell(Color.RED, 3);
-            Dice dadoA = new Dice(Color.RED, 3);
-
-            cella.putDice(dadoA);
-            assertTrue(cella.showDice().getColor().equals(dadoA.getColor()) &&
-                                cella.showDice().getNumber() == dadoA.getNumber());
-
-            Dice dadoB = cella.pickDice();
-            assertTrue(dadoB.getColor().equals(dadoA.getColor()) &&
-                                dadoB.getNumber() == dadoA.getNumber());
-
-            Dice dadoC = cella.pickDice();
-            assertTrue(dadoC == null);
-
-        } catch ( InvalidColorException | NotEmptyCellException | InvalidShadeException | InvalidColorValueException | InvalidShadeValueException e) {
+        } catch (NotEmptyCellException e) {
             fail();
+        } catch (InvalidColorException e) {
+            assertTrue(cellaLibera.showDice() == null);
         }
 
     }
 
     @Test
     public void getCellsDiceColorTest(){
-
-        try {
-            Cell cella = new Cell(Color.RED, 3);
-            Dice dado = new Dice(Color.RED, 3);
-
-            assertTrue(cella.getCellsDiceColor() == null);
-
-            cella.putDice(dado);
-            assertTrue(cella.getCellsDiceColor().equals(dado.getColor()));
-
-        } catch (InvalidShadeException | InvalidColorException | NotEmptyCellException | InvalidColorValueException | InvalidShadeValueException e) {
-            fail();
-        }
-
+            assertTrue(cellaOccupata.getCellsDiceColor() == Color.RED);
+            assertTrue(cellaLibera.getCellsDiceColor() == null);
     }
 
     @Test
     public void getCellsDiceNumberTest(){
-        try {
-            Cell cella = new Cell(Color.RED, 3);
-            Dice dado = new Dice(Color.RED, 3);
-
-            assertTrue(cella.getCellsDiceNumber() == 0);
-
-            cella.putDice(dado);
-            assertTrue(cella.getCellsDiceNumber() == dado.getNumber());
-
-        } catch (InvalidShadeException | InvalidColorException | NotEmptyCellException | InvalidColorValueException | InvalidShadeValueException e) {
-            fail();
-        }
+            assertTrue(cellaOccupata.getCellsDiceNumber() == 3);
+            assertTrue(cellaLibera.getCellsDiceNumber() == 0);
     }
 }
