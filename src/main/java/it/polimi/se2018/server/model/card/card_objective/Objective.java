@@ -3,16 +3,35 @@ package it.polimi.se2018.server.model.card.card_objective;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
 
-public class Objective {
 
-    //OVERVIEW: La classe rappresenta la carta Obbiettivo, in cui si è inserita un'istanza dell'interfaccia StrategyAlgorithm
-    //per richiamare poi i vari algoritmi a seconda della tipologia di carta selezionata
+/**
+ * La classe rappresenta una carta Obbiettivo generica che, a seconda del valore assunto dall'attributo ImPrivate, identifica una carta
+ * Obbiettivo Privata (se TRUE) o carta Obbiettivo Pubblica (se FALSE)
+ *
+ * @author Simone Lanzillotta
+ */
+
+
+
+public class Objective {
 
     private String name;
     private String description;
     private int favours;
     private StrategyAlgorithm myObjective;
     private boolean ImPrivate;
+
+
+    /**
+     * Costruttore della classe: crea una carta Obbiettivo Privata o Pubblica a seconda del valore di verità assunto dal
+     * parametro imPrivate
+     *
+     * @param name nome della carta
+     * @param description descrizione della carta
+     * @param favours numero segnalini favore della carta
+     * @param myObjective riferimento all'interfaccia che dinamicamente seleziona l'algoritmo associato alalc arta creata
+     * @param imPrivate booleano che identifica una carta Obbiettivo Provata da una Pubblica
+     */
 
     public Objective(String name, String description, int favours, StrategyAlgorithm myObjective, boolean imPrivate) {
         this.name = name;
@@ -22,16 +41,37 @@ public class Objective {
         ImPrivate = imPrivate;
     }
 
+
+    /**
+     * Metodo che restitutisce la descrizione della carta
+     *
+     * @return descrizione della carta
+     */
+
     public String getDescription(){
         return description;
     }
+
+
+    /**
+     * Metodo che restituisce i segnalini favore della carta
+     *
+     * @return numero segnalini della carta
+     */
 
     public int getFavours(){
         return favours;
     }
 
-    //Metodo useAlgorithm -> richiama al suo interno il metodo di myObjective che, tramite override, utilizzerà
-    //l'algoritmo a seconda della carte richiamata
+
+    /**
+     * Metodo che richiama al suo interno il metodo use dell'interfaccia myobjective che andrà a richiamare dinamicamente
+     * l'algoritmo associata alla carta
+     *
+     * @param player riferimento al player (quindi alla sua Side)
+     * @return invocazione del metodo use(Player player)
+     * @throws Exception lanciata quando il riferimento sia null
+     */
 
     public int useAlgorithm(Player player) throws Exception {
         return myObjective.use(player);
