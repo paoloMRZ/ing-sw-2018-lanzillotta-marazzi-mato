@@ -2,7 +2,6 @@ package it.polimi.se2018.server.model.card.card_schema;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.*;
-import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
@@ -79,6 +78,17 @@ public class Side {
     }
 
     /**
+     * Il metodo verifica se la cella indicata da (row,col) non appartiene alla cornice più esterna della griglia di gioco.
+     *
+     * @param row coordinata relativa alla riga.
+     * @param col coordinata relativa alla colonna.
+     * @return restituisce true se la cella indicata da (row,col) non appartiene alla cornice più esterna della griglia di gioco, in caso contrario restituisce false.
+     */
+    private boolean areNotEdgeCoordinates(int row, int col){
+        return !(row == 0 || row == MAX_ROW) && !(col == 0 || col == MAX_COL);
+    }
+
+    /**
      * Metodo di appoggio per l'inserimento di un nuovo dado in una cella. Il suo scopo è quello di controllare se il dado
      * 'd' coincide con l'eventuale dado contenuto in (row, col) per colore o sfumatura.
      *
@@ -88,19 +98,19 @@ public class Side {
      * @return restituisce true se il dado passato conincide per colore o per sfumatura al dado contenuto nella cella indicata dalle coordinate.
      */
     private boolean areSimilarDice(int row, int col, Dice d) {
-        return matrix[row][col].showDice().getNumber() == d.getNumber() || matrix[row][col].showDice().getColor().equals(d.getColor());
+        return matrix[row][col].showDice().getNumber() == d.getNumber() || matrix[row][col].showDice().getColor() == d.getColor();
     }
 
     /**
-     * Questo metodo effettua il controllo delle celle confinanti ortogonalmente alla cella selezionata per l'inserimento.
-     * Se una di queste celle posside un dado con sfumatura o colore uguale a quella del dado passato viene restituito false.
+     * Questo metodo effettua il controllo delle celle confinanti ortogonalmente alla cella indicata da (row,col)
+     * con lo scopo di verificare se vengono rispettate le condizioni imposte dai vicini.
      *
      * @param row coordinata relativa alla riga.
      * @param col coordinata relativa alla colonna.
      * @param d dado da confrontare.
-     * @return viene restuito true se il dado passato rispetta le condizioni imposte dalle celle confinanti alla cella indicata dalle coordinate passate.
+     * @return Se una di delle celle ortogonalmente confinanti posside un dado con sfumatura o colore uguale a quella del dado passato viene restituito true.
      */
-    private boolean checkOrtogonalNeighbor(int row, int col, Dice d) {
+    private boolean checkOrtogonalError(int row, int col, Dice d) {
 
         for (int y = -1; y <= 1; y++) {
             for (int x = -1; x <= 1; x++) {
@@ -112,11 +122,11 @@ public class Side {
                         matrix[row + x][col + y].showDice() != null &&
                         areSimilarDice(row + x, col + y, d)   )
 
-                        return false;
+                        return true;
             }
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -175,7 +185,7 @@ public class Side {
 
             //Se non è il primo inserimento controlla i vicini.
             if (!isEmpty) {
-                if (!checkOrtogonalNeighbor(row, col, d))
+                if (checkOrtogonalError(row, col, d))
                     throw new NearDiceInvalidException();
 
                 if(!isThereNeighbor(row,col))
@@ -185,7 +195,7 @@ public class Side {
 
                 //Se è il primo inserimento puoi inserire solo nella cornice più esterna. Non è necessario controllare i vicini, bastas controllare che le coordinate
                 //passate si riferiscano ad una cella della corretta per il primo inserimento.
-                if (!(row == 0 || row == MAX_ROW) && !(col == 0 || col == MAX_COL)) throw new InvalidCoordinatesException();
+                if (areNotEdgeCoordinates(row,col)) throw new InvalidCoordinatesException();
             }
             matrix[row][col].putDice(d);
             isEmpty = false; //Questa istruzione deve sempre essere l'ultima di questo metodo.
@@ -212,7 +222,7 @@ public class Side {
 
             //Se non è il primo inserimento controlla i vicini.
             if (!isEmpty) {
-                if (!checkOrtogonalNeighbor(row, col, d))
+                if (checkOrtogonalError(row, col, d))
                     throw new NearDiceInvalidException();
 
                 if(!isThereNeighbor(row,col))
@@ -222,7 +232,7 @@ public class Side {
 
                 //Se è il primo inserimento puoi inserire solo nella cornice più esterna. Non è necessario controllare i vicini, bastas controllare che le coordinate
                 //passate si riferiscano ad una cella della corretta per il primo inserimento.
-                if (!(row == 0 || row == MAX_ROW) && !(col == 0 || col == MAX_COL))
+                if (areNotEdgeCoordinates(row,col))
                     throw new InvalidCoordinatesException();
             }
             matrix[row][col].putDiceIgnoringColor(d);
@@ -252,7 +262,7 @@ public class Side {
         if(areValidcoordinates(row,col)){
             //Se non è il primo inserimento controlla i vicini.
             if (!isEmpty) {
-                if (!checkOrtogonalNeighbor(row, col, d))
+                if (checkOrtogonalError(row, col, d))
                     throw new NearDiceInvalidException();
 
                 if(!isThereNeighbor(row,col))
@@ -262,7 +272,7 @@ public class Side {
 
                 //Se è il primo inserimento puoi inserire solo nella cornice più esterna. Non è necessario controllare i vicini, basta controllare che le coordinate
                 //passate si riferiscano ad una cella della corretta per il primo inserimento.
-                if (!(row == 0 || row == MAX_ROW) && !(col == 0 || col == MAX_COL))
+                if (areNotEdgeCoordinates(row,col))
                     throw new InvalidCoordinatesException();
             }
 
@@ -295,7 +305,7 @@ public class Side {
 
                 //Se è il primo inserimento puoi inserire solo nella cornice più esterna. Non è necessario controllare i vicini, basta controllare che le coordinate
                 //passate si riferiscano ad una cella della corretta per il primo inserimento.
-                if (isEmpty && !(row == 0 || row == MAX_ROW) && !(col == 0 || col == MAX_COL))
+                if (isEmpty && areNotEdgeCoordinates(row,col))
                     throw new InvalidCoordinatesException();
             }
 

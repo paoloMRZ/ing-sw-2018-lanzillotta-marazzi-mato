@@ -2,7 +2,6 @@ package it.polimi.se2018.test_card_schema;
 
 import it.polimi.se2018.server.exceptions.SagradaException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.*;
-import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
@@ -21,10 +20,9 @@ import static org.junit.Assert.fail;
 
 public class SideTest {
 
-
     private Side lato = null;
+    private ArrayList<Side> lati = new ArrayList<>();
     private ArrayList<Cell> celle = new ArrayList<>();
-    private ArrayList<Dice> dadi = null;
 
     @Before
     public void buildSide() {
@@ -59,30 +57,36 @@ public class SideTest {
             celle.add(new Cell(Color.GREEN, 0));
 
 
+            //Passo un valore errato al parametro favours in modo che venga sollevata un'eccezzione.
+            lato = new Side("test", 0, celle);
+            fail();
+        } catch (InvalidShadeValueException e) {
+            fail();
+        } catch (InvalidFavoursValueException e) {
+            assertTrue(lato == null);
+        }
+
+        try {
             lato = new Side("test", 3, celle);
-        } catch (InvalidColorValueException | InvalidShadeValueException | InvalidFavoursValueException e) {
+
+            lati.add(new Side("test", 3, celle));
+            lati.add(new Side("test", 3, celle));
+            lati.add(new Side("test", 3, celle));
+            lati.add(new Side("test", 3, celle));
+
+        } catch (InvalidShadeValueException | InvalidFavoursValueException e) {
             fail();
         }
 
     }
 
-
-    @Before
-    public void buildDice() {
-
-        dadi = new ArrayList<>();
-        dadi.add(new Dice(Color.PURPLE, 2));
-        dadi.add(new Dice(Color.BLUE, 4));
-
-    }
-
-
     //Testo le combinazioni di coordinate che danno false.
     //Provo a fare delle put passando coordinate non valide.
+
     @Test
     public void areValidCoordinatesTest() {
 
-        Dice dado = dadi.get(0);
+        Dice dado = new Dice(Color.GREEN,3);
         int[] row = {-1, 4, 0, 0};
         int[] col = {0, 0, -1, 5};
 
@@ -102,304 +106,285 @@ public class SideTest {
     }
 
     @Test
+    public void edgeCoordinatesTest() {
+
+    Dice dado = new Dice(Color.YELLOW, 1);
+    int[] row = {0,3,1,1};
+    int[] col = {1,1,0,4};
+    int i = 0;
+
+        for (Side lato:lati){
+            try {
+                lato.put(row[i], col[i],dado);
+            } catch (SagradaException e) {
+                fail();
+            }
+            i++;
+        }
+
+    }
+
+    @Test
+    public void fisrtWrongPutTest(){
+        Dice dado = new Dice(Color.YELLOW, 3);
+        int i = 0;
+
+
+        for (Side l : lati) {
+            try {
+                switch (i) {
+                    case 0: {
+                        l.put(2, 1, dado);
+                        fail();
+                    } break;
+
+                    case 1: {
+                        l.putIgnoringShade(2, 1, dado);
+                        fail();
+                    } break;
+
+                    case 2: {
+                        l.putIgnoringColor(2, 1, dado);
+                        fail();
+                    } break;
+
+                    case 3: {
+                        l.putWithoutDicesNear(2, 1, dado);
+                        fail();
+                    } break;
+                }
+
+            } catch (InvalidCoordinatesException e) {
+                assertTrue(true);
+            } catch (SagradaException e) {
+                fail();
+            }
+
+            i++;
+        }
+    }
+
+    @Test
+    public void secondPutWithoutDicesNear(){
+        Dice dado = new Dice(Color.YELLOW, 3);
+        int i = 0;
+
+        for(Side l:lati) {
+            try {
+                l.put(0,0,dado);
+            } catch (SagradaException e) {
+                fail();
+            }
+        }
+
+        for (Side l : lati) {
+            try {
+                switch (i) {
+                    case 0: {
+                        l.put(3, 0, dado);
+                        fail();
+                    } break;
+
+                    case 1: {
+                        l.putIgnoringShade(3, 0, dado);
+                        fail();
+                    } break;
+
+                    case 2: {
+                        l.putIgnoringColor(3, 0, dado);
+                        fail();
+                    } break;
+
+                    case 3: {
+                        l.putWithoutDicesNear(3, 0, dado);
+                        assertTrue(l.showCell(3,0).showDice().getColor() == dado.getColor() &&
+                                            l.showCell(3,0).showDice().getNumber() == dado.getNumber());
+                    } break;
+                }
+
+            } catch (NoDicesNearException e) {
+                try {
+                    assertTrue(l.showCell(3,0).showDice() == null);
+                } catch (InvalidCoordinatesException | InvalidShadeValueException e1) {
+                    fail();
+                }
+            } catch (SagradaException e) {
+                fail();
+            }
+
+            i++;
+        }
+    }
+
+    @Test
+    public void invalidCoordinatesPut() {
+        Dice dado = new Dice(Color.YELLOW, 3);
+        int i = 0;
+
+
+        for (Side l : lati) {
+            try {
+                switch (i) {
+                    case 0: {
+                        l.put(-1, 0, dado);
+                        fail();
+                    } break;
+
+                    case 1: {
+                        l.putIgnoringShade(-1, 0, dado);
+                        fail();
+                    } break;
+
+                    case 2: {
+                        l.putIgnoringColor(-1, 0, dado);
+                        fail();
+                    } break;
+
+                    case 3: {
+                        l.putWithoutDicesNear(-1, 0, dado);
+                        fail();
+                    } break;
+                }
+
+            } catch (InvalidCoordinatesException e) {
+                assertTrue(true);
+            } catch (SagradaException e) {
+                fail();
+            }
+
+            i++;
+        }
+
+    }
+
+    @Test
+    public void putOrtogonalErrorTest(){
+        Dice dado = new Dice(Color.YELLOW, 3);
+        int i = 0;
+
+        for(Side l:lati) {
+            try {
+                l.put(0,4,dado);
+            } catch (SagradaException e) {
+                fail();
+            }
+        }
+
+        for (Side l : lati) {
+            try {
+                switch (i) {
+                    case 0: {
+                        l.put(1, 4, dado);
+                        fail();
+                    } break;
+
+                    case 1: {
+                        l.putIgnoringShade(1, 4, dado);
+                        fail();
+                    } break;
+
+                    case 2: {
+                        l.putIgnoringColor(1, 4, dado);
+                        fail();
+                    } break;
+
+                    case 3: {
+                        l.putWithoutDicesNear(1, 4, dado);
+                        fail();
+                    } break;
+                }
+
+            } catch (NearDiceInvalidException e) {
+                try {
+                    assertTrue(l.showCell(1,4).showDice() == null);
+                } catch (InvalidCoordinatesException | InvalidShadeValueException e1) {
+                    fail();
+                }
+            } catch (InvalidCoordinatesException e){
+                try {
+                    assertTrue(l.showCell(1,4).showDice() == null && i == 3);
+                } catch (InvalidShadeValueException | InvalidCoordinatesException e1) {
+                    fail();
+                }
+            } catch (SagradaException e) {
+                fail();
+            }
+
+            i++;
+        }
+    }
+
+    @Test
+    public void secondCorrectPutTest(){
+        Dice dado = new Dice(Color.YELLOW, 3);
+        int i = 0;
+
+        for(Side l:lati) {
+            try {
+                l.put(0,4,dado);
+            } catch (SagradaException e) {
+                fail();
+            }
+        }
+
+        for (Side l : lati) {
+            try {
+                switch (i) {
+                    case 0: {
+                        l.put(1, 3, dado);
+                        assertTrue(l.showCell(1,3).showDice().getColor() == dado.getColor() &&
+                                            l.showCell(1,3).showDice().getNumber() == dado.getNumber());
+                    } break;
+
+                    case 1: {
+                        l.putIgnoringShade(1, 3, dado);
+                        assertTrue(l.showCell(1,3).showDice().getColor() == dado.getColor() &&
+                                l.showCell(1,3).showDice().getNumber() == dado.getNumber());
+                    } break;
+
+                    case 2: {
+                        l.putIgnoringColor(1, 3, dado);
+                        assertTrue(l.showCell(1,3).showDice().getColor() == dado.getColor() &&
+                                l.showCell(1,3).showDice().getNumber() == dado.getNumber());
+                    } break;
+
+                    case 3: {
+                        l.putWithoutDicesNear(0, 0, dado);
+                        assertTrue(l.showCell(0,0).showDice().getColor() == dado.getColor() &&
+                                l.showCell(0,0).showDice().getNumber() == dado.getNumber());
+                    } break;
+                }
+            } catch (SagradaException e) {
+                fail();
+            }
+
+            i++;
+        }
+    }
+
+    @Test
     public void pickTest() {
-        Dice dado;
+        Dice dadoA = new Dice(Color.GREEN, 3);
+        Dice dadoB;
 
         try {
-            lato.put(0,0,dadi.get(0));
-            dado = lato.pick(0,0);
+            lato.put(0,0,dadoA);
+            dadoB = lato.pick(0,0);
 
-            assertTrue(dado.getColor() == dadi.get(0).getColor() &&
-                                dado.getNumber() == dadi.get(0).getNumber() &&
-                                lato.showCell(0,0).showDice() == null);
+            assertTrue(dadoB.getColor() == dadoA.getColor() &&
+                    dadoB.getNumber() == dadoA.getNumber() &&
+                    lato.showCell(0,0).showDice() == null);
         } catch (SagradaException e) {
             fail();
         }
 
-        dado = null;
+        dadoB = null;
         try {
-            dado = lato.pick(-1,0);
+            dadoB = lato.pick(-1,0);
 
             fail();
         } catch ( InvalidCoordinatesException e) {
-            assertTrue(dado == null);
-        }
-
-
-
-    }
-
-    @Test
-    public void putTest() {
-
-        int i = 0;
-
-        //Primo inserimento errato.
-        try {
-            lato.put(2, 2, new Dice(Color.RED, 1));
-            fail();
-        } catch (InvalidCoordinatesException  e) {
-            try {
-                assertTrue(lato.showCell(2,2).showDice() == null);
-            } catch (SagradaException e1) {
-                fail();
-            }
-        } catch (SagradaException e) {
-            fail();
-        }
-
-        //Primo, secondo e terzo inserimento corretto.
-        try {
-            for (Dice dado : dadi) {
-                lato.put(i, i, dado);
-                assertTrue(lato.showCell(i, i).showDice().getColor() == dado.getColor() &&
-                        lato.showCell(i, i).showDice().getNumber() == dado.getNumber());
-
-                i++;
-            }
-
-            lato.put(2, 1, new Dice(Color.RED, 3));
-
-        } catch (SagradaException e) {
-            fail();
-        }
-
-
-        //Inserimento errato a causa del dado vicino.
-        try {
-            lato.put(3, 1, new Dice(Color.RED, 1));
-            fail();
-        } catch (NearDiceInvalidException  e) {
-            try {
-                assertTrue(lato.showCell(3,1).showDice() == null);
-            } catch (InvalidShadeValueException | InvalidColorValueException | InvalidCoordinatesException e1) {
-                fail();
-            }
-        } catch (SagradaException e) {
-            fail();
-        }
-
-        //Inserimeto (errato) senza dadi vicini.
-        try {
-            lato.put(0, 3, new Dice(Color.RED, 6));
-            fail();
-        } catch (NoDicesNearException e) {
-            try {
-                assertTrue(lato.showCell(3,1).showDice() == null);
-            } catch (InvalidShadeValueException | InvalidColorValueException | InvalidCoordinatesException e1) {
-                fail();
-            }
-        } catch (SagradaException e) {
-            fail();
-        }
-    }
-
-    @Test
-    public void putIgnoringColorTest() {
-
-        //Primo inserimento errato.
-        try {
-            lato.putIgnoringColor(2, 2, new Dice(Color.RED, 1));
-            fail();
-        } catch (InvalidCoordinatesException e) {
-            try {
-                assertTrue(lato.showCell(2, 2).showDice() == null);
-            } catch (InvalidShadeValueException | InvalidColorValueException | InvalidCoordinatesException e1) {
-                fail();
-            }
-        } catch (SagradaException e) {
-            fail();
-        }
-
-
-        //Primo e secondo inserimento corretti.
-        try {
-
-            lato.putIgnoringColor(3, 3, dadi.get(0));
-
-            assertTrue(lato.showCell(3, 3).showDice().getColor() == dadi.get(0).getColor() &&
-                                lato.showCell(3, 3).showDice().getNumber() == dadi.get(0).getNumber());
-
-            lato.putIgnoringColor(2, 3, dadi.get(1));
-
-            assertTrue(lato.showCell(2, 3).showDice().getColor() == dadi.get(1).getColor() &&
-                    lato.showCell(2, 3).showDice().getNumber() == dadi.get(1).getNumber());
-
-        } catch (SagradaException e) {
-            fail();
-        }
-
-
-        //Inserimento errato a causa del dado vicino.
-        try {
-            lato.putIgnoringColor(1, 3, new Dice(Color.BLUE, 1));
-            fail();
-        }  catch (NearDiceInvalidException  e) {
-            try {
-                assertTrue(lato.showCell(1,3).showDice() == null);
-            } catch (InvalidShadeValueException | InvalidColorValueException | InvalidCoordinatesException e1) {
-                fail();
-            }
-        } catch (SagradaException e) {
-            fail();
-        }
-
-        //Inserimento (errato) senza dadi vicini.
-        try {
-            lato.putIgnoringColor(0, 0, new Dice(Color.RED, 6));
-            fail();
-        }  catch (NoDicesNearException e) {
-            try {
-                assertTrue(lato.showCell(0,0).showDice() == null);
-            } catch (InvalidShadeValueException | InvalidColorValueException | InvalidCoordinatesException e1) {
-                fail();
-            }
-        } catch (SagradaException e) {
-            fail();
-        }
-
-        //Inserimento con coordinate errate.
-        try {
-            lato.putIgnoringColor(-1, 3, new Dice(Color.RED, 6));
-            fail();
-        }  catch (InvalidCoordinatesException e) {
-
-                assertTrue(true);
-        } catch (SagradaException e) {
-            fail();
-        }
-    }
-
-    @Test
-    public void  putIgnoringShadeTest(){
-
-        //Primo inserimento errato.
-        try {
-            lato.putIgnoringShade(2, 2, new Dice(Color.RED, 1));
-            fail();
-        }  catch (InvalidCoordinatesException e) {
-            try {
-                assertTrue(lato.showCell(2, 2).showDice() == null);
-            } catch (InvalidShadeValueException | InvalidColorValueException | InvalidCoordinatesException e1) {
-                fail();
-            }
-        } catch (SagradaException e) {
-            fail();
-        }
-
-        //Primo e secondo inserimento corretti.
-        try {
-
-            lato.putIgnoringShade(2, 0, dadi.get(0));
-
-            assertTrue(lato.showCell(2, 0).showDice().getColor()== dadi.get(0).getColor() &&
-                    lato.showCell(2, 0).showDice().getNumber() == dadi.get(0).getNumber());
-
-            lato.putIgnoringShade(3, 1, dadi.get(1));
-
-            assertTrue(lato.showCell(3, 1).showDice().getColor() == dadi.get(1).getColor() &&
-                    lato.showCell(3, 1).showDice().getNumber() == dadi.get(1).getNumber());
-
-        } catch (SagradaException e) {
-            fail();
-        }
-
-
-        //Inserimento errato a causa del dado vicino.
-        try {
-            lato.putIgnoringShade(3, 2, new Dice(Color.BLUE, 1));
-            fail();
-        }  catch (NearDiceInvalidException  e) {
-            try {
-                assertTrue(lato.showCell(3,2).showDice() == null);
-            } catch (SagradaException e1) {
-                fail();
-            }
-        } catch (SagradaException e) {
-            fail();
-        }
-
-        //Inserimento (errato) senza dadi vicini.
-        try {
-            lato.putIgnoringShade(0, 3, new Dice(Color.RED, 6));
-            fail();
-        }  catch (NoDicesNearException e) {
-            try {
-                assertTrue(lato.showCell(0,3).showDice() == null);
-            } catch (InvalidShadeValueException | InvalidColorValueException | InvalidCoordinatesException e1) {
-                fail();
-            }
-        } catch (SagradaException e) {
-            fail();
-        }
-
-        //Inserimento con coordinate errate.
-        try {
-            lato.putIgnoringShade(-1, 3, new Dice(Color.RED, 6));
-            fail();
-        }  catch (InvalidCoordinatesException e) {
-
-            assertTrue(true);
-        } catch (SagradaException e) {
-            fail();
-        }
-    }
-
-    @Test
-    public void putWithoutNearDicesTest(){
-
-        //Primo inserimento errato.
-        try {
-            lato.putWithoutDicesNear(2, 2, new Dice(Color.RED, 1));
-            fail();
-        }  catch (InvalidCoordinatesException e) {
-            try {
-                assertTrue(lato.showCell(2, 2).showDice() == null);
-            } catch (SagradaException e1) {
-                fail();
-            }
-        } catch (SagradaException  e) {
-            fail();
-        }
-
-        //Primo e secondo inserimento corretti.
-        try{
-            lato.putWithoutDicesNear(0,0, dadi.get(0));
-
-            assertTrue(lato.showCell(0,0).showDice().getNumber() == dadi.get(0).getNumber() &&
-                                lato.showCell(0,0).showDice().getColor() == dadi.get(0).getColor());
-
-            lato.putWithoutDicesNear(1,3, dadi.get(1));
-
-            assertTrue(lato.showCell(1,3).showDice().getNumber() == dadi.get(1).getNumber() &&
-                    lato.showCell(1,3).showDice().getColor() == (dadi.get(1).getColor()));
-
-        } catch (SagradaException e) {
-            fail();
-        }
-
-        //Inserimento errato a causa della presenza di un dado confinante.
-        try{
-            lato.putWithoutDicesNear(0,1, new Dice(Color.GREEN, 1));
-            fail();
-        } catch (InvalidCoordinatesException e){
-            try {
-                assertTrue(lato.showCell(0,1).showDice() == null);
-            } catch (SagradaException e1) {
-                fail();
-            }
-        } catch (SagradaException e) {
-            fail();
-        }
-
-        //Inserimento errato a causa delle coordinate.
-        try{
-            lato.putWithoutDicesNear(-1,1, new Dice(Color.GREEN, 1));
-            fail();
-        } catch (InvalidCoordinatesException e){
-                assertTrue(true);
-        } catch (SagradaException e) {
-            fail();
+            assertTrue(dadoB == null);
         }
     }
 
@@ -442,7 +427,7 @@ public class SideTest {
 
         try {
             assertTrue(lato.showCell(0,0).getColor() == (celle.get(0).getColor()) &&
-                                lato.showCell(0,0).getNumber() == celle.get(0).getNumber());
+                    lato.showCell(0,0).getNumber() == celle.get(0).getNumber());
         } catch (SagradaException e) {
             fail();
         }
@@ -456,7 +441,4 @@ public class SideTest {
             fail();
         }
     }
-
-
-
 }
