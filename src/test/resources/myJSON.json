@@ -69,5 +69,149 @@
                [{"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 6}, {"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 2}, {"color": "RED", "number" : 0}],
                [{"color": "WHITE", "number" : 0}, {"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 4}, {"color": "GREEN", "number" : 0}, {"color": "WHITE", "number" : 0}],
                [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 3}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 0}]]
+  },
+
+  {
+    "name": "Aurora Sagradis",
+    "favours": 4,
+    "matrix": [[{"color": "RED", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "YELLOW", "number" : 0}],
+               [{"color": "WHITE", "number" : 4}, {"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 3}, {"color": "GREEN", "number" : 0}, {"color": "WHITE", "number" : 2}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 1}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 6}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}]]
+  },
+
+  {
+    "name": "Industria",
+    "favours": 5,
+    "matrix": [[{"color": "WHITE", "number" : 1}, {"color": "RED", "number" : 0}, {"color": "WHITE", "number" : 3}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 6}],
+               [{"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 4}, {"color": "RED", "number" : 0}, {"color": "WHITE", "number" : 2}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "RED", "number" : 0}, {"color": "WHITE", "number" : 1}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 3}, {"color": "RED", "number" : 0}]]
+  },
+
+  {
+    "name": "Shadow Thief",
+    "favours": 5,
+    "matrix": [[{"color": "WHITE", "number" : 6}, {"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 5}],
+               [{"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 0}, {"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "RED", "number" : 0}, {"color": "WHITE", "number" : 6}, {"color": "WHITE", "number" : 0}, {"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "YELLOW", "number" : 0}, {"color": "RED", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 4}, {"color": "WHITE", "number" : 3}]]
+  },
+
+  {
+    "name": "Batllo",
+    "favours": 5,
+    "matrix": [[{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 6}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 4}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 3}, {"color": "GREEN", "number" : 0}, {"color": "YELLOW", "number" : 0}, {"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 2}],
+               [{"color": "WHITE", "number" : 1}, {"color": "WHITE", "number" : 4}, {"color": "RED", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 3}]]
+  },
+
+  {
+    "name": "Gravitas",
+    "favours": 5,
+    "matrix": [[{"color": "WHITE", "number" : 1}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 3}, {"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 2}, {"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 6}, {"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 4}, {"color": "WHITE", "number" : 0}],
+               [{"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 2}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 1}]]
+  },
+
+  {
+    "name": "Fractal Drops",
+    "favours": 5,
+    "matrix": [[{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 4}, {"color": "WHITE", "number" : 0}, {"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 6}],
+               [{"color": "RED", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 2}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "RED", "number" : 0}, {"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 1}],
+               [{"color": "BLUE", "number" : 0}, {"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}]]
+  },
+
+  {
+    "name": "Lux Astram",
+    "favours": 5,
+    "matrix": [[{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 1}, {"color": "GREEN", "number" : 0}, {"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 4}],
+               [{"color": "WHITE", "number" : 6}, {"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 2}, {"color": "WHITE", "number" : 5}, {"color": "GREEN", "number" : 0}],
+               [{"color": "WHITE", "number" : 1}, {"color": "GREEN", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 3}, {"color": "PURPLE", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}]]
+  },
+
+  {
+    "name": "Chromatic Splendor",
+    "favours": 4,
+    "matrix": [[{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "GREEN", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 2}, {"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 1}],
+               [{"color": "WHITE", "number" : 0}, {"color": "RED", "number" : 0}, {"color": "WHITE", "number" : 3}, {"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 1}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 6}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 4}]]
+  },
+
+  {
+    "name": "FireLight",
+    "favours": 5,
+    "matrix": [[{"color": "WHITE", "number" : 3}, {"color": "WHITE", "number" : 4}, {"color": "WHITE", "number" : 1}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 6}, {"color": "WHITE", "number" : 2}, {"color": "WHITE", "number" : 0}, {"color": "YELLOW", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "YELLOW", "number" : 0}, {"color": "RED", "number" : 0}],
+               [{"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 0}, {"color": "YELLOW", "number" : 0}, {"color": "RED", "number" : 0}, {"color": "WHITE", "number" : 6}]]
+  },
+
+  {
+    "name": "Luz Celestial",
+    "favours": 3,
+    "matrix": [[{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "RED", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 0}],
+               [{"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 4}, {"color": "WHITE", "number" : 0}, {"color": "GREEN", "number" : 0}, {"color": "WHITE", "number" : 3}],
+               [{"color": "WHITE", "number" : 6}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 2}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}]]
+  },
+
+  {
+    "name": "Water of Life",
+    "favours": 6,
+    "matrix": [[{"color": "WHITE", "number" : 6}, {"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 1}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 4}, {"color": "RED", "number" : 0}, {"color": "WHITE", "number" : 2}, {"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "GREEN", "number" : 0}, {"color": "WHITE", "number" : 6}, {"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 3}, {"color": "PURPLE", "number" : 0}]]
+  },
+
+  {
+    "name": "Ripples of Light",
+    "favours": 5,
+    "matrix": [[{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "RED", "number" : 0}, {"color": "WHITE", "number" : 5}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 4}, {"color": "BLUE", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 3}, {"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 6}],
+               [{"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 2}, {"color": "GREEN", "number" : 0}, {"color": "WHITE", "number" : 1}, {"color": "RED", "number" : 0}]]
+  },
+
+  {
+    "name": "Comitas",
+    "favours": 5,
+    "matrix": [[{"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 2}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 6}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 4}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "YELLOW", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 5}],
+               [{"color": "WHITE", "number" : 1}, {"color": "WHITE", "number" : 2}, {"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 3}, {"color": "WHITE", "number" : 0}]]
+  },
+
+  {
+    "name": "Lux Mundi",
+    "favours": 6,
+    "matrix": [[{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 1}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 1}, {"color": "GREEN", "number" : 0}, {"color": "WHITE", "number" : 3}, {"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 2}],
+               [{"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 4}, {"color": "WHITE", "number" : 6}, {"color": "GREEN", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "GREEN", "number" : 0}, {"color": "WHITE", "number" : 0}]]
+  },
+
+  {
+    "name": "Fulgor del Cielo",
+    "favours": 5,
+    "matrix": [[{"color": "WHITE", "number" : 0}, {"color": "BLUE", "number" : 0}, {"color": "RED", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 4}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 0}, {"color": "BLUE", "number" : 0}],
+               [{"color": "BLUE", "number" : 0}, {"color": "WHITE", "number" : 2}, {"color": "WHITE", "number" : 0}, {"color": "RED", "number" : 0}, {"color": "WHITE", "number" : 5}],
+               [{"color": "WHITE", "number" : 6}, {"color": "RED", "number" : 0}, {"color": "WHITE", "number" : 3}, {"color": "WHITE", "number" : 1}, {"color": "WHITE", "number" : 0}]]
+  },
+
+  {
+    "name": "Sun's Glory",
+    "favours": 6,
+    "matrix": [[{"color": "WHITE", "number" : 1}, {"color": "PURPLE", "number" : 0}, {"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 4}],
+               [{"color": "PURPLE", "number" : 0}, {"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 6}],
+               [{"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 3}],
+               [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 4}, {"color": "WHITE", "number" : 2}, {"color": "WHITE", "number" : 1}]]
   }
 ]
