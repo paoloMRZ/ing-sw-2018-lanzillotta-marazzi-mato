@@ -2,7 +2,6 @@ package it.polimi.se2018.test_card_schema;
 
 import it.polimi.se2018.server.exceptions.SagradaException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.*;
-import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
@@ -23,6 +22,7 @@ public class SideTest {
 
 
     private Side lato = null;
+    private ArrayList<Side> lati = new ArrayList<>();
     private ArrayList<Cell> celle = new ArrayList<>();
     private ArrayList<Dice> dadi = null;
 
@@ -60,7 +60,14 @@ public class SideTest {
 
 
             lato = new Side("test", 3, celle);
-        } catch (InvalidColorValueException | InvalidShadeValueException | InvalidFavoursValueException e) {
+
+
+            lati.add(new Side("test", 3, celle));
+            lati.add(new Side("test", 3, celle));
+            lati.add(new Side("test", 3, celle));
+            lati.add(new Side("test", 3, celle));
+
+        } catch (InvalidShadeValueException | InvalidFavoursValueException e) {
             fail();
         }
 
@@ -101,33 +108,87 @@ public class SideTest {
 
     }
 
+    //Testa la prima le quattro tipologie di combinazioni possibili per la prima put valida per la put semplice.
     @Test
-    public void pickTest() {
-        Dice dado;
+    public void firstCorrectPutTest() {
 
-        try {
-            lato.put(0,0,dadi.get(0));
-            dado = lato.pick(0,0);
+    Dice dado = new Dice(Color.YELLOW, 1);
+    int[] row = {0,3,1,1};
+    int[] col = {1,1,0,4};
+    int i = 0;
 
-            assertTrue(dado.getColor() == dadi.get(0).getColor() &&
-                                dado.getNumber() == dadi.get(0).getNumber() &&
-                                lato.showCell(0,0).showDice() == null);
-        } catch (SagradaException e) {
-            fail();
+        for (Side lato:lati){
+            try {
+                lato.put(row[i], col[i],dado);
+            } catch (SagradaException e) {
+                fail();
+            }
+            i++;
         }
-
-        dado = null;
-        try {
-            dado = lato.pick(-1,0);
-
-            fail();
-        } catch ( InvalidCoordinatesException e) {
-            assertTrue(dado == null);
-        }
-
-
 
     }
+
+    @Test
+    public void firstCorrectPutIgnoringColorTest() {
+
+        Dice dado = new Dice(Color.YELLOW, 1);
+        int[] row = {0,3,1,1};
+        int[] col = {1,1,0,4};
+        int i = 0;
+
+        for (Side lato:lati){
+            try {
+                lato.putIgnoringColor(row[i], col[i],dado);
+            } catch (SagradaException e) {
+                fail();
+            }
+            i++;
+        }
+
+    }
+
+    @Test
+    public void firstCorrectPutIgnoringShadeTest() {
+
+        Dice dado = new Dice(Color.YELLOW, 1);
+        int[] row = {0,3,1,1};
+        int[] col = {1,1,0,4};
+        int i = 0;
+
+        for (Side lato:lati){
+            try {
+                lato.putIgnoringShade(row[i], col[i],dado);
+            } catch (SagradaException e) {
+                fail();
+            }
+            i++;
+        }
+
+    }
+
+    @Test
+    public void firstCorrectPutWithoutDicesNearTest() {
+
+        Dice dado = new Dice(Color.YELLOW, 1);
+        int[] row = {0,3,1,1};
+        int[] col = {1,1,0,4};
+        int i = 0;
+
+        for (Side lato:lati){
+            try {
+                lato.putWithoutDicesNear(row[i], col[i],dado);
+            } catch (SagradaException e) {
+                fail();
+            }
+            i++;
+        }
+
+    }
+
+
+
+
+    //------------------------------------------------------------------------
 
     @Test
     public void putTest() {
@@ -172,7 +233,7 @@ public class SideTest {
         } catch (NearDiceInvalidException  e) {
             try {
                 assertTrue(lato.showCell(3,1).showDice() == null);
-            } catch (InvalidShadeValueException | InvalidColorValueException | InvalidCoordinatesException e1) {
+            } catch (InvalidShadeValueException | InvalidCoordinatesException e1) {
                 fail();
             }
         } catch (SagradaException e) {
@@ -186,7 +247,7 @@ public class SideTest {
         } catch (NoDicesNearException e) {
             try {
                 assertTrue(lato.showCell(3,1).showDice() == null);
-            } catch (InvalidShadeValueException | InvalidColorValueException | InvalidCoordinatesException e1) {
+            } catch (InvalidShadeValueException | InvalidCoordinatesException e1) {
                 fail();
             }
         } catch (SagradaException e) {
@@ -204,7 +265,7 @@ public class SideTest {
         } catch (InvalidCoordinatesException e) {
             try {
                 assertTrue(lato.showCell(2, 2).showDice() == null);
-            } catch (InvalidShadeValueException | InvalidColorValueException | InvalidCoordinatesException e1) {
+            } catch (InvalidShadeValueException | InvalidCoordinatesException e1) {
                 fail();
             }
         } catch (SagradaException e) {
@@ -237,7 +298,7 @@ public class SideTest {
         }  catch (NearDiceInvalidException  e) {
             try {
                 assertTrue(lato.showCell(1,3).showDice() == null);
-            } catch (InvalidShadeValueException | InvalidColorValueException | InvalidCoordinatesException e1) {
+            } catch (InvalidShadeValueException | InvalidCoordinatesException e1) {
                 fail();
             }
         } catch (SagradaException e) {
@@ -251,7 +312,7 @@ public class SideTest {
         }  catch (NoDicesNearException e) {
             try {
                 assertTrue(lato.showCell(0,0).showDice() == null);
-            } catch (InvalidShadeValueException | InvalidColorValueException | InvalidCoordinatesException e1) {
+            } catch (InvalidShadeValueException | InvalidCoordinatesException e1) {
                 fail();
             }
         } catch (SagradaException e) {
@@ -271,7 +332,7 @@ public class SideTest {
     }
 
     @Test
-    public void  putIgnoringShadeTest(){
+    public void putIgnoringShadeTest(){
 
         //Primo inserimento errato.
         try {
@@ -280,7 +341,7 @@ public class SideTest {
         }  catch (InvalidCoordinatesException e) {
             try {
                 assertTrue(lato.showCell(2, 2).showDice() == null);
-            } catch (InvalidShadeValueException | InvalidColorValueException | InvalidCoordinatesException e1) {
+            } catch (InvalidShadeValueException | InvalidCoordinatesException e1) {
                 fail();
             }
         } catch (SagradaException e) {
@@ -326,7 +387,7 @@ public class SideTest {
         }  catch (NoDicesNearException e) {
             try {
                 assertTrue(lato.showCell(0,3).showDice() == null);
-            } catch (InvalidShadeValueException | InvalidColorValueException | InvalidCoordinatesException e1) {
+            } catch (InvalidShadeValueException | InvalidCoordinatesException e1) {
                 fail();
             }
         } catch (SagradaException e) {
@@ -404,6 +465,54 @@ public class SideTest {
     }
 
     @Test
+    public void showCellTest(){
+
+        try {
+            assertTrue(lato.showCell(0,0).getColor() == (celle.get(0).getColor()) &&
+                    lato.showCell(0,0).getNumber() == celle.get(0).getNumber());
+        } catch (SagradaException e) {
+            fail();
+        }
+
+        try{
+            lato.showCell(-1,0);
+            fail();
+        } catch (InvalidCoordinatesException e) {
+            assertTrue(true);
+        } catch (SagradaException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void pickTest() {
+        Dice dado;
+
+        try {
+            lato.put(0,0,dadi.get(0));
+            dado = lato.pick(0,0);
+
+            assertTrue(dado.getColor() == dadi.get(0).getColor() &&
+                    dado.getNumber() == dadi.get(0).getNumber() &&
+                    lato.showCell(0,0).showDice() == null);
+        } catch (SagradaException e) {
+            fail();
+        }
+
+        dado = null;
+        try {
+            dado = lato.pick(-1,0);
+
+            fail();
+        } catch ( InvalidCoordinatesException e) {
+            assertTrue(dado == null);
+        }
+
+
+
+    }
+
+    @Test
     public void getColorTest(){
 
         try {
@@ -434,26 +543,6 @@ public class SideTest {
             fail();
         } catch (InvalidCoordinatesException e) {
             assertTrue(true);
-        }
-    }
-
-    @Test
-    public void showCellTest(){
-
-        try {
-            assertTrue(lato.showCell(0,0).getColor() == (celle.get(0).getColor()) &&
-                                lato.showCell(0,0).getNumber() == celle.get(0).getNumber());
-        } catch (SagradaException e) {
-            fail();
-        }
-
-        try{
-            lato.showCell(-1,0);
-            fail();
-        } catch (InvalidCoordinatesException e) {
-            assertTrue(true);
-        } catch (SagradaException e) {
-            fail();
         }
     }
 
