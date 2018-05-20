@@ -17,31 +17,32 @@ public class ToolCard12 extends ToolMultiParam {
     private int D2ColNew;
 //todo rivedere il numero di parametri
 
-    public ToolCard12(String player, int cardIndex, int coordBox, int coordInBox,int D1RowOld, int D1ColOld,int D1RowNew, int D1ColNew){
+    public ToolCard12(String player, int cardIndex, ArrayList<Integer> inputs){
         super(player,cardIndex);
-        this.coordInBox=coordInBox;
-        this.coordOnBox=coordBox;
-        this.D1RowOld=D1RowOld;
-        this.D1ColOld=D1ColOld;
-        this.D1RowNew=D1RowNew;
-        this.D1ColNew=D1ColNew;
-        this.D2RowOld=-1;
-        this.D2ColOld=-1;
-        this.D2RowNew=-1;
-        this.D2ColNew=-1;
-    }
-    public ToolCard12(String player, int cardIndex, int coordBox, int coordInBox,int D1RowOld, int D1ColOld,int D1RowNew, int D1ColNew,int D2RowOld, int D2ColOld,int D2RowNew, int D2ColNew){
-        super(player,cardIndex);
-        this.coordInBox=coordInBox;
-        this.coordOnBox=coordBox;
-        this.D1RowOld=D1RowOld;
-        this.D1ColOld=D1ColOld;
-        this.D1RowNew=D1RowNew;
-        this.D1ColNew=D1ColNew;
-        this.D2RowOld=D2RowOld;
-        this.D2ColOld=D2ColOld;
-        this.D2RowNew=D2RowNew;
-        this.D2ColNew=D2ColNew;
+        if(inputs.size()==6){
+            this.coordOnBox=inputs.get(0);
+            this.coordInBox=inputs.get(1);
+            this.D1RowOld=inputs.get(2);
+            this.D1ColOld=inputs.get(3);
+            this.D1RowNew=inputs.get(4);
+            this.D1ColNew=inputs.get(5);
+            this.D2RowOld=-1;
+            this.D2ColOld=-1;
+            this.D2RowNew=-1;
+            this.D2ColNew=-1;
+        }
+        else{
+            this.coordOnBox=inputs.get(0);
+            this.coordInBox=inputs.get(1);
+            this.D1RowOld=inputs.get(2);
+            this.D1ColOld=inputs.get(3);
+            this.D1RowNew=inputs.get(4);
+            this.D1ColNew=inputs.get(5);
+            this.D2RowOld=inputs.get(6);
+            this.D2ColOld=inputs.get(7);
+            this.D2RowNew=inputs.get(8);
+            this.D2ColNew=inputs.get(9);
+        }
     }
 
     @Override

@@ -9,14 +9,17 @@ public class MoreThanSimple extends ToolMultiParam{
     private int col;
     private int die;
     private boolean decision;//se valore da aggiungere all'attuale valore del dado
+    // il vecchio prototipo
+    //da allineare a tutti quelli troppo lunghi
+    //era public MoreThanSimple (String player, int cardIndex, boolean addUp, int iDie,int row,int col)
 
-    public MoreThanSimple (String player, int cardIndex, boolean addUp, int iDie,int row,int col){
+    public MoreThanSimple (String player, int cardIndex, boolean addUp, ArrayList<Integer> inputs){
 
         super(player,cardIndex);
 
-            this.die=iDie;
-            this.row=row;
-            this.col=col;
+            this.die=inputs.get(0);
+            this.row=inputs.get(1);
+            this.col=inputs.get(2);
             this.decision=addUp;
 
 

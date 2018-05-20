@@ -9,12 +9,12 @@ public class ToolCard4 extends ToolCard2{
     private int row2New;
     private int col2New;
 
-    public ToolCard4(String player, int cardIndex, int row, int col, int rowNew, int colNew, int row2, int col2, int row2New, int col2New){
-        super(player,cardIndex,row,col,rowNew,colNew);
-        this.row2=row2;
-        this.col2=col2;
-        this.row2New=row2New;
-        this.col2New=col2New;
+    public ToolCard4(String player, int cardIndex, ArrayList<Integer> inputs){
+        super(player,cardIndex,new ArrayList<>(  Arrays.asList(inputs.get(0),inputs.get(1),inputs.get(2),inputs.get(3)) ));
+        this.row2=inputs.get(4);
+        this.col2=inputs.get(5);
+        this.row2New=inputs.get(6);
+        this.col2New=inputs.get(7);
     }
 
     @Override

@@ -6,6 +6,7 @@ import it.polimi.se2018.server.events.tool_mex.MoreThanSimple;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
+import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidSomethingWasNotDoneGood;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 import it.polimi.se2018.server.model.reserve.Reserve;
@@ -23,7 +24,7 @@ public class PinzaSgrossatrice extends Utensils {
     //TODO fare metodi di sostegno
 
 
-    public void function(Controller controller, MoreThanSimple myMessage)throws InvalidValueException, InvalidCellException {
+    public void function(Controller controller, MoreThanSimple myMessage) throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
         //unwrapping message
 
         ArrayList<Integer> messageCont= new ArrayList<>(myMessage.getAttributes());

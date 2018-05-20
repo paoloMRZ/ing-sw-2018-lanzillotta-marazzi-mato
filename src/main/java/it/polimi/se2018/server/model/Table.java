@@ -54,7 +54,7 @@ public class Table{
         return temp;
    }
 
-   public Dice pickFromReserve(int position){
+   public Dice pickFromReserve(int position) throws ArrayIndexOutOfBoundsException,NullPointerException{
        return reserve.pick(position);
    }
 
@@ -78,18 +78,9 @@ public class Table{
     //metodo che serve a a cambiare la riserva se ci sono stati cambiamenti al suo interno
     //fonadmentale per le carte utensile
 
-   public ArrayList<Dice>  setReserve(Reserve toStore){
+   public void  setReserve(Reserve toStore){
        ArrayList<Dice> preStored= toStore.getDices();
-       ArrayList<Dice> ritorno = new ArrayList<>();
-       Iterator<Dice> el = preStored.iterator();
-
-       while(el.hasNext()){
-           Dice tmp =el.next();
-           Dice toPass= new Dice(tmp.getColor(),tmp.getNumber());
-           ritorno.add(toPass);
-       }
-       return ritorno;
-
+       this.reserve= new Reserve(preStored);
    }
     //todo ma serviva sto metodo che ho fatto??? o avevate altri propositi per
    //metodo che crea una nuova riserva da zero

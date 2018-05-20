@@ -44,7 +44,7 @@ public class Player {
         this.name=nomine;
         this.howManyTurns=2;
         this.didPlayCard=false;
-        this.didPlayCard=false;
+        this.didPlayDie=false;
     }
 
     public Color getColorCell(int i, int j) throws Exception{

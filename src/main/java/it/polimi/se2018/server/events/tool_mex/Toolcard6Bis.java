@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Toolcard6Bis extends MoreThanSimple{
 
-    public Toolcard6Bis(String player,int card,boolean letItDown,int die,int row,int col){
-        super(player,card,letItDown,die,row,col);
+    public Toolcard6Bis(String player,int card,boolean letItDown, ArrayList<Integer> inputs){
+        super(player,card,letItDown,inputs);
     }
     public ArrayList<Integer> getAttributes(){
         return super.getAttributes();
