@@ -241,16 +241,4 @@ public class CellTest {
         }
 
     }
-
-    @Test
-    public void getCellsDiceColorTest(){
-            assertTrue(cellaOccupata.getCellsDiceColor() == Color.RED);
-            assertTrue(cellaLibera.getCellsDiceColor() == null);
-    }
-
-    @Test
-    public void getCellsDiceNumberTest(){
-            assertTrue(cellaOccupata.getCellsDiceNumber() == 3);
-            assertTrue(cellaLibera.getCellsDiceNumber() == 0);
-    }
 }
