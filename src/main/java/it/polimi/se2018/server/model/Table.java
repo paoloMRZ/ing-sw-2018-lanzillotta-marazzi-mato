@@ -1,8 +1,10 @@
 package it.polimi.se2018.server.model;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
+import it.polimi.se2018.server.model.card.card_schema.Side;
 import it.polimi.se2018.server.model.card.card_utensils.Utensils;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 import it.polimi.se2018.server.model.dice_sachet.DiceSachet;
@@ -11,93 +13,243 @@ import it.polimi.se2018.server.model.grid.ScoreGrid;
 import it.polimi.se2018.server.model.reserve.Reserve;
 
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
-
-public class Table{
-
-   private ArrayList<Utensils> utensilsDeck;
-   private ArrayList<Objective> objectiveDeck;
-   private ArrayList<Player> playersList;
-   private DiceSachet diceSachet;
-   private Reserve reserve;
-   private ScoreGrid scoreGrid;
-   private RoundGrid roundGrid;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
-//todo parlare della modifica al prototipo: tolto riserva dal costruttore
-   public Table(ArrayList<Utensils> utensilsDeck, ArrayList<Objective> objectiveDeck, ArrayList<Player> playersList, DiceSachet diceSachet, ScoreGrid scoreGrid, RoundGrid roundGrid) {
+/**
+ * Rappresenta il tavolo di gioco ideato come una composizione di elementi, già impostati per la sessione di gioco (ovvero con le Carte Obbiettivo Private e
+ * con le quattro Side per giocatore già distribuite.
+ *
+ * Si noti che il Player dovrà in un secondo momento scegliere una carta Side tra le quattro assegnate e quindi scartare le altre.
+ *
+ * @author Simone Lanzillotta
+ * @author Kevin Mato
+ */
+
+
+
+
+public class Table {
+
+    private ArrayList<Utensils> utensilsDeck;
+    private ArrayList<Objective> objectiveDeck;
+    private ArrayList<Player> playersList;
+    private DiceSachet diceSachet;
+    private Reserve reserve;
+    private ScoreGrid scoreGrid;
+    private RoundGrid roundGrid;
+
+
+    /**
+     * costruttore della classe Table che imposta tutti i componenti della sessione di gioco
+     *
+     * @param utensilsDeck  carte Utensili selezionate per la sessione di gioco
+     * @param objectiveDeck carte Obbiettivo della sessione di gioco
+     * @param playersList   lista dei giocatori della sessione di gioco
+     * @param diceSachet    sacchetto dei dadi della sessione di gioco
+     * @param scoreGrid     griglia dei punti della sessione di gioco
+     * @param roundGrid     griglia dei round della sessione di gioco
+     */
+
+    public Table(ArrayList<Utensils> utensilsDeck, ArrayList<Objective> objectiveDeck, ArrayList<Player> playersList, DiceSachet diceSachet, ScoreGrid scoreGrid, RoundGrid roundGrid) {
         this.utensilsDeck = utensilsDeck;
         this.objectiveDeck = objectiveDeck;
         this.playersList = playersList;
         this.diceSachet = diceSachet;
         this.scoreGrid = scoreGrid;
         this.roundGrid = roundGrid;
-       this.reserve = createReserve(); //todo discutere se assegnabile a costruttore
-   }
+        this.reserve = createReserve();
+    }
 
-   //Metodo che simula l'estrazione della riserva. Per ogni giocatore, vanno estratti 2 dadi +1 al risultato complessivo
-   //Quindi alla collezione contenuta in riservca devo aggiungere (put) un dado estratto dal sacchetto dei dadi (getDiceFromSachet)
-   public void extractReserve(int numbOfDice){
 
-       int cont = (playersList.size())*2+1;
-       for(; cont>0; cont--){
-           reserve.put(diceSachet.getDiceFromSachet());
-       }
-   }
+    /**
+     * Metodo che restituisce una copia della riserva
+     *
+     * @return una copia della riserva della sessione di gioco
+     */
 
-   //DOMANDA: nell'UML abbiamo specificato come tipo di ritorno un ArrayList<Dice>, non si potrebbe ritornare direttamente una copia dell'ggetto oggetto Riserva?
-
-   public Reserve getReserve(){
-       Reserve temp = new Reserve(reserve.getDices());
+    public Reserve getReserve() {
+        Reserve temp = new Reserve(reserve.getDices());
         return temp;
-   }
+    }
 
-   public Dice pickFromReserve(int position) throws ArrayIndexOutOfBoundsException,NullPointerException{
-       return reserve.pick(position);
-   }
 
-   //TODO: da discutere sull'utilità dei due metodi
+    /**
+     * Metodo che restituisce una copia della collezione delle carte Utensili
+     *
+     * @return una copia delle carte Utensili utilizzate nella sessione di gioco
+     */
 
-   public List<Utensils> getDeckUtensils(){
+    public List<Utensils> getDeckUtensils() {
         ArrayList<Utensils> temp = (ArrayList<Utensils>) utensilsDeck.clone();
         return temp;
-   }
+    }
 
-    public List<Objective> getDeckObjective(){
-        ArrayList<Objective> temp = (ArrayList<Objective>)utensilsDeck.clone();
+
+    /**
+     * Metodo che restituisce una copia della collezione delle carte Obbiettivo
+     *
+     * @return una copia delle carte Obbiettivo nella sessione di gioco
+     */
+    public List<Objective> getDeckObjective() {
+        ArrayList<Objective> temp = (ArrayList<Objective>) utensilsDeck.clone();
         return temp;
-   }
+    }
 
 
-   public Utensils getUtensils(int cardPosition){
+    /**
+     * Metodo che restituisce una determinata carta Utensile
+     *
+     * @param cardPosition indice della carta Utensile da restituire
+     * @return la carta Utensile alla posizione indicata
+     */
+
+    public Utensils getUtensils(int cardPosition) {
         return utensilsDeck.get(cardPosition);
-   }
+    }
 
-    //metodo che serve a a cambiare la riserva se ci sono stati cambiamenti al suo interno
-    //fonadmentale per le carte utensile
 
-   public void  setReserve(Reserve toStore){
-       ArrayList<Dice> preStored= toStore.getDices();
-       this.reserve= new Reserve(preStored);
-   }
-    //todo ma serviva sto metodo che ho fatto??? o avevate altri propositi per
-   //metodo che crea una nuova riserva da zero
+    /**
+     * Metodo che simula il pescaggio dalla riserva della sessione di gioco
+     *
+     * @param position indice corrispondente al dado da estrarre
+     * @return il dado alla posizione indicata
+     * @throws ArrayIndexOutOfBoundsException lanciata quando si indica un indice al di fuori delle dimensioni massime della collezione (in questo caso Reserve)
+     * @throws NullPointerException           lanciata quando viene generato un NullPointer
+     */
 
-    public Reserve createReserve(){
-        ArrayList<Dice> giveTo= new ArrayList<>();
-        for(int i=(playersList.size()*2+1);i>0;i--){
+    public Dice pickFromReserve(int position) throws ArrayIndexOutOfBoundsException, NullPointerException {
+        return reserve.pick(position);
+    }
+
+
+    /**
+     * Metodo che serve a cambiare la riserva se ci sono stati cambiamenti al suo interno (fondamentale per le carte Utensile)
+     *
+     * @param toStore riserva a cui si volgiono applicare i cambiamenti
+     */
+
+    public void setReserve(Reserve toStore) {
+        ArrayList<Dice> preStored = toStore.getDices();
+        this.reserve = new Reserve(preStored);
+    }
+
+
+    /**
+     * Metodo che simula l'estrazione della riserva. Per ogni giocatore, vanno estratti 2 dadi +1 al risultato complessivo. Quindi alla collezione contenuta in riserva
+     * devo aggiungere (put) un dado estratto dal sacchetto dei dadi (getDiceFromSachet)
+     *
+     * @return riserva creata simulando un'estrazione ripetuta (e casuale) di dadi
+     */
+
+    public Reserve createReserve() {
+        ArrayList<Dice> giveTo = new ArrayList<>();
+        for (int i = (playersList.size() * 2 + 1); i > 0; i--) {
             giveTo.add(diceSachet.getDiceFromSachet());
         }
         return new Reserve(giveTo);
     }
 
-    //todo è lagale questa return?
-    public Player callPlayerByName(String name) throws InvalidValueException{
-       for(Player p : playersList){
-           if(p.getName().equals(name)) return p;
-       }
-       throw new InvalidValueException();
+
+    /**
+     * Metodo che restituisce il giocatore selezionandolo tramite il proprio nome associato
+     *
+     * @param name nome del giocatore da prelevare
+     * @return giocatore con il nome corrispondente
+     * @throws InvalidValueException lanciata quando il  valore in ingresso (nome in questo caso) non è valido ai fini della ricerca
+     */
+
+    public Player callPlayerByName(String name) throws InvalidValueException {
+        for (Player p : playersList) {
+            if (p.getName().equals(name)) return p;
+        }
+        throw new InvalidValueException();
+    }
+
+
+    /**
+     * Metodo che simula l'estrazione delle carte Side da assegnare al Player che, in un secondo momento, dovrà sceglierne una per giocare
+     *
+     * Si noti che per estrazione si intende una composizione di due fasi:
+     *      -> una prima estrazione randomica di una carta Side (quindi di un lato della carta completa)
+     *      -> una seconda estrazione vincolata a quella precedente (per completare la carta e simularne il corretto pescaggio)
+     *
+     * All'intenro del metodo si utilizza anche la libreria Jackson per l'acquisizione della mappatura delle carte Side dal file myJSON.json
+     *
+     * @param playersList lista dei giocatori partecipanti alla sessione di gioco
+     * @throws IOException lanciato nel caso ci fossero errori di acquisizione del file JSon
+     */
+
+    public void setCardPlayer(ArrayList<Player> playersList) throws IOException {
+
+        //Set di operazioni per l'acquisizione da file
+
+        InputStream is = getClass().getClassLoader().getResourceAsStream("myJSON.json");
+        ObjectMapper mapper = new ObjectMapper();
+        Side[] sideCollection;
+        sideCollection = mapper.readValue(is, Side[].class);
+
+
+        //Creo uno stream di interi da 0 a 23:
+        // -> Creo lo stream con IntStream
+        // -> Imposto l'intervallo chiuso da cui creare lo stream di interi rangeClosed
+        // -> trasformo l'IntStream in una box di Integer (boxed())
+        // -> trasformo il box Collector in una collezione (in particolare un ArrayList)
+
+        List<Integer> range = IntStream.rangeClosed(0, 23).boxed().collect(Collectors.toCollection(ArrayList::new));
+        Collections.shuffle(range);
+
+        //Creo la collezione che andranno a contenerele carte estratte per ogni Player
+
+        ArrayList<Side> sideSelected = new ArrayList<>();
+
+        //Quindi per ogni giocatore nella lista
+
+        for (Player p : playersList) {
+            int i = 0;
+
+            //Per goni giocatore devo fare due estrazioni (composte a loro volta da una estrazione vincolata) di Side
+            while(i<2) {
+
+                //Genero un numero randomico prendendo come dato la lunghezza dell'array di Interi
+                Random random = new Random();
+                int casualNum = random.nextInt(range.size() - 1);
+
+                //Estraggo l'indice della carta che dovrò pescare dalla collezione di carte Side
+                int extract = range.get(casualNum);
+
+                sideSelected.add(sideCollection[extract]);
+
+                //Ora devo assegnare l'altro lato della carta side estratta in modo da renderle univocamente accoppiate
+
+                if (extract == 0 || extract % 2 == 0) {
+                    sideSelected.add(sideCollection[extract + 1]);
+                    for (Integer in : range) {
+                        if (in.equals(extract + 1)) range.remove(in);
+                    }
+                    i++;
+
+                } else if (extract % 2 != 0) {
+                    sideSelected.add(sideCollection[extract - 1]);
+                    for (Integer in : range) {
+                        if (in.equals(extract - 1)) range.remove(in);
+                    }
+                    i++;
+                }
+
+                range.remove(casualNum);
+            }
+
+            //Una volta che ho estratto tutte le side, assegno la collezione alla classe Player
+            p.setSideSelection(sideSelected);
+
+        }
     }
 }
