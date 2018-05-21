@@ -108,7 +108,7 @@ public class Player {
 
 
 
-    public void setMySide(List<Side> mySideSelection, int pos){
+    public void setMySide(int pos){
         mySide = mySideSelection.get(pos);
     }
 
