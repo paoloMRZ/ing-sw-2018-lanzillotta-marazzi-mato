@@ -187,7 +187,7 @@ public class Table {
      * @throws IOException lanciato nel caso ci fossero errori di acquisizione del file JSon
      */
 
-    public void setCardPlayer(ArrayList<Player> playersList) throws IOException {
+    public void setCardPlayer(List<Player> playersList) throws IOException {
 
         //Set di operazioni per l'acquisizione da file
 
@@ -206,14 +206,13 @@ public class Table {
         List<Integer> range = IntStream.rangeClosed(0, 23).boxed().collect(Collectors.toCollection(ArrayList::new));
         Collections.shuffle(range);
 
-        //Creo la collezione che andranno a contenerele carte estratte per ogni Player
-
-        ArrayList<Side> sideSelected = new ArrayList<>();
 
         //Quindi per ogni giocatore nella lista
-
         for (Player p : playersList) {
             int i = 0;
+
+            //Creo la collezione che andranno a contenerele carte estratte per ogni Player
+            ArrayList<Side> sideSelected = new ArrayList<>();
 
             //Per goni giocatore devo fare due estrazioni (composte a loro volta da una estrazione vincolata) di Side
             while(i<2) {
@@ -223,23 +222,27 @@ public class Table {
                 int casualNum = random.nextInt(range.size() - 1);
 
                 //Estraggo l'indice della carta che dovrò pescare dalla collezione di carte Side
-                int extract = range.get(casualNum);
-
+                int extract = range.get(casualNum).intValue();
                 sideSelected.add(sideCollection[extract]);
 
                 //Ora devo assegnare l'altro lato della carta side estratta in modo da renderle univocamente accoppiate
-
                 if (extract == 0 || extract % 2 == 0) {
                     sideSelected.add(sideCollection[extract + 1]);
                     for (Integer in : range) {
-                        if (in.equals(extract + 1)) range.remove(in);
+                        if (in.intValue() == extract + 1) {
+                            range.remove(in);
+                            break;
+                        }
                     }
                     i++;
 
                 } else if (extract % 2 != 0) {
                     sideSelected.add(sideCollection[extract - 1]);
                     for (Integer in : range) {
-                        if (in.equals(extract - 1)) range.remove(in);
+                        if (in.intValue() == extract - 1) {
+                            range.remove(in);
+                            break;
+                        }
                     }
                     i++;
                 }
