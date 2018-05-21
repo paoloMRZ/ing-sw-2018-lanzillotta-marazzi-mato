@@ -2,15 +2,15 @@ package it.polimi.se2018.server.model;
 
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidHowManyTimes;
-import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.*;
-import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
 import it.polimi.se2018.server.model.card.card_schema.Cell;
 import it.polimi.se2018.server.model.card.card_schema.Side;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
+
+import java.util.List;
 
 public class Player {
 
@@ -27,6 +27,8 @@ public class Player {
         tramite magari un secondo costruttore in override, settare il campo MYSIDE con la scelta effettuata.
 
     */
+
+    private List<Side> mySideSelection;
 
     private String name;
     private Side mySide;
@@ -55,21 +57,12 @@ public class Player {
         return mySide.getNumber(i,j);
     }
 
-    //Ritorna il colore del dado posizionato nella cella (i,j), se esiste
-    public Color getDiceColor(int i, int j) throws Exception{
-        return mySide.getCellsDiceColorInformation(i,j);
-    }
-
-    //Ritorna il numero del dado posizionato nella cella (i,j), se esiste
-    public int getDiceNumber(int i, int j) throws Exception{
-        return mySide.getCellsDiceNumberInformation(i,j);
-    }
 
     public void putDice(Dice d, int row, int col) throws InvalidCellException, InvalidCoordinatesException {
         this.mySide.put(row,col,d);
     }
 
-    public Cell showSelectedCell(int row, int col) throws InvalidShadeValueException, InvalidCoordinatesException, InvalidColorValueException {
+    public Cell showSelectedCell(int row, int col) throws InvalidShadeValueException, InvalidCoordinatesException {
         return mySide.showCell(row,col);
     }
 
@@ -105,11 +98,20 @@ public class Player {
         return name;
     }
 
-    public void putDiceIgnoreColor(int oldRow, int oldCol,int newRow, int newCol) throws InvalidColorValueException, InvalidCoordinatesException, InvalidShadeValueException, NoDicesNearException, NotEmptyCellException, InvalidShadeException, NearDiceInvalidException {
+    public void putDiceIgnoreColor(int oldRow, int oldCol,int newRow, int newCol) throws InvalidCoordinatesException, InvalidShadeValueException, NoDicesNearException, NotEmptyCellException, InvalidShadeException, NearDiceInvalidException {
         mySide.putIgnoringColor(newRow,  newCol,    mySide.showCell(oldRow,oldCol).pickDice());
     }
 
-    public void putDiceIgnoreValue(int oldRow, int oldCol,int newRow, int newCol) throws InvalidColorValueException, InvalidCoordinatesException, InvalidShadeValueException, NoDicesNearException, NotEmptyCellException, InvalidColorException, NearDiceInvalidException {
+    public void putDiceIgnoreValue(int oldRow, int oldCol,int newRow, int newCol) throws InvalidCoordinatesException, InvalidShadeValueException, NoDicesNearException, NotEmptyCellException, InvalidColorException, NearDiceInvalidException {
         mySide.putIgnoringShade(newRow,  newCol,    mySide.showCell(oldRow,oldCol).pickDice());
     }
+
+
+
+
+    public void setSideSelection(List<Side> mySideSelection){
+        this.mySideSelection = mySideSelection;
+    }
+
+
 }
