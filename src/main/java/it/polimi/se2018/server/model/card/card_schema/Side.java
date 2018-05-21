@@ -8,6 +8,7 @@ import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeVa
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -386,20 +387,6 @@ public class Side {
             throw new InvalidCoordinatesException();
     }
 
-    // I metodi restituiscono l'informazione del colore e del numero dell'eventuale dado posizionato sulla cella (row,col)
-    @Deprecated
-    public Color getCellsDiceColorInformation(int row, int col) throws InvalidCoordinatesException{
-        if(areValidcoordinates(row,col))
-            return matrix[row][col].getCellsDiceColor();
-        else throw new InvalidCoordinatesException();
-    }
-
-    @Deprecated
-    public int getCellsDiceNumberInformation(int row, int col) throws InvalidCoordinatesException{
-        if(areValidcoordinates(row,col))
-            return matrix[row][col].getCellsDiceNumber();
-        else throw new InvalidCoordinatesException();
-    }
 }
 
 

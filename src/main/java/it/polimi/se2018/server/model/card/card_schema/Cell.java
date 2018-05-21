@@ -190,34 +190,4 @@ public class Cell {
         return number;
     }
 
-    /**
-     * Restituisce il colore del dado contenuto nella cella.
-     * Se nessun dado è presente restituisce null.
-     *
-     * @deprecated fornisce un'informazione che si può ricavare tramite il metodo showDice.
-     * @return String colore.
-     */
-    @Deprecated
-    public Color getCellsDiceColor(){
-        if(this.dice != null) return dice.getColor();
-        else return null;
-    }
-
-
-    /**
-     * Restituisce il numero del dado contenuto nella cella.
-     * Se nessun dado è presente restituisce null.
-     *
-     * @deprecated fornisce un'informazione che si può ricavare tramite il metodo showDice.
-     * @return int valore.
-     */
-    @Deprecated
-    public int getCellsDiceNumber(){
-        if(this.dice != null) return dice.getNumber();
-        else return 0;
-    }
-
-
-
-
 }
