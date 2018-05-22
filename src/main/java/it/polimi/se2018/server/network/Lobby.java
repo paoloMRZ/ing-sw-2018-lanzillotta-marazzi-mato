@@ -1,25 +1,25 @@
-package it.polimi.se2018.server.Network;
+package it.polimi.se2018.server.network;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Lobby {
 
-    private ArrayList<Client> players;
+    private ArrayList<FakeClient> players;
 
     public Lobby(){
 
         players = new ArrayList<>();
     }
 
-    public void add(Client player){
+    public void add(FakeClient player){
         if(player != null){
             players.add(player);
         }
     }
 
 
-    public Client remove(int pos){
+    public FakeClient remove(int pos){
         return  null;
     }
 
@@ -27,7 +27,7 @@ public class Lobby {
 
         ArrayList<String> nick = new ArrayList<>();
 
-        for(Client client: players){
+        for(FakeClient client: players){
             nick.add(client.getNickname());
         }
 

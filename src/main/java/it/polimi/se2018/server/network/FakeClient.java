@@ -1,14 +1,14 @@
-package it.polimi.se2018.server.Network;
+package it.polimi.se2018.server.network;
 
 import it.polimi.se2018.server.fake_view.FakeView;
 
-public class Client {
+public class FakeClient {
 
     private String nickname;
     private Connection connectionType;
     private FakeView virtualView;
 
-    public Client(String nickname, Connection connectionType, FakeView virtualView) {
+    public FakeClient(String nickname, Connection connectionType, FakeView virtualView) {
         this.nickname = nickname;
         this.connectionType = connectionType;
         this.virtualView = virtualView;

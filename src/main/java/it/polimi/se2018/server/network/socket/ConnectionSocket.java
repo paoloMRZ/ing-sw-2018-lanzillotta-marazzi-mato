@@ -1,4 +1,6 @@
-package it.polimi.se2018.server.Network;
+package it.polimi.se2018.server.network.socket;
+
+import it.polimi.se2018.server.network.Connection;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

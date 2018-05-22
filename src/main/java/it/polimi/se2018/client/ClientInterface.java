@@ -1,5 +1,9 @@
 package it.polimi.se2018.client;
 
-public interface ClientInterface {
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
+public interface ClientInterface extends Remote {
+    void send(String mex) throws RemoteException;
+    String receive() throws  RemoteException;
 }

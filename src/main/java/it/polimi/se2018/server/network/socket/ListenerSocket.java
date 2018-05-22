@@ -1,4 +1,6 @@
-package it.polimi.se2018.server.Network;
+package it.polimi.se2018.server.network.socket;
+
+import it.polimi.se2018.server.network.Lobby;
 
 import java.io.IOException;
 import java.net.ServerSocket;

@@ -1,4 +1,4 @@
-package it.polimi.se2018.server.Network;
+package it.polimi.se2018.server.network;
 
 public interface Connection {
 

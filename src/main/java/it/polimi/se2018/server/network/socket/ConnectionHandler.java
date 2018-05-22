@@ -1,4 +1,7 @@
-package it.polimi.se2018.server.Network;
+package it.polimi.se2018.server.network.socket;
+
+import it.polimi.se2018.server.network.FakeClient;
+import it.polimi.se2018.server.network.Lobby;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -31,7 +34,7 @@ public class ConnectionHandler implements Runnable {
                 }
             }while(lobby.getNicknameList().contains(nick));
 
-            lobby.add(new Client(nick, new ConnectionSocket(socket), null));
+            lobby.add(new FakeClient(nick, new ConnectionSocket(socket), null));
             out.writeChars("Sei stato messo in attesa\n");
 
         } catch (IOException e) {
