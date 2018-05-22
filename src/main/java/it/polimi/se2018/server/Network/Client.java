@@ -18,11 +18,11 @@ public class Client {
         return nickname;
     }
 
-    public void sendMessage(String mex){
+    public void send(String mex){
         connectionType.send(mex);
     }
 
-    public String receiveMessage(){
+    public String receive(){
         return connectionType.receive();
     }
 

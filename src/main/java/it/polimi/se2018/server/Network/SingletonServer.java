@@ -38,25 +38,30 @@ public class SingletonServer implements ServerInterface, Remote {
         }
     }
 
+
+    /**
+     * Metodo run() che avvia il thread dedicato alla connessione socket
+     *
+     */
+
+
     public void run(){
+        Runnable runnable = new ListenerSocket(lobby, serverSocket);
+        Thread threadSocket = new Thread(runnable);
 
-        System.out.println("[*] In attesa di connessioni.");
-        while(isOpen){
-
-            try {
-                Runnable r = new ConnectionHandler(lobby, serverSocket.accept());
-                new Thread(r).start();
-
-            } catch (IOException e) {
-                System.out.println("[*] ERRORE: impossibile aprire la socket.");
-            }
-
-            System.out.println("[*] Ho ricevuto una connessione.");
-        }
+        threadSocket.start();
     }
+
+
+    /**
+     * Metodo che aggiunge un nuovo Client che ha richiesto una connessione RMI alla lista di giocatori
+     *
+     * @param clientInterface tipologia di connessione (in questo caso RMI) scelta dal client
+     * @param nickname nome del giocatore
+     */
 
     @Override
     public void add(ClientInterface clientInterface, String nickname) {
-        Client client = new Client(new)
+        Client client = new Client(nickname, new ConnectionRMI(), null);
     }
 }
