@@ -5,14 +5,26 @@ import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
-/*
-    Algoritm10:
-    Nome: "Varietà di Colore"
-    Effetto: "Set di dadi di ogni colore ovunque"
-    Punti Favore: 4
-*/
+
+/**
+ * Rappresenta l'incapsulamento dell'algoritmo relativo alla carta "Varietà di Colore" : "Set di dadi di ogni colore ovunque"
+ * con Punti Favore 4
+ *
+ * @author Simone Lanzillotta
+ */
+
+
 
 public class ColorVariety extends VarietyAlgorithm implements StrategyAlgorithm {
+
+    /**
+     * Metodo che implementa l'algoritmo associato alla carta Obbiettivo
+     *
+     * @param player riferimento alla classe Player (quindi alla Side su cui si sta applicando la carta obbiettivo)
+     * @return i segnalini guadagnati dal Player su cui si è applicata la carta Obbiettivo
+     * @throws Exception viene sollevata in caso di Eccezione generica
+     */
+
 
     @Override
     public int use(Player player) throws Exception {

@@ -2,14 +2,26 @@ package it.polimi.se2018.server.model.card.card_objective.obj_algos.algos;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
 
-/*
-    Algoritmo8:
-    Nome: "Sfumature Diverse"
-    Effetto: "Set di dadi di ogni valore ovunque"
-    Punti Favore: 5
-*/
+
+/**
+ * Rappresenta l'incapsulamento dell'algoritmo relativo alla carta "Sfumature Diverse" : "Set di dadi di ogni valore ovunque"
+ * con Punti Favore 5
+ *
+ * @author Simone Lanzillotta
+ */
+
+
 
 public class ShadeVariety extends VarietyAlgorithm implements StrategyAlgorithm{
+
+
+    /**
+     * Metodo che implementa l'algoritmo associato alla carta Obbiettivo
+     *
+     * @param player riferimento alla classe Player (quindi alla Side su cui si sta applicando la carta obbiettivo)
+     * @return i segnalini guadagnati dal Player su cui si è applicata la carta Obbiettivo
+     * @throws Exception viene sollevata in caso di Eccezione generica
+     */
 
     @Override
     public int use(Player player) throws Exception {

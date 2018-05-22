@@ -1,38 +1,48 @@
 package it.polimi.se2018.server.model.card.card_objective.obj_algos.algos;
 
-
-
-/*
-    Algoritmo1:
-    Nome: "Colori diversi - Riga"
-    Effetto: "Righe senza colori ripetuti"
-    Punti Favore: 6
-
-    Algoritmo2:
-    Nome: "Colori diversi - Colonna"
-    Effetto: "Colonne senza colori ripetuti"
-    Punti Favore: 5
-
-     Il costruttore genera quindi l'algoritmo4 se maxRow > maxCol, altrimenti crea l'algoritmo3
-
-*/
-
-
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
+
+
+/**
+ * Rappresenta l'incapsulamento dell'algoritmo relativo alle carte della tipologia SpecificColorVariety che, a seconda del valore
+ * in ingresso, istanzia una delle seguenti tipologia di carta:
+ *
+ * "Colori diversi - Riga" : "Righe senza colori ripetuti", Punti Favore: 6
+ * "Colori diversi - Colonna" : "Colonne senza colori ripetuti", Punti Favore: 5
+ *
+ * @author Simone Lanzillotta
+ */
+
 
 public class SpecificColorVariety extends VarietyAlgorithm implements StrategyAlgorithm {
 
     private int maxRow = 0;
     private int maxCol = 0;
 
-    //Costruttore
+    /**
+     * Costruttore della classe che passa in ingresso il numero di righe e di colonne
+     *
+     * @param maxRow valore massimo delle righe della carta Side
+     * @param maxCol valore massimo delle colonne della carta Side
+     */
+
     public SpecificColorVariety(int maxRow, int maxCol) {
         this.maxRow = maxRow;
         this.maxCol = maxCol;
     }
+
+
+    /**
+     * Metodo che implementa l'algoritmo associato alla carta Obbiettivo: a seconda del valore in ingresso di righe o colonna,
+     * effettua una ricerca per righe se maxRow<maxCol, altrimenti effettua una ricerca per colonne.
+     *
+     * @param player riferimento alla classe Player (quindi alla Side su cui si sta applicando la carta obbiettivo)
+     * @return i segnalini guadagnati dal Player su cui si è applicata la carta Obbiettivo
+     * @throws Exception viene sollevata in caso di Eccezione generica
+     */
 
     @Override
     public int use(Player player) throws Exception {
