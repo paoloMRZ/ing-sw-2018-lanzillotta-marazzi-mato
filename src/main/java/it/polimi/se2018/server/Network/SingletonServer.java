@@ -7,8 +7,10 @@ import it.polimi.se2018.server.fake_view.FakeView;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
-public class SingletonServer implements ServerInterface, Remote {
+public class SingletonServer extends UnicastRemoteObject implements ServerInterface {
 
     private final int PORT = 1234;
 
@@ -18,13 +20,22 @@ public class SingletonServer implements ServerInterface, Remote {
     private ServerSocket serverSocket;
     private boolean isOpen;
 
-    private static SingletonServer ourInstance = new SingletonServer();
+    private static SingletonServer ourInstance;
+
+    static {
+        try {
+            ourInstance = new SingletonServer();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static SingletonServer getInstance() {
         return ourInstance;
     }
 
-    private SingletonServer() {
+    private SingletonServer() throws RemoteException  {
+        super(0);
 
         controller = null;
         virtualView = null;

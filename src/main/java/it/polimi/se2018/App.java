@@ -19,9 +19,9 @@ public class App {
             LocateRegistry.createRegistry(1099);
             SingletonServer server = SingletonServer.getInstance();
 
+            server.run();
             Naming.rebind("Server", server);
 
-            server.run();
         } catch (RemoteException | MalformedURLException e) {
             e.printStackTrace();
         }
