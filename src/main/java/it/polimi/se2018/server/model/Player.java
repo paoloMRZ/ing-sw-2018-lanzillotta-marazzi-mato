@@ -2,7 +2,9 @@ package it.polimi.se2018.server.model;
 
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidHowManyTimes;
+import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.*;
+import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
@@ -85,7 +87,11 @@ public class Player {
         else didPlayDie=true;
     }
     public void reductor()throws InvalidHowManyTimes {
-        if(howManyTurns>0) howManyTurns=howManyTurns-1;
+        if(howManyTurns>0){
+            howManyTurns=howManyTurns-1;
+            this.didPlayCard=false;
+            this.didPlayDie=false;
+        }
         else throw new InvalidHowManyTimes();
     }
     public void restoreValues(){
@@ -98,12 +104,16 @@ public class Player {
         return name;
     }
 
-    public void putDiceIgnoreColor(int oldRow, int oldCol,int newRow, int newCol) throws InvalidCoordinatesException, InvalidShadeValueException, NoDicesNearException, NotEmptyCellException, InvalidShadeException, NearDiceInvalidException {
-        mySide.putIgnoringColor(newRow,  newCol,    mySide.showCell(oldRow,oldCol).pickDice());
+    public void putDiceIgnoreColor(int oldRow, int oldCol,int newRow, int newCol) throws InvalidValueException, NoDicesNearException, NotEmptyCellException, InvalidShadeException, NearDiceInvalidException {
+        Dice D=mySide.showCell(oldRow,oldCol).pickDice();
+        if(D==null) throw new InvalidValueException();
+        mySide.putIgnoringColor(newRow,  newCol,  D  );
     }
 
-    public void putDiceIgnoreValue(int oldRow, int oldCol,int newRow, int newCol) throws InvalidCoordinatesException, InvalidShadeValueException, NoDicesNearException, NotEmptyCellException, InvalidColorException, NearDiceInvalidException {
-        mySide.putIgnoringShade(newRow,  newCol,    mySide.showCell(oldRow,oldCol).pickDice());
+    public void putDiceIgnoreValue(int oldRow, int oldCol,int newRow, int newCol) throws InvalidValueException, NoDicesNearException, NotEmptyCellException, InvalidColorException, NearDiceInvalidException {
+        Dice D=mySide.showCell(oldRow,oldCol).pickDice();
+        if(D==null) throw  new InvalidValueException();
+        mySide.putIgnoringShade(newRow,  newCol,  D  );
     }
 
 
@@ -116,6 +126,8 @@ public class Player {
     public void setSideSelection(List<Side> mySideSelection){
         this.mySideSelection = mySideSelection;
     }
-
+    public void putWithoutDicesNear(int row, int col, Dice d) throws InvalidColorException, NotEmptyCellException, InvalidShadeException, InvalidCoordinatesException {
+        mySide.putWithoutDicesNear(row,col,d);
+    }
 
 }

@@ -1,5 +1,7 @@
 package it.polimi.se2018.server.controller;
 
+import it.polimi.se2018.server.exceptions.InvalidValueException;
+import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.Table;
 
 public class ControllerTurn {
@@ -13,8 +15,8 @@ public class ControllerTurn {
         this.lobby=LOBBY;
     }
 
-    public String getTurn(){
-        return turnOf;
+    public Player getTurn() throws InvalidValueException {
+        return lobby.callPlayerByName(turnOf);
     }
 
     public int getRound() {

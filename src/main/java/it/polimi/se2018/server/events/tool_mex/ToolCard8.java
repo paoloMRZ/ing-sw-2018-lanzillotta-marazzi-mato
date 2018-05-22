@@ -1,7 +1,14 @@
 package it.polimi.se2018.server.events.tool_mex;
 
-public class ToolCard8 extends ToolNoParam {
-    public ToolCard8(String player, int cardIndex ){
-        super(player,cardIndex);
+import java.util.ArrayList;
+
+public class ToolCard8 extends ToolCard9 {
+    public ToolCard8(String player, int cardIndex, ArrayList<Integer> inputs){
+        super(player,cardIndex,inputs);
+    }
+
+    @Override
+    public ArrayList<Integer> getAttributes() {
+        return super.getAttributes();
     }
 }

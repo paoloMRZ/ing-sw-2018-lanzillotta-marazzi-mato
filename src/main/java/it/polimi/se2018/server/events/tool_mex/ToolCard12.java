@@ -47,8 +47,7 @@ public class ToolCard12 extends ToolMultiParam {
 
     @Override
     public ArrayList<Integer> getAttributes(){
-        if(D2ColNew==-1) return new ArrayList<>(Arrays.asList(coordOnBox, coordInBox,D1RowOld, D1ColOld, D1RowNew,  D1ColNew));
-        else return new ArrayList<>(Arrays.asList(coordOnBox, coordInBox,D1RowOld, D1ColOld, D1RowNew,  D1ColNew, D2RowOld, D2ColOld, D2RowNew, D2ColNew));
+        return new ArrayList<>(Arrays.asList(coordOnBox, coordInBox,D1RowOld, D1ColOld, D1RowNew,  D1ColNew, D2RowOld, D2ColOld, D2RowNew, D2ColNew));
     }
 
 }

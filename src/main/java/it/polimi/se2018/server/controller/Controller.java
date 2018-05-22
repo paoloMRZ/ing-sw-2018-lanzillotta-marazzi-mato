@@ -43,5 +43,7 @@ public class Controller{
         return cAction;
     }
 
-
+    public ControllerTurn getcTurn() {
+        return cTurn;
+    }
 }

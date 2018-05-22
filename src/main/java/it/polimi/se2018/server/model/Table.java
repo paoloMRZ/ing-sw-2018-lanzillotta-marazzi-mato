@@ -255,4 +255,12 @@ public class Table {
 
         }
     }
+
+
+    public RoundGrid getRoundGrid(){
+        return roundGrid;
+    }
+    public DiceSachet getDiceSachet(){
+        return diceSachet;
+    }
 }
