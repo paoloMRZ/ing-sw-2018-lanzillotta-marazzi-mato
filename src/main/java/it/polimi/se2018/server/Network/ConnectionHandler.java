@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class ConnectionHandler extends Thread {
+public class ConnectionHandler implements Runnable {
 
     private Lobby lobby;
     private Socket socket;
@@ -20,7 +20,7 @@ public class ConnectionHandler extends Thread {
         try {
             Scanner in = new Scanner(socket.getInputStream());
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-            String nick = null;
+            String nick;
 
             out.writeChars("Ciao! Dammi il tuo nick\n");
             do{

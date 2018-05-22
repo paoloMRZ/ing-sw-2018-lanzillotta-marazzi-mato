@@ -5,7 +5,6 @@ import it.polimi.se2018.server.fake_view.FakeView;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.logging.Logger;
 
 public class SingletonServer{
 
@@ -41,11 +40,11 @@ public class SingletonServer{
 
         System.out.println("[*] In attesa di connessioni.");
         while(isOpen){
-            Thread thread = null;
 
             try {
-                thread = new Thread( new ConnectionHandler(lobby, serverSocket.accept()));
-                thread.start();
+                Runnable r = new ConnectionHandler(lobby, serverSocket.accept());
+                new Thread(r).start();
+
             } catch (IOException e) {
                 System.out.println("[*] ERRORE: impossibile aprire la socket.");
             }

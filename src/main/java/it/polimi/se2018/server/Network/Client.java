@@ -19,11 +19,11 @@ public class Client {
     }
 
     public void sendMessage(String mex){
-
+        connectionType.send(mex);
     }
 
     public String receiveMessage(){
-        return null;
+        return connectionType.receive();
     }
 
     public void setVirtualView(FakeView virtualView){
