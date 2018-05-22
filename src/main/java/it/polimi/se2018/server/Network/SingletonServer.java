@@ -1,12 +1,14 @@
 package it.polimi.se2018.server.Network;
 
+import it.polimi.se2018.client.ClientInterface;
 import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.fake_view.FakeView;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.rmi.Remote;
 
-public class SingletonServer{
+public class SingletonServer implements ServerInterface, Remote {
 
     private final int PORT = 1234;
 
@@ -53,4 +55,8 @@ public class SingletonServer{
         }
     }
 
+    @Override
+    public void add(ClientInterface clientInterface, String nickname) {
+        Client client = new Client(new)
+    }
 }
