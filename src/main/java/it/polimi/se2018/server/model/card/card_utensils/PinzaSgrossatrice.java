@@ -31,11 +31,12 @@ public class PinzaSgrossatrice extends Utensils {
         String name= myMessage.getPlayer();
         int die=messageCont.get(0);
         boolean up=myMessage.getDecision();
-        int row=messageCont.get(1);
-        int col=messageCont.get(2);
 
-        controller.getcAction()
-            .workOnSide(name,   upper(controller.getcAction().pickFromReserve(die),up),     row,    col);
+        Dice D=upper(controller.getcAction()
+                            .pickFromReserve(die),up);
+
+        controller.getcAction().putBackInReserve(D);
+
 
         controller.getcAction().playerActivatedCard(name);
     }

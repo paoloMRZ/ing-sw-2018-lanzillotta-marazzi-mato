@@ -1,10 +1,8 @@
 package it.polimi.se2018;
 
-import it.polimi.se2018.server.Network.ServerInterface;
-import it.polimi.se2018.server.Network.SingletonServer;
+import it.polimi.se2018.server.network.SingletonServer;
 
 import java.net.MalformedURLException;
-import java.net.ServerSocket;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;

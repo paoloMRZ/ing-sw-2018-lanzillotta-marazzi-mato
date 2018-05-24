@@ -18,7 +18,7 @@ public class Martelletto extends  Utensils {
                 "scegliere il secondo dad");
     }
     public void function(Controller controller) throws InvalidValueException, InvalidActivationException {
-        if(controller.getcTurn().getTurn().getHowManyTurns() == 1 && !controller.getcTurn().getTurn().getDidPlayDie()) {
+        if(controller.getcTurn().getTurn().getHowManyTurns() == 0 && !controller.getcTurn().getTurn().getDidPlayDie()) {
             Reserve rolled= new Reserve(new ArrayList<Dice>());
             Reserve tmpRes= controller.getcAction().getReserve();
             ArrayList<Dice> toRoll= tmpRes.getDices();

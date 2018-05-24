@@ -30,7 +30,7 @@ public class TaglerinaCircolare extends Utensils{
         Dice fromReserve= controller.getcAction().pickFromReserve(indexDie);
 
         controller.getcAction().putOnGrid(boxOnGrid,fromReserve);
-        controller.getcAction().setHoldingADiceMoveInProgress(fromGrid);
+        controller.getcAction().putBackInReserve(fromGrid);
 
 
         controller.getcAction().playerActivatedCard(name);

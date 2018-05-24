@@ -23,6 +23,7 @@ public class ControllerAction {
         this.lobby=LOBBY;
     }
 
+
     public void workOnSide(String name,Dice d, int row, int col)throws InvalidValueException, InvalidCellException, InvalidCoordinatesException {
         lobby.callPlayerByName(name).putDice(d,row,col);
     }
@@ -37,6 +38,7 @@ public class ControllerAction {
         Dice tmp= lobby.pickFromReserve(die);
         lobby.callPlayerByName(name).putWithoutDicesNear(row,col,tmp);
     }
+    //si poteva scrivere usando wokOnSide ma ho voluto rendere ciascun metodo indipendente
     public void moveStuffOnSide(String name,int oldRow, int oldCol,int newRow, int newCol) throws InvalidValueException, InvalidCellException {
         lobby.callPlayerByName(name).putDice(lobby.callPlayerByName(name).showSelectedCell(oldRow,oldCol).pickDice(),newRow,newCol);
     }
@@ -44,6 +46,7 @@ public class ControllerAction {
     public Reserve getReserve(){
         return lobby.getReserve();
     }
+
     public void putBackInReserve(){
         Reserve toStoreAgain=lobby.getReserve();
         toStoreAgain.put(getHoldingADiceMoveInProgress());
@@ -83,6 +86,10 @@ public class ControllerAction {
     public Dice takeALookToDie(String name, int row, int col) throws InvalidValueException {
         return lobby.callPlayerByName(name).showSelectedCell(row,col).showDice();
     }
+    public Dice takeALookToDieInGrid(int onBox, int inBox) throws InvalidValueException {
+        return lobby.getRoundGrid().show(onBox,inBox);
+    }
+
     public void setHoldingADiceMoveInProgress(Dice d){
         this.holdingADiceMoveInProgress=d;
     }

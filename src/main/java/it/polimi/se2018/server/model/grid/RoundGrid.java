@@ -62,6 +62,17 @@ public class RoundGrid {
         }
 
     }
+    public Dice show(int posOnGrid,int posOnLilGroup)throws InvalidValueException{
+
+        if(posOnGrid>10 || posOnGrid <0) throw new InvalidValueException();
+        else{
+            Dice tmp = roundDices.get(posOnGrid).get(posOnLilGroup);
+            Dice ret = new Dice(tmp.getColor(),tmp.getNumber());
+            return ret;
+        }
+
+    }
+
 
     //metodo dedicato alle rimanenze della riserva che finiscono sulla griglia, viene appeso perchè è l'ultimo
     //round appena giocato

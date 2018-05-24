@@ -18,6 +18,7 @@ public class TaglierinaManuale extends Utensils {
     public void function(Controller controller, ToolCard12 myMessage) throws InvalidValueException, InvalidCellException {
         ArrayList<Integer> messageCont= new ArrayList<>(myMessage.getAttributes());
         String name= myMessage.getPlayer();
+
         int onBox= messageCont.get(0);
         int inBox= messageCont.get(1);
         int oldRow1=messageCont.get(2);
@@ -29,7 +30,7 @@ public class TaglierinaManuale extends Utensils {
         int newRow2=messageCont.get(8);
         int newCol2=messageCont.get(9);
 
-        Dice fromGrid=controller.getcAction().takeFromGrid(onBox,inBox);
+        Dice fromGrid=controller.getcAction().takeALookToDieInGrid(onBox,inBox);
         Dice d1=controller.getcAction().takeALookToDie(name,oldRow1,oldCol1);
         Dice d2=controller.getcAction().takeALookToDie(name,oldRow2,oldCol2);
         //controllo che i dadi selezionati siano consoni alla carta

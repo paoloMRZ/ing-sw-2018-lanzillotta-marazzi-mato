@@ -19,7 +19,8 @@ public class TamponeDiamantato extends Utensils {
         String name= myMessage.getPlayer();
 
         controller.getcAction().putBackInReserve(
-                flip(controller.getcAction().pickFromReserve(die)));
+                                                 flip(controller.getcAction()
+                                                         .pickFromReserve(die)));
 
         controller.getcAction().playerActivatedCard(name);
     }
