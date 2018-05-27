@@ -155,7 +155,11 @@ public class SideTest {
                 }
 
             } catch (InvalidCoordinatesException e) {
-                assertTrue(true);
+                try {
+                    assertTrue(l.showCell(2,1).showDice() == null);
+                } catch (InvalidCoordinatesException | InvalidShadeValueException e1) {
+                    fail();
+                }
             } catch (SagradaException e) {
                 fail();
             }
@@ -265,6 +269,9 @@ public class SideTest {
         for(Side l:lati) {
             try {
                 l.put(0,4,dado);
+                assertTrue(l.showCell(0,4).showDice() != null &&
+                                    l.showCell(0,4).showDice().getNumber() == dado.getNumber() &&
+                                    l.showCell(0,4).showDice().getColor() == dado.getColor());
             } catch (SagradaException e) {
                 fail();
             }
@@ -315,17 +322,51 @@ public class SideTest {
     }
 
     @Test
-    public void secondCorrectPutTest(){
+    public void firstAndSecondCorrectPutTest(){
         Dice dado = new Dice(Color.YELLOW, 3);
         int i = 0;
 
         for(Side l:lati) {
             try {
-                l.put(0,4,dado);
+
+                switch (i){
+                    case 0:{
+                        l.put(0,4,dado);
+                        assertTrue(l.showCell(0,4).showDice() != null &&
+                                l.showCell(0,4).showDice().getNumber() == dado.getNumber() &&
+                                l.showCell(0,4).showDice().getColor() == dado.getColor());
+                    }break;
+
+                    case 1:{
+                        l.putIgnoringShade(0,4,dado);
+                        assertTrue(l.showCell(0,4).showDice() != null &&
+                                l.showCell(0,4).showDice().getNumber() == dado.getNumber() &&
+                                l.showCell(0,4).showDice().getColor() == dado.getColor());
+                    }break;
+
+                    case 2:{
+                        l.putIgnoringColor(0,4,dado);
+                        assertTrue(l.showCell(0,4).showDice() != null &&
+                                l.showCell(0,4).showDice().getNumber() == dado.getNumber() &&
+                                l.showCell(0,4).showDice().getColor() == dado.getColor());
+                    }break;
+
+                    case 3: {
+                        l.putWithoutDicesNear(0,4,dado);
+                        assertTrue(l.showCell(0,4).showDice() != null &&
+                                l.showCell(0,4).showDice().getNumber() == dado.getNumber() &&
+                                l.showCell(0,4).showDice().getColor() == dado.getColor());
+                    }break;
+                }
+
             } catch (SagradaException e) {
                 fail();
             }
+
+            i++;
         }
+
+        i=0;
 
         for (Side l : lati) {
             try {
@@ -437,6 +478,49 @@ public class SideTest {
             fail();
         } catch (InvalidCoordinatesException e) {
             assertTrue(true);
+        } catch (SagradaException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void areSimilarDiceTest(){
+
+        Dice dadoA = new Dice(Color.YELLOW, 1);
+        Dice dadoB = new Dice(Color.YELLOW, 2);
+        Dice dadoC = new Dice(Color.RED, 1);
+
+        //Primo put.
+        try{
+            lato.put(0,0, dadoA);
+            assertTrue(lato.showCell(0,0).showDice().getColor() == dadoA.getColor() &&
+                                lato.showCell(0,0).showDice().getNumber() == dadoA.getNumber());
+        }catch (SagradaException e ){
+            fail();
+        }
+
+        //Secondo put. Il dado ha lo stesso colore del suo vicino.
+        try {
+            lato.put(1,0,dadoB);
+        } catch (NearDiceInvalidException e) {
+            try {
+                assertTrue(lato.showCell(1,0).showDice() == null);
+            } catch (InvalidCoordinatesException | InvalidShadeValueException e1) {
+                fail();
+            }
+        } catch (SagradaException e) {
+            fail();
+        }
+
+        //Terzo put. Il dado ha la stessa sfumatura del suo vicino.
+        try {
+            lato.put(0,1,dadoC);
+        } catch (NearDiceInvalidException e) {
+            try {
+                assertTrue(lato.showCell(0,1).showDice() == null);
+            } catch (InvalidCoordinatesException | InvalidShadeValueException e1) {
+                fail();
+            }
         } catch (SagradaException e) {
             fail();
         }
