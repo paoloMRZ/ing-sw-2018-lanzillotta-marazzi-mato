@@ -7,7 +7,7 @@ import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 
 /**
- * Rappresenta l'incapsulamento dell'algoritmo relativo alle carte della tipologia ShadesOf che, a seconda delcolore in ingresso,
+ * Rappresenta l'incapsulamento dell'algoritmo relativo alle carte della tipologia ShadesOf che, a seconda del colore in ingresso,
  * istanzia una delle seguenti tipologia di carta:
  *
  * "Sfumature Rosse - Privata" : "Somma dei valori su tutti i dadi rossi" ,  Punti Favore #

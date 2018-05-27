@@ -247,12 +247,6 @@ public class ColorDiagonals implements StrategyAlgorithm {
     public int use(Player player) throws Exception {
 
         int favours = 0;
-        Color tempColor1;
-        Color tempColor2;
-        Color tempColor3;
-
-        Dice dieTemp2;
-        Dice dieTemp3;
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 5; j++) {
