@@ -24,12 +24,11 @@ public class PinzaSgrossatrice extends Utensils {
     //TODO fare metodi di sostegno
 
 
-    public void function(Controller controller, MoreThanSimple myMessage) throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void function(Controller controller, MoreThanSimple myMessage) throws InvalidValueException, InvalidSomethingWasNotDoneGood {
         //unwrapping message
 
-        ArrayList<Integer> messageCont= new ArrayList<>(myMessage.getAttributes());
         String name= myMessage.getPlayer();
-        int die=messageCont.get(0);
+        int die=myMessage.getDie();
         boolean up=myMessage.getDecision();
 
         Dice D=upper(controller.getcAction()

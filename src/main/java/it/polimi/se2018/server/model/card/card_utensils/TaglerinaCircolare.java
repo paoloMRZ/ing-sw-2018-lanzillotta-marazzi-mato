@@ -18,7 +18,7 @@ public class TaglerinaCircolare extends Utensils{
     }
 
     //todo discutere cosa fare con quel dado perchè l'algoritmo rimane in sospseso
-    public void function(Controller controller, ToolCard5 myMessage) throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void function(Controller controller, ToolCard5 myMessage) throws InvalidValueException, InvalidSomethingWasNotDoneGood {
         ArrayList<Integer> messageCont= new ArrayList<>(myMessage.getAttributes());
         String name= myMessage.getPlayer();
         int indexDie= messageCont.get(0);

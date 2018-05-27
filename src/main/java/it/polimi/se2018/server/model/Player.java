@@ -226,7 +226,7 @@ public class Player {
      */
 
     public void putDiceIgnoreColor(int oldRow, int oldCol,int newRow, int newCol) throws InvalidValueException, NoDicesNearException, NotEmptyCellException, InvalidShadeException, NearDiceInvalidException {
-        Dice D=mySide.showCell(oldRow,oldCol).pickDice();
+        Dice D=mySide.pick(oldRow,oldCol);
         if(D==null) throw new InvalidValueException();
         mySide.putIgnoringColor(newRow,  newCol,  D  );
     }
@@ -247,7 +247,7 @@ public class Player {
      */
 
     public void putDiceIgnoreValue(int oldRow, int oldCol,int newRow, int newCol) throws InvalidValueException, NoDicesNearException, NotEmptyCellException, InvalidColorException, NearDiceInvalidException {
-        Dice D=mySide.showCell(oldRow,oldCol).pickDice();
+        Dice D=mySide.pick(oldRow,oldCol);
         if(D==null) throw  new InvalidValueException();
         mySide.putIgnoringShade(newRow,  newCol,  D  );
     }
@@ -290,5 +290,7 @@ public class Player {
     public void putWithoutDicesNear(int row, int col, Dice die) throws InvalidColorException, NotEmptyCellException, InvalidShadeException, InvalidCoordinatesException {
         mySide.putWithoutDicesNear(row,col,die);
     }
-
+    public Dice sidePick(int row, int col) throws InvalidCoordinatesException {
+        return mySide.pick(row,col);
+    }
 }

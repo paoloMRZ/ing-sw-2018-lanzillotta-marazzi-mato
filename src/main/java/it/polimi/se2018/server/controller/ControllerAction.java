@@ -40,7 +40,7 @@ public class ControllerAction {
     }
     //si poteva scrivere usando wokOnSide ma ho voluto rendere ciascun metodo indipendente
     public void moveStuffOnSide(String name,int oldRow, int oldCol,int newRow, int newCol) throws InvalidValueException, InvalidCellException {
-        lobby.callPlayerByName(name).putDice(lobby.callPlayerByName(name).showSelectedCell(oldRow,oldCol).pickDice(),newRow,newCol);
+        lobby.callPlayerByName(name).putDice(lobby.callPlayerByName(name).sidePick(oldRow,oldCol),newRow,newCol);
     }
 
     public Reserve getReserve(){
@@ -61,7 +61,7 @@ public class ControllerAction {
         try {
             return lobby.pickFromReserve(whichOne);
         }
-        catch(ArrayIndexOutOfBoundsException  e){
+        catch(IndexOutOfBoundsException  e){
             throw new InvalidValueException();
         }
         catch(NullPointerException e){
@@ -80,6 +80,9 @@ public class ControllerAction {
     }
     public void putOnGrid(int onGrid,Dice d) throws InvalidValueException {
         lobby.getRoundGrid().put(onGrid,d);
+    }
+    public Dice pickOnGrid(int onGrid,int inGrid) throws InvalidValueException {
+        return lobby.getRoundGrid().pick(onGrid,inGrid);
     }
 
 
@@ -110,4 +113,5 @@ public class ControllerAction {
         lobby.getDiceSachet().reput(die);
         return lobby.getDiceSachet().getDiceFromSachet();
     }
+
 }

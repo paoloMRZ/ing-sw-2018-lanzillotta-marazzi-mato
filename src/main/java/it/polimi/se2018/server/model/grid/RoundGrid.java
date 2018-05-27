@@ -6,6 +6,7 @@ import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class RoundGrid {
@@ -15,8 +16,11 @@ public class RoundGrid {
 
     public RoundGrid() {
         //metto valori di default
-        this.roundDices =   new ArrayList<>();
+        this.roundDices =   new ArrayList<>(Arrays.asList(null,null,null,null,null,null,null,null,null,null));
         this.actualRound = 1;
+        //for (int where=0;where<10;where++){
+        //    roundDices.set(where,null);
+       // }
     }
 
     /*
