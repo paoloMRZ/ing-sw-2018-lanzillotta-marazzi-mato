@@ -18,13 +18,14 @@ import static org.junit.Assert.*;
 //Carta testata: Kaleidoscopic Dream
 
 public class SpecificColorVarietyTest {
+
     private static ArrayList<Cell> casualList = new ArrayList<>(20);
     private static Side casualSide;
     private static Player player;
     private static Objective obj;
 
     @Before
-    public void setup() throws InvalidShadeValueException, InvalidFavoursValueException, InvalidColorValueException {
+    public void setup() throws InvalidShadeValueException, InvalidFavoursValueException{
         casualList.add(new Cell(Color.YELLOW , 0));
         casualList.add(new Cell(Color.BLUE, 0));
         casualList.add(new Cell(Color.WHITE, 0));
@@ -57,12 +58,17 @@ public class SpecificColorVarietyTest {
 
             SpecificColorVariety columnColorVarietyTest = new SpecificColorVariety(5,4);
             obj = new Objective("TestName", "TestDescription", 4, columnColorVarietyTest, false);
-            player = new Player(casualSide, obj, 4, "Tester");
+            player = new Player(obj, 4, "Tester");
 
             casualSide.put(0,0,new Dice(Color.YELLOW, 4));
             casualSide.put(1,0,new Dice(Color.GREEN, 2));
             casualSide.put(2,0,new Dice(Color.RED, 3));
             casualSide.put(3,0,new Dice(Color.BLUE, 2));
+
+            ArrayList<Side> sides = new ArrayList<>();
+            sides.add(casualSide);
+            player.setSideSelection(sides);
+            player.setMySide(0);
 
             assertEquals(5,obj.useAlgorithm(player));
 
@@ -76,7 +82,7 @@ public class SpecificColorVarietyTest {
 
             SpecificColorVariety columnColorVarietyTest = new SpecificColorVariety(5,4);
             obj = new Objective("TestName", "TestDescription", 4, columnColorVarietyTest, false);
-            player = new Player(casualSide, obj, 4, "Tester");
+            player = new Player(obj, 4, "Tester");
 
             casualSide.put(0,0,new Dice(Color.YELLOW, 4));
             casualSide.put(1,0,new Dice(Color.GREEN, 5));
@@ -103,6 +109,11 @@ public class SpecificColorVarietyTest {
             casualSide.put(2,4,new Dice(Color.GREEN, 1));
             casualSide.put(3,4,new Dice(Color.YELLOW, 6));
 
+            ArrayList<Side> sides = new ArrayList<>();
+            sides.add(casualSide);
+            player.setSideSelection(sides);
+            player.setMySide(0);
+
             assertEquals(25,obj.useAlgorithm(player));
 
         } catch (Exception e) { fail();}
@@ -115,12 +126,17 @@ public class SpecificColorVarietyTest {
 
             SpecificColorVariety columnColorVarietyTest = new SpecificColorVariety(5,4);
             obj = new Objective("TestName", "TestDescription", 4, columnColorVarietyTest, false);
-            player = new Player(casualSide, obj, 4, "Tester");
+            player = new Player(obj, 4, "Tester");
 
             casualSide.put(0,0,new Dice(Color.YELLOW, 4));
             casualSide.put(1,0,new Dice(Color.GREEN, 5));
             casualSide.put(2,0,new Dice(Color.RED, 3));
             casualSide.put(3,0,new Dice(Color.YELLOW, 5));
+
+            ArrayList<Side> sides = new ArrayList<>();
+            sides.add(casualSide);
+            player.setSideSelection(sides);
+            player.setMySide(0);
 
             assertEquals(0,obj.useAlgorithm(player));
 
@@ -134,15 +150,20 @@ public class SpecificColorVarietyTest {
     public void singleSetTestRow(){
         try {
 
-            SpecificColorVariety rowColorVarietyTest = new SpecificColorVariety(4,5);
-            obj = new Objective("TestName", "TestDescription", 4, rowColorVarietyTest, false);
-            player = new Player(casualSide, obj, 4, "Tester");
+            SpecificColorVariety columnColorVarietyTest = new SpecificColorVariety(4,5);
+            obj = new Objective("TestName", "TestDescription", 4, columnColorVarietyTest, false);
+            player = new Player(obj, 4, "Tester");
 
             casualSide.put(0,0,new Dice(Color.YELLOW, 4));
             casualSide.put(0,1,new Dice(Color.BLUE, 2));
             casualSide.put(0,2,new Dice(Color.RED, 6));
             casualSide.put(0,3,new Dice(Color.GREEN, 3));
             casualSide.put(0,4,new Dice(Color.PURPLE, 1));
+
+            ArrayList<Side> sides = new ArrayList<>();
+            sides.add(casualSide);
+            player.setSideSelection(sides);
+            player.setMySide(0);
 
             assertEquals(6,obj.useAlgorithm(player));
 
@@ -154,9 +175,9 @@ public class SpecificColorVarietyTest {
     public void completeSetTestRow(){
         try {
 
-            SpecificColorVariety rowColorVarietyTest = new SpecificColorVariety(4,5);
-            obj = new Objective("TestName", "TestDescription", 4, rowColorVarietyTest, false);
-            player = new Player(casualSide, obj, 4, "Tester");
+            SpecificColorVariety columnColorVarietyTest = new SpecificColorVariety(4,5);
+            obj = new Objective("TestName", "TestDescription", 4, columnColorVarietyTest, false);
+            player = new Player(obj, 4, "Tester");
 
             casualSide.put(0,0,new Dice(Color.YELLOW, 4));
             casualSide.put(0,1,new Dice(Color.BLUE, 2));
@@ -182,6 +203,11 @@ public class SpecificColorVarietyTest {
             casualSide.put(3,3,new Dice(Color.BLUE, 6));
             casualSide.put(3,4,new Dice(Color.YELLOW, 3));
 
+            ArrayList<Side> sides = new ArrayList<>();
+            sides.add(casualSide);
+            player.setSideSelection(sides);
+            player.setMySide(0);
+
             assertEquals(24,obj.useAlgorithm(player));
 
         } catch (Exception e) { fail();}
@@ -192,15 +218,20 @@ public class SpecificColorVarietyTest {
     public void noSetTestRow(){
         try {
 
-            SpecificColorVariety rowColorVarietyTest = new SpecificColorVariety(4,5);
-            obj = new Objective("TestName", "TestDescription", 4, rowColorVarietyTest, false);
-            player = new Player(casualSide, obj, 4, "Tester");
+            SpecificColorVariety columnColorVarietyTest = new SpecificColorVariety(4,5);
+            obj = new Objective("TestName", "TestDescription", 4, columnColorVarietyTest, false);
+            player = new Player(obj, 4, "Tester");
 
             casualSide.put(0,0,new Dice(Color.YELLOW, 4));
             casualSide.put(0,1,new Dice(Color.BLUE, 5));
             casualSide.put(0,2,new Dice(Color.RED, 6));
             casualSide.put(0,3,new Dice(Color.GREEN, 5));
             casualSide.put(0,4,new Dice(Color.YELLOW, 1));
+
+            ArrayList<Side> sides = new ArrayList<>();
+            sides.add(casualSide);
+            player.setSideSelection(sides);
+            player.setMySide(0);
 
             assertEquals(0,obj.useAlgorithm(player));
 

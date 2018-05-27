@@ -25,6 +25,7 @@ public class CoupleOfShadesTest {
     private static Player player;
     private static Objective obj;
 
+
     @Before
     public void setup() throws InvalidShadeValueException, InvalidFavoursValueException, InvalidColorValueException {
         casualList.add(new Cell(Color.YELLOW, 0));
@@ -49,7 +50,6 @@ public class CoupleOfShadesTest {
         casualList.add(new Cell(Color.YELLOW, 0));
 
         casualSide = new Side("test", 4, casualList);
-
     }
 
     @Test
@@ -58,13 +58,19 @@ public class CoupleOfShadesTest {
 
             CoupleOfShades coupleOfLigth = new CoupleOfShades(1,2);
             obj = new Objective("TestName", "TestDescription", 2, coupleOfLigth, false);
-            player = new Player(casualSide, obj, 4, "Tester");
+            player = new Player(obj, 4, "Tester");
+
 
             casualSide.put(0,0,new Dice(Color.YELLOW, 4));
             casualSide.put(0,1,new Dice(Color.BLUE, 2));
             casualSide.put(0,2,new Dice(Color.RED, 1));
             casualSide.put(0,3,new Dice(Color.BLUE, 3));
             casualSide.put(0,4,new Dice(Color.PURPLE, 1));
+
+            ArrayList<Side> sides = new ArrayList<>();
+            sides.add(casualSide);
+            player.setSideSelection(sides);
+            player.setMySide(0);
 
             assertEquals(2,obj.useAlgorithm(player));
 
@@ -78,7 +84,7 @@ public class CoupleOfShadesTest {
 
             CoupleOfShades coupleOfMedium = new CoupleOfShades(3,4);
             obj = new Objective("TestName", "TestDescription", 2, coupleOfMedium, false);
-            player = new Player(casualSide, obj, 4, "Tester");
+            player = new Player(obj, 4, "Tester");
 
             casualSide.put(0,0,new Dice(Color.YELLOW, 4));
             casualSide.put(0,1,new Dice(Color.BLUE, 3));
@@ -103,6 +109,11 @@ public class CoupleOfShadesTest {
             casualSide.put(3,2,new Dice(Color.PURPLE, 4));
             casualSide.put(3,3,new Dice(Color.BLUE, 3));
             casualSide.put(3,4,new Dice(Color.YELLOW, 4));
+
+            ArrayList<Side> sides = new ArrayList<>();
+            sides.add(casualSide);
+            player.setSideSelection(sides);
+            player.setMySide(0);
 
             assertEquals(14,obj.useAlgorithm(player));
 

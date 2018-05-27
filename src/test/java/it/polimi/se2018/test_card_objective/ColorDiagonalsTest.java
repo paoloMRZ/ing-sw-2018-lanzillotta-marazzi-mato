@@ -27,7 +27,7 @@ public class ColorDiagonalsTest {
     private static ColorDiagonals colorDiagonalTest;
 
     @Before
-    public void setup() throws InvalidShadeValueException, InvalidFavoursValueException, InvalidColorValueException {
+    public void setup() throws InvalidShadeValueException, InvalidFavoursValueException{
         casualList.add(new Cell(Color.YELLOW, 0));
         casualList.add(new Cell(Color.BLUE, 0));
         casualList.add(new Cell(Color.WHITE, 0));
@@ -50,10 +50,9 @@ public class ColorDiagonalsTest {
         casualList.add(new Cell(Color.YELLOW, 0));
 
         casualSide = new Side("test", 4, casualList);
-
         colorDiagonalTest = new ColorDiagonals();
         obj = new Objective("TestName", "TestDescription", 4, colorDiagonalTest, false);
-        player = new Player(casualSide, obj, 4, "Tester");
+        player = new Player(obj, 4, "Tester");
 
     }
 
@@ -62,6 +61,11 @@ public class ColorDiagonalsTest {
         try{
             casualSide.put(0,0,new Dice(Color.YELLOW, 4));
             casualSide.put(1,1,new Dice(Color.YELLOW, 5));
+
+            ArrayList<Side> sides = new ArrayList<>();
+            sides.add(casualSide);
+            player.setSideSelection(sides);
+            player.setMySide(0);
 
             assertEquals(2,obj.useAlgorithm(player));
         }catch(Exception e){ fail();}
@@ -73,6 +77,11 @@ public class ColorDiagonalsTest {
         try{
             casualSide.put(0,4,new Dice(Color.PURPLE, 1));
             casualSide.put(1,3,new Dice(Color.PURPLE, 5));
+
+            ArrayList<Side> sides = new ArrayList<>();
+            sides.add(casualSide);
+            player.setSideSelection(sides);
+            player.setMySide(0);
 
             assertEquals(2,obj.useAlgorithm(player));
         }catch(Exception e){ fail();}
@@ -86,6 +95,11 @@ public class ColorDiagonalsTest {
             casualSide.put(1,1,new Dice(Color.YELLOW, 5));
             casualSide.put(2,0,new Dice(Color.YELLOW, 3));
             casualSide.put(3,1,new Dice(Color.YELLOW, 6));
+
+            ArrayList<Side> sides = new ArrayList<>();
+            sides.add(casualSide);
+            player.setSideSelection(sides);
+            player.setMySide(0);
 
             assertEquals(4,obj.useAlgorithm(player));
         }catch(Exception e){ fail();}
@@ -103,12 +117,12 @@ public class ColorDiagonalsTest {
             casualSide.put(1,3,new Dice(Color.RED, 6));
             casualSide.put(2,2,new Dice(Color.RED, 1));
 
+            ArrayList<Side> sides = new ArrayList<>();
+            sides.add(casualSide);
+            player.setSideSelection(sides);
+            player.setMySide(0);
+
             assertEquals(7,obj.useAlgorithm(player));
         }catch(Exception e){ fail();}
     }
-
-
-
-
-
 }

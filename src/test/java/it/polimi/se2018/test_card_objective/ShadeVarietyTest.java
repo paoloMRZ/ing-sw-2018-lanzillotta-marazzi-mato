@@ -49,9 +49,11 @@ public class ShadeVarietyTest {
         casualList.add(new Cell(Color.YELLOW, 0));
 
         casualSide = new Side("test", 4, casualList);
+
         ShadeVariety shadesVarietyTest = new ShadeVariety();
         obj = new Objective("TestName", "TestDescription", 3, shadesVarietyTest, false);
-        player = new Player(casualSide, obj, 4, "Tester");
+        player = new Player(obj, 4, "Tester");
+
 
     }
 
@@ -65,6 +67,12 @@ public class ShadeVarietyTest {
             casualSide.put(2,1,new Dice(Color.RED, 4));
             casualSide.put(3,0,new Dice(Color.GREEN, 5));
             casualSide.put(2,0,new Dice(Color.YELLOW, 6));
+
+            ArrayList<Side> sides = new ArrayList<>();
+            sides.add(casualSide);
+            player.setSideSelection(sides);
+            player.setMySide(0);
+
             assertEquals(5,obj.useAlgorithm(player));
 
         } catch (Exception e) { fail();}
@@ -82,6 +90,12 @@ public class ShadeVarietyTest {
             casualSide.put(2,0,new Dice(Color.YELLOW, 6));
 
             casualSide.put(3,2, new Dice(Color.GREEN, 2));
+
+            ArrayList<Side> sides = new ArrayList<>();
+            sides.add(casualSide);
+            player.setSideSelection(sides);
+            player.setMySide(0);
+
             assertEquals(5,obj.useAlgorithm(player));
 
         } catch (Exception e) { fail();}
@@ -96,6 +110,12 @@ public class ShadeVarietyTest {
             casualSide.put(1,2,new Dice(Color.YELLOW, 3));
             casualSide.put(2,1,new Dice(Color.RED, 4));
             casualSide.put(3,0,new Dice(Color.GREEN, 5));
+
+            ArrayList<Side> sides = new ArrayList<>();
+            sides.add(casualSide);
+            player.setSideSelection(sides);
+            player.setMySide(0);
+
             assertEquals(0,obj.useAlgorithm(player));
 
         } catch (Exception e) { fail();}

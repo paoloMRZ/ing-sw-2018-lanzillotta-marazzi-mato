@@ -48,7 +48,6 @@ public class ShadesOfCardTest {
         casualList.add(new Cell(Color.YELLOW, 0));
 
         casualSide = new Side("test", 4, casualList);
-
     }
 
 
@@ -58,7 +57,7 @@ public class ShadesOfCardTest {
 
             ShadesOfCard shadesOfPurple = new ShadesOfCard(Color.PURPLE);
             obj = new Objective("TestName", "TestDescription", 3, shadesOfPurple, false);
-            player = new Player(casualSide, obj, 4, "Tester");
+            player = new Player(obj, 4, "Tester");
 
             casualSide.put(0,0,new Dice(Color.RED, 3));
             casualSide.put(1,1,new Dice(Color.PURPLE, 2));
@@ -66,7 +65,14 @@ public class ShadesOfCardTest {
             casualSide.put(3,2,new Dice(Color.GREEN, 5));
             casualSide.put(3,3,new Dice(Color.PURPLE, 1));
             casualSide.put(2,4,new Dice(Color.PURPLE, 1));
+
+            ArrayList<Side> sides = new ArrayList<>();
+            sides.add(casualSide);
+            player.setSideSelection(sides);
+            player.setMySide(0);
+
             assertEquals(4,obj.useAlgorithm(player));
+
 
         } catch (Exception e) { fail();}
 
@@ -77,7 +83,7 @@ public class ShadesOfCardTest {
         try {
             ShadesOfCard shadesOfRed = new ShadesOfCard(Color.RED);
             obj = new Objective("TestName", "TestDescription", 3, shadesOfRed, false);
-            player = new Player(casualSide, obj, 4, "Tester");
+            player = new Player(obj, 4, "Tester");
 
             casualSide.put(0,0,new Dice(Color.RED, 3));
             casualSide.put(1,1,new Dice(Color.PURPLE, 3));
@@ -86,6 +92,12 @@ public class ShadesOfCardTest {
             casualSide.put(3,3,new Dice(Color.PURPLE, 4));
             casualSide.put(2,4,new Dice(Color.PURPLE, 1));
             casualSide.put(1,4,new Dice(Color.RED, 5));
+
+            ArrayList<Side> sides = new ArrayList<>();
+            sides.add(casualSide);
+            player.setSideSelection(sides);
+            player.setMySide(0);
+
             assertEquals(14,obj.useAlgorithm(player));
 
         } catch (Exception e) {fail();}
@@ -97,7 +109,7 @@ public class ShadesOfCardTest {
 
             ShadesOfCard shadesOfYellow = new ShadesOfCard(Color.YELLOW);
             obj = new Objective("TestName", "TestDescription", 3, shadesOfYellow, false);
-            player = new Player(casualSide, obj, 4, "Tester");
+            player = new Player(obj, 4, "Tester");
 
             casualSide.put(0,0,new Dice(Color.RED, 3));
             casualSide.put(1,1,new Dice(Color.PURPLE, 3));
@@ -109,6 +121,12 @@ public class ShadesOfCardTest {
             casualSide.put(3,4,new Dice(Color.YELLOW, 1));
             casualSide.put(0,3,new Dice(Color.BLUE, 4));
             casualSide.put(0,4,new Dice(Color.YELLOW, 6));
+
+            ArrayList<Side> sides = new ArrayList<>();
+            sides.add(casualSide);
+            player.setSideSelection(sides);
+            player.setMySide(0);
+
             assertEquals(16,obj.useAlgorithm(player));
 
         } catch (Exception e) {fail();}

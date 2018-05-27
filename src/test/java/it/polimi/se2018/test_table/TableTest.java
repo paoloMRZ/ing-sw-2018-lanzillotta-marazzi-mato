@@ -46,7 +46,7 @@ public class TableTest {
     @Test
     public void singlePlayerExtraction() throws IOException, InvalidCoordinatesException, InvalidShadeValueException {
 
-        players.add(new Player(null, obj, 4, "Tester"));
+        players.add(new Player(obj, 4, "Tester"));
 
         table.setCardPlayer(players);
         players.get(0).setMySide(0);
@@ -57,10 +57,10 @@ public class TableTest {
     @Test
     public void completePlayersExtraction() throws IOException, InvalidCoordinatesException, InvalidShadeValueException {
 
-        players.add(new Player(null, obj, 1, "Tester1"));
-        players.add(new Player(null, obj, 2, "Tester2"));
-        players.add(new Player(null, obj, 3, "Tester3"));
-        players.add(new Player(null, obj, 4, "Tester4"));
+        players.add(new Player(obj, 1, "Tester1"));
+        players.add(new Player(obj, 2, "Tester2"));
+        players.add(new Player(obj, 3, "Tester3"));
+        players.add(new Player(obj, 4, "Tester4"));
 
         table.setCardPlayer(players);
         players.get(0).setMySide(0);
