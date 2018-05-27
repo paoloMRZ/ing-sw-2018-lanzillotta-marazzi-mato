@@ -8,7 +8,6 @@ import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeVa
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,7 +24,7 @@ public class Side {
     @JsonProperty private Cell [][] matrix;
     @JsonProperty private int favours;
     @JsonProperty private String name;
-    private boolean isEmpty;    //Indica se lo schema contiene dadi. La griglia non potrà mai ritornare vuota.
+    private int numberOfDice;    //Numero di dadi contenuti nella griglia.
 
 
     /**
@@ -48,23 +47,32 @@ public class Side {
 
     public Side(String name, int favours, List<Cell> cells) throws InvalidFavoursValueException, InvalidShadeValueException {          //settings rappresenta l'array di stringhe per settare Side
 
+        numberOfDice = 0;
         matrix = new Cell[MAX_ROW +1][MAX_COL +1];
         int k = 0;
 
+        Cell tmp;
+
         for(int i=0; i<MAX_ROW+1; i++){
             for(int j=0; j<MAX_COL+1; j++){
-                matrix[i][j] = new Cell(cells.get(k).getColor(), cells.get(k).getNumber());
+                tmp = new Cell(cells.get(k).getColor(), cells.get(k).getNumber());
+                matrix[i][j] = tmp;
+
+                if(tmp.showDice() != null) //Se la cella passata per costruire la griglia contiene un dado incremento il numero di dadi contenuti nella griglia.
+                    numberOfDice++;
+
                 k++;
             }
         }
 
-        if(favours > 0)
+        if(favours > 0) {
             this.favours = favours;
-        else
+        }
+        else {
             throw new InvalidFavoursValueException();
+        }
 
         this.name = name;
-        isEmpty = true;
     }
 
     /**
@@ -160,8 +168,15 @@ public class Side {
      * @throws InvalidCoordinatesException viene sollevata se vengono passate delle coordinate non valide.
      */
     public Dice pick(int row, int col) throws InvalidCoordinatesException {
-        if(areValidcoordinates(row, col))
+
+        if(areValidcoordinates(row, col)) {
+            Dice tmp = matrix[row][col].showDice();
+
+            if(tmp != null) //Decremento il numero di dadi solo se restituisco veramente un dado.
+                numberOfDice--;
+
             return matrix[row][col].pickDice();
+        }
         else
             throw new InvalidCoordinatesException();
     }
@@ -185,7 +200,7 @@ public class Side {
         if(areValidcoordinates(row,col)) { //Controllo se le coordinate sono valide. Se non lo sono lancio un'eccezione.
 
             //Se non è il primo inserimento controlla i vicini.
-            if (!isEmpty) {
+            if (numberOfDice != 0) {
                 if (checkOrtogonalError(row, col, d))
                     throw new NearDiceInvalidException();
 
@@ -199,7 +214,7 @@ public class Side {
                 if (areNotEdgeCoordinates(row,col)) throw new InvalidCoordinatesException();
             }
             matrix[row][col].putDice(d);
-            isEmpty = false; //Questa istruzione deve sempre essere l'ultima di questo metodo.
+            numberOfDice++; //Questa istruzione deve sempre essere l'ultima di questo metodo.
         }
         else
             throw new InvalidCoordinatesException();
@@ -222,7 +237,7 @@ public class Side {
         if(areValidcoordinates(row,col)){
 
             //Se non è il primo inserimento controlla i vicini.
-            if (!isEmpty) {
+            if (numberOfDice != 0) {
                 if (checkOrtogonalError(row, col, d))
                     throw new NearDiceInvalidException();
 
@@ -238,7 +253,7 @@ public class Side {
             }
             matrix[row][col].putDiceIgnoringColor(d);
 
-            isEmpty = false; //Questa istruzione deve sempre essere l'ultima di questo metodo.
+            numberOfDice++; //Questa istruzione deve sempre essere l'ultima di questo metodo.
         }
         else
             throw new InvalidCoordinatesException();
@@ -262,7 +277,7 @@ public class Side {
     public void putIgnoringShade(int row, int col, Dice d) throws InvalidCoordinatesException, NearDiceInvalidException, NoDicesNearException, NotEmptyCellException, InvalidColorException {
         if(areValidcoordinates(row,col)){
             //Se non è il primo inserimento controlla i vicini.
-            if (!isEmpty) {
+            if (numberOfDice != 0) {
                 if (checkOrtogonalError(row, col, d))
                     throw new NearDiceInvalidException();
 
@@ -279,7 +294,7 @@ public class Side {
 
             matrix[row][col].putDiceIgnoringShade(d);
 
-            isEmpty = false; //Questa istruzione deve sempre essere l'ultima di questo metodo.
+            numberOfDice++; //Questa istruzione deve sempre essere l'ultima di questo metodo.
         }
         else
             throw new InvalidCoordinatesException();
@@ -300,18 +315,18 @@ public class Side {
      */
     public void putWithoutDicesNear(int row, int col, Dice d) throws InvalidCoordinatesException, InvalidShadeException, NotEmptyCellException, InvalidColorException {
         if(areValidcoordinates(row, col)){
-            if(!isEmpty && isThereNeighbor(row,col))
+            if(numberOfDice != 0 && isThereNeighbor(row,col))
                 throw new InvalidCoordinatesException();
             else{
 
                 //Se è il primo inserimento puoi inserire solo nella cornice più esterna. Non è necessario controllare i vicini, basta controllare che le coordinate
                 //passate si riferiscano ad una cella della corretta per il primo inserimento.
-                if (isEmpty && areNotEdgeCoordinates(row,col))
+                if (numberOfDice == 0 && areNotEdgeCoordinates(row,col))
                     throw new InvalidCoordinatesException();
             }
 
             matrix[row][col].putDice(d);
-            isEmpty = false; //Questa istruzione deve sempre essere l'ultima di questo metodo.
+            numberOfDice++; //Questa istruzione deve sempre essere l'ultima di questo metodo.
         }
         else
             throw new InvalidCoordinatesException();
