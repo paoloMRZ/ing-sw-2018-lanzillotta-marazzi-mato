@@ -11,9 +11,9 @@ import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 import java.util.ArrayList;
 
-public class TaglerinaCircolare extends Utensils{
+public class TaglierinaCircolare extends Utensils{
 
-    public TaglerinaCircolare(){
+    public TaglierinaCircolare(){
         super(5,"TaglerinaCircolare", Color.GREEN,"Dopo aver scelto un dado, scambia quel dado con un dado sul Tracciato dei Round");
     }
 
