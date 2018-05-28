@@ -16,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -23,7 +24,6 @@ import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 
 public class LathekinTest{
-    private ArrayList<Player> players = null;
     private Lathekin lat = null;
     private ArrayList<Cell> sideContent = null;
     private Controller controller = null;
@@ -33,7 +33,7 @@ public class LathekinTest{
     private ArrayList<Side> sides = new ArrayList<>();
 
     @Before
-    public void settings() throws InvalidColorValueException, InvalidShadeValueException, InvalidFavoursValueException {
+    public void settings() throws InvalidValueException, IOException {
         this.lat = new Lathekin();
 
         this.sideContent = new ArrayList<>(20);
@@ -65,15 +65,17 @@ public class LathekinTest{
 
         this.chosenOne = new Side("toTEST", 5, this.sideContent);
         sides.add(chosenOne);
-        Player player1= new Player(null,chosenOne.getFavours(),"primo");
-        Player player2= new Player(null,chosenOne.getFavours(),"secondo");
+        controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
+
+
+        Player player1 = controller.getLobby().callPlayerByName("primo");
+        Player player2 = controller.getLobby().callPlayerByName("secondo");
         player1.setSideSelection(sides);
         player1.setMySide(0);
+        player1.setFavours();
         player2.setSideSelection(sides);
         player2.setMySide(0);
-        ArrayList<Player> players = new ArrayList<>(Arrays.asList(player1, player2));
-        this.players = players;
-        this.controller = new Controller(players);
+        player2.setFavours();
 
     }
 

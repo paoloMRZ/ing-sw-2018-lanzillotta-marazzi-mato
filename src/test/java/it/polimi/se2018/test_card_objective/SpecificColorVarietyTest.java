@@ -58,7 +58,7 @@ public class SpecificColorVarietyTest {
 
             SpecificColorVariety columnColorVarietyTest = new SpecificColorVariety(5,4);
             obj = new Objective("TestName", "TestDescription", 4, columnColorVarietyTest, false);
-            player = new Player(obj, 4, "Tester");
+            player = new Player(obj, "Tester");
 
             casualSide.put(0,0,new Dice(Color.YELLOW, 4));
             casualSide.put(1,0,new Dice(Color.GREEN, 2));
@@ -82,7 +82,7 @@ public class SpecificColorVarietyTest {
 
             SpecificColorVariety columnColorVarietyTest = new SpecificColorVariety(5,4);
             obj = new Objective("TestName", "TestDescription", 4, columnColorVarietyTest, false);
-            player = new Player(obj, 4, "Tester");
+            player = new Player(obj, "Tester");
 
             casualSide.put(0,0,new Dice(Color.YELLOW, 4));
             casualSide.put(1,0,new Dice(Color.GREEN, 5));
@@ -126,7 +126,7 @@ public class SpecificColorVarietyTest {
 
             SpecificColorVariety columnColorVarietyTest = new SpecificColorVariety(5,4);
             obj = new Objective("TestName", "TestDescription", 4, columnColorVarietyTest, false);
-            player = new Player(obj, 4, "Tester");
+            player = new Player(obj, "Tester");
 
             casualSide.put(0,0,new Dice(Color.YELLOW, 4));
             casualSide.put(1,0,new Dice(Color.GREEN, 5));
@@ -152,7 +152,7 @@ public class SpecificColorVarietyTest {
 
             SpecificColorVariety columnColorVarietyTest = new SpecificColorVariety(4,5);
             obj = new Objective("TestName", "TestDescription", 4, columnColorVarietyTest, false);
-            player = new Player(obj, 4, "Tester");
+            player = new Player(obj, "Tester");
 
             casualSide.put(0,0,new Dice(Color.YELLOW, 4));
             casualSide.put(0,1,new Dice(Color.BLUE, 2));
@@ -177,7 +177,7 @@ public class SpecificColorVarietyTest {
 
             SpecificColorVariety columnColorVarietyTest = new SpecificColorVariety(4,5);
             obj = new Objective("TestName", "TestDescription", 4, columnColorVarietyTest, false);
-            player = new Player(obj, 4, "Tester");
+            player = new Player(obj, "Tester");
 
             casualSide.put(0,0,new Dice(Color.YELLOW, 4));
             casualSide.put(0,1,new Dice(Color.BLUE, 2));
@@ -220,7 +220,7 @@ public class SpecificColorVarietyTest {
 
             SpecificColorVariety columnColorVarietyTest = new SpecificColorVariety(4,5);
             obj = new Objective("TestName", "TestDescription", 4, columnColorVarietyTest, false);
-            player = new Player(obj, 4, "Tester");
+            player = new Player(obj, "Tester");
 
             casualSide.put(0,0,new Dice(Color.YELLOW, 4));
             casualSide.put(0,1,new Dice(Color.BLUE, 5));

@@ -18,14 +18,13 @@ import it.polimi.se2018.server.model.reserve.Reserve;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
 public class PennelloPerEglomiseTest {
-
-    private ArrayList<Player> players = null;
     private PennelloPerEglomise pennello = null;
     private ArrayList<Cell> sideContent = null;
     private Controller controller = null;
@@ -34,7 +33,7 @@ public class PennelloPerEglomiseTest {
     private Reserve supportReserve = null;
     private ArrayList<Side> sides = new ArrayList<>();
     @Before
-    public void settings() throws InvalidColorValueException, InvalidShadeValueException, InvalidFavoursValueException {
+    public void settings() throws InvalidValueException {
         this.pennello = new PennelloPerEglomise();
 
         this.sideContent = new ArrayList<>(20);
@@ -67,31 +66,33 @@ public class PennelloPerEglomiseTest {
         this.chosenOne = new Side("toTEST", 5, this.sideContent);
 
         sides.add(chosenOne);
-        Player player1= new Player(null,chosenOne.getFavours(),"primo");
-        Player player2= new Player(null,chosenOne.getFavours(),"secondo");
+        controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
+
+
+        Player player1 = controller.getLobby().callPlayerByName("primo");
+        Player player2 = controller.getLobby().callPlayerByName("secondo");
         player1.setSideSelection(sides);
         player1.setMySide(0);
+        player1.setFavours();
         player2.setSideSelection(sides);
         player2.setMySide(0);
-        ArrayList<Player> players = new ArrayList<>(Arrays.asList(player1, player2));
-        this.players = players;
-        this.controller = new Controller(players);
+        player2.setFavours();
 
     }
 
     //ricreo una riserva con un consono numero di dadi in base a quanti giovatori ho inserito
     //sebbene la riserva non sia fondamentale preparo l'environment per evitare problematiche
     @Test(expected = InvalidValueException.class)
-    public void playerNameCorrupted() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void playerNameCorrupted() throws InvalidValueException, InvalidCellException{
 
-        this.message = new ToolCard2("pippo", 1, new ArrayList(Arrays.asList(0, 0, 1, 1)));
+        this.message = new ToolCard2("pippo", 1, new ArrayList<>(Arrays.asList(0, 0, 1, 1)));
 
         Dice d1 = new Dice(Color.BLUE, 1);
         Dice d2 = new Dice(Color.BLUE, 1);
         Dice d3 = new Dice(Color.BLUE, 1);
         Dice d4 = new Dice(Color.BLUE, 1);
         Dice d5 = new Dice(Color.BLUE, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
         pennello.function(controller, message);
 
@@ -100,7 +101,7 @@ public class PennelloPerEglomiseTest {
     }
 
     @Test(expected = InvalidValueException.class)
-    public void dieNotExisting() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void dieNotExisting() throws InvalidValueException, InvalidCellException{
         //i dati dell'input nel messaggio seguono la convenzione stabilita in MultiParam
         this.message = new ToolCard2("primo", 1, new ArrayList<>(Arrays.asList(0, 0, 0, 2)));
 
@@ -109,7 +110,7 @@ public class PennelloPerEglomiseTest {
         Dice d3 = new Dice(Color.BLUE, 1);
         Dice d4 = new Dice(Color.BLUE, 1);
         Dice d5 = new Dice(Color.BLUE, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
         pennello.function(controller, message);
 
@@ -118,7 +119,7 @@ public class PennelloPerEglomiseTest {
     }
 
     @Test(expected = InvalidCoordinatesException.class)
-    public void piazzamentoCellNotExistingPicking() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void piazzamentoCellNotExistingPicking() throws InvalidValueException, InvalidCellException{
         //i dati dell'input nel messaggio seguono la convenzione stabilita in MultiParam
         this.message = new ToolCard2("primo", 1, new ArrayList<>(Arrays.asList(11, 11, 2, 3)));
 
@@ -127,7 +128,7 @@ public class PennelloPerEglomiseTest {
         Dice d3 = new Dice(Color.BLUE, 1);
         Dice d4 = new Dice(Color.BLUE, 1);
         Dice d5 = new Dice(Color.BLUE, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
         pennello.function(controller, message);
 
@@ -136,7 +137,7 @@ public class PennelloPerEglomiseTest {
     }
 
     @Test(expected = InvalidCoordinatesException.class)//sulla casella del colore sbagliato
-    public void piazzamentoCellNotExistingPutting() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void piazzamentoCellNotExistingPutting() throws InvalidValueException, InvalidCellException {
         //i dati dell'input nel messaggio seguono la convenzione stabilita in MultiParam
         this.message = new ToolCard2("primo", 1, new ArrayList<>(Arrays.asList(0, 2, 44, 44)));
 
@@ -145,7 +146,7 @@ public class PennelloPerEglomiseTest {
         Dice d3 = new Dice(Color.BLUE, 1);
         Dice d4 = new Dice(Color.BLUE, 1);
         Dice d5 = new Dice(Color.BLUE, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
         controller.getcAction().workOnSide("primo", supportReserve.pick(0), 0, 2);
 
@@ -156,7 +157,7 @@ public class PennelloPerEglomiseTest {
     }
 
     @Test
-    public void puttingIgnoreColorIsGood() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void puttingIgnoreColorIsGood(){
         try {
             //i dati dell'input nel messaggio seguono la convenzione stabilita in MultiParam
             this.message = new ToolCard2("primo", 1, new ArrayList<>(Arrays.asList(0, 1, 0, 3)));
@@ -167,7 +168,7 @@ public class PennelloPerEglomiseTest {
             Dice d4 = new Dice(Color.PURPLE, 4);
             Dice d5 = new Dice(Color.YELLOW, 1);
 
-            this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+            this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
             controller.getcAction().resettingReserve(supportReserve);
             //posiziono il dado da spostare in seguito
             //POSIZIONO DUE DADI PER RISPETTARE ADIACENZA DEI DADI VOLTA PER VOLTA
@@ -194,7 +195,7 @@ public class PennelloPerEglomiseTest {
     }
 //qunado sposto il primo dado immesso
     @Test
-    public void puttingIgnoreColorIsGoodFirstTimer() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void puttingIgnoreColorIsGoodFirstTimer(){
         try {
             //i dati dell'input nel messaggio seguono la convenzione stabilita in MultiParam
             this.message = new ToolCard2("primo", 1, new ArrayList<>(Arrays.asList(0, 2, 0, 3)));
@@ -205,7 +206,7 @@ public class PennelloPerEglomiseTest {
             Dice d4 = new Dice(Color.PURPLE, 4);
             Dice d5 = new Dice(Color.YELLOW, 1);
 
-            this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+            this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
             controller.getcAction().resettingReserve(supportReserve);
             //posiziono il dado da spostare in seguito
             //POSIZIONO DUE DADI PER RISPETTARE ADIACENZA DEI DADI VOLTA PER VOLTA
@@ -240,7 +241,7 @@ public class PennelloPerEglomiseTest {
             Dice d4 = new Dice(Color.YELLOW, 4);
             Dice d5 = new Dice(Color.YELLOW, 1);
 
-            this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+            this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
             controller.getcAction().resettingReserve(supportReserve);
             //posiziono il dado da spostare in seguito
             //POSIZIONO DUE DADI PER RISPETTARE ADIACENZA DEI DADI VOLTA PER VOLTA
@@ -280,7 +281,7 @@ public class PennelloPerEglomiseTest {
             Dice d4 = new Dice(Color.YELLOW, 4);
             Dice d5 = new Dice(Color.YELLOW, 1);
 
-            this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+            this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
             controller.getcAction().resettingReserve(supportReserve);
             //posiziono il dado da spostare in seguito
             //POSIZIONO DUE DADI PER RISPETTARE ADIACENZA DEI DADI VOLTA PER VOLTA

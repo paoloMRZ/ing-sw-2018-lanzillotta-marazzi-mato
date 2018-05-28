@@ -15,6 +15,7 @@ import it.polimi.se2018.server.model.reserve.Reserve;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -24,7 +25,6 @@ import static org.junit.Assert.fail;
 //To make these test: set the message and the dices you want, put some dices if needed. Kev.
 
 public class PinzaSgrossatriceTest {
-    private ArrayList<Player> players=null;
     private PinzaSgrossatrice pinza=null;
     private  ArrayList<Cell> sideContent = null;
     private Controller controller=null;
@@ -33,7 +33,7 @@ public class PinzaSgrossatriceTest {
     private Reserve supportReserve=null;
     private static ArrayList<Side> sides = new ArrayList<>();
     @Before
-    public void settings() throws InvalidColorValueException, InvalidShadeValueException, InvalidFavoursValueException {
+    public void settings() throws InvalidShadeValueException, InvalidFavoursValueException{
         this.pinza=new PinzaSgrossatrice();
 
         this.sideContent= new ArrayList<>(20);
@@ -66,15 +66,16 @@ public class PinzaSgrossatriceTest {
         this.chosenOne=new Side("toTEST",5,this.sideContent);
 
         sides.add(chosenOne);
-        Player player1= new Player(null,chosenOne.getFavours(),"primo");
-        Player player2= new Player(null,chosenOne.getFavours(),"secondo");
+        Player player1= new Player(null,"primo");
+        Player player2= new Player(null,"secondo");
         player1.setSideSelection(sides);
         player1.setMySide(0);
+        player1.setFavours();
         player2.setSideSelection(sides);
         player2.setMySide(0);
-        ArrayList<Player> players= new ArrayList<>(Arrays.asList(player1,player2));
-        this.players=players;
-        this.controller= new Controller(players);
+        player2.setFavours();
+
+        this.controller = new Controller(new ArrayList<>(Arrays.asList(player1.getName(), player2.getName())));
 
     }
 
@@ -83,7 +84,7 @@ public class PinzaSgrossatriceTest {
 
     //I SEGUENTI TEST SONO VARIAZIONI NEL MESSAGGIO
     @Test(expected = InvalidValueException.class)
-    public void decisionNotValidWithTrue() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void decisionNotValidWithTrue() throws InvalidValueException, InvalidSomethingWasNotDoneGood {
 
             this.message = new MoreThanSimple("primo", 1, true,1);
 
@@ -101,7 +102,7 @@ public class PinzaSgrossatriceTest {
             fail("Fail: Non ha lanciato eccezione!");
     }
     @Test(expected = InvalidValueException.class)
-    public void decisionNotValidWithFalse() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void decisionNotValidWithFalse() throws InvalidValueException, InvalidSomethingWasNotDoneGood {
 
         this.message = new MoreThanSimple("primo", 1, false,1);
 
@@ -118,7 +119,7 @@ public class PinzaSgrossatriceTest {
         fail("Fail: Non ha lanciato eccezione!");
     }
     @Test
-    public void decisionIsValidFalse() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void decisionIsValidFalse(){
          try{
              this.message = new MoreThanSimple("primo", 1, false,2);
                 Dice d1 = new Dice(Color.BLUE, 3);
@@ -142,7 +143,7 @@ public class PinzaSgrossatriceTest {
     }
 
     @Test
-    public void decisionIsValidTrue() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void decisionIsValidTrue(){
         try{
             this.message = new MoreThanSimple("primo", 1, true,1);
             Dice d1 = new Dice(Color.BLUE, 3);
@@ -165,7 +166,7 @@ public class PinzaSgrossatriceTest {
         }
     }
     @Test(expected = InvalidValueException.class)
-    public void playerNameCorrupted() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void playerNameCorrupted() throws InvalidValueException, InvalidSomethingWasNotDoneGood {
 
         this.message = new MoreThanSimple("pippo", 1, true,1);
 

@@ -55,7 +55,7 @@ public class ColorVarietyTest {
 
         ColorVariety colorVarietyTest = new ColorVariety();
         obj = new Objective("TestName", "TestDescription", 3, colorVarietyTest, false);
-        player = new Player(obj, 4, "Tester");
+        player = new Player(obj,  "Tester");
 
     }
 

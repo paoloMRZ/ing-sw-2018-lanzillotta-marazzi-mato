@@ -16,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -23,7 +24,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class AlesatorePerLaminaDiRameTest {
-    private ArrayList<Player> players = null;
     private AlesatorePerLaminaDiRame lamina = null;
     private ArrayList<Cell> sideContent = null;
     private Controller controller = null;
@@ -31,8 +31,10 @@ public class AlesatorePerLaminaDiRameTest {
     private Side chosenOne = null;
     private Reserve supportReserve = null;
     private ArrayList<Side> sides = new ArrayList<>();
+
+
     @Before
-    public void settings() throws InvalidColorValueException, InvalidShadeValueException, InvalidFavoursValueException {
+    public void settings() throws InvalidValueException {
         this.lamina = new AlesatorePerLaminaDiRame();
 
         this.sideContent = new ArrayList<>(20);
@@ -62,17 +64,19 @@ public class AlesatorePerLaminaDiRameTest {
         sideContent.add(new Cell(Color.GREEN, 0));
         sideContent.add(new Cell(Color.WHITE, 4));
 
-        this.chosenOne = new Side("toTEST", 5, this.sideContent);
+        chosenOne = new Side("toTEST", 5, sideContent);
         sides.add(chosenOne);
-        Player player1= new Player(null,chosenOne.getFavours(),"primo");
-        Player player2= new Player(null,chosenOne.getFavours(),"secondo");
+        controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
+
+
+        Player player1 = controller.getLobby().callPlayerByName("primo");
+        Player player2 = controller.getLobby().callPlayerByName("secondo");
         player1.setSideSelection(sides);
         player1.setMySide(0);
+        player1.setFavours();
         player2.setSideSelection(sides);
         player2.setMySide(0);
-        ArrayList<Player> players = new ArrayList<>(Arrays.asList(player1, player2));
-        this.players = players;
-        this.controller = new Controller(players);
+        player2.setFavours();
 
     }
 
@@ -81,14 +85,14 @@ public class AlesatorePerLaminaDiRameTest {
     @Test(expected = InvalidValueException.class)
     public void playerNameCorrupted() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
 
-        this.message = new ToolCard3("pippo", 1, new ArrayList(Arrays.asList(0, 0, 1, 1)));
+        this.message = new ToolCard3("pippo", 1, new ArrayList<>(Arrays.asList(0, 0, 1, 1)));
 
         Dice d1 = new Dice(Color.BLUE, 1);
         Dice d2 = new Dice(Color.BLUE, 1);
         Dice d3 = new Dice(Color.BLUE, 1);
         Dice d4 = new Dice(Color.BLUE, 1);
         Dice d5 = new Dice(Color.BLUE, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
         controller.getcAction().workOnSide("primo", controller.getcAction()
                 .pickFromReserve(0), 0, 2);
@@ -100,7 +104,7 @@ public class AlesatorePerLaminaDiRameTest {
     }
 
     @Test(expected = InvalidValueException.class)
-    public void dieNotExisting() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void dieNotExisting() throws InvalidValueException, InvalidCellException{
         //i dati dell'input nel messaggio seguono la convenzione stabilita in MultiParam
         this.message = new ToolCard3("primo", 1, new ArrayList<>(Arrays.asList(0, 0, 0, 2)));
 
@@ -109,7 +113,7 @@ public class AlesatorePerLaminaDiRameTest {
         Dice d3 = new Dice(Color.BLUE, 1);
         Dice d4 = new Dice(Color.BLUE, 1);
         Dice d5 = new Dice(Color.BLUE, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
         lamina.function(controller, message);
 
@@ -118,7 +122,7 @@ public class AlesatorePerLaminaDiRameTest {
     }
 
     @Test(expected = InvalidCoordinatesException.class)
-    public void piazzamentoCellNotExistingPicking() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void piazzamentoCellNotExistingPicking() throws InvalidValueException, InvalidCellException{
         //i dati dell'input nel messaggio seguono la convenzione stabilita in MultiParam
         this.message = new ToolCard3("primo", 1, new ArrayList<>(Arrays.asList(11, 11, 2, 3)));
 
@@ -127,7 +131,7 @@ public class AlesatorePerLaminaDiRameTest {
         Dice d3 = new Dice(Color.BLUE, 1);
         Dice d4 = new Dice(Color.BLUE, 1);
         Dice d5 = new Dice(Color.BLUE, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
         lamina.function(controller, message);
 
@@ -146,7 +150,7 @@ public class AlesatorePerLaminaDiRameTest {
         Dice d3 = new Dice(Color.BLUE, 1);
         Dice d4 = new Dice(Color.BLUE, 1);
         Dice d5 = new Dice(Color.BLUE, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
         controller.getcAction().workOnSide("primo", controller.getcAction()
                 .pickFromReserve(0), 0, 2);
@@ -161,7 +165,7 @@ public class AlesatorePerLaminaDiRameTest {
 
 
     @Test
-    public void puttingIgnoreValueIsGood() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void puttingIgnoreValueIsGood(){
         try {
             //i dati dell'input nel messaggio seguono la convenzione stabilita in MultiParam
             this.message = new ToolCard3("primo", 1, new ArrayList<>(Arrays.asList(0, 2, 0, 0)));
@@ -172,7 +176,7 @@ public class AlesatorePerLaminaDiRameTest {
             Dice d4 = new Dice(Color.PURPLE, 4);
             Dice d5 = new Dice(Color.YELLOW, 1);
 
-            this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+            this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
             controller.getcAction().resettingReserve(supportReserve);
             //posiziono il dado da spostare in seguito
             //POSIZIONO DUE DADI PER RISPETTARE ADIACENZA DEI DADI VOLTA PER VOLTA
@@ -199,7 +203,7 @@ public class AlesatorePerLaminaDiRameTest {
     }
     //qunado sposto il primo dado immesso
     @Test
-    public void puttingIgnoreValueIsGoodFirstTimer() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void puttingIgnoreValueIsGoodFirstTimer(){
         try {
             //i dati dell'input nel messaggio seguono la convenzione stabilita in MultiParam
             this.message = new ToolCard3("primo", 1, new ArrayList<>(Arrays.asList(0, 2, 0, 0)));
@@ -210,7 +214,7 @@ public class AlesatorePerLaminaDiRameTest {
             Dice d4 = new Dice(Color.PURPLE, 4);
             Dice d5 = new Dice(Color.YELLOW, 1);
 
-            this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+            this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
             controller.getcAction().resettingReserve(supportReserve);
             //posiziono il dado da spostare in seguito
             //POSIZIONO DUE DADI PER RISPETTARE ADIACENZA DEI DADI VOLTA PER VOLTA
@@ -245,7 +249,7 @@ public class AlesatorePerLaminaDiRameTest {
             Dice d4 = new Dice(Color.YELLOW, 4);
             Dice d5 = new Dice(Color.YELLOW, 1);
 
-            this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+            this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
             controller.getcAction().resettingReserve(supportReserve);
             //posiziono il dado da spostare in seguito
             //POSIZIONO DUE DADI PER RISPETTARE ADIACENZA DEI DADI VOLTA PER VOLTA
@@ -286,7 +290,7 @@ public class AlesatorePerLaminaDiRameTest {
             Dice d4 = new Dice(Color.YELLOW, 4);
             Dice d5 = new Dice(Color.YELLOW, 1);
 
-            this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+            this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
             controller.getcAction().resettingReserve(supportReserve);
             //posiziono il dado da spostare in seguito
             //POSIZIONO DUE DADI PER RISPETTARE ADIACENZA DEI DADI VOLTA PER VOLTA

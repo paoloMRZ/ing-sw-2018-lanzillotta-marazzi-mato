@@ -12,22 +12,22 @@ import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_schema.Cell;
 import it.polimi.se2018.server.model.card.card_schema.Side;
-import it.polimi.se2018.server.model.card.card_utensils.TaglerinaCircolare;
+import it.polimi.se2018.server.model.card.card_utensils.TaglierinaCircolare;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 import it.polimi.se2018.server.model.reserve.Reserve;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 
-public class TaglerinaCircolareTest {
-    private ArrayList<Player> players=null;
-    private TaglerinaCircolare taglerina=null;
+public class TaglierinaCircolareTest {
+    private TaglierinaCircolare taglerina=null;
     private  ArrayList<Cell> sideContent = null;
     private Controller controller=null;
     private ToolCard5 message=null;
@@ -36,8 +36,8 @@ public class TaglerinaCircolareTest {
     private static ArrayList<Side> sides = new ArrayList<>();
 
     @Before
-    public void settings() throws InvalidColorValueException, InvalidShadeValueException, InvalidFavoursValueException {
-        this.taglerina=new TaglerinaCircolare();
+    public void settings() throws InvalidColorValueException, InvalidShadeValueException, InvalidFavoursValueException, IOException {
+        this.taglerina=new TaglierinaCircolare();
 
         this.sideContent= new ArrayList<>(20);
         //Aurorae Magnificus
@@ -68,15 +68,16 @@ public class TaglerinaCircolareTest {
 
         this.chosenOne=new Side("toTEST",5,this.sideContent);
         sides.add(chosenOne);
-        Player player1= new Player(null,chosenOne.getFavours(),"primo");
-        Player player2= new Player(null,chosenOne.getFavours(),"secondo");
+        Player player1= new Player(null,"primo");
+        Player player2= new Player(null,"secondo");
         player1.setSideSelection(sides);
         player1.setMySide(0);
+        player1.setFavours();
         player2.setSideSelection(sides);
         player2.setMySide(0);
-        ArrayList<Player> players= new ArrayList<>(Arrays.asList(player1,player2));
-        this.players=players;
-        this.controller= new Controller(players);
+        player2.setFavours();
+
+        this.controller = new Controller(new ArrayList<>(Arrays.asList(player1.getName(), player2.getName())));
 
     }
 

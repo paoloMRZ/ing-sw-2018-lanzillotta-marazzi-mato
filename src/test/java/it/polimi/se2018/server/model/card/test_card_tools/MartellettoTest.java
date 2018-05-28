@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import sun.font.TrueTypeFont;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -26,12 +27,14 @@ public class MartellettoTest {
     private Reserve tester=null;
     private Martelletto mar= new Martelletto();
     private ArrayList<Player> players= new ArrayList<>(Arrays.asList(
-            new Player(null,0,"1"),
-            new Player(null,0,"3"),
-            new Player(null,0,"4"),
-            new Player(null,0,"2")   ));
+            new Player(null,"1"),
+            new Player(null,"3"),
+            new Player(null,"4"),
+            new Player(null,"2")   ));
 
-    private Controller controller=new Controller(players);
+    private ArrayList<String> playersName= new ArrayList<>(Arrays.asList("1", "3", "4", "2"));
+
+    private Controller controller;
     private Table lobby = new Table(null,null,players,new DiceSachet(),null,null);
 
     private ArrayList<Integer> countingBefore=new ArrayList<>();
@@ -42,8 +45,10 @@ public class MartellettoTest {
 
     private ArrayList<Integer> countingAfter2=new ArrayList<>();
 
+
     @Before
-    public void settings() throws InvalidValueException, InvalidHowManyTimes {
+    public void settings() throws InvalidValueException, InvalidHowManyTimes{
+        controller=new Controller(playersName);
         tester=lobby.createReserve();
         controller.getcAction().resettingReserve(tester);
         controller.getcTurn().setRound();

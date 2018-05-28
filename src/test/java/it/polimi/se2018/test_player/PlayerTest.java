@@ -59,7 +59,7 @@ public class PlayerTest {
         sides.add(casualSide);
         ColorDiagonals testerCard = new ColorDiagonals();
         obj = new Objective("TestName", "TestDescription", 4, testerCard, false);
-        player = new Player(obj, 4, "Tester");
+        player = new Player(obj,"Tester");
 
     }
 

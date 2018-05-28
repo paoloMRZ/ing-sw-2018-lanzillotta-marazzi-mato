@@ -58,7 +58,7 @@ public class CoupleOfShadesTest {
 
             CoupleOfShades coupleOfLigth = new CoupleOfShades(1,2);
             obj = new Objective("TestName", "TestDescription", 2, coupleOfLigth, false);
-            player = new Player(obj, 4, "Tester");
+            player = new Player(obj, "Tester");
 
 
             casualSide.put(0,0,new Dice(Color.YELLOW, 4));
@@ -84,7 +84,7 @@ public class CoupleOfShadesTest {
 
             CoupleOfShades coupleOfMedium = new CoupleOfShades(3,4);
             obj = new Objective("TestName", "TestDescription", 2, coupleOfMedium, false);
-            player = new Player(obj, 4, "Tester");
+            player = new Player(obj, "Tester");
 
             casualSide.put(0,0,new Dice(Color.YELLOW, 4));
             casualSide.put(0,1,new Dice(Color.BLUE, 3));
