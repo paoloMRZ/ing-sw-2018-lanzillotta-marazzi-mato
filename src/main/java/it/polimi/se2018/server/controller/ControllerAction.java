@@ -24,13 +24,13 @@ public class ControllerAction {
     }
 
 
-    public void workOnSide(String name,Dice d, int row, int col)throws InvalidValueException, InvalidCellException, InvalidCoordinatesException {
+    public void workOnSide(String name,Dice d, int row, int col)throws InvalidValueException, InvalidCellException {
         lobby.callPlayerByName(name).putDice(d,row,col);
     }
-    public void workOnSideIgnoreColor(String name,int oldRow, int oldCol,int newRow, int newCol)throws InvalidValueException, InvalidCellException, InvalidCoordinatesException{
+    public void workOnSideIgnoreColor(String name,int oldRow, int oldCol,int newRow, int newCol)throws InvalidValueException, InvalidCellException{
         lobby.callPlayerByName(name).putDiceIgnoreColor(oldRow,oldCol,newRow,newCol);
     }
-    public void workOnSideIgnoreValue(String name,int oldRow, int oldCol,int newRow, int newCol)throws InvalidValueException, InvalidCellException, InvalidCoordinatesException{
+    public void workOnSideIgnoreValue(String name,int oldRow, int oldCol,int newRow, int newCol)throws InvalidValueException, InvalidCellException{
         lobby.callPlayerByName(name).putDiceIgnoreValue(oldRow,oldCol,newRow,newCol);
     }
 
