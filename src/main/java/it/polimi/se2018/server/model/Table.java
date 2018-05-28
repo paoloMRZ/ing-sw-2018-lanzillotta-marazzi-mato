@@ -263,4 +263,7 @@ public class Table {
     public DiceSachet getDiceSachet(){
         return diceSachet;
     }
+    public Player callPlayerByNumber(int x){
+        return playersList.get(x);
+    }
 }
