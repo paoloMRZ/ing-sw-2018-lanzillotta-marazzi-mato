@@ -19,7 +19,7 @@ public class Objective {
     private String description;
     private int favours;
     private StrategyAlgorithm myObjective;
-    private boolean ImPrivate;
+    private boolean imPrivate;
 
 
     /**
@@ -38,7 +38,17 @@ public class Objective {
         this.description = description;
         this.favours = favours;
         this.myObjective = myObjective;
-        ImPrivate = imPrivate;
+        this.imPrivate = imPrivate;
+    }
+
+
+    /**
+     * Metodo che restitutisce il nome della carta
+     *
+     * @return descrizione della carta
+     */
+    public String getName(){
+        return name;
     }
 
 
