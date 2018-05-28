@@ -58,10 +58,10 @@ public class Table {
      * @param roundGrid     griglia dei round della sessione di gioco
      */
 
-    public Table(ArrayList<Utensils> utensilsDeck, ArrayList<Objective> objectiveDeck, ArrayList<Player> playersList, DiceSachet diceSachet, ScoreGrid scoreGrid, RoundGrid roundGrid) {
-        this.utensilsDeck = utensilsDeck;
-        this.objectiveDeck = objectiveDeck;
-        this.playersList = playersList;
+    public Table(List<Utensils> utensilsDeck, List<Objective> objectiveDeck, List<Player> playersList, DiceSachet diceSachet, ScoreGrid scoreGrid, RoundGrid roundGrid) {
+        this.utensilsDeck = (ArrayList<Utensils>)utensilsDeck;
+        this.objectiveDeck = (ArrayList<Objective>)objectiveDeck;
+        this.playersList = (ArrayList<Player>)playersList;
         this.diceSachet = diceSachet;
         this.scoreGrid = scoreGrid;
         this.roundGrid = roundGrid;
@@ -88,8 +88,7 @@ public class Table {
      */
 
     public List<Utensils> getDeckUtensils() {
-        ArrayList<Utensils> temp = (ArrayList<Utensils>) utensilsDeck.clone();
-        return temp;
+        return new ArrayList<>(utensilsDeck);
     }
 
 
@@ -99,8 +98,7 @@ public class Table {
      * @return una copia delle carte Obbiettivo nella sessione di gioco
      */
     public List<Objective> getDeckObjective() {
-        ArrayList<Objective> temp = (ArrayList<Objective>) utensilsDeck.clone();
-        return temp;
+        return new ArrayList<>(objectiveDeck);
     }
 
 
@@ -115,6 +113,17 @@ public class Table {
         return utensilsDeck.get(cardPosition);
     }
 
+
+    /**
+     * Metodo che restituisce una determinata carta Obbiettivo
+     *
+     * @param cardPosition indice della carta Obbiettivo da restituire
+     * @return la carta Obbiettivo alla posizione indicata
+     */
+
+    public Objective getObjective(int cardPosition) {
+        return objectiveDeck.get(cardPosition);
+    }
 
     /**
      * Metodo che simula il pescaggio dalla riserva della sessione di gioco
