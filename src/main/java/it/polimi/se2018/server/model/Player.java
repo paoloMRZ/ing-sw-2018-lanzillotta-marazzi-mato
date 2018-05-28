@@ -28,8 +28,8 @@ public class Player {
     private List<Side> mySideSelection;
     private String name;
     private Side mySide;
-    private Objective myobjective;
-    private int favours;
+    private Objective myObjective;
+    private int favours = 0;
     private boolean isMyTurn;
     private int howManyTurns;
     private boolean didPlayDie;
@@ -41,19 +41,38 @@ public class Player {
      * l'associazione della carta Side viene demandata in un secondo momento tramite il metodo setMySide.
      *
      * @param objective riferimento alla carta Obbietivo (privato) associata al Player
-     * @param favours riferimento ai segnalini favore iniziali del player
      * @param nomine  riferimento al nome del giocatore
      */
 
-    public Player(Objective objective, int favours, String nomine) {
-        this.myobjective = objective;
-        this.favours = favours;
+    public Player(Objective objective, String nomine) {
+        this.myObjective = objective;
         this.name=nomine;
         this.howManyTurns=2;
         this.didPlayCard=false;
         this.didPlayDie=false;
     }
 
+
+    /**
+     * Metodo che restituisce il nome del giocatore
+     *
+     * @return nome del giocatore
+     */
+
+    public String getName(){
+        return name;
+    }
+
+
+    /**
+     * Metodo che restituisce il riferimento alla carta Obbiettivo Privata del giocatore
+     *
+     * @return riferimento alla carta Obbiettivo Privata
+     */
+
+    public Objective getMyObjective() {
+        return myObjective;
+    }
 
     /**
      * Metodo che restituisce la restrizione di colore della cella selezionata tramite le sue coordinate nella carta Side del giocatore
@@ -80,38 +99,6 @@ public class Player {
 
     public int getNumberCell(int row, int col)  throws Exception{
         return mySide.getNumber(row,col);
-    }
-
-
-    /**
-     * Metodo che permette il posizionamento dei dadi sulla Side del giocatore
-     *
-     * @param die riferimento al dado che si intende posizionare sulla carta Side
-     * @param row riferimento alla riga di posizionamento interessata
-     * @param col riferimento alla colonna di posizionamento interessata
-     * @throws InvalidCellException viene lanciata quando la cella selezionata è già occupata da un altro Dado
-     * @throws InvalidCoordinatesException viene lanciata quando le coordinate inserite non sono valide
-     */
-
-    public void putDice(Dice die, int row, int col) throws InvalidCellException, InvalidCoordinatesException {
-        this.mySide.put(row,col,die);
-    }
-
-
-    /**
-     * Metodo che mostra la Cella selezionata tramite le sue coordinate nella carta Side
-     *
-     * @param row riferimento alla riga di posizionamento interessata
-     * @param col riferimento alla colonna di posizionamento interessata
-     * @return restituisce il riferimento a una copia dell'oggetto Cell selezionato tramite le coordinate (row,col)
-     * @throws InvalidShadeValueException viene lanciata quando il valore di sfumatura della Cella non è valido
-     * @throws InvalidCoordinatesException viene lanciata quando le coordinate inserite non sono valide
-     */
-
-    //TODO: Perchè solleva l'eccezione InvalidShadeValueException?
-
-    public Cell showSelectedCell(int row, int col) throws InvalidCoordinatesException, InvalidShadeValueException {
-        return mySide.showCell(row,col);
     }
 
 
@@ -149,6 +136,16 @@ public class Player {
 
 
     /**
+     * Metodo che imposta il numero di segnalini favore del giocatore in base alla difficoltà della propria carta Side scelta
+     *
+     */
+
+    public void setFavours(){
+        favours = mySide.getFavours();
+    }
+
+
+    /**
      * Metodo di aggiornamento del parametro didPlayCard
      *
      */
@@ -167,6 +164,38 @@ public class Player {
     public void setDidPlayDie(){
         if(didPlayDie) didPlayDie=false;
         else didPlayDie=true;
+    }
+
+
+    /**
+     * Metodo che permette il posizionamento dei dadi sulla Side del giocatore
+     *
+     * @param die riferimento al dado che si intende posizionare sulla carta Side
+     * @param row riferimento alla riga di posizionamento interessata
+     * @param col riferimento alla colonna di posizionamento interessata
+     * @throws InvalidCellException viene lanciata quando la cella selezionata è già occupata da un altro Dado
+     * @throws InvalidCoordinatesException viene lanciata quando le coordinate inserite non sono valide
+     */
+
+    public void putDice(Dice die, int row, int col) throws InvalidCellException, InvalidCoordinatesException {
+        this.mySide.put(row,col,die);
+    }
+
+
+    /**
+     * Metodo che mostra la Cella selezionata tramite le sue coordinate nella carta Side
+     *
+     * @param row riferimento alla riga di posizionamento interessata
+     * @param col riferimento alla colonna di posizionamento interessata
+     * @return restituisce il riferimento a una copia dell'oggetto Cell selezionato tramite le coordinate (row,col)
+     * @throws InvalidShadeValueException viene lanciata quando il valore di sfumatura della Cella non è valido
+     * @throws InvalidCoordinatesException viene lanciata quando le coordinate inserite non sono valide
+     */
+
+    //TODO: Perchè solleva l'eccezione InvalidShadeValueException?
+
+    public Cell showSelectedCell(int row, int col) throws InvalidCoordinatesException, InvalidShadeValueException {
+        return mySide.showCell(row,col);
     }
 
 
@@ -196,17 +225,6 @@ public class Player {
         this.howManyTurns=2;
         this.didPlayCard=false;
         this.didPlayDie=false;
-    }
-
-
-    /**
-     * Metodo che restituisce il nome del giocatore
-     *
-     * @return nome del giocatore
-     */
-
-    public String getName(){
-        return name;
     }
 
 
@@ -261,6 +279,7 @@ public class Player {
 
     public void setMySide(int pos){
         mySide = mySideSelection.get(pos);
+        setFavours();
     }
 
 
