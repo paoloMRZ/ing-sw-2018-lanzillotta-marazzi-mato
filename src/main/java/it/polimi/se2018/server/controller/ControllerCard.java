@@ -42,7 +42,7 @@ public class ControllerCard implements Visitor {
     }
 
     @Override
-    public void visit(TaglerinaCircolare ItemT) {
+    public void visit(TaglierinaCircolare ItemT) {
         //todo
     }
 
