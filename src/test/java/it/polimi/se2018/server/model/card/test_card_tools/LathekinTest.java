@@ -30,7 +30,8 @@ public class LathekinTest{
     private ToolCard4 message = null;
     private Side chosenOne = null;
     private Reserve supportReserve = null;
-    private static ArrayList<Side> sides = new ArrayList<>();
+    private ArrayList<Side> sides = new ArrayList<>();
+
     @Before
     public void settings() throws InvalidColorValueException, InvalidShadeValueException, InvalidFavoursValueException {
         this.lat = new Lathekin();

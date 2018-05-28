@@ -12,6 +12,7 @@ import it.polimi.se2018.server.model.card.card_schema.Side;
 import it.polimi.se2018.server.model.card.card_utensils.AlesatorePerLaminaDiRame;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 import it.polimi.se2018.server.model.reserve.Reserve;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,7 +30,7 @@ public class AlesatorePerLaminaDiRameTest {
     private ToolCard3 message = null;
     private Side chosenOne = null;
     private Reserve supportReserve = null;
-    private static ArrayList<Side> sides = new ArrayList<>();
+    private ArrayList<Side> sides = new ArrayList<>();
     @Before
     public void settings() throws InvalidColorValueException, InvalidShadeValueException, InvalidFavoursValueException {
         this.lamina = new AlesatorePerLaminaDiRame();
@@ -137,21 +138,25 @@ public class AlesatorePerLaminaDiRameTest {
     @Test(expected = InvalidCoordinatesException.class)//sulla casella del colore sbagliato
     public void piazzamentoCellNotExistingPutting() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
         //i dati dell'input nel messaggio seguono la convenzione stabilita in MultiParam
-        this.message = new ToolCard3("primo", 1, new ArrayList<>(Arrays.asList(0, 2, 44, 44)));
+        this.message = new ToolCard3("primo", 1, new ArrayList<>(Arrays.asList(0, 2, 11, 11)));
+
 
         Dice d1 = new Dice(Color.BLUE, 1);
-        Dice d2 = new Dice(Color.BLUE, 1);
+        Dice d2 = new Dice(Color.GREEN, 2);
         Dice d3 = new Dice(Color.BLUE, 1);
         Dice d4 = new Dice(Color.BLUE, 1);
         Dice d5 = new Dice(Color.BLUE, 1);
         this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
-        controller.getcAction().workOnSide("primo", supportReserve.pick(0), 0, 2);
+        controller.getcAction().workOnSide("primo", controller.getcAction()
+                .pickFromReserve(0), 0, 2);
+        controller.getcAction().workOnSide("primo", controller.getcAction()
+                .pickFromReserve(0), 0, 1);
 
         lamina.function(controller, message);
 
 
-        fail("Fail: Non ha lanciato eccezione!");
+        Assert.fail("Fail: Non ha lanciato eccezione!");
     }
 
 
