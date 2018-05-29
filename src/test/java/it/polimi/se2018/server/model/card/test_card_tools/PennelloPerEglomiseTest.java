@@ -69,8 +69,8 @@ public class PennelloPerEglomiseTest {
         controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
 
 
-        Player player1 = controller.getLobby().callPlayerByName("primo");
-        Player player2 = controller.getLobby().callPlayerByName("secondo");
+        Player player1 = controller.getPlayerByName("primo");
+        Player player2 = controller.getPlayerByName("secondo");
         player1.setSideSelection(sides);
         player1.setMySide(0);
         player1.setFavours();

@@ -1,6 +1,7 @@
 package it.polimi.se2018.server.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.Table;
@@ -248,8 +249,8 @@ public class Controller{
      * @return riferimento a Table
      */
 
-    public Table getLobby(){
-        return lobby;
+    public Player getPlayerByName(String name) throws InvalidValueException {
+        return lobby.callPlayerByName(name);
     }
 
 
