@@ -2,7 +2,6 @@ package it.polimi.se2018.server.model.card.test_card_tools;
 
 import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.events.tool_mex.ToolCard5;
-import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
@@ -19,7 +18,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -27,7 +25,7 @@ import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 
 public class TaglierinaCircolareTest {
-    private TaglierinaCircolare taglerina=null;
+    private TaglierinaCircolare taglierina=null;
     private  ArrayList<Cell> sideContent = null;
     private Controller controller=null;
     private ToolCard5 message=null;
@@ -36,8 +34,8 @@ public class TaglierinaCircolareTest {
     private static ArrayList<Side> sides = new ArrayList<>();
 
     @Before
-    public void settings() throws InvalidColorValueException, InvalidShadeValueException, InvalidFavoursValueException, IOException {
-        this.taglerina=new TaglierinaCircolare();
+    public void settings() throws InvalidShadeValueException, InvalidFavoursValueException {
+        this.taglierina=new TaglierinaCircolare();
 
         this.sideContent= new ArrayList<>(20);
         //Aurorae Magnificus
@@ -98,7 +96,7 @@ public class TaglierinaCircolareTest {
 
         controller.getcAction().putOnGrid(0, new Dice(Color.YELLOW, 4));
 
-        taglerina.function(controller, message);
+        taglierina.function(controller, message);
 
         Dice itsHim = controller.getcAction().pickFromReserve(4);
         Dice itsHim2 = controller.getcAction().pickOnGrid(0, 0);
@@ -130,7 +128,7 @@ public class TaglierinaCircolareTest {
 
         controller.getcAction().putOnGrid(0, new Dice(Color.YELLOW, 4));
 
-        taglerina.function(controller, message);
+        taglierina.function(controller, message);
 
         Dice itsHim = controller.getcAction().pickFromReserve(4);
         Dice itsHim2 = controller.getcAction().pickOnGrid(0, 0);
@@ -158,7 +156,7 @@ public class TaglierinaCircolareTest {
 
         controller.getcAction().putOnGrid(0, new Dice(Color.YELLOW, 4));
 
-        taglerina.function(controller, message);
+        taglierina.function(controller, message);
 
         Dice itsHim = controller.getcAction().pickFromReserve(4);
         Dice itsHim2 = controller.getcAction().pickOnGrid(0, 0);

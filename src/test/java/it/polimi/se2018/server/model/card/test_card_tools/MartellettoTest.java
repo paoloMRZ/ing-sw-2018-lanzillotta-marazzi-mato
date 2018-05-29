@@ -14,8 +14,6 @@ import it.polimi.se2018.server.model.dice_sachet.DiceSachet;
 import it.polimi.se2018.server.model.reserve.Reserve;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import sun.font.TrueTypeFont;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +49,7 @@ public class MartellettoTest {
         controller=new Controller(playersName);
         tester=lobby.createReserve();
         controller.getcAction().resettingReserve(tester);
-        controller.getcTurn().setRound();
+        controller.getcTurn().setTurn();
         controller.getcTurn().getTurn().restoreValues();
         controller.getcTurn().getTurn().reductor();
         controller.getcTurn().getTurn().reductor();

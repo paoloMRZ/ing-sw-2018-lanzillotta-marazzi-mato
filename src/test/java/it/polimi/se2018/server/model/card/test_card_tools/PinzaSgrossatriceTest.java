@@ -15,7 +15,6 @@ import it.polimi.se2018.server.model.reserve.Reserve;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -26,57 +25,14 @@ import static org.junit.Assert.fail;
 
 public class PinzaSgrossatriceTest {
     private PinzaSgrossatrice pinza=null;
-    private  ArrayList<Cell> sideContent = null;
     private Controller controller=null;
     private MoreThanSimple message=null;
-    private Side chosenOne= null;
     private Reserve supportReserve=null;
-    private static ArrayList<Side> sides = new ArrayList<>();
+
     @Before
-    public void settings() throws InvalidShadeValueException, InvalidFavoursValueException{
+    public void settings(){
         this.pinza=new PinzaSgrossatrice();
-
-        this.sideContent= new ArrayList<>(20);
-        //Aurorae Magnificus
-
-        sideContent.add(new Cell(Color.WHITE , 5));
-        sideContent.add(new Cell(Color.GREEN, 0));
-        sideContent.add(new Cell(Color.BLUE, 0));
-        sideContent.add(new Cell(Color.PURPLE, 0));
-        sideContent.add(new Cell(Color.WHITE, 2));
-
-        sideContent.add(new Cell(Color.PURPLE, 0));
-        sideContent.add(new Cell(Color.WHITE, 0));
-        sideContent.add(new Cell(Color.WHITE, 0));
-        sideContent.add(new Cell(Color.WHITE, 0));
-        sideContent.add(new Cell(Color.YELLOW, 0));
-
-        sideContent.add(new Cell(Color.YELLOW, 0));
-        sideContent.add(new Cell(Color.WHITE, 0));
-        sideContent.add(new Cell(Color.WHITE, 6));
-        sideContent.add(new Cell(Color.WHITE, 0));
-        sideContent.add(new Cell(Color.PURPLE, 0));
-
-        sideContent.add(new Cell(Color.WHITE, 1));
-        sideContent.add(new Cell(Color.WHITE, 0));
-        sideContent.add(new Cell(Color.WHITE, 0));
-        sideContent.add(new Cell(Color.GREEN, 0));
-        sideContent.add(new Cell(Color.WHITE, 4));
-
-        this.chosenOne=new Side("toTEST",5,this.sideContent);
-
-        sides.add(chosenOne);
-        Player player1= new Player(null,"primo");
-        Player player2= new Player(null,"secondo");
-        player1.setSideSelection(sides);
-        player1.setMySide(0);
-        player1.setFavours();
-        player2.setSideSelection(sides);
-        player2.setMySide(0);
-        player2.setFavours();
-
-        this.controller = new Controller(new ArrayList<>(Arrays.asList(player1.getName(), player2.getName())));
-
+        controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
     }
 
     //ricreo una riserva con un consono numero di dadi in base a quanti giovatori ho inserito
