@@ -25,10 +25,11 @@ public class DiluentePerPastaSalda extends Utensils {
         Dice picked=controller.getcAction().extractDieAgain(controller.getcAction().pickFromReserve(die));
         controller.getcAction()
                    .setHoldingADiceMoveInProgress(picked);
-        //todo aggiornare responder
-        controller.getcAction().responder("SuccesColor","",picked.getColor().name());
+        //todo aggiornare responder sul table
+        controller.getcAction().responder("SuccessColor","",picked.getColor().name());
     }
-    public void function(Controller controller, ToolCard11Bis myMessage) throws InvalidValueException, InvalidSomethingWasNotDoneGood, InvalidCellException {
+
+    public void function(Controller controller, ToolCard11Bis myMessage) throws InvalidValueException, InvalidCellException {
         ArrayList<Integer> messageCont= new ArrayList<>(myMessage.getAttributes());
         String name= myMessage.getPlayer();
         int value=messageCont.get(0);

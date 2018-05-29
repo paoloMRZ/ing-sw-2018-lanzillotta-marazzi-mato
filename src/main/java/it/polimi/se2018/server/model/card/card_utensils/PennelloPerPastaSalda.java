@@ -2,7 +2,7 @@ package it.polimi.se2018.server.model.card.card_utensils;
 
 import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.events.tool_mex.ToolCard6;
-import it.polimi.se2018.server.events.tool_mex.Toolcard6Bis;
+import it.polimi.se2018.server.events.tool_mex.ToolCard6Bis;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidSomethingWasNotDoneGood;
@@ -28,7 +28,7 @@ public class PennelloPerPastaSalda extends Utensils {
         controller.getcAction().responder("SuccesValue","",String.valueOf(picked.getNumber()));
    }
 
-    public void function(Controller controller, Toolcard6Bis myMessage) throws InvalidValueException, InvalidSomethingWasNotDoneGood, InvalidCellException {
+    public void function(Controller controller, ToolCard6Bis myMessage) throws InvalidValueException, InvalidCellException {
         String name= myMessage.getPlayer();
 
         if(myMessage.getDecision()){
@@ -37,8 +37,8 @@ public class PennelloPerPastaSalda extends Utensils {
         }
         else{
             ArrayList<Integer> cont= myMessage.getAttributes();
-            int row=cont.get(1);
-            int col=cont.get(2);
+            int row=cont.get(0);
+            int col=cont.get(1);
             controller.getcAction().workOnSide(name,controller.getcAction().getHoldingADiceMoveInProgress(),row,col);
             controller.getcAction().playerActivatedCard(name);
         }

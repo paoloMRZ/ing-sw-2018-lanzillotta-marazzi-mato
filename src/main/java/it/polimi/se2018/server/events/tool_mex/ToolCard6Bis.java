@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 
 
-public class Toolcard6Bis extends ToolMultiParam{
+public class ToolCard6Bis extends ToolMultiParam{
 
     private ArrayList<Integer> data;
     private boolean decision;
 
-    public Toolcard6Bis(String player,int card,boolean letItDown, ArrayList<Integer> inputs){
+    public ToolCard6Bis(String player, int card, boolean letItDown, ArrayList<Integer> inputs){
         super(player,card);
         this.decision=letItDown;
         this.data=new ArrayList<>(inputs);

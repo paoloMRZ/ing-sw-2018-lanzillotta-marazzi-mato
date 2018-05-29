@@ -278,4 +278,7 @@ public class Table {
     public int peopleCounter(){
         return playersList.size();
     }
+    public void responder(String typeResponse, String message, String content ){
+        //todo
+    }
 }

@@ -10,18 +10,20 @@ import java.util.ArrayList;
 public class ControllerTurn {
     private Table lobby;
 
-    private int round;
+    private int round=0;
     private String turnOf=null;
+    private String firstPlayer=null;
 
 
     private int caller=0;
     private int numbOfPlayers;
 
-    private ArrayList<String> orderOfTurning;
+    private ArrayList<String> orderOfTurning = new ArrayList<>();
 //gestione delle fasi
     private boolean upDown=true;
     private boolean andata=true;
     private boolean started=false;
+
 
     public ControllerTurn(Table LOBBY){
 
@@ -42,17 +44,8 @@ public class ControllerTurn {
     }
 
     public void setRound() throws InvalidHowManyTimes {
-        if(!started){
-            this.round=1;
-            this.orderOfTurning=new ArrayList<>();
-            turnOf=lobby.callPlayerByNumber(0).getName();
-        }
-        else{
-            round=round+1;
-            this.orderOfTurning=new ArrayList<>();
-            setTurn();
-        }
-
+        firstPlayer=lobby.callPlayerByNumber(caller).getName();
+        round=round+1;
     }
 
     public void setTurn() throws InvalidHowManyTimes {
@@ -61,7 +54,12 @@ public class ControllerTurn {
         recorder(turnOf);
         lobby.callPlayerByNumber(caller).reductor();
 
-        callerModifier();
+        if(turnOf.equals(firstPlayer) && !andata){
+            andata = !andata;
+            callerModifier();
+            //todo si potrebbe mettere qui il setround da vedere
+        }
+        else callerModifier();
 
     }
 
@@ -87,6 +85,8 @@ public class ControllerTurn {
             andata=false;
         }
     }
+
+
     private void recorder(String name){
         if(!orderOfTurning.contains(name)) orderOfTurning.add(name);
     }

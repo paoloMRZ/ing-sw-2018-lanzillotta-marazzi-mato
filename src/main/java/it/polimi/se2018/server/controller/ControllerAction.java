@@ -96,23 +96,22 @@ public class ControllerAction {
     public void setHoldingADiceMoveInProgress(Dice d){
         this.holdingADiceMoveInProgress=d;
     }
-    public Dice getHoldingADiceMoveInProgress(){//todo di fretta riguardare se giusto
+
+    public Dice getHoldingADiceMoveInProgress(){
         Dice tmp= holdingADiceMoveInProgress;
         holdingADiceMoveInProgress=null;
         return tmp;
     }
+
     public void responder(String typeResponse, String message, String content ){//da finire per le risposte
-        switch(typeResponse){
-            case "SuccessColor":
-                //todo segnalare successColor alla fakeview
-            case "SuccesValue":
-                //todo
-        }
+        lobby.responder(typeResponse,message,content);
     }
+
     public Dice extractDieAgain(Dice die){
         lobby.getDiceSachet().reput(die);
         return lobby.getDiceSachet().getDiceFromSachet();
     }
+
     public int peopleCounter(){
         return lobby.peopleCounter();
     }
