@@ -19,11 +19,12 @@ public class TenagliaARotelle extends Utensils {
     }
     public void function(Controller controller,ToolCard8 myMessage) throws InvalidValueException, InvalidSomethingWasNotDoneGood, InvalidCellException, InvalidActivationException, InvalidHowManyTimes {
         //mi deve interessare che sia soo nel primo turno per vietare il secondo
-        if(controller.getcTurn().getTurn().getHowManyTurns()==1){
-
+        String name= myMessage.getPlayer();
+        String compare= controller.getcTurn().getTurn().getName();
+        if(compare.equals(name)){
+            if(controller.getcTurn().getTurn().getHowManyTurns()==1){
             ArrayList<Integer> messageCont= new ArrayList<>(myMessage.getAttributes());
 
-            String name= myMessage.getPlayer();
             int die=messageCont.get(0);
             int row=messageCont.get(1);
             int col=messageCont.get(2);
@@ -31,8 +32,9 @@ public class TenagliaARotelle extends Utensils {
             controller.getcAction().workOnSide(name,controller.getcAction().pickFromReserve(die),row,col);
             controller.getcTurn().getTurn().reductor();
 
-            controller.getcAction().playerActivatedCard(name);
+            controller.getcAction().playerActivatedCard(name);}
+            else throw new InvalidActivationException();
         }
-        else throw new InvalidActivationException();
+        else throw  new InvalidValueException();
     }
 }

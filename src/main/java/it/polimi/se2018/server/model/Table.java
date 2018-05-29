@@ -275,4 +275,7 @@ public class Table {
     public Player callPlayerByNumber(int x){
         return playersList.get(x);
     }
+    public int peopleCounter(){
+        return playersList.size();
+    }
 }

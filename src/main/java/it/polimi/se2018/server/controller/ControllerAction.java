@@ -34,8 +34,8 @@ public class ControllerAction {
         lobby.callPlayerByName(name).putDiceIgnoreValue(oldRow,oldCol,newRow,newCol);
     }
 
-    public void putNoNeighbours(String name, int die, int row, int col) throws InvalidValueException, InvalidShadeException, NotEmptyCellException, InvalidColorException {
-        Dice tmp= lobby.pickFromReserve(die);
+    public void putNoNeighbours(String name, int die, int row, int col) throws InvalidValueException, InvalidShadeException, NotEmptyCellException, InvalidColorException, InvalidSomethingWasNotDoneGood {
+        Dice tmp= pickFromReserve(die);
         lobby.callPlayerByName(name).putWithoutDicesNear(row,col,tmp);
     }
     //si poteva scrivere usando wokOnSide ma ho voluto rendere ciascun metodo indipendente
@@ -113,5 +113,7 @@ public class ControllerAction {
         lobby.getDiceSachet().reput(die);
         return lobby.getDiceSachet().getDiceFromSachet();
     }
-
+    public int peopleCounter(){
+        return lobby.peopleCounter();
+    }
 }

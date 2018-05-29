@@ -6,6 +6,7 @@ import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.InvalidColorException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.InvalidShadeException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.NotEmptyCellException;
+import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidSomethingWasNotDoneGood;
 import it.polimi.se2018.server.model.Color;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class RigaInSughero extends Utensils {
                 "che non sia adiacente a un altro dado Devi rispettare tutte le restrizioni di piazzamento");
 
     }
-    public void function(Controller controller, ToolCard9 myMessage) throws InvalidValueException, InvalidShadeException, NotEmptyCellException, InvalidColorException {
+    public void function(Controller controller, ToolCard9 myMessage) throws InvalidValueException, InvalidShadeException, NotEmptyCellException, InvalidColorException, InvalidSomethingWasNotDoneGood {
         //unwrapping message
 
         ArrayList<Integer> messageCont= new ArrayList<>(myMessage.getAttributes());

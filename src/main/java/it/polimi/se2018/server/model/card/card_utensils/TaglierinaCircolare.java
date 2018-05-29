@@ -13,8 +13,8 @@ import java.util.ArrayList;
 
 public class TaglierinaCircolare extends Utensils{
 
-    public TaglierinaCircolare(){
-        super(5,"TaglerinaCircolare", Color.GREEN,"Dopo aver scelto un dado, scambia quel dado con un dado sul Tracciato dei Round");
+    public TaglierinaCircolare() {
+        super(5, "TaglierinaCircolare", Color.GREEN, "Dopo aver scelto un dado, scambia quel dado con un dado sul Tracciato dei Round");
     }
 
     //todo discutere cosa fare con quel dado perchè l'algoritmo rimane in sospseso

@@ -9,13 +9,16 @@ public class ControllerTurn {
     private Table lobby;
     private String turnOf=null;
     private int numbOfPlayers;
-    private int round;
+    private int round=1;
     private int caller=0;
     private boolean upDown=true;
+    private boolean andata=true;
 
 
     public ControllerTurn(Table LOBBY){
+
         this.lobby=LOBBY;
+        this.numbOfPlayers=lobby.peopleCounter();
     }
 
     public Player getTurn() throws InvalidValueException {
@@ -26,13 +29,33 @@ public class ControllerTurn {
         return round;
     }
 
-    public void setRound() throws InvalidHowManyTimes {
+    public void setTurn() throws InvalidHowManyTimes {
+
         turnOf=lobby.callPlayerByNumber(caller).getName();
         lobby.callPlayerByNumber(caller).reductor();
 
-        if(caller==numbOfPlayers-1) upDown=false;
-        if(caller==0) upDown=true;
+        callerModifier();
+
+
+    }
+    private void callerModifier(){
+        if(andata) {
+            if (caller == 0) upDown = true;
+            if (caller == numbOfPlayers - 1) upDown = true;
+        }
+        else{
+            if (caller == 0) upDown = false;
+            if (caller == numbOfPlayers - 1) upDown = false;
+        }
         if(upDown) caller=caller+1;
         else caller=caller-1;
+        if(caller<0){
+            caller=0;
+            andata=true;
+        }
+        if(caller>numbOfPlayers-1){
+            caller=numbOfPlayers-1;
+            andata=false;
+        }
     }
 }

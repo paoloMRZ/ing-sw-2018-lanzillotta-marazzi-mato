@@ -4,33 +4,33 @@ import it.polimi.se2018.server.model.card.card_utensils.*;
 
 public interface Visitor {
 
-    void visit(Utensils itemUtensil);
+    public void visit(Utensils ItemUtensil);
 
-    void visit(PinzaSgrossatrice itemPinza);
+    public void visit(PinzaSgrossatrice ItemPinza);
 
-    void visit(PennelloPerEglomise itemPennelloEglo);
+    public void visit(PennelloPerEglomise ItemPennelloEglo);
 
-    void visit(Lathekin itemLathekin);
-
-
-    void visit(PennelloPerPastaSalda itemPennelloPasta);
-
-    void visit(AlesatorePerLaminaDiRame itemAlesatore);
-
-    void visit(Martelletto itemMartelletto);
+    public void visit(Lathekin ItemLathekin);
 
 
-    void visit(DiluentePerPastaSalda itemDiluente);
+    public void visit(PennelloPerPastaSalda ItemPennelloPasta);
 
-    void visit(RigaInSughero itemRiga);
+    public void visit(AlesatorePerLaminaDiRame ItemAlesatore);
+
+    public void visit(Martelletto ItemMartelletto);
+
+
+    public void visit(DiluentePerPastaSalda ItemDiluente);
+
+    public void visit(RigaInSughero ItemRiga);
 
     void visit(TaglierinaCircolare itemT);
 
 
-    void visit(TaglierinaManuale itemTM);
+    public void visit(TaglierinaManuale ItemTM);
 
-    void visit(TamponeDiamantato itemTD);
+    public void visit(TamponeDiamantato ItemTD);
 
-    void visit(TenagliaARotelle itemTe);
+    public void visit(TenagliaARotelle ItemTe);
 
 }
