@@ -1,14 +1,11 @@
 package it.polimi.se2018.server.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.Table;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
-import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
 import it.polimi.se2018.server.model.card.card_objective.obj_algos.algos.*;
-import it.polimi.se2018.server.model.card.card_schema.Side;
 import it.polimi.se2018.server.model.card.card_utensils.*;
 import it.polimi.se2018.server.model.dice_sachet.DiceSachet;
 import it.polimi.se2018.server.model.grid.RoundGrid;
@@ -244,13 +241,36 @@ public class Controller{
 
 
     /**
-     * Metodo che restituisce il riferimento all'attributo di tipo Table contenuto in Controller
+     * Metodo che restituisce il riferimento al Player tramite una ricerca per nome
      *
      * @return riferimento a Table
      */
 
     public Player getPlayerByName(String name) throws InvalidValueException {
         return lobby.callPlayerByName(name);
+    }
+
+
+    /**
+     * Metodo che restituisce il riferimento alla collezione di carte Obbiettivo Pubblico del Table
+     *
+     * @return alla collezione di carte Obbiettivo Pubblico
+     */
+
+    public List<Objective> getTableObjective(){
+        return new ArrayList<>(lobby.getDeckObjective());
+    }
+
+
+
+    /**
+     * Metodo che restituisce il riferimento alla collezione di carte Utensili del Table
+     *
+     * @return alla collezione di carte Utensili
+     */
+
+    public List<Utensils> getTableUtensils(){
+        return new ArrayList<>(lobby.getDeckUtensils());
     }
 
 

@@ -18,30 +18,30 @@ public class ControllerTest {
 
 
     @Test
-    public void checkUtensilsCreation(){
+    public void checkUtensilsCreation() {
 
-        assertTrue(!controller.getLobby().getUtensils(0).getDesciption().equals(controller.getLobby().getUtensils(1).getDesciption()));
-        assertTrue(!controller.getLobby().getUtensils(1).getDesciption().equals(controller.getLobby().getUtensils(2).getDesciption()));
-        assertTrue(!controller.getLobby().getUtensils(0).getDesciption().equals(controller.getLobby().getUtensils(2).getDesciption()));
+        assertTrue(!controller.getTableUtensils().get(0).getDesciption().equals(controller.getTableUtensils().get(1).getDesciption()));
+        assertTrue(!controller.getTableUtensils().get(1).getDesciption().equals(controller.getTableUtensils().get(2).getDesciption()));
+        assertTrue(!controller.getTableUtensils().get(2).getDesciption().equals(controller.getTableUtensils().get(0).getDesciption()));
     }
 
     @Test
     public void checkObjectivesCreation(){
 
-        assertTrue(!controller.getLobby().getObjective(0).getName().equals(controller.getLobby().getObjective(1).getName()));
-        assertTrue(!controller.getLobby().getObjective(1).getName().equals(controller.getLobby().getObjective(2).getName()));
-        assertTrue(!controller.getLobby().getObjective(0).getName().equals(controller.getLobby().getObjective(2).getName()));
+        assertTrue(!controller.getTableObjective().get(0).getName().equals(controller.getTableObjective().get(0).getName()));
+        assertTrue(!controller.getTableObjective().get(1).getName().equals(controller.getTableObjective().get(2).getName()));
+        assertTrue(!controller.getTableObjective().get(2).getName().equals(controller.getTableObjective().get(0).getName()));
     }
 
     @Test
     public void checkPlayersCreation() throws InvalidValueException {
 
-        assertTrue(!controller.getLobby().callPlayerByName("1").getMyObjective().getName().equals(controller.getLobby().callPlayerByName("2").getMyObjective().getName()));
-        assertTrue(!controller.getLobby().callPlayerByName("1").getMyObjective().getName().equals(controller.getLobby().callPlayerByName("3").getMyObjective().getName()));
-        assertTrue(!controller.getLobby().callPlayerByName("1").getMyObjective().getName().equals(controller.getLobby().callPlayerByName("4").getMyObjective().getName()));
-        assertTrue(!controller.getLobby().callPlayerByName("2").getMyObjective().getName().equals(controller.getLobby().callPlayerByName("3").getMyObjective().getName()));
-        assertTrue(!controller.getLobby().callPlayerByName("2").getMyObjective().getName().equals(controller.getLobby().callPlayerByName("4").getMyObjective().getName()));
-        assertTrue(!controller.getLobby().callPlayerByName("3").getMyObjective().getName().equals(controller.getLobby().callPlayerByName("4").getMyObjective().getName()));
+        assertTrue(!controller.getPlayerByName("1").getMyObjective().getName().equals(controller.getPlayerByName("2").getMyObjective().getName()));
+        assertTrue(!controller.getPlayerByName("1").getMyObjective().getName().equals(controller.getPlayerByName("3").getMyObjective().getName()));
+        assertTrue(!controller.getPlayerByName("1").getMyObjective().getName().equals(controller.getPlayerByName("4").getMyObjective().getName()));
+        assertTrue(!controller.getPlayerByName("2").getMyObjective().getName().equals(controller.getPlayerByName("3").getMyObjective().getName()));
+        assertTrue(!controller.getPlayerByName("2").getMyObjective().getName().equals(controller.getPlayerByName("4").getMyObjective().getName()));
+        assertTrue(!controller.getPlayerByName("3").getMyObjective().getName().equals(controller.getPlayerByName("4").getMyObjective().getName()));
     }
 
 
