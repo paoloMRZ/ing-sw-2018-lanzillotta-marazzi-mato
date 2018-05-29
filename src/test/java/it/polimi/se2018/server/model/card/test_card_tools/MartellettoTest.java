@@ -22,47 +22,67 @@ import java.util.Arrays;
 import static junit.framework.TestCase.fail;
 
 public class MartellettoTest {
-    private Reserve tester=null;
+
     private Martelletto mar= new Martelletto();
-    private ArrayList<Player> players= new ArrayList<>(Arrays.asList(
-            new Player(null,"1"),
-            new Player(null,"3"),
-            new Player(null,"4"),
-            new Player(null,"2")   ));
 
-    private ArrayList<String> playersName= new ArrayList<>(Arrays.asList("1", "3", "4", "2"));
 
-    private Controller controller;
-    private Table lobby = new Table(null,null,players,new DiceSachet(),null,null);
+    private ArrayList<String> playersName= new ArrayList<>(Arrays.asList("1", "3", "2"));
+    private Controller controller=new Controller(playersName);
+    private Reserve tester=null;
 
-    private ArrayList<Integer> countingBefore=new ArrayList<>();
-    private ArrayList<Color> colorsBefore=new ArrayList<>();
 
-    private ArrayList<Integer> countingAfter=new ArrayList<>();
-    private ArrayList<Color> colorsAfter=new ArrayList<>();
+    private ArrayList<Integer> countingBefore;
+    private ArrayList<Color> colorsBefore;
 
-    private ArrayList<Integer> countingAfter2=new ArrayList<>();
+    private ArrayList<Integer> countingAfter;
+    private ArrayList<Color> colorsAfter;
+
+
+
 
 
     @Before
     public void settings() throws InvalidValueException, InvalidHowManyTimes{
-        controller=new Controller(playersName);
-        tester=lobby.createReserve();
-        controller.getcAction().resettingReserve(tester);
-        controller.getcTurn().setTurn();
-        controller.getcTurn().getTurn().restoreValues();
-        controller.getcTurn().getTurn().reductor();
-        controller.getcTurn().getTurn().reductor();
 
+        countingBefore=new ArrayList<>();
+        colorsBefore=new ArrayList<>();
+
+        countingAfter=new ArrayList<>();
+        colorsAfter=new ArrayList<>();
     }
+
+
+
     @Test
-    public void counting(){
+    public void happy(){
+        try {
+            controller.getcTurn().setRound();
+            controller.getcTurn().setTurn();
+            controller.getcTurn().setTurn();
+            controller.getcTurn().setTurn();
+            controller.getcTurn().setTurn();
+
+
+            Dice d1 = new Dice(Color.BLUE, 1);
+            Dice d2 = new Dice(Color.GREEN, 4);
+            Dice d3 = new Dice(Color.PURPLE, 4);
+            Dice d4 = new Dice(Color.YELLOW, 4);
+            Dice d5 = new Dice(Color.YELLOW, 1);
+
+            this.tester = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
+            controller.getcAction().resettingReserve(tester);
+        }
+        catch(Exception e){
+            fail("setting dentro test"+e);
+        }
 
         try {
             counter(true);
-            //non uso un messaggio perchè non ha una funzionalità vera e propria
+
             mar.function(controller);
+
             counter(false);
+
             comparing();
         }
         catch(Exception e){
@@ -70,42 +90,41 @@ public class MartellettoTest {
         }
 
     }
+    @Test(expected = InvalidActivationException.class)
+    public void invalid() throws InvalidHowManyTimes, InvalidValueException, InvalidActivationException, InvalidSomethingWasNotDoneGood {
+            controller.getcTurn().setRound();
+            controller.getcTurn().setTurn();
+            controller.getcTurn().setTurn();
 
-    @Test(expected= InvalidSomethingWasNotDoneGood.class)
-    public void failing() throws InvalidSomethingWasNotDoneGood, InvalidValueException, InvalidActivationException {
-        counter(true);
-        //non uso un messaggio perchè non ha una funzionalità vera e propria
-        mar.function(controller);
-        counter2(false);
-        comparing();
+
+
+
+            Dice d1 = new Dice(Color.BLUE, 1);
+            Dice d2 = new Dice(Color.GREEN, 4);
+            Dice d3 = new Dice(Color.PURPLE, 4);
+            Dice d4 = new Dice(Color.YELLOW, 4);
+            Dice d5 = new Dice(Color.YELLOW, 1);
+
+            this.tester = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
+            controller.getcAction().resettingReserve(tester);
+
+
+
+            counter(true);
+
+            mar.function(controller);
+
+            counter(false);
+
+            comparing();
+
+            fail("non ha lanciato excp");
+
     }
+
     private void counter(boolean isBefore){
-        ArrayList<Dice> container= tester.getDices();
-                for (Dice d: container) {
-                if(isBefore){
-                    if(colorsBefore.contains(d.getColor())){
-                        int where=colorsBefore.indexOf(d.getColor());
-                        countingBefore.set(where,countingBefore.get(where)+1);
-                    }
-                    else{
-                        colorsBefore.add(d.getColor());
-                        countingBefore.add(1);
-                    }
-                }
-                else{
-                    if(colorsAfter.contains(d.getColor())){
-                        int where=colorsAfter.indexOf(d.getColor());
-                        countingAfter.set(where,countingAfter.get(where)+1);
-                    }
-                    else{
-                        colorsAfter.add(d.getColor());
-                        countingAfter.add(1);
-                    }
-                }
-        }
-    }
-    private void counter2(boolean isBefore){
-        ArrayList<Dice> container= tester.getDices();
+        ArrayList<Dice> container = controller.getcAction().getReserve().getDices();
+
         for (Dice d: container) {
             if(isBefore){
                 if(colorsBefore.contains(d.getColor())){
@@ -124,11 +143,12 @@ public class MartellettoTest {
                 }
                 else{
                     colorsAfter.add(d.getColor());
-                    countingAfter.add(2);
+                    countingAfter.add(1);
                 }
             }
         }
     }
+
     private void comparing() throws InvalidSomethingWasNotDoneGood {
         for(Color c: colorsBefore){
             if(countingBefore.get(colorsBefore.indexOf(c))!= countingAfter.get(colorsAfter.indexOf(c))) throw new InvalidSomethingWasNotDoneGood();
