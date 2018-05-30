@@ -286,7 +286,7 @@ public class Controller{
 
 
     /**
-     *  Metodo che restituisce il riferimento all'attributo di tipo ControllerTurn contenuto in Controller
+     * Metodo che restituisce il riferimento all'attributo di tipo ControllerTurn contenuto in Controller
      *
      * @return riferimento a ControllerTurn
      */
@@ -294,4 +294,17 @@ public class Controller{
     public ControllerTurn getcTurn() {
         return cTurn;
     }
+
+
+    /**
+     * Metodo utilizzato per passare la collezioni di Stringhe rappresentanti i nomi dei player nelle corrispondenti posizioni all'ultimo round
+     *
+     */
+
+    public void setRoundPosition(){
+        cPoints.setFinalRoundPosition(cTurn.getOrderOfTurning());
+    }
+
+
+
 }
