@@ -66,8 +66,8 @@ public class CoupleOfShades implements StrategyAlgorithm{
             }
         }
 
-        if(contOne>contTwo && contTwo!=0) return favours*contTwo;
-        else if(contTwo>contOne && contOne!=0) return favours*contOne;
+        if(contOne<contTwo && contOne!=0) return favours*contOne;
+        else if(contTwo<contOne && contTwo!=0) return favours*contTwo;
         else if(contOne==contTwo) return favours*contOne;
         else return 0;
     }

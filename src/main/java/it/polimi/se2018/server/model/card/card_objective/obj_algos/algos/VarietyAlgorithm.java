@@ -1,5 +1,7 @@
 package it.polimi.se2018.server.model.card.card_objective.obj_algos.algos;
 
+import java.util.ArrayList;
+
 /**
  * La classe VarietyAlgorithm rappresenta una sorta di " raccoglitore " di metodi utilizzati da buona parte delle classi contenute nel
  * package /algos
@@ -41,13 +43,13 @@ public class VarietyAlgorithm {
     /**
      * Metodo di supporto che verifica che nella collezione in ingresso non ci siano elementi nulli
      *
-     * @param array collezione di interi di cui si vuole controllare gli elementi
+     * @param counter collezione di interi di cui si vuole controllare gli elementi
      * @return TRUE se è presente un riferimento a null, altrimenti FALSE
      */
 
-    public boolean hasZeroElement(int[] array) {
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == 0) return true;
+    public boolean hasZeroElement(int[] counter) {
+        for (int i = 0; i < counter.length; i++) {
+            if (counter[i] == 0) return true;
         }
         return false;
     }
@@ -91,5 +93,18 @@ public class VarietyAlgorithm {
         }
         return check;
     }
+
+
+    public int minValues(int [] array){
+        int head = array[0];
+
+        for(int i=1; i<array.length; i++){
+            if(head>=array[i]) {
+                head = array[i];
+            }
+        }
+        return head;
+    }
+
 
 }
