@@ -5,6 +5,8 @@ import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
+import java.util.ArrayList;
+
 
 /**
  * Rappresenta l'incapsulamento dell'algoritmo relativo alla carta "Varietà di Colore" : "Set di dadi di ogni colore ovunque"
@@ -57,7 +59,7 @@ public class ColorVariety extends VarietyAlgorithm implements StrategyAlgorithm 
                 }
             }
         }
-        if (!hasZeroElement(contColor)) return favours * (sumArray(contColor) / 5);
+        if (!hasZeroElement(contColor)) return favours*minValues(contColor);
         else return 0;
     }
 }

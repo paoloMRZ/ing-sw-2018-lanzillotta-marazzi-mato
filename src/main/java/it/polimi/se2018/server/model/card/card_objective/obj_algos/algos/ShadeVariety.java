@@ -2,6 +2,9 @@ package it.polimi.se2018.server.model.card.card_objective.obj_algos.algos;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 
 /**
  * Rappresenta l'incapsulamento dell'algoritmo relativo alla carta "Sfumature Diverse" : "Set di dadi di ogni valore ovunque"
@@ -12,7 +15,7 @@ import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgor
 
 
 
-public class ShadeVariety extends VarietyAlgorithm implements StrategyAlgorithm{
+public class ShadeVariety extends VarietyAlgorithm implements StrategyAlgorithm {
 
 
     /**
@@ -26,7 +29,7 @@ public class ShadeVariety extends VarietyAlgorithm implements StrategyAlgorithm{
     @Override
     public int use(Player player) throws Exception {
         int favours = 5;
-        int[] contNumber=new int[6];
+        int[] contNumber = new int[6];
         int tempNumber=0;
 
         for(int i=0; i<4; i++){
@@ -61,7 +64,7 @@ public class ShadeVariety extends VarietyAlgorithm implements StrategyAlgorithm{
             }
         }
 
-        if(!hasZeroElement(contNumber)) return favours*(sumArray(contNumber)/6);
+        if(!hasZeroElement(contNumber)) return favours*minValues(contNumber);
         else return 0;
     }
 }

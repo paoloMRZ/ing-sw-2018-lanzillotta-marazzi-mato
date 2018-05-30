@@ -125,6 +125,18 @@ public class Table {
         return objectiveDeck.get(cardPosition);
     }
 
+
+    /**
+     * Metodo che restituisce il riferimento all'attributo scoreGrid
+     *
+     * @return riferimento all'attributo scoreGrid
+     */
+
+    public ScoreGrid getScoreGrid() {
+        return scoreGrid;
+    }
+
+
     /**
      * Metodo che simula il pescaggio dalla riserva della sessione di gioco
      *

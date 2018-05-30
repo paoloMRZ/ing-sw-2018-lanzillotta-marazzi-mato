@@ -28,7 +28,7 @@ public class ControllerTest {
     @Test
     public void checkObjectivesCreation(){
 
-        assertTrue(!controller.getTableObjective().get(0).getName().equals(controller.getTableObjective().get(0).getName()));
+        assertTrue(!controller.getTableObjective().get(0).getName().equals(controller.getTableObjective().get(1).getName()));
         assertTrue(!controller.getTableObjective().get(1).getName().equals(controller.getTableObjective().get(2).getName()));
         assertTrue(!controller.getTableObjective().get(2).getName().equals(controller.getTableObjective().get(0).getName()));
     }

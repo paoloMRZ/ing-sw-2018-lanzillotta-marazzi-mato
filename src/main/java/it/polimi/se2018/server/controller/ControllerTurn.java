@@ -6,6 +6,7 @@ import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.Table;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ControllerTurn {
     private Table lobby;
@@ -39,7 +40,7 @@ public class ControllerTurn {
         return round;
     }
 
-    public ArrayList<String> getOrderOfTurning() {
+    public List<String> getOrderOfTurning() {
         return orderOfTurning;
     }
 
