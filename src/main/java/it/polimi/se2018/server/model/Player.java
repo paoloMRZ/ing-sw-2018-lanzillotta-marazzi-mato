@@ -65,6 +65,27 @@ public class Player {
 
 
     /**
+     * Metodo che restituisce il riferimento ai segnalini Favore del giocatore
+     *
+     * @return riferimento al'attributo favours
+     */
+
+    public int getFavours() {
+        return favours;
+    }
+
+
+    /**
+     * Metodo che restituisce il riferimento alla carta Side del giocatore
+     *
+     * @return riferimento alla carta Side
+     */
+
+    public Side getMySide() {
+        return mySide;
+    }
+
+    /**
      * Metodo che restituisce il riferimento alla carta Obbiettivo Privata del giocatore
      *
      * @return riferimento alla carta Obbiettivo Privata
