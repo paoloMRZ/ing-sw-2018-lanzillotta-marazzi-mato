@@ -1,7 +1,10 @@
 package it.polimi.se2018.server.network;
 
+
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 import it.polimi.se2018.server.network.fake_client.FakeClient;
+import it.polimi.se2018.server.timer.ObserverTimer;
+import it.polimi.se2018.server.timer.SagradaTimer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,15 +15,21 @@ import java.util.List;
  * Oltre a questo fa da tramite tra view (client) e fake view (server).
  * @author Marazzi Paolo
  */
-public class Lobby {
+public class Lobby implements ObserverTimer {
+    private int numberOfClient;
     private ArrayList<FakeClient> connections;
-    //TODO Aggiungere il timer e la sua gestione.
+    private SagradaTimer timer;
 
     /**
      * Costruttore della classe.
      */
-    public Lobby(){
-        connections = new ArrayList<>();
+    public Lobby(int lifeTime){
+        if(lifeTime > 0) {
+            numberOfClient = 0;
+            connections = new ArrayList<>();
+            timer = new SagradaTimer(lifeTime);
+            timer.add(this); //Mi aggiungo alla lista degli osservatori del timer. TODO Se di decide di togliere la classe astratta observableTimer questo metodo forse sprisce!
+        } //TODO gestire il caso in cui viene passato un parametro sbagliato.
     }
 
     /**
@@ -29,10 +38,25 @@ public class Lobby {
      * @throws InvalidNicknameException viene sollevata se il nickname del fake client da inserire è già utilizzato da un altro fake client contenuto nella lobby.
      */
     public synchronized void add (FakeClient connection) throws InvalidNicknameException {
-        if(getNicknames().contains(connection.getNickname()))
-            throw new InvalidNicknameException();
-        else
-            connections.add(connection);
+        if (numberOfClient < 4) {
+            if (getNicknames().contains(connection.getNickname()))
+                throw new InvalidNicknameException();
+            else {
+                connections.add(connection);
+                numberOfClient++;
+
+                if (numberOfClient == 4) {
+                    //TODO richiamo il metodo privato per cosrtuire la pertita e avviarla
+                    timer.stop();
+                    System.out.println("[*]Si sono collegati 4 clients --> avvio la partita");
+                }
+
+                if (numberOfClient == 1 && !timer.isStarted()) {
+                    System.out.println("[*]SI è connesso il primo client --> avvio il timer\n");
+                    timer.start();
+                }
+            }
+        }
     }
 
     /**
@@ -44,6 +68,7 @@ public class Lobby {
             if(client.getNickname().equals(nickname)) {
                 client.closeConnection();
                 connections.remove(client);
+                numberOfClient--;
                 System.out.println("[*]" + client.getNickname() + " rimosso dalla lobby!");
                 return;
             }
@@ -75,4 +100,18 @@ public class Lobby {
         return nicknames;
     }
 
+    @Override
+    public void timerUpdate() {
+        timer.stop();
+
+        if(numberOfClient >= 2){
+            //TODO richiamo il metodo privato per costruire e avviare la partita.
+            System.out.println("[*]Ci sono " + numberOfClient + " clients --> Avvio la partita");
+        }
+        else
+        {
+           //TODO vedere sulle specifiche del progetto cosa si dice di fare.
+            System.out.println("[*]Ci sono " + numberOfClient + " clients --> Non avvio la partita");
+        }
+    }
 }
