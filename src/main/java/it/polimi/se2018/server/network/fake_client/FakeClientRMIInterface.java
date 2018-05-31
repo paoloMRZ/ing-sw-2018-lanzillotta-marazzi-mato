@@ -1,4 +1,4 @@
-package server.fake_client;
+package it.polimi.se2018.server.network.fake_client;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

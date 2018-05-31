@@ -1,8 +1,8 @@
 package it.polimi.se2018.client.connection_handler;
 
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
+import it.polimi.se2018.server.network.fake_client.FakeClientRMIInterface;
 import it.polimi.se2018.server.network.implementation.ServerInterface;
-import server.fake_client.FakeClientRMIInterface;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;

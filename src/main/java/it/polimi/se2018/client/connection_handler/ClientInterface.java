@@ -1,5 +1,7 @@
 package it.polimi.se2018.client.connection_handler;
-import server.fake_client.FakeClientRMIInterface;
+
+
+import it.polimi.se2018.server.network.fake_client.FakeClientRMIInterface;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

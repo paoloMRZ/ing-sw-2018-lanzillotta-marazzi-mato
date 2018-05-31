@@ -13,7 +13,7 @@ import java.rmi.server.UnicastRemoteObject;
  *
  * @author Marazzi Paolo
  */
-public class FakeClientRMI extends FakeClient implements server.fake_client.FakeClientRMIInterface {
+public class FakeClientRMI extends FakeClient implements FakeClientRMIInterface {
 
     private ClientInterface clientInterface;
 
@@ -32,7 +32,7 @@ public class FakeClientRMI extends FakeClient implements server.fake_client.Fake
             this.clientInterface = clientInterface;
 
             //Passo al vero client l'interfaccia remota del suo corrispettivo fake client su server (cioè questo oggetto).
-            server.fake_client.FakeClientRMIInterface remoteRef = (server.fake_client.FakeClientRMIInterface) UnicastRemoteObject.exportObject(this, 0);
+            FakeClientRMIInterface remoteRef = (FakeClientRMIInterface) UnicastRemoteObject.exportObject(this, 0);
             clientInterface.accept(remoteRef);
         }
     }
