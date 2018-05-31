@@ -6,10 +6,12 @@ import it.polimi.se2018.server.model.card.card_utensils.*;
 
 public class ControllerCard implements Visitor {
     private Table lobby;
+    private Controller controller;
 
 
-    public ControllerCard(Table LOBBY){
+    public ControllerCard(Table LOBBY,Controller controller){
         this.lobby=LOBBY;
+        this.controller=controller;
     }
 
     //metodo che controlla se i favori del giocatore sia abbastanza per una certa carta utensile

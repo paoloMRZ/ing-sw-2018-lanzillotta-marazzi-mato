@@ -26,6 +26,7 @@ import java.util.List;
 public class ControllerPoints {
 
     private Table lobby;
+    private Controller controller;
     private ArrayList<String> finalRoundPosition;
 
     /**
@@ -34,8 +35,9 @@ public class ControllerPoints {
      * @param lobby riferimento all'oggetto Table della sessione di gioco
      */
 
-    public ControllerPoints(Table lobby){
+    public ControllerPoints(Table lobby, Controller controller) {
         this.lobby = lobby;
+        this.controller = controller;
     }
 
 
@@ -45,8 +47,8 @@ public class ControllerPoints {
      * @param roundPosition riferimento alla collezione di stringhe rappresentanti i nomi dei giocatori nelle rispettivi posizioni all'ultimo round
      */
 
-    public void setFinalRoundPosition(List<String> roundPosition){
-        this.finalRoundPosition = (ArrayList<String>)roundPosition;
+    public void setFinalRoundPosition(List<String> roundPosition) {
+        this.finalRoundPosition = (ArrayList<String>) roundPosition;
     }
 
 
@@ -59,11 +61,11 @@ public class ControllerPoints {
 
     private int searchVoidCell(Side side) throws InvalidShadeValueException, InvalidCoordinatesException {
 
-        int counter =0;
+        int counter = 0;
 
-        for(int i=0; i<4; i++){
-            for(int j=0; j<5; j++){
-                if(side.showCell(i,j).showDice()==null) counter++;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 5; j++) {
+                if (side.showCell(i, j).showDice() == null) counter++;
             }
         }
         return counter;
@@ -73,7 +75,7 @@ public class ControllerPoints {
     /**
      * Metodo utilizzato per il calcolo del punteggio finale associato a ciascun giocatore
      *
-      * @throws Exception viene lanciata quando si genera un riferimento non valido
+     * @throws Exception viene lanciata quando si genera un riferimento non valido
      */
 
     public void updateScoreOfPlayer() throws Exception {
@@ -86,15 +88,15 @@ public class ControllerPoints {
         //Ricavo il numero di player dei player di cui si intende calcolare il punteggio
         int numbOfPlayers = lobby.getScoreGrid().getSizeScore();
 
-        for(int i =0; i<numbOfPlayers;i++){
+        for (int i = 0; i < numbOfPlayers; i++) {
             Player player = lobby.callPlayerByNumber(i);
-            for (Objective objective: objectives) {
-                lobby.getScoreGrid().updatePoints(i,objective.useAlgorithm(player));
+            for (Objective objective : objectives) {
+                lobby.getScoreGrid().updatePoints(i, objective.useAlgorithm(player));
             }
 
-            lobby.getScoreGrid().updatePoints(i,player.getMyObjective().useAlgorithm(player));
-            lobby.getScoreGrid().updatePoints(i,player.getFavours());
-            lobby.getScoreGrid().updatePoints(i,(searchVoidCell(player.getMySide()))*(-1));
+            lobby.getScoreGrid().updatePoints(i, player.getMyObjective().useAlgorithm(player));
+            lobby.getScoreGrid().updatePoints(i, player.getFavours());
+            lobby.getScoreGrid().updatePoints(i, (searchVoidCell(player.getMySide())) * (-1));
         }
     }
 
@@ -102,15 +104,14 @@ public class ControllerPoints {
     /**
      * Classe adibita alla creazione di un oggetto che rappresenti un associazione tra Player e un punteggio specifico riguardo le modalità di scelta di un
      * vincitore in caso di parità. Dispone quindi di un campo name e un campo score contente il relativo punteggio parziale.
-     *
      */
 
-    private class ScoreByPlayer{
+    private class ScoreByPlayer {
 
         String name;
         int score;
 
-        public ScoreByPlayer(String name, int score){
+        public ScoreByPlayer(String name, int score) {
             this.name = name;
             this.score = score;
         }
@@ -136,7 +137,7 @@ public class ControllerPoints {
         int head = partialScore.get(0).getScoreOfPlayer();
 
         for (ScoreByPlayer partial : partialScore) {
-                if(head <= partial.getScoreOfPlayer()) head = partial.getScoreOfPlayer();
+            if (head <= partial.getScoreOfPlayer()) head = partial.getScoreOfPlayer();
         }
 
         return head;
@@ -150,109 +151,109 @@ public class ControllerPoints {
      * @return riferimento alla collezione di oggetti ScoreByName
      */
 
-    private List<String> equalityPlayer(List<ScoreByPlayer> partialScore){
+    private List<String> equalityPlayer(List<ScoreByPlayer> partialScore) {
 
         int maxScore = maxValues(partialScore);
         ArrayList<String> selectedPlayers = new ArrayList<>();
 
         //Il metodo estrae una sottolista di elementi che hanno uno stesso punteggio
         for (ScoreByPlayer partial : partialScore) {
-            if(partial.getScoreOfPlayer()==maxScore) selectedPlayers.add(partial.getNameOfPlayer());
+            if (partial.getScoreOfPlayer() == maxScore) selectedPlayers.add(partial.getNameOfPlayer());
         }
 
         return selectedPlayers;
     }
 
+        /**
+         * Metodo che estrae da collezione di oggetti ScoreByName una lista di ScoreByName selezionati
+         *
+         * @param partialScore riferimento alla collezione di ScoreByName da cui si intende estrarre oggetti
+         * @param equality riferimento alla lista di nomi per identificare gli oggetti ScoreByName che si intende estrarre
+         * @return riferimento alla collezioni di oggetti ScoreByName selezionati
+         */
 
-    /**
-     * Metodo che estrae da collezione di oggetti ScoreByName una lista di ScoreByName selezionati
-     *
-     * @param partialScore riferimento alla collezione di ScoreByName da cui si intende estrarre oggetti
-     * @param equality riferimento alla lista di nomi per identificare gli oggetti ScoreByName che si intende estrarre
-     * @return riferimento alla collezioni di oggetti ScoreByName selezionati
-     */
+        private List<ScoreByPlayer> extractPlayer (List < ScoreByPlayer > partialScore, List < String > equality){
 
-    private List<ScoreByPlayer> extractPlayer(List<ScoreByPlayer> partialScore, List<String> equality){
+            ArrayList<ScoreByPlayer> selection = new ArrayList<>();
+            for (ScoreByPlayer partial : partialScore) {
+                for (String name : equality) {
+                    if (name.equals(partial.getNameOfPlayer())) selection.add(partial);
+                }
 
-        ArrayList<ScoreByPlayer> selection = new ArrayList<>();
-        for (ScoreByPlayer partial : partialScore) {
-            for (String name : equality) {
-                if(name.equals(partial.getNameOfPlayer())) selection.add(partial);
             }
 
-        }
-
-        return selection;
-    }
-
-
-    /**
-     *  Metodo utilizzato per eleggere il vincitore della partita, ovvero il gicoatore con il punteggio più alto. Richiama al suo interno il metodo per il calcolo dei
-     *  punteggi finali. Devo però gestire eventiali casi di parità. Si noti che i casi possibili che si possono verificare, vanno applicati nell'ordine seguente:
-     *
-     *      • Vince il giocatore col maggior numero di punti dati dall’Obiettivo Personale;
-     *      • Se c’è ancora parità vince chi ha più Segnalini Favore;
-     *      • se ancora non c’è un vincitore, vince il giocatore, tra quelli in parità, che occupa la posizione più bassa dell’ordine dell’ultimo round.
-     *
-     * @return nome del vincitore
-     * @throws Exception viene lanciata qualora si passassero valori non accettabili
-     */
-
-    public String nameOfWinner() throws Exception {
-
-        ArrayList<String> compareFinalPoint;
-        ArrayList<String> compareObjectivePoint;
-        ArrayList<String> compareFavoursPoint;
-        ArrayList<String> compareRound;
-
-        String nameOfWinner = null;
-
-        //Richiamo il metodo per il calcolo del punteggio
-        updateScoreOfPlayer();
-
-
-        //Creo le collezioni di gestione della parità, che verranno valjutate nell'ordine indicato
-        int numbOfPlayers = lobby.getScoreGrid().getSizeScore();
-
-        ArrayList<ScoreByPlayer> finalPoint = new ArrayList<>();
-        ArrayList<ScoreByPlayer> favoursPoint = new ArrayList<>();
-        ArrayList<ScoreByPlayer> objectivePoint = new ArrayList<>();
-        ArrayList<String> roundPosition = this.finalRoundPosition;
-
-        for (int i = 0; i < numbOfPlayers; i++) {
-            Player player = lobby.callPlayerByNumber(i);
-            favoursPoint.add(new ScoreByPlayer(player.getName(), player.getFavours()));
-            objectivePoint.add(new ScoreByPlayer(player.getName(), player.getMyObjective().useAlgorithm(player)));
-            finalPoint.add(new ScoreByPlayer(player.getName(), lobby.getScoreGrid().getPlayersPoint(i)));
+            return selection;
         }
 
 
-        //Create tutte le collezioni del caso, procedo con la scelta del vincitore
+        /**
+         *  Metodo utilizzato per eleggere il vincitore della partita, ovvero il gicoatore con il punteggio più alto. Richiama al suo interno il metodo per il calcolo dei
+         *  punteggi finali. Devo però gestire eventiali casi di parità. Si noti che i casi possibili che si possono verificare, vanno applicati nell'ordine seguente:
+         *
+         *      • Vince il giocatore col maggior numero di punti dati dall’Obiettivo Personale;
+         *      • Se c’è ancora parità vince chi ha più Segnalini Favore;
+         *      • se ancora non c’è un vincitore, vince il giocatore, tra quelli in parità, che occupa la posizione più bassa dell’ordine dell’ultimo round.
+         *
+         * @return nome del vincitore
+         * @throws Exception viene lanciata qualora si passassero valori non accettabili
+         */
 
-        //Esiste un giocatore che ha un punteggio finale maggiore degli altri ed è unico?
-        compareFinalPoint = new ArrayList<>(equalityPlayer(finalPoint));
+        public String nameOfWinner () throws Exception {
 
-        if (compareFinalPoint.size() == 1) nameOfWinner = compareFinalPoint.get(0);
-        else {
+            ArrayList<String> compareFinalPoint;
+            ArrayList<String> compareObjectivePoint;
+            ArrayList<String> compareFavoursPoint;
+            ArrayList<String> compareRound;
 
-            //Valuta il punteggio parziale relativo alle carte Obbiettivo Privato dei giocatori a pari punteggio finale
-            compareObjectivePoint = new ArrayList<>(equalityPlayer(extractPlayer(objectivePoint, compareFinalPoint)));
-            if (compareObjectivePoint.size() == 1) nameOfWinner = compareObjectivePoint.get(0);
+            String nameOfWinner = null;
+
+            //Richiamo il metodo per il calcolo del punteggio
+            updateScoreOfPlayer();
+
+
+            //Creo le collezioni di gestione della parità, che verranno valjutate nell'ordine indicato
+            int numbOfPlayers = lobby.getScoreGrid().getSizeScore();
+
+            ArrayList<ScoreByPlayer> finalPoint = new ArrayList<>();
+            ArrayList<ScoreByPlayer> favoursPoint = new ArrayList<>();
+            ArrayList<ScoreByPlayer> objectivePoint = new ArrayList<>();
+            ArrayList<String> roundPosition = this.finalRoundPosition;
+
+            for (int i = 0; i < numbOfPlayers; i++) {
+                Player player = lobby.callPlayerByNumber(i);
+                favoursPoint.add(new ScoreByPlayer(player.getName(), player.getFavours()));
+                objectivePoint.add(new ScoreByPlayer(player.getName(), player.getMyObjective().useAlgorithm(player)));
+                finalPoint.add(new ScoreByPlayer(player.getName(), lobby.getScoreGrid().getPlayersPoint(i)));
+            }
+
+
+            //Create tutte le collezioni del caso, procedo con la scelta del vincitore
+
+            //Esiste un giocatore che ha un punteggio finale maggiore degli altri ed è unico?
+            compareFinalPoint = new ArrayList<>(equalityPlayer(finalPoint));
+
+            if (compareFinalPoint.size() == 1) nameOfWinner = compareFinalPoint.get(0);
             else {
 
-                //Valuta il punteggio parziale relativo ai segnalini Favore dei giocatori a pari punteggio finale e pari punteggio relativo alla carta Obbiettivo Privato
-                compareFavoursPoint = new ArrayList<>(equalityPlayer(extractPlayer(favoursPoint, compareObjectivePoint)));
-                if (compareFavoursPoint.size() == 1) nameOfWinner = compareFavoursPoint.get(0);
+                //Valuta il punteggio parziale relativo alle carte Obbiettivo Privato dei giocatori a pari punteggio finale
+                compareObjectivePoint = new ArrayList<>(equalityPlayer(extractPlayer(objectivePoint, compareFinalPoint)));
+                if (compareObjectivePoint.size() == 1) nameOfWinner = compareObjectivePoint.get(0);
                 else {
 
-                    //Valuta la posizione nell'ultimo round dei giocatori a pari punteggio finale, pari punteggio relativo alla carta Obbiettivo Privato e pari segnalini Favore
-                    for (String position : roundPosition) {
-                        if (compareFavoursPoint.contains(position)) nameOfWinner = position;
+                    //Valuta il punteggio parziale relativo ai segnalini Favore dei giocatori a pari punteggio finale e pari punteggio relativo alla carta Obbiettivo Privato
+                    compareFavoursPoint = new ArrayList<>(equalityPlayer(extractPlayer(favoursPoint, compareObjectivePoint)));
+                    if (compareFavoursPoint.size() == 1) nameOfWinner = compareFavoursPoint.get(0);
+                    else {
+
+                        //Valuta la posizione nell'ultimo round dei giocatori a pari punteggio finale, pari punteggio relativo alla carta Obbiettivo Privato e pari segnalini Favore
+                        for (String position : roundPosition) {
+                            if (compareFavoursPoint.contains(position)) nameOfWinner = position;
+                        }
                     }
                 }
             }
+
+            return nameOfWinner;
         }
 
-        return nameOfWinner;
-    }
 }

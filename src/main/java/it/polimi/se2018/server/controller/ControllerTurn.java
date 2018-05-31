@@ -10,6 +10,7 @@ import java.util.List;
 
 public class ControllerTurn {
     private Table lobby;
+    private Controller controller;
 
     private int round=0;
     private String turnOf=null;
@@ -26,10 +27,11 @@ public class ControllerTurn {
     private boolean started=false;
 
 
-    public ControllerTurn(Table LOBBY){
+    public ControllerTurn(Table LOBBY,Controller controller){
 
         this.lobby=LOBBY;
         this.numbOfPlayers=lobby.peopleCounter();
+        this.controller=controller;
     }
 
     public Player getTurn() throws InvalidValueException {
@@ -44,9 +46,18 @@ public class ControllerTurn {
         return orderOfTurning;
     }
 
+    //il primo metodo a venire lanciato in questa classe
     public void setRound() throws InvalidHowManyTimes {
-        firstPlayer=lobby.callPlayerByNumber(caller).getName();
-        round=round+1;
+        if(!started) {
+            firstPlayer = lobby.callPlayerByNumber(caller).getName();
+            round = round + 1;
+            setTurn();
+        }
+        else {
+            firstPlayer = lobby.callPlayerByNumber(caller).getName();
+            round = round + 1;
+            isGameFinished();
+        }
     }
 
     public void setTurn() throws InvalidHowManyTimes {
@@ -55,10 +66,10 @@ public class ControllerTurn {
         recorder(turnOf);
         lobby.callPlayerByNumber(caller).reductor();
 
-        if(turnOf.equals(firstPlayer) && !andata){
-            andata = !andata;
+        if(!andata && turnOf.equals(firstPlayer) ){
+            andata = true;
             callerModifier();
-            //todo si potrebbe mettere qui il setround da vedere
+            setRound();
         }
         else callerModifier();
 
@@ -75,8 +86,10 @@ public class ControllerTurn {
             if (caller == 0) upDown = false;
             if (caller == numbOfPlayers - 1) upDown = false;
         }
+
         if(upDown) caller=caller+1;
         else caller=caller-1;
+
         if(caller<0){
             caller=0;
             andata=true;
@@ -90,5 +103,9 @@ public class ControllerTurn {
 
     private void recorder(String name){
         if(!orderOfTurning.contains(name)) orderOfTurning.add(name);
+    }
+
+    private void isGameFinished(){
+        if(round>10) controller.finalize();
     }
 }

@@ -46,10 +46,10 @@ public class Controller{
     public Controller(List<String> nameOfPlayers) {
         if (!nameOfPlayers.isEmpty()) {
             this.lobby = new Table(setListOfUtensils(), setListOfObjectivePublic(), setListOfPlayers(nameOfPlayers), new DiceSachet(), new ScoreGrid(setListOfPlayers(nameOfPlayers).size()), new RoundGrid());
-            this.cCard = new ControllerCard(lobby);
-            this.cAction = new ControllerAction(lobby);
-            this.cPoints = new ControllerPoints(lobby);
-            this.cTurn = new ControllerTurn(lobby);
+            this.cCard = new ControllerCard(lobby,this);
+            this.cAction = new ControllerAction(lobby,this);
+            this.cPoints = new ControllerPoints(lobby, this);
+            this.cTurn = new ControllerTurn(lobby,this);
         }
         else throw new NullPointerException();
     }
@@ -286,13 +286,19 @@ public class Controller{
 
 
     /**
-     * Metodo che restituisce il riferimento all'attributo di tipo ControllerTurn contenuto in Controller
+     *  Metodo che restituisce il riferimento all'attributo di tipo ControllerTurn contenuto in Controller
      *
      * @return riferimento a ControllerTurn
      */
 
     public ControllerTurn getcTurn() {
         return cTurn;
+    }
+
+    public void finalize(){
+        //todo metodo che viene lanciato quando il decimo round si è concluso e lancia la parte finale del gioco
+        //todo
+        //todo
     }
 
 

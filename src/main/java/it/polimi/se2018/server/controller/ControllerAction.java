@@ -17,10 +17,12 @@ import javax.naming.spi.ResolveResult;
 public class ControllerAction {
     private Table lobby;
     private Dice holdingADiceMoveInProgress;
+    private Controller controller;
 
 
-    public ControllerAction(Table LOBBY){
+    public ControllerAction(Table LOBBY,Controller controller){
         this.lobby=LOBBY;
+        this.controller=controller;
     }
 
 
