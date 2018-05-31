@@ -28,8 +28,15 @@ public class Lobby implements ObserverTimer {
             numberOfClient = 0;
             connections = new ArrayList<>();
             timer = new SagradaTimer(lifeTime);
-            timer.add(this); //Mi aggiungo alla lista degli osservatori del timer. TODO Se di decide di togliere la classe astratta observableTimer questo metodo forse sprisce!
+            timer.add(this); //Mi aggiungo alla lista degli osservatori del timer.
         } //TODO gestire il caso in cui viene passato un parametro sbagliato.
+    }
+
+    /**
+     * Questa classe crea una nuova partita. Per fare questo crea FakeView, Controller e Model e li collega fra loro.
+     */
+    private void createGame(){
+        //TODO Implementare la classe.
     }
 
     /**
@@ -46,13 +53,13 @@ public class Lobby implements ObserverTimer {
                 numberOfClient++;
 
                 if (numberOfClient == 4) {
-                    //TODO richiamo il metodo privato per cosrtuire la pertita e avviarla
+                    createGame();
                     timer.stop();
-                    System.out.println("[*]Si sono collegati 4 clients --> avvio la partita");
+                    System.out.println("[*]Si sono collegati 4 cliens --> avvio la partita"); //TODO da rimuovere.
                 }
 
                 if (numberOfClient == 1 && !timer.isStarted()) {
-                    System.out.println("[*]SI è connesso il primo client --> avvio il timer\n");
+                    System.out.println("[*]SI è connesso il primo client --> avvio il timer\n"); //TODO da rimuovere.
                     timer.start();
                 }
             }
@@ -61,6 +68,7 @@ public class Lobby implements ObserverTimer {
 
     /**
      * Il metodo rimuove dalla lobby il fake client specificato tramite il nickname e chiude la connessione ad esso dedicata.
+     * Nel caso in cui il nickname passato non è presente nella lobby il metodo non effettua nessuna operazione.
      * @param nickname nickname del fake client da rimuovere.
      */
     public synchronized void remove(String nickname){
@@ -73,8 +81,6 @@ public class Lobby implements ObserverTimer {
                 return;
             }
         }
-
-        //TODO Gestire il caso in cui il nickname passato non esiste!
     }
 
     /**
@@ -105,13 +111,13 @@ public class Lobby implements ObserverTimer {
         timer.stop();
 
         if(numberOfClient >= 2){
-            //TODO richiamo il metodo privato per costruire e avviare la partita.
-            System.out.println("[*]Ci sono " + numberOfClient + " clients --> Avvio la partita");
+            System.out.println("[*]Ci sono " + numberOfClient + " client --> Avvio la partita"); //TODO da rimuovere.
+            createGame();
         }
         else
         {
            //TODO vedere sulle specifiche del progetto cosa si dice di fare.
-            System.out.println("[*]Ci sono " + numberOfClient + " clients --> Non avvio la partita");
+            System.out.println("[*]Ci sono " + numberOfClient + " clients --> Non avvio la partita"); //TODO da rimuovere.
         }
     }
 }
