@@ -2,16 +2,31 @@ package it.polimi.se2018.server.timer;
 
 import java.util.TimerTask;
 
-public class Clock extends TimerTask {
+/**
+ * La classe rappresenta il task da eseguire in modo ciclico quando il timer "Sagrada" viene avviato.
+ * Questa classe estende java.util.TimerTask in modo da poter essere avviata tramite la classe java.util.Timer.
+ *
+ * La classe ha livello di accessibilità package.
+ * @author Marazzi Paolo
+ */
+    class Clock extends TimerTask {
 
-    private SagradaTimer sagradaTimer;
+    private SagradaTimer sagradaTimer; //Timer "Sagrada" che viene notificato ad ogni esecuzione del metodo run.
 
-    public Clock(SagradaTimer sagradaTimer){
+    /**
+     * Costruttore della classe.
+     * @param sagradaTimer timer "Sagrada" che viene notificato ad ogni esecuzione del metodo run.
+     */
+    Clock(SagradaTimer sagradaTimer){
         if(sagradaTimer != null) {
             this.sagradaTimer = sagradaTimer;
         }
     }
 
+    /**
+     * Metodo che viene eseguito dall'oggetto dalla classe java.util.Timer contenuta nella classe SagradaTimer.
+     * Il metodo notifica l'oggetto SagradaTimer che è stato passato come parametro al costruttore.
+     */
     @Override
     public void run() {
         sagradaTimer.clockNotify();
