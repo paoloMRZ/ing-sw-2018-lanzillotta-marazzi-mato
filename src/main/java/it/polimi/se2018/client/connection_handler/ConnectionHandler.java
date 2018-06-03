@@ -5,7 +5,7 @@ package it.polimi.se2018.client.connection_handler;
  */
 public abstract class ConnectionHandler  {
     /**
-     *  Il metodo notifica la view di un evento tramite un messaggio.
+     *  Il metodo receiveNotify la view di un evento tramite un messaggio.
      * @param message messaggio da inviare alla view.
      */
     public void notifica(String message){
@@ -16,7 +16,7 @@ public abstract class ConnectionHandler  {
     }
 
     /**
-     * La view notifica il server di un evento tramite un messaggio.
+     * La view receiveNotify il server di un evento tramite un messaggio.
      * @param message messaggio da inviare al server.
      */
     public abstract void sendToServer(String message);

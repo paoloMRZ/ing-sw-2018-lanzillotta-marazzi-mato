@@ -1,10 +1,11 @@
 package it.polimi.se2018.server.network.fake_client;
 
+import it.polimi.se2018.server.exceptions.ConnectionCloseException;
 import it.polimi.se2018.server.network.Lobby;
-import it.polimi.se2018.server.network.fake_client.FakeClient;
 
 import java.io.*;
 import java.net.Socket;
+
 
 /**
  * La classe rappresenta l'entità associata a lato server che si occupa di gestire la comunicazione con uno specifico client
@@ -15,6 +16,10 @@ import java.net.Socket;
 public class FakeClientSocket extends FakeClient implements Runnable {
 
     private Socket socket;
+    private OutputStreamWriter out;
+    private BufferedReader reader;
+
+    private boolean isOpen; //Indica se la connessione è aperta, quindi se il loop di lettura "sta girando".
 
     /**
      * Costruttore della classe.
@@ -23,17 +28,20 @@ public class FakeClientSocket extends FakeClient implements Runnable {
      * @param lobby stanza di gioco.
      * @param nickname nickname scelto dal giocatore.
      */
-    public FakeClientSocket(Socket socket, Lobby lobby, String nickname){
+    public FakeClientSocket(Socket socket, Lobby lobby, String nickname) throws IOException {
         super(lobby, nickname); //Richiamo il costruttore padre.
 
         if(socket != null){
+            this.isOpen = true;
             this.socket = socket;
+            this.out = new OutputStreamWriter(socket.getOutputStream());
+            this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         }
     }
 
     /**
      * Loop di ascolto sulla socket che deve essere lancito su un thread dedicato.
-     * Appene viene ricevuto un messaggio sulla socket la classe lo notifica alla lobby che si occuperà di
+     * Appene viene ricevuto un messaggio sulla socket la classe lo receiveNotify alla lobby che si occuperà di
      * passare l'informazione ai destinatari.
      *
      * Nel caso in cui viene ricevuto un messaggio di chiusura della comunicazione, oltre a notificarlo alla lobby, viene interrotto il loop.
@@ -42,27 +50,24 @@ public class FakeClientSocket extends FakeClient implements Runnable {
     public void run() {
 
         try {
-            System.out.println("[*]Thread di ascolto avviato.\n");
 
-            boolean isOpen = true;
-            BufferedReader reader= new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String message;
 
-            while(isOpen){
+            while(isOpen) {
+
+
                 message = reader.readLine();
-                if( message != null && !message.trim().equals("")) {
-                    if (message.equals("bye")) { //TODO Sistemare il messaggio passato per la chiusura della connessione.
-                        lobby.remove(super.getNickname()); //Notifio la lobby della richiesta di chiusura della connessione.
-                        isOpen = false; //Interrompo il loop di lettura.
-                    } else {
-                        System.out.println("[*]Ho ricevuto un messaggio da " + this.getNickname());
-                        lobby.notifica(message.concat("\n")); //Notifico la lobby del messaggio ricevuto.
-                    }
+
+                if (message == null) { //Controllo se è caduta la connessione.
+                    lobby.receiveNotify("/" + getNickname() + "/###/rete/?/disconnect\n");
+
+                } else { //In tutti gli altri casi devo passare il messaggio al controllore.
+                    lobby.receiveNotify(message.concat("\n")); //Notifico la lobby del messaggio ricevuto.
                 }
             }
 
         } catch (IOException e) {
-            System.out.println("[*]ERRORE di rete!"); //TODO Definire bene come gestire quest'eccezione.
+            lobby.receiveNotify("/" + getNickname() + "/###/rete/?/disconnect\n");
         }
     }
 
@@ -72,26 +77,34 @@ public class FakeClientSocket extends FakeClient implements Runnable {
      * @param message messaggio da inviare al client.
      */
     @Override
-    public void update(String message) {
-        try {
-            OutputStreamWriter out = new OutputStreamWriter(socket.getOutputStream());
-            out.write(message);
-            out.flush();
-        } catch (IOException e) {
-            System.out.println("[*]ERRORE nell'aprire lo stream di scrittura!"); //TODO definire bene come gestire questa eccezione.
+    public void update(String message) throws ConnectionCloseException {
+        if(isOpen) {
+            try {
+                out.write(message);
+                out.flush();
+            } catch (IOException e) {
+               throw new ConnectionCloseException();
+            }
         }
     }
 
     /**
-     * Il metodo chiude la connessione col client inviandogli un messaggio di notifica e chiudendo la socket.
+     * Il metodo chiude la connessione col client inviandogli un messaggio di receiveNotify e chiudendo la socket.
      */
     @Override
-    public void closeConnection() { //TODO Sistemare i messaggi.
-        update("bye\n"); //Invio un messaggio al client che notifica la chiusura della connessione. TODO il messaggio usato è provvisorio.
+    public void closeConnection() {
         try {
-            socket.close(); //chiudo la socket.
+            out.close(); //Chiudo il buffer di scrittura.
+            reader.close(); //Chiudo il buffer di lettura.
+            socket.close(); //Chiudo la socket.
+            isOpen = false; //Interrompo il loop di lettura.
         } catch (IOException e) {
-            System.out.println("[*]ERRORE chiusura socket!\n"); //TODO definire bene come gestire questa eccezione.
+            isOpen = false;
         }
+    }
+
+    @Override
+    public boolean isFreezed() {
+        return !isOpen;
     }
 }

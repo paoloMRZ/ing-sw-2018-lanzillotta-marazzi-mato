@@ -1,5 +1,6 @@
 package it.polimi.se2018.client.connection_handler;
 
+import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 import it.polimi.se2018.server.network.fake_client.FakeClientRMIInterface;
 import it.polimi.se2018.server.network.implementation.ServerInterface;
@@ -16,8 +17,8 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class ConnectionHandlerRMI extends ConnectionHandler implements ClientInterface {
 
-    private ServerInterface serverInterface;
     private FakeClientRMIInterface fakeClientInterface;
+    private String nickname;
 
     /**
      * Costruttore della classe.
@@ -28,27 +29,20 @@ public class ConnectionHandlerRMI extends ConnectionHandler implements ClientInt
      * @param nickname nickname scelto dall'utente.
      * @throws InvalidNicknameException viene sollevata se il nickname scelto è già in uso sul server.
      */
-    public ConnectionHandlerRMI(String nickname) throws InvalidNicknameException {
+    public ConnectionHandlerRMI(String nickname) throws InvalidNicknameException, GameStartedException, NotBoundException, MalformedURLException, RemoteException {
 
         super();
 
-        try {
-            System.out.println("[*]Mi connetto al registry e recupero l'interfaccia del server.");
-            serverInterface = (ServerInterface) Naming.lookup("//localhost/MyServer");
-            ClientInterface remoteRef = (ClientInterface) UnicastRemoteObject.exportObject(this, 0); //Lo faccio perchè non posso far estendere unicast a questa classe visto che ne estende già una.
+        this.nickname = nickname;
+        ServerInterface serverInterface;
 
-            System.out.println("[*]Mi connetto al server tramite RMI.");
-            serverInterface.add(remoteRef,nickname);
+        serverInterface = (ServerInterface) Naming.lookup("//localhost/MyServer");
+        ClientInterface remoteRef = (ClientInterface) UnicastRemoteObject.exportObject(this, 0); //Lo faccio perchè non posso far estendere unicast a questa classe visto che ne estende già una.
 
-            System.out.println("[*]Connessione avvenuta con successo! \n");
+        serverInterface.add(remoteRef, nickname);
 
-        } catch (NotBoundException e) {
-            System.out.println("[*]ERRORE il riferimento passato non è associato a nulla!"); //TODO Definire bene come gestire quest'eccezione!
-        } catch (MalformedURLException e) {
-            System.out.println("[*]ERRORE URL non trovato!");//TODO Definire bene come gestire quest'eccezione!
-        } catch (RemoteException e) {
-            System.out.println("[*]ERRORE di connessione: " + e.getMessage() + "!");//TODO Definire bene come gestire quest'eccezione!
-        }
+        super.notifica("/###/" + nickname + "/rete/?/ok\n");
+
     }
 
     /**
@@ -60,13 +54,13 @@ public class ConnectionHandlerRMI extends ConnectionHandler implements ClientInt
         try {
             fakeClientInterface.sendToserver(message);
         } catch (RemoteException e) {
-            System.out.println("[*]ERRORE di connessione: " + e.getMessage() + "!");//TODO Definire bene come gestire quest'eccezione!
+            super.notifica("/###/" + nickname + "/rete/?/disconnect\n");
         }
     }
 
     /**
      * Metodo richiamato dal server per mandare un messaggio al client tramite l'interfaccia remota di quest'ultimo.
-     * Quando il client riceve un messaggio lo notifica alla view.
+     * Quando il client riceve un messaggio lo receiveNotify alla view.
      * @param message messaggio da inviare.
      */
     @Override
@@ -80,10 +74,10 @@ public class ConnectionHandlerRMI extends ConnectionHandler implements ClientInt
      * @param fakeClientInterface interfaccia remota del fake client che chiama questo metodo.
      */
     @Override
-    public void accept(FakeClientRMIInterface fakeClientInterface){
-        if(fakeClientInterface != null) {
-            this.fakeClientInterface = fakeClientInterface;
-            System.out.println("[*]Ho ricevuto l'interfaccia del mio corrispettivo fake client");
-        }
+    public void accept(FakeClientRMIInterface fakeClientInterface) {
+        this.fakeClientInterface = fakeClientInterface;
+        if(this.fakeClientInterface == null)
+            super.notifica("/###/" + nickname + "/rete/?/disconnect\n");
+
     }
 }

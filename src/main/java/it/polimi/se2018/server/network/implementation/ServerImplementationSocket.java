@@ -1,7 +1,9 @@
 package it.polimi.se2018.server.network.implementation;
 
+import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 import it.polimi.se2018.server.network.Lobby;
+import it.polimi.se2018.server.network.fake_client.FakeClient;
 import it.polimi.se2018.server.network.fake_client.FakeClientSocket;
 
 import java.io.BufferedReader;
@@ -18,24 +20,37 @@ import java.net.Socket;
  */
 public class ServerImplementationSocket implements Runnable {
 
-    private final int PORT = 1234; //Porta della socket.
+    private static final int PORT = 1234; //Porta della socket.
 
     private Lobby lobby;
     private ServerSocket serverSocket;
+
+    private boolean isOpen = true;
+
+    private OutputStreamWriter out = null;
+    private BufferedReader reader = null;
+
 
     /**
      * Costruttore della classe. Ha il compito di aprire la socket.
      * @param lobby sala d'attesa in cui vengono inseriti tutti i client che superano la verifica del nickname.
      */
-    public ServerImplementationSocket(Lobby lobby){
+    public ServerImplementationSocket(Lobby lobby) throws IOException {
         if(lobby != null)
             this.lobby = lobby;
 
-        System.out.println("[*]Apro la socket.");
+        serverSocket = new ServerSocket(PORT);
+    }
+
+
+    private void sendMessageAndClose(FakeClient fakeClient, String message){
         try {
-            serverSocket = new ServerSocket(PORT);
+            out.write(message); //viene notificata al client l'invalidità del nickname.
+            out.flush();
+            fakeClient.closeConnection(); //La connessione viene chiusa anche se la receiveNotify del nickname non valido non è andata a buon fine.
+
         } catch (IOException e) {
-            System.out.println("[*]ERRORE nell'apertura della socket!");
+            fakeClient.closeConnection(); //La connessione viene chiusa anche se la receiveNotify del nickname non valido non è andata a buon fine.
         }
     }
 
@@ -48,18 +63,11 @@ public class ServerImplementationSocket implements Runnable {
     @Override
     public void run() {
 
-        System.out.println("[*]Mi metto in attesa di connessioni sulla socket.\n");
-
-        boolean isOpen = true;
         FakeClientSocket fakeClient = null;
-        OutputStreamWriter out = null;
-        BufferedReader reader = null;
 
         while(isOpen){
             try {
-                Socket socket = serverSocket.accept(); //Accetto la connessione dal client.
-                System.out.println("\n[*]Si è connesso un client sulla socket.");
-
+                Socket socket = serverSocket.accept();
 
                 reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 out = new OutputStreamWriter(socket.getOutputStream());
@@ -69,27 +77,32 @@ public class ServerImplementationSocket implements Runnable {
 
 
                 lobby.add(fakeClient); //Provo ad aggiungerlo alla lobby.
-                out.write("OK\n"); //Se l'inserimento va a buon fine lo notifico al client. TODO Il messaggio di notifica è provvisorio.,
+
+                out.write("/###/" + fakeClient.getNickname() + "/rete/?/ok\n"); //Se l'inserimento va a buon fine lo notifico al client.
                 out.flush();
-                System.out.println("[*]Aggiunto alla lobby.");
 
                 (new Thread(fakeClient)).start(); //Avvio il thread dedicato all'ascolto dei messaggi destinati al fake client.
 
             } catch (InvalidNicknameException e) {
                 //Se il nickname non è valido viene sollevata questa eccezione dal metodo 'add' della classe lobby.
-                try {
-                    System.out.println("[*]Connessione rifiutata");
-                    out.write("NO\n"); //viene notificata al client l'invalidità del nickname. TODO Il messaggio di notifica è privvisorio.
-                    out.flush();
+                sendMessageAndClose(fakeClient, "/###/" + fakeClient.getNickname() + "/rete/?/ko_nickname\n");
 
-                } catch (IOException e1) {
-                    System.out.println("[*]ERRORE nella connessione su socket col client."); //TODO definire come gestire questa eccezione.
-                }
-                fakeClient.closeConnection(); //La connessione viene chiusa anche se la notifica del nickname non valido non è andata a buon fine.
-            }
-            catch (IOException e) {
-                System.out.println("[*]ERRORE nella connessione su socket col client."); //TODO definire come gestire questa eccezione.
+            } catch (GameStartedException e) {
+                //Se la partita è già stata avviata ed il client che si è connesso non era stato congelato viene sollevata questa eccezione.
+                sendMessageAndClose(fakeClient,"/###/" + fakeClient.getNickname() + "/rete/?/ko_gamestarted\n");
+
+            } catch (IOException e) {
+                if(fakeClient != null)
+                    fakeClient.closeConnection();
             }
         }
+    }
+
+
+    public void close() throws IOException {
+        isOpen = false;
+        if(out!= null) out.close();
+        if(reader!= null) reader.close();
+        if(serverSocket!= null) serverSocket.close();
     }
 }

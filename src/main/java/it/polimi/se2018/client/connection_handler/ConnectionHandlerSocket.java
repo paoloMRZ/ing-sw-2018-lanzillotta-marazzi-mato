@@ -1,5 +1,6 @@
 package it.polimi.se2018.client.connection_handler;
 
+import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 
 import java.io.*;
@@ -12,6 +13,10 @@ import java.net.Socket;
 public class ConnectionHandlerSocket extends  ConnectionHandler implements Runnable {
 
     private Socket socket;
+    private OutputStreamWriter out;
+    private BufferedReader reader;
+
+    private String nickname;
 
     /**
      * Costruttore della classe.
@@ -23,28 +28,47 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
      * @param nickname nickname con cui collegarsi al server.
      * @throws InvalidNicknameException viene sollevata quando il nickanme scelto è già utilizzato da un'altro client connesso al server.
      */
-    public ConnectionHandlerSocket(String nickname) throws InvalidNicknameException {
+    public ConnectionHandlerSocket(String nickname) throws InvalidNicknameException, GameStartedException, IOException {
 
         super();
 
-        try {
-            //Mi collego al server.
-            socket = new Socket("localhost", 1234);
-            OutputStreamWriter out = new OutputStreamWriter(socket.getOutputStream());
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        this.nickname = nickname;
 
-            //Gli mando il nickname che l'utente vuole utilizzare.
-            out.write(nickname.concat("\n"));
-            out.flush();
+        String tmp;
 
-            //Attendo la convalida del nickname.
-            if(reader.readLine().equals("NO"))
-                throw new InvalidNicknameException(); //Nickname non valido.
-            else
-                System.out.println("[*]Connessione avvenuta."); //Nickname valido.
-        } catch (IOException e) {
-            System.out.println("[*]ERRORE nel collegamento al server!");
-        }
+        //Mi collego al server.
+        socket = new Socket("localhost", 1234);
+        out = new OutputStreamWriter(socket.getOutputStream());
+        reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+        //Gli mando il nickname che l'utente vuole utilizzare.
+        out.write(nickname.concat("\n"));
+        out.flush();
+
+
+        //Attendo la convalida del nickname.
+        tmp = reader.readLine();
+
+        if (isInvalidNicknameMessage(tmp))
+            throw new InvalidNicknameException(); //Nickname non valido.
+        else if (isGameStartedErrorMessage(tmp))
+            throw new GameStartedException(); //Partita già iniziata.
+        else if (isClientConnectedMessage(tmp))
+            super.notifica(tmp); //Nickname valido.
+
+    }
+
+
+    private boolean isInvalidNicknameMessage(String message){
+        return message.replace("\n", "").split("/")[3].equals("rete") && message.replace("\n", "").split("/")[5].equals("ko_nickname");
+    }
+
+    private boolean isGameStartedErrorMessage(String message){
+       return message.replace("\n", "").split("/")[3].equals("rete") && message.replace("\n", "").split("/")[5].equals("ko_gamestarted");
+    }
+
+    private boolean isClientConnectedMessage(String message){
+        return message.replace("\n", "").split("/")[3].equals("rete") && message.replace("\n", "").split("/")[5].equals("ok");
     }
 
     /**
@@ -54,17 +78,15 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
     @Override
     public void sendToServer(String message) {
         try {
-            OutputStreamWriter out = new OutputStreamWriter(socket.getOutputStream());
             out.write(message);
             out.flush();
-            System.out.println("[*]Messaggio inviato");
         } catch (IOException e) {
-            System.out.println("[*]ERRORE nell'estrazione dello stream dalla socket!");
+            super.notifica("/###/" + nickname + "/rete/?/disconnect\n");
         }
     }
 
     /**
-     * Loop di lettura della socket. Appena arriva un messaggio dal server lo notifica alla view tramite il metodo contenuto nel padre "ConnectionHandler".
+     * Loop di lettura della socket. Appena arriva un messaggio dal server lo receiveNotify alla view tramite il metodo contenuto nel padre "ConnectionHandler".
      * Se riceve un messaggio di chiusura della connessione oltre a notificarlo alla view interrompe il loop di lettura.
      */
     @Override
@@ -72,22 +94,21 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
 
         boolean isOpen = true;
 
-        System.out.println("[*]Avvio il loop di lettura che attende i messaggi dal server.");
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String tmp;
+        while (isOpen) {
+            try {
+                String tmp;
 
-            while(isOpen){
                 tmp = reader.readLine();
-                if(tmp.equals("bye"))
+
+                if (tmp == null)
                     isOpen = false;
-                super.notifica(tmp);
+                else
+                    super.notifica(tmp);
+
+            } catch (IOException e) {
+                isOpen = false;
             }
-
-            System.out.println("[*]Connessione chiusa!\n");
-
-        } catch (IOException e) {
-            System.out.println("[*]ERRORE nell'estrazione dello stream dalla socket!");
         }
+        super.notifica("/###/" + this.nickname.replace("\n", "") + "/rete/?/disconnect\n");
     }
 }

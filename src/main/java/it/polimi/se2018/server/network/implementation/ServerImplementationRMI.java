@@ -2,11 +2,17 @@ package it.polimi.se2018.server.network.implementation;
 
 
 import it.polimi.se2018.client.connection_handler.ClientInterface;
+import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 import it.polimi.se2018.server.network.Lobby;
 import it.polimi.se2018.server.network.fake_client.FakeClientRMI;
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 /**
@@ -14,6 +20,7 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class ServerImplementationRMI extends UnicastRemoteObject implements ServerInterface {
 
+    private static final int PORT = 1099;
     private Lobby lobby;
 
     /**
@@ -22,11 +29,15 @@ public class ServerImplementationRMI extends UnicastRemoteObject implements Serv
      * @param lobby sala d'attesa in cui vengono inseriti tutti i client che superano la verifica del nickname.
      * @throws RemoteException viene lanciata se il nickname passato è già utilizzato da un'altro client nella lobby.
      */
-    public ServerImplementationRMI(Lobby lobby) throws RemoteException {
+    public ServerImplementationRMI(Lobby lobby) throws RemoteException, MalformedURLException {
         super(0);
 
-        if (lobby != null)
+        LocateRegistry.createRegistry(PORT);
+        Naming.rebind("//localhost/MyServer", this);
+
+        if (lobby != null) {
             this.lobby = lobby;
+        }
     }
 
     /**
@@ -39,16 +50,14 @@ public class ServerImplementationRMI extends UnicastRemoteObject implements Serv
      * @throws InvalidNicknameException viene sollevata se il nickname scelto non è disponibile.
      */
     @Override
-    public void add(ClientInterface clientInterface, String nickname) throws RemoteException, InvalidNicknameException {
+    public void add(ClientInterface clientInterface, String nickname) throws RemoteException, InvalidNicknameException, GameStartedException {
 
-        System.out.println("\n[*]Ho ricevuto una nuova connessione da RMI.");
         FakeClientRMI fakeClient = new FakeClientRMI(clientInterface, lobby, nickname);
-        try {
-            lobby.add(fakeClient);
-            System.out.println("\n[*]Ho aggiunto il client alla lobby\n");
-        }catch (InvalidNicknameException e){
-            System.out.println("[*]Connessione rifiutata");
-            throw new InvalidNicknameException();
-        }
+
+        lobby.add(fakeClient);
+    }
+
+    public void close() throws RemoteException, NotBoundException, MalformedURLException {
+        Naming.unbind("//localhost/MyServer");
     }
 }
