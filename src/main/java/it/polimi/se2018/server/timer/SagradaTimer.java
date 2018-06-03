@@ -23,7 +23,7 @@ public class SagradaTimer {
      * Costruttore della classe.
      * Nel caso venga passato un valore non valido (cioè <= 0) per il parametro tick il timer
      * viene settato automaticamente a 30 sec.
-     * @param tick intervallo di tempo (in secondi) dopo cui gli osservatori ricevono la notifica.
+     * @param tick intervallo di tempo (in secondi) dopo cui gli osservatori ricevono la receiveNotify.
      */
     public SagradaTimer(int tick){
         if(tick > 0){
@@ -40,7 +40,7 @@ public class SagradaTimer {
     }
 
     /**
-     * Il metodo notifica tutti gli osservatori di questa classe richiamando il metodo timerUpdate di ognuno.
+     * Il metodo receiveNotify tutti gli osservatori di questa classe richiamando il metodo timerUpdate di ognuno.
      */
     private void timerNotify(){
         for(ObserverTimer osservatore : osservatori)
@@ -79,6 +79,8 @@ public class SagradaTimer {
             //non sarebbe possibile riavviarlo (vedi documentazione java).
             timer = new Timer();
 
+            counter = lifeTime; //Resetto il contatore al valore iniziale.
+
             //Avvio il timer in modo che esegua il metodo run dell'oggetto Clock (TimerTask) ogni secondo.
             timer.scheduleAtFixedRate(new Clock(this), 0, 1000);
             isStarted = true;
@@ -93,6 +95,13 @@ public class SagradaTimer {
         if(isStarted) {
             timer.cancel();
             isStarted = false;
+        }
+    }
+
+    public void reset(){
+        if(isStarted) {
+            stop();
+            start();
         }
     }
 
@@ -113,7 +122,7 @@ public class SagradaTimer {
     }
 
     /**
-     * Metodo di notifica che viene richiamato ogni secondo dal metodo run della classe Clock (TimerTask).
+     * Metodo di receiveNotify che viene richiamato ogni secondo dal metodo run della classe Clock (TimerTask).
      *
      * Si noti che il metodo ha livello di protezione package!
      */

@@ -25,7 +25,7 @@ import java.util.TimerTask;
 
     /**
      * Metodo che viene eseguito dall'oggetto dalla classe java.util.Timer contenuta nella classe SagradaTimer.
-     * Il metodo notifica l'oggetto SagradaTimer che è stato passato come parametro al costruttore.
+     * Il metodo receiveNotify l'oggetto SagradaTimer che è stato passato come parametro al costruttore.
      */
     @Override
     public void run() {
