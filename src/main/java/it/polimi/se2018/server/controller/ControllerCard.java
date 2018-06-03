@@ -1,5 +1,6 @@
 package it.polimi.se2018.server.controller;
 
+import it.polimi.se2018.server.events.tool_mex.Activate;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.Table;
 import it.polimi.se2018.server.model.card.card_utensils.*;
@@ -16,6 +17,10 @@ public class ControllerCard implements Visitor {
 
     //metodo che controlla se i favori del giocatore sia abbastanza per una certa carta utensile
     public void checkFavour(Player player, Utensils Item){
+        //todo
+    }
+
+    public void welcome(Activate message){
         //todo
     }
 /////////////////////////////////////////////////////////////////////////

@@ -5,10 +5,9 @@ public class FakeView{
 
     private FakeVChat chat;
 
-    public FakeView(FakeVChat chat){
-        this.chat=chat;
+    public FakeView(){
+        this.chat=new FakeVChat(this);
     }
-
 
 
 }

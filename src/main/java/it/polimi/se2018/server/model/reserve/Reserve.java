@@ -3,17 +3,19 @@ package it.polimi.se2018.server.model.reserve;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import it.polimi.se2018.server.model.Table;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 
 public class Reserve {
-
+    private Table table;
     private ArrayList<Dice> Dices;
 
 
     //il costruttore prende alla costruzione il riferimento ad un ArrayList
-    public Reserve(ArrayList<Dice> dices){
+    public Reserve(ArrayList<Dice> dices,Table tavolo){
         this.Dices= dices;
+        this.table=tavolo;
     }
 
 
@@ -43,5 +45,8 @@ public class Reserve {
 
         return ritorno;
     }
+    /////////////Comunicazione/////
+    public void refreshState(){
 
+    }
 }

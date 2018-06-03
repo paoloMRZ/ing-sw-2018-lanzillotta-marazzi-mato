@@ -1,8 +1,6 @@
 package it.polimi.se2018.server.events.responses;
 
-import it.polimi.se2018.server.events.responses.Success;
-
-public class SuccessValue extends Success {
+public class SuccessValue extends SuccessActivation {
     private int value;
     private int die;
 

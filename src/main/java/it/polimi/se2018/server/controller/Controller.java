@@ -35,6 +35,7 @@ public class Controller{
     private final ControllerAction cAction;
     private final ControllerPoints cPoints;
     private final ControllerTurn cTurn;
+    private final ControllerChat cChat;
 
 
     /**
@@ -45,11 +46,12 @@ public class Controller{
 
     public Controller(List<String> nameOfPlayers) {
         if (!nameOfPlayers.isEmpty()) {
-            this.lobby = new Table(setListOfUtensils(), setListOfObjectivePublic(), setListOfPlayers(nameOfPlayers), new DiceSachet(), new ScoreGrid(setListOfPlayers(nameOfPlayers).size()), new RoundGrid());
+            this.lobby = new Table(setListOfUtensils(), setListOfObjectivePublic(), setListOfPlayers(nameOfPlayers));
             this.cCard = new ControllerCard(lobby,this);
             this.cAction = new ControllerAction(lobby,this);
             this.cPoints = new ControllerPoints(lobby, this);
             this.cTurn = new ControllerTurn(lobby,this);
+            this.cChat= new ControllerChat(this);
         }
         else throw new NullPointerException();
     }
@@ -310,6 +312,7 @@ public class Controller{
     public void setRoundPosition(){
         cPoints.setFinalRoundPosition(cTurn.getOrderOfTurning());
     }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 

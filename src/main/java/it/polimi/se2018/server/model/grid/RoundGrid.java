@@ -3,6 +3,7 @@ package it.polimi.se2018.server.model.grid;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 //todo studiare meglio la possibilità di usare le celle per definire le posizioni nella grid
 //import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.NotEmptyCellException;
+import it.polimi.se2018.server.model.Table;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 import java.util.ArrayList;
@@ -12,9 +13,11 @@ import java.util.Iterator;
 public class RoundGrid {
     private ArrayList<ArrayList<Dice>> roundDices;
     private int actualRound;
+    private Table tavolo;
 
 
-    public RoundGrid() {
+    public RoundGrid(Table table) {
+        this.tavolo=table;
         //metto valori di default
         this.roundDices =   new ArrayList<>(Arrays.asList(null,null,null,null,null,null,null,null,null,null));
         this.actualRound = 1;

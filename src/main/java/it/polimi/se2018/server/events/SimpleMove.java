@@ -4,7 +4,7 @@ package it.polimi.se2018.server.events;
 import java.util.Arrays;
 import java.util.ArrayList;
 
-public class SimpleMove extends EventMVC{
+public class SimpleMove extends EventMVC {
     private int dieIndex;
     private int row;
     private int col;

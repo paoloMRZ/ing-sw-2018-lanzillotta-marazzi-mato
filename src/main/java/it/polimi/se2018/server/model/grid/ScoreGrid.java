@@ -1,5 +1,7 @@
 package it.polimi.se2018.server.model.grid;
 
+import it.polimi.se2018.server.model.Table;
+
 /**
  * La classe rappresenta il tracciato per il calcolo finale dei punti da associare a ciascun giocatore
  *
@@ -8,7 +10,7 @@ package it.polimi.se2018.server.model.grid;
  */
 
 public class ScoreGrid {
-
+    private Table tavolo;
     private int[] scoreLines;
 
     /**
@@ -18,8 +20,9 @@ public class ScoreGrid {
      * @param numberOfPlayers riferimento al numero di giocatori partecipanti
      */
 
-    public ScoreGrid(int numberOfPlayers) {
+    public ScoreGrid(int numberOfPlayers,Table table) {
         scoreLines = new int[numberOfPlayers];
+        this.tavolo=table;
     }
 
 

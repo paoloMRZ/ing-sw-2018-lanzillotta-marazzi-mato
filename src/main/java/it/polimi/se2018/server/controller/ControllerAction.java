@@ -1,6 +1,9 @@
 package it.polimi.se2018.server.controller;
 
 
+import it.polimi.se2018.server.events.HookMessage;
+import it.polimi.se2018.server.events.SimpleMove;
+import it.polimi.se2018.server.events.responses.ErrorSomethingNotGood;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.InvalidColorException;
@@ -25,6 +28,7 @@ public class ControllerAction {
         this.controller=controller;
     }
 
+///////////////////////////////////////////////////////////////////////
 
     public void workOnSide(String name,Dice d, int row, int col)throws InvalidValueException, InvalidCellException {
         lobby.callPlayerByName(name).putDice(d,row,col);
@@ -105,9 +109,6 @@ public class ControllerAction {
         return tmp;
     }
 
-    public void responder(String typeResponse, String message, String content ){//da finire per le risposte
-        lobby.responder(typeResponse,message,content);
-    }
 
     public Dice extractDieAgain(Dice die){
         lobby.getDiceSachet().reput(die);
@@ -117,4 +118,17 @@ public class ControllerAction {
     public int peopleCounter(){
         return lobby.peopleCounter();
     }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void SimpleMove(){
+        //todo
+    }
+///////////////////////////////////////////////////////////////////////////////////////////////
+    public void sendErrorWasNotGood(String name){
+        lobby.responder().notifyObserver(new ErrorSomethingNotGood(name));
+    }
+    public void hook(HookMessage message){
+        lobby.responder().register(message.getObserver());
+    }
+
 }

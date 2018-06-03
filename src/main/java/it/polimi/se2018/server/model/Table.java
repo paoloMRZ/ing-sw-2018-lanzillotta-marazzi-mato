@@ -45,6 +45,7 @@ public class Table {
     private Reserve reserve;
     private ScoreGrid scoreGrid;
     private RoundGrid roundGrid;
+    private final TableChat chat;
 
 
     /**
@@ -53,19 +54,20 @@ public class Table {
      * @param utensilsDeck  carte Utensili selezionate per la sessione di gioco
      * @param objectiveDeck carte Obbiettivo della sessione di gioco
      * @param playersList   lista dei giocatori della sessione di gioco
-     * @param diceSachet    sacchetto dei dadi della sessione di gioco
-     * @param scoreGrid     griglia dei punti della sessione di gioco
-     * @param roundGrid     griglia dei round della sessione di gioco
+     * @param// diceSachet    sacchetto dei dadi della sessione di gioco
+     * @param //scoreGrid     griglia dei punti della sessione di gioco
+     * @param //roundGrid     griglia dei round della sessione di gioco
      */
 
-    public Table(List<Utensils> utensilsDeck, List<Objective> objectiveDeck, List<Player> playersList, DiceSachet diceSachet, ScoreGrid scoreGrid, RoundGrid roundGrid) {
+    public Table(List<Utensils> utensilsDeck, List<Objective> objectiveDeck, List<Player> playersList) {
         this.utensilsDeck = (ArrayList<Utensils>)utensilsDeck;
         this.objectiveDeck = (ArrayList<Objective>)objectiveDeck;
         this.playersList = (ArrayList<Player>)playersList;
-        this.diceSachet = diceSachet;
-        this.scoreGrid = scoreGrid;
-        this.roundGrid = roundGrid;
+        this.diceSachet = new DiceSachet();
+        this.scoreGrid = new ScoreGrid(playersList.size(),this);
+        this.roundGrid = new RoundGrid(this);
         this.reserve = createReserve();
+        this.chat= new TableChat();
     }
 
 
@@ -76,7 +78,7 @@ public class Table {
      */
 
     public Reserve getReserve() {
-        Reserve temp = new Reserve(reserve.getDices());
+        Reserve temp = new Reserve(reserve.getDices(),this);
         return temp;
     }
 
@@ -159,7 +161,7 @@ public class Table {
 
     public void setReserve(Reserve toStore) {
         ArrayList<Dice> preStored = toStore.getDices();
-        this.reserve = new Reserve(preStored);
+        this.reserve = new Reserve(preStored,this);
     }
 
 
@@ -175,7 +177,7 @@ public class Table {
         for (int i = (playersList.size() * 2 + 1); i > 0; i--) {
             giveTo.add(diceSachet.getDiceFromSachet());
         }
-        return new Reserve(giveTo);
+        return new Reserve(giveTo,this);
     }
 
 
@@ -290,7 +292,7 @@ public class Table {
     public int peopleCounter(){
         return playersList.size();
     }
-    public void responder(String typeResponse, String message, String content ){
-        //todo
+    public TableChat responder(){
+        return chat;
     }
 }
