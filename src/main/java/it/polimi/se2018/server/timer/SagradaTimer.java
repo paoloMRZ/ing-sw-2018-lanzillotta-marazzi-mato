@@ -4,11 +4,22 @@ import java.util.ArrayList;
 import java.util.Timer;
 
 /**
- * Questa classe implementa un timer che deve essere impostato con un intervallo definito nell'ordine dei secondi.
+ * Questa classe implementa un timer che effettua il conto alla rovescia partendo dal valore (in secondi) impostato
+ * al momento della creazione dell'oggetto.
  * Quando scade l'interevallo di tempo impostato tramite il costruttore della classe tutti gli oggetti che osservano
  * questo timer vengono notificati.
  *
  * Attenzione: qunado il timer scade il cliclo di conteggio ricomincia da capo in modo automatico!
+ *
+ * Per utilizzare questo timer, dopo aver costruito un nuovo oggetto, bisogna aggiungere tramite il metodo 'add' tutti gli oggetti che deveono
+ * essere notificati allo scadere del tempo prestabilito. Questi oggetti devono implementare l'interfaccia 'ObserverTimer' contenuta in questo
+ * package.
+ *
+ * Il timer deve essere avviato tramite il metodo 'start' e deve essere fermato tramite il metodo 'stop'.
+ * Il metodo 'reset' ha effetto soltanto se il timer è stato avviato.
+ *
+ * Si noti che dopo aver stoppato il timer, se lo si riavvia, il conteggio riparte al valore impostato alla creazione dell'oggetto.
+ *
  * @author Marazzi Paolo.
  */
 
