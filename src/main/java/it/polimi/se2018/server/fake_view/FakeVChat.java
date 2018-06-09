@@ -1,17 +1,13 @@
 package it.polimi.se2018.server.fake_view;
 
 
-import it.polimi.se2018.server.events.UpdateReq;
-import it.polimi.se2018.server.events.ObservableForth;
-import it.polimi.se2018.server.events.ObserverBack;
-import it.polimi.se2018.server.events.ObserverForth;
-import it.polimi.se2018.server.events.SimpleMove;
+import it.polimi.se2018.server.events.*;
 import it.polimi.se2018.server.events.responses.*;
 import it.polimi.se2018.server.events.tool_mex.*;
 
 
-public class FakeVChat implements ObserverBack,ObservableForth {
-    private ObserverForth controller;
+public class FakeVChat implements ViewAsObserver,ViewAsObservable {
+    private ControllerAsObserver controller;
     private FakeView fake;
 
 
@@ -21,12 +17,9 @@ public class FakeVChat implements ObserverBack,ObservableForth {
         this.fake=f;
     }
 
-    public void register(ObserverForth o){
+    public void register(ControllerAsObserver o){
         this.controller=o;
-    }
-
-    public void unregister(){
-        this.controller=null;
+        notifyObserver(new HookMessage(this));
     }
 
 
@@ -79,16 +72,20 @@ public class FakeVChat implements ObserverBack,ObservableForth {
     public void notifyObserver(ToolCard12 mex){
         controller.update(mex);
     }
+    public void notifyObserver(HookMessage mex){
+        controller.update(mex);
+    }
 
 
     public void notifyObserver(UpdateReq mex){
         controller.update(mex);
     }
+
     public void update(SuccessSimpleMove mex){//todo
-         }
+    }
 
     public void update(SuccessColor mex){//todo
-         }
+    }
     public void update(SuccessValue mex) {//todo
     }
     public void update(SuccessActivation mex) {//todo

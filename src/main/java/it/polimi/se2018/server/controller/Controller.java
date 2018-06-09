@@ -1,18 +1,15 @@
 package it.polimi.se2018.server.controller;
 
+import it.polimi.se2018.server.events.tool_mex.Activate;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.model.Color;
+import it.polimi.se2018.server.model.NotifyModel;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.Table;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
 import it.polimi.se2018.server.model.card.card_objective.obj_algos.algos.*;
 import it.polimi.se2018.server.model.card.card_utensils.*;
-import it.polimi.se2018.server.model.dice_sachet.DiceSachet;
-import it.polimi.se2018.server.model.grid.RoundGrid;
-import it.polimi.se2018.server.model.grid.ScoreGrid;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -46,8 +43,9 @@ public class Controller{
 
     public Controller(List<String> nameOfPlayers) {
         if (!nameOfPlayers.isEmpty()) {
-            this.lobby = new Table(setListOfUtensils(), setListOfObjectivePublic(), setListOfPlayers(nameOfPlayers));
-            this.cCard = new ControllerCard(lobby,this);
+            NotifyModel notifier= new NotifyModel();
+            this.lobby = new Table(setListOfUtensils(), setListOfObjectivePublic(), setListOfPlayers(nameOfPlayers,notifier),notifier);
+            this.cCard = new ControllerCard(this);
             this.cAction = new ControllerAction(lobby,this);
             this.cPoints = new ControllerPoints(lobby, this);
             this.cTurn = new ControllerTurn(lobby,this);
@@ -63,7 +61,7 @@ public class Controller{
      * @return riferimento alla collezione di player
      */
 
-    private List<Player> setListOfPlayers(List<String> nameOfPlayers) {
+    private List<Player> setListOfPlayers(List<String> nameOfPlayers,NotifyModel notifier) {
 
         if (!nameOfPlayers.isEmpty()) {
             ArrayList<Player> listOfPlayers = new ArrayList<>();
@@ -79,7 +77,7 @@ public class Controller{
             Collections.shuffle(range);
 
             for (String s : nameOfPlayers) {
-                listOfPlayers.add(new Player(randomCard(objectives, range), s));
+                listOfPlayers.add(new Player(randomCard(objectives, range), s,notifier));
             }
 
             return listOfPlayers;
@@ -288,31 +286,31 @@ public class Controller{
 
 
     /**
-     *  Metodo che restituisce il riferimento all'attributo di tipo ControllerTurn contenuto in Controller
+     *  Metodo che Il player turnante
      *
-     * @return riferimento a ControllerTurn
+     * @return riferimento a player turnanate
      */
 
-    public ControllerTurn getcTurn() {
-        return cTurn;
+    public Player getTurn() throws InvalidValueException {
+        return cTurn.getTurn();
     }
 
-    public void finalize(){
+    public List<String> getOrderOfTurning(){ return cTurn.getOrderOfTurning();}
+
+    protected void finalizeTheGame(){
         //todo metodo che viene lanciato quando il decimo round si è concluso e lancia la parte finale del gioco
         //todo
         //todo
     }
 
-
-    /**
-     * Metodo utilizzato per passare la collezioni di Stringhe rappresentanti i nomi dei player nelle corrispondenti posizioni all'ultimo round
-     *
-     */
-
-    public void setRoundPosition(){
-        cPoints.setFinalRoundPosition(cTurn.getOrderOfTurning());
+    public void callThrough(Activate mex){
+        lobby.getUtensils(mex.getCard()).accept(cCard,mex);
     }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public ControllerChat getcChat() {
+        return cChat;
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 

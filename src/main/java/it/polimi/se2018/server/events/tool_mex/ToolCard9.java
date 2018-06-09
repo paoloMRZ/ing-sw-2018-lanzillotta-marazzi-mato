@@ -12,7 +12,4 @@ public class ToolCard9 extends ToolCard5{
         super(player,card,inputs);
     }
 
-    public ArrayList<Integer> getAttributes() {
-        return super.getAttributes();
-    }
 }

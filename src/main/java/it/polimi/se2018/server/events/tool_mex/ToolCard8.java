@@ -7,8 +7,4 @@ public class ToolCard8 extends ToolCard9 {
         super(player,cardIndex,inputs);
     }
 
-    @Override
-    public ArrayList<Integer> getAttributes() {
-        return super.getAttributes();
-    }
 }

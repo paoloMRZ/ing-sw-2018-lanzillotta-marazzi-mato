@@ -1,15 +1,13 @@
 package it.polimi.se2018.server.events;
 
-import it.polimi.se2018.server.fake_view.FakeVChat;
-
 public class HookMessage {
-    private final ObserverBack observer;
+    private final ViewAsObserver observer;
 
-    public HookMessage(ObserverBack chat){
+    public HookMessage(ViewAsObserver chat){
         this.observer=chat;
     }
 
-    public ObserverBack getObserver() {
+    public ViewAsObserver getObserver() {
         return observer;
     }
 }

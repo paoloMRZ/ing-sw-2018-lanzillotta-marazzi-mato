@@ -7,7 +7,7 @@ public class EventMVC{
     protected String name;
 
     public EventMVC(String pName){
-        this.name= new String(pName);
+        this.name= pName;
     }
     public String getPlayer(){
         return name;

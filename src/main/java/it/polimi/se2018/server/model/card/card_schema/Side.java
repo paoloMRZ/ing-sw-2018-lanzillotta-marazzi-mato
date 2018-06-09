@@ -1,6 +1,9 @@
 package it.polimi.se2018.server.model.card.card_schema;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.se2018.server.events.UpdateReq;
+import it.polimi.se2018.server.events.responses.UpdateM;
+import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.*;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
@@ -401,6 +404,29 @@ public class Side {
         else
             throw new InvalidCoordinatesException();
     }
+
+//////////////////////////////////////////////////////////
+///////////////////////////Comunicazione//////////////////
+//////////////////////////////////////////////////////////
+
+    private UpdateM createResponse(){
+        String who = this.getClass().getName();
+        String content = this.toString();
+
+        return new UpdateM(who, content);
+    }
+    //todo toString da fare
+
+    public UpdateM updateForcer(UpdateReq m){
+        if(m.getWhat().contains(this.getClass().getName())){
+            return createResponse();}
+        return null;
+    }
+
+    public UpdateM setUpdate(){
+        return createResponse();
+    }
+
 
 }
 

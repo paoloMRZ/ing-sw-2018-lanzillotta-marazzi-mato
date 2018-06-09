@@ -1,6 +1,7 @@
 package it.polimi.se2018.server.model.card.card_utensils;
 
 import it.polimi.se2018.server.controller.Controller;
+import it.polimi.se2018.server.controller.ControllerCard;
 import it.polimi.se2018.server.controller.Visitor;
 import it.polimi.se2018.server.events.tool_mex.MoreThanSimple;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
@@ -23,6 +24,9 @@ public class PinzaSgrossatrice extends Utensils {
     }
     //TODO fare metodi di sostegno
 
+    public void accept(Visitor c, MoreThanSimple m){
+        c.visit(this,m);
+    }
 
     public void function(Controller controller, MoreThanSimple myMessage) throws InvalidValueException, InvalidSomethingWasNotDoneGood {
         //unwrapping message
@@ -36,8 +40,9 @@ public class PinzaSgrossatrice extends Utensils {
 
         controller.getcAction().putBackInReserve(D);
 
-
+        setTheUse();
         controller.getcAction().playerActivatedCard(name);
+
     }
 
     private Dice upper(Dice d,boolean decision) throws InvalidValueException{

@@ -1,5 +1,7 @@
 package it.polimi.se2018.server.model.grid;
 
+import it.polimi.se2018.server.events.UpdateReq;
+import it.polimi.se2018.server.events.responses.UpdateM;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 //todo studiare meglio la possibilità di usare le celle per definire le posizioni nella grid
 //import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.NotEmptyCellException;
@@ -13,17 +15,14 @@ import java.util.Iterator;
 public class RoundGrid {
     private ArrayList<ArrayList<Dice>> roundDices;
     private int actualRound;
-    private Table tavolo;
 
 
-    public RoundGrid(Table table) {
-        this.tavolo=table;
+
+    public RoundGrid() {
+
         //metto valori di default
         this.roundDices =   new ArrayList<>(Arrays.asList(null,null,null,null,null,null,null,null,null,null));
         this.actualRound = 1;
-        //for (int where=0;where<10;where++){
-        //    roundDices.set(where,null);
-       // }
     }
 
     /*
@@ -54,6 +53,7 @@ public class RoundGrid {
                 roundDices.get(posOnGrid).add(tmp);
             }
         }
+        setUpdate();
     }
 
     public Dice pick(int posOnGrid,int posOnLilGroup)throws InvalidValueException{
@@ -65,6 +65,7 @@ public class RoundGrid {
            roundDices.get(posOnGrid).remove(posOnLilGroup);
            //se non ci sono più elementi mi garantisco che sia posto a null, utile alla put
            if(roundDices.get(posOnGrid).isEmpty()) roundDices.set(posOnGrid,null);
+           setUpdate();
            return ret;
         }
 
@@ -93,10 +94,29 @@ public class RoundGrid {
             save.add(toSave);
         }
         roundDices.add(save);
+        setUpdate();
     }
 
 
     public int getRound(){
         return actualRound;
+    }
+    /////////////Comunicazione/////
+    private UpdateM createResponse(){
+            String who = this.getClass().getName();
+            String content = this.toString();
+
+            return new UpdateM(who, content);
+    }
+    //todo toString da fare
+
+    public UpdateM updateForcer(UpdateReq m){
+        if(m.getWhat().contains(this.getClass().getName())){
+            return createResponse();}
+        return null;
+    }
+
+    public UpdateM setUpdate(){
+        return createResponse();
     }
 }

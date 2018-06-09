@@ -1,6 +1,7 @@
 package it.polimi.se2018.server.model.card.card_utensils;
 
 import it.polimi.se2018.server.controller.Controller;
+import it.polimi.se2018.server.controller.Visitor;
 import it.polimi.se2018.server.events.tool_mex.ToolCard12;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
@@ -15,6 +16,11 @@ public class TaglierinaManuale extends Utensils {
         super(12,"TaglierinaManuale", Color.BLUE,"Muovi fino a due dadi dello stesso colore di un solo dado sul" +
                 " Tracciato dei Round Devi rispettare tutte le restrizioni di piazzamento");
     }
+
+    public void accept(Visitor c,  ToolCard12 m){
+        c.visit(this,m);
+    }
+
     public void function(Controller controller, ToolCard12 myMessage) throws InvalidValueException, InvalidCellException {
         ArrayList<Integer> messageCont= new ArrayList<>(myMessage.getAttributes());
         String name= myMessage.getPlayer();

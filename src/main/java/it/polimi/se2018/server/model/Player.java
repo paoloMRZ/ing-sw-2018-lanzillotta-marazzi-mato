@@ -1,10 +1,11 @@
 package it.polimi.se2018.server.model;
 
+import it.polimi.se2018.server.events.UpdateReq;
+import it.polimi.se2018.server.events.responses.UpdateM;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidHowManyTimes;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.*;
-import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
@@ -25,12 +26,13 @@ import java.util.List;
 
 public class Player {
 
+    private final NotifyModel notifier;
     private List<Side> mySideSelection;
-    private String name;
+    private final String name;
     private Side mySide;
-    private Objective myObjective;
+    private final Objective myObjective;
     private int favours = 0;
-    private boolean isMyTurn;
+    private boolean isMyTurn=false;
     private int howManyTurns;
     private boolean didPlayDie;
     private boolean didPlayCard;
@@ -44,7 +46,8 @@ public class Player {
      * @param nomine  riferimento al nome del giocatore
      */
 
-    public Player(Objective objective, String nomine) {
+    public Player(Objective objective, String nomine,NotifyModel notifier) {
+        this.notifier=notifier;
         this.myObjective = objective;
         this.name=nomine;
         this.howManyTurns=2;
@@ -164,7 +167,11 @@ public class Player {
     public void setFavours(){
         favours = mySide.getFavours();
     }
-
+    /**
+     * Metodo che reimposta il numero di segnalini favore del giocatore in base al costo della crta utensile attivata
+     *
+     */
+    public void resetFavours(int cost){favours= favours-cost;}
 
     /**
      * Metodo di aggiornamento del parametro didPlayCard
@@ -229,12 +236,17 @@ public class Player {
     public void reductor()throws InvalidHowManyTimes {
         if(howManyTurns>0){
             howManyTurns=howManyTurns-1;
-            this.didPlayCard=false;
-            this.didPlayDie=false;
+            didPlayCard=false;
+            didPlayDie=false;
         }
         else throw new InvalidHowManyTimes();
     }
-
+    public void setIsMyTurner(){
+        isMyTurn= !isMyTurn;
+    }
+    public boolean getIsMyTurn(){
+        return isMyTurn;
+    }
 
     /**
      * Metodo che imposta i valori dei parametri howManyTurns, didPlayCard e didPlayDie. Si noti che il metodo verrà richiamato non
@@ -332,5 +344,18 @@ public class Player {
     }
     public Dice sidePick(int row, int col) throws InvalidCoordinatesException {
         return mySide.pick(row,col);
+    }
+//////////////////////////////////////////////////////////
+///////////////////////////Comunicazione//////////////////
+//////////////////////////////////////////////////////////
+public void refresh(UpdateReq m){
+    launchCommunication(mySide.updateForcer(m));
+}
+    private void launchCommunication(UpdateM m){
+        if(m!=null) notifier.notifyObserver(m);
+    }
+
+    public void setUpdateSide(){
+        launchCommunication(mySide.setUpdate());
     }
 }

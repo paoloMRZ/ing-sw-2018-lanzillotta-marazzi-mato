@@ -2,11 +2,11 @@ package it.polimi.se2018.server.events;
 
 import it.polimi.se2018.server.events.tool_mex.*;
 
-public interface ObserverForth {
+public interface ControllerAsObserver {
 
     public void update(Activate mex);
     public void update(SimpleMove mex);
-
+/*
     public void update(MoreThanSimple mex);
     public void update(ToolCard2 mex);
     public void update(ToolCard3 mex);
@@ -21,7 +21,7 @@ public interface ObserverForth {
     public void update(ToolCard11 mex);
     public void update(ToolCard11Bis mex);
     public void update(ToolCard12 mex);
-
+*/
 
     public void update(UpdateReq mex);
     public void update(HookMessage mex);

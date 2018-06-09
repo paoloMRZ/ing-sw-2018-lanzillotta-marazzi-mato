@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ControllerTurn {
-    private Table lobby;
-    private Controller controller;
+    private final Table lobby;
+    private final Controller controller;
 
     private int round=0;
     private String turnOf=null;
@@ -35,7 +35,7 @@ public class ControllerTurn {
     }
 
     public Player getTurn() throws InvalidValueException {
-        return lobby.callPlayerByName(turnOf);
+            return lobby.callPlayerByName(turnOf);
     }
 
     public int getRound() {
@@ -47,7 +47,7 @@ public class ControllerTurn {
     }
 
     //il primo metodo a venire lanciato in questa classe
-    public void setRound() throws InvalidHowManyTimes {
+    public void setRound() throws InvalidHowManyTimes, InvalidValueException {
         if(!started) {
             firstPlayer = lobby.callPlayerByNumber(caller).getName();
             round = round + 1;
@@ -60,11 +60,15 @@ public class ControllerTurn {
         }
     }
 
-    public void setTurn() throws InvalidHowManyTimes {
+    public void setTurn() throws InvalidHowManyTimes, InvalidValueException {
+
+        lobby.callPlayerByName(turnOf).setIsMyTurner();
 
         turnOf=lobby.callPlayerByNumber(caller).getName();
         recorder(turnOf);
         lobby.callPlayerByNumber(caller).reductor();
+        lobby.callPlayerByNumber(caller).setIsMyTurner();
+
 
         if(!andata && turnOf.equals(firstPlayer) ){
             andata = true;
@@ -106,6 +110,6 @@ public class ControllerTurn {
     }
 
     private void isGameFinished(){
-        if(round>10) controller.finalize();
+        if(round>10) controller.finalizeTheGame();
     }
 }

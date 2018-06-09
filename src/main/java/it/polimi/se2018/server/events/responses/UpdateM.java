@@ -1,16 +1,19 @@
 package it.polimi.se2018.server.events.responses;
 
-import it.polimi.se2018.server.events.UpdateReq;
-
-public class UpdateM extends UpdateReq {
+public class UpdateM{
     private String content;
+    private String what;
 
-    public UpdateM(String player, String what,String contenuto){
-        super(player,what);
+    public UpdateM(String what,String contenuto){
         this.content=contenuto;
+        this.what=what;
     }
-
     public String getContent() {
         return content;
     }
+
+    public String getWhat() {
+        return what;
+    }
+
 }

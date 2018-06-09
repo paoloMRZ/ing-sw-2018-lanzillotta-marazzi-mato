@@ -2,6 +2,7 @@ package it.polimi.se2018.server.model.card.card_utensils;
 
 
 import it.polimi.se2018.server.controller.Controller;
+import it.polimi.se2018.server.controller.Visitor;
 import it.polimi.se2018.server.events.tool_mex.ToolCard5;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
@@ -17,7 +18,10 @@ public class TaglierinaCircolare extends Utensils{
         super(5, "TaglierinaCircolare", Color.GREEN, "Dopo aver scelto un dado, scambia quel dado con un dado sul Tracciato dei Round");
     }
 
-    //todo discutere cosa fare con quel dado perchè l'algoritmo rimane in sospseso
+    public void accept(Visitor c, ToolCard5 m){
+        c.visit(this,m);
+    }
+
     public void function(Controller controller, ToolCard5 myMessage) throws InvalidValueException, InvalidSomethingWasNotDoneGood {
         ArrayList<Integer> messageCont= new ArrayList<>(myMessage.getAttributes());
         String name= myMessage.getPlayer();

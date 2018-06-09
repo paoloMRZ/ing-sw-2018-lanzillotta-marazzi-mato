@@ -1,6 +1,8 @@
 package it.polimi.se2018.server.model.card.card_utensils;
 
 import it.polimi.se2018.server.controller.Controller;
+import it.polimi.se2018.server.controller.Visitor;
+import it.polimi.se2018.server.events.responses.SuccessValue;
 import it.polimi.se2018.server.events.tool_mex.ToolCard6;
 import it.polimi.se2018.server.events.tool_mex.ToolCard6Bis;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
@@ -18,6 +20,14 @@ public class PennelloPerPastaSalda extends Utensils {
                "tira nuovamente quel dado Se non puoi piazzarlo, " +
                "riponilo nella Riserva");
    }
+
+    public void accept(Visitor c, ToolCard6 m){
+        c.visit(this,m);
+    }
+    public void accept(Visitor c, ToolCard6Bis m){
+        c.visit(this,m);
+    }
+
     public void function(Controller controller, ToolCard6 myMessage) throws InvalidValueException, InvalidSomethingWasNotDoneGood {
         String name= myMessage.getPlayer();
 
@@ -25,7 +35,7 @@ public class PennelloPerPastaSalda extends Utensils {
         Dice picked = controller.getcAction().pickFromReserve(indexDie);
         picked.rollDice();
         controller.getcAction().setHoldingADiceMoveInProgress(picked);
-        controller.getcAction().responder("SuccesValue","",String.valueOf(picked.getNumber()));
+        controller.getcChat().notifyObserver(new SuccessValue(myMessage.getCard(),"",name,picked.getNumber(),indexDie));
    }
 
     public void function(Controller controller, ToolCard6Bis myMessage) throws InvalidValueException, InvalidCellException {

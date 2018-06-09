@@ -2,7 +2,7 @@ package it.polimi.se2018.server.events;
 
 import it.polimi.se2018.server.events.responses.*;
 
-public interface ObserverBack {
+public interface ViewAsObserver {
 
     public void update(SuccessSimpleMove mex);
     public void update(SuccessColor mex);

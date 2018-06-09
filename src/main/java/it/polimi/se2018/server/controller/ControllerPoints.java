@@ -25,9 +25,9 @@ import java.util.List;
 
 public class ControllerPoints {
 
-    private Table lobby;
-    private Controller controller;
-    private ArrayList<String> finalRoundPosition;
+    private final Table lobby;
+    private final Controller controller;
+
 
     /**
      * Costruttore della classe Controlleroints
@@ -39,18 +39,6 @@ public class ControllerPoints {
         this.lobby = lobby;
         this.controller = controller;
     }
-
-
-    /**
-     * Metodo setter utilizzato per istanziare l'attributo finalRoundPosition quando si giunge al decimo round
-     *
-     * @param roundPosition riferimento alla collezione di stringhe rappresentanti i nomi dei giocatori nelle rispettivi posizioni all'ultimo round
-     */
-
-    public void setFinalRoundPosition(List<String> roundPosition) {
-        this.finalRoundPosition = (ArrayList<String>) roundPosition;
-    }
-
 
     /**
      * Metodo di supporto che viene utilizzato per calcolare il numero di celle rimaste vuote alla fine della partita
@@ -217,7 +205,7 @@ public class ControllerPoints {
             ArrayList<ScoreByPlayer> finalPoint = new ArrayList<>();
             ArrayList<ScoreByPlayer> favoursPoint = new ArrayList<>();
             ArrayList<ScoreByPlayer> objectivePoint = new ArrayList<>();
-            ArrayList<String> roundPosition = this.finalRoundPosition;
+            ArrayList<String> roundPosition = (ArrayList<String>) controller.getOrderOfTurning();
 
             for (int i = 0; i < numbOfPlayers; i++) {
                 Player player = lobby.callPlayerByNumber(i);

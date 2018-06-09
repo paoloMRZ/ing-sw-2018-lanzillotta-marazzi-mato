@@ -7,8 +7,4 @@ public class ToolCard3 extends ToolCard2 {
     public ToolCard3(String player, int card, ArrayList<Integer> inputs){
         super(player,card,inputs);
     }
-    public ArrayList<Integer> getAttributes() {
-        return super.getAttributes();
-    }
-
 }

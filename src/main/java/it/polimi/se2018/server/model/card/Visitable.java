@@ -1,9 +1,9 @@
 package it.polimi.se2018.server.model.card;
 
 import it.polimi.se2018.server.controller.Visitor;
+import it.polimi.se2018.server.events.tool_mex.Activate;
+
 
 public interface Visitable {
-//TODO DOVREBBERO IMPLEMENTARE IL METODO TUTTE LE CLASSI O BASTA LA CLASSE PADRE?
-        public void accept(Visitor visitor);
-
+        public void accept(Visitor visitor,Activate m);
 }

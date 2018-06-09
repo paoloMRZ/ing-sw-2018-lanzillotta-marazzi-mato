@@ -2,6 +2,8 @@ package it.polimi.se2018.server.model;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.se2018.server.events.UpdateReq;
+import it.polimi.se2018.server.events.responses.UpdateM;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
 import it.polimi.se2018.server.model.card.card_schema.Side;
@@ -38,15 +40,15 @@ import java.util.stream.IntStream;
 
 public class Table {
 
-    private ArrayList<Utensils> utensilsDeck;
-    private ArrayList<Objective> objectiveDeck;
-    private ArrayList<Player> playersList;
-    private DiceSachet diceSachet;
+    private final ArrayList<Utensils> utensilsDeck;
+    private final  ArrayList<Objective> objectiveDeck;
+    private final ArrayList<Player> playersList;
+    private final DiceSachet diceSachet;
     private Reserve reserve;
-    private ScoreGrid scoreGrid;
-    private RoundGrid roundGrid;
-    private final TableChat chat;
-
+    private final ScoreGrid scoreGrid;
+    private final RoundGrid roundGrid;
+    private final NotifyModel chat;
+    private Dice holdingADiceMoveInProgress;
 
     /**
      * costruttore della classe Table che imposta tutti i componenti della sessione di gioco
@@ -59,15 +61,16 @@ public class Table {
      * @param //roundGrid     griglia dei round della sessione di gioco
      */
 
-    public Table(List<Utensils> utensilsDeck, List<Objective> objectiveDeck, List<Player> playersList) {
+    public Table(List<Utensils> utensilsDeck, List<Objective> objectiveDeck, List<Player> playersList,NotifyModel notifyBack) {
         this.utensilsDeck = (ArrayList<Utensils>)utensilsDeck;
         this.objectiveDeck = (ArrayList<Objective>)objectiveDeck;
         this.playersList = (ArrayList<Player>)playersList;
         this.diceSachet = new DiceSachet();
-        this.scoreGrid = new ScoreGrid(playersList.size(),this);
-        this.roundGrid = new RoundGrid(this);
+        this.scoreGrid = new ScoreGrid(playersList.size());
+        this.roundGrid = new RoundGrid();
         this.reserve = createReserve();
-        this.chat= new TableChat();
+        this.chat= notifyBack;
+
     }
 
 
@@ -78,8 +81,7 @@ public class Table {
      */
 
     public Reserve getReserve() {
-        Reserve temp = new Reserve(reserve.getDices(),this);
-        return temp;
+        return new Reserve(reserve.getDices());
     }
 
 
@@ -148,7 +150,7 @@ public class Table {
      * @throws NullPointerException           lanciata quando viene generato un NullPointer
      */
 
-    public Dice pickFromReserve(int position) throws ArrayIndexOutOfBoundsException, NullPointerException {
+    public Dice pickFromReserve(int position){
         return reserve.pick(position);
     }
 
@@ -161,7 +163,7 @@ public class Table {
 
     public void setReserve(Reserve toStore) {
         ArrayList<Dice> preStored = toStore.getDices();
-        this.reserve = new Reserve(preStored,this);
+        this.reserve = new Reserve(preStored);
     }
 
 
@@ -177,7 +179,7 @@ public class Table {
         for (int i = (playersList.size() * 2 + 1); i > 0; i--) {
             giveTo.add(diceSachet.getDiceFromSachet());
         }
-        return new Reserve(giveTo,this);
+        return new Reserve(giveTo);
     }
 
 
@@ -194,6 +196,14 @@ public class Table {
             if (p.getName().equals(name)) return p;
         }
         throw new InvalidValueException();
+    }
+    //davvero utile????????'vedremo
+    //non lancia eccezioni non se se legale
+    public  Player callPlayerByItsHisTurn(){
+        for (Player p : playersList) {
+            if (p.getIsMyTurn()) return p;
+        }
+        return null;
     }
 
 
@@ -292,7 +302,38 @@ public class Table {
     public int peopleCounter(){
         return playersList.size();
     }
-    public TableChat responder(){
+    public NotifyModel responder(){
         return chat;
+    }
+
+////////////////////////////////////////////////////////////////////////////////
+    public void refresh(UpdateReq m){
+        launchCommunication(reserve.updateForcer(m));
+        launchCommunication(roundGrid.updateForcer(m));
+        launchCommunication(scoreGrid.updateForcer(m));
+    }
+    private void launchCommunication(UpdateM m){
+        if(m!=null) chat.notifyObserver(m);
+    }
+
+    public void setUpdateReserve(){
+        launchCommunication(reserve.setUpdate());
+    }
+    public void setUpdateRoundGrid(){
+        launchCommunication(roundGrid.setUpdate());
+    }
+    public void setUpdateScoreGrid(){
+        launchCommunication(scoreGrid.setUpdate());
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
+    public void setHoldingADiceMoveInProgress(Dice d){
+        this.holdingADiceMoveInProgress=d;
+    }
+    public Dice getHoldingADiceMoveInProgress(){
+        Dice tmp= holdingADiceMoveInProgress;
+        holdingADiceMoveInProgress=null;
+        return tmp;
     }
 }

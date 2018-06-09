@@ -1,5 +1,7 @@
 package it.polimi.se2018.server.model.grid;
 
+import it.polimi.se2018.server.events.UpdateReq;
+import it.polimi.se2018.server.events.responses.UpdateM;
 import it.polimi.se2018.server.model.Table;
 
 /**
@@ -10,7 +12,7 @@ import it.polimi.se2018.server.model.Table;
  */
 
 public class ScoreGrid {
-    private Table tavolo;
+
     private int[] scoreLines;
 
     /**
@@ -20,9 +22,9 @@ public class ScoreGrid {
      * @param numberOfPlayers riferimento al numero di giocatori partecipanti
      */
 
-    public ScoreGrid(int numberOfPlayers,Table table) {
+    public ScoreGrid(int numberOfPlayers) {
         scoreLines = new int[numberOfPlayers];
-        this.tavolo=table;
+
     }
 
 
@@ -35,6 +37,7 @@ public class ScoreGrid {
 
     public void updatePoints(int player, int howMuch){
         scoreLines[player] = scoreLines[player]+howMuch;
+        //setUpdate();
     }
 
 
@@ -58,5 +61,24 @@ public class ScoreGrid {
 
     public int getSizeScore(){
         return scoreLines.length;
+    }
+
+    /////////////Comunicazione/////
+    private UpdateM createResponse(){
+        String who = this.getClass().getName();
+        String content = this.toString();
+
+        return new UpdateM(who, content);
+    }
+    //todo toString da fare
+
+    public UpdateM updateForcer(UpdateReq m){
+        if(m.getWhat().contains(this.getClass().getName())){
+            return createResponse();}
+        return null;
+    }
+
+    public UpdateM setUpdate(){
+        return createResponse();
     }
 }

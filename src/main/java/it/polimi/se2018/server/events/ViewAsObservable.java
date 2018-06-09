@@ -2,11 +2,9 @@ package it.polimi.se2018.server.events;
 
 import it.polimi.se2018.server.events.tool_mex.*;
 
-public interface ObservableForth {
+public interface ViewAsObservable {
 
-    public void register(ObserverForth o);
-
-    public void unregister();
+    public void register(ControllerAsObserver o);
 
     public void notifyObserver(Activate mex);
     public void notifyObserver(SimpleMove mex);

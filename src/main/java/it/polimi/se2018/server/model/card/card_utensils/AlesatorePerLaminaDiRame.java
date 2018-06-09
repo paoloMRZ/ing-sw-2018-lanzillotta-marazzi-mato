@@ -1,6 +1,7 @@
 package it.polimi.se2018.server.model.card.card_utensils;
 
 import it.polimi.se2018.server.controller.Controller;
+import it.polimi.se2018.server.controller.Visitor;
 import it.polimi.se2018.server.events.tool_mex.ToolCard3;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
@@ -15,6 +16,9 @@ public class AlesatorePerLaminaDiRame extends Utensils {
                     "valore Devi rispettare tutte le altre restrizioni di piazzamento");
         }
 
+    public void accept(Visitor c, ToolCard3 m){
+        c.visit(this,m);
+    }
     public void function(Controller controller, ToolCard3 myMessage)throws InvalidValueException, InvalidCellException {
         //unwrapping message
 

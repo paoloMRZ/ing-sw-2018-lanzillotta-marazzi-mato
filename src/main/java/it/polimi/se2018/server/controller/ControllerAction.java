@@ -3,7 +3,9 @@ package it.polimi.se2018.server.controller;
 
 import it.polimi.se2018.server.events.HookMessage;
 import it.polimi.se2018.server.events.SimpleMove;
-import it.polimi.se2018.server.events.responses.ErrorSomethingNotGood;
+import it.polimi.se2018.server.events.UpdateReq;
+import it.polimi.se2018.server.events.responses.*;
+import it.polimi.se2018.server.events.tool_mex.Activate;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.InvalidColorException;
@@ -12,15 +14,17 @@ import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.NotEmptyCellExc
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidSomethingWasNotDoneGood;
 import it.polimi.se2018.server.model.Table;
+import it.polimi.se2018.server.model.card.card_utensils.Utensils;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 import it.polimi.se2018.server.model.reserve.Reserve;
 
-import javax.naming.spi.ResolveResult;
+
+import java.util.ArrayList;
 
 public class ControllerAction {
-    private Table lobby;
-    private Dice holdingADiceMoveInProgress;
-    private Controller controller;
+    private final Table lobby;
+
+    private final Controller controller;
 
 
     public ControllerAction(Table LOBBY,Controller controller){
@@ -29,6 +33,7 @@ public class ControllerAction {
     }
 
 ///////////////////////////////////////////////////////////////////////
+
 
     public void workOnSide(String name,Dice d, int row, int col)throws InvalidValueException, InvalidCellException {
         lobby.callPlayerByName(name).putDice(d,row,col);
@@ -100,13 +105,11 @@ public class ControllerAction {
     }
 
     public void setHoldingADiceMoveInProgress(Dice d){
-        this.holdingADiceMoveInProgress=d;
+        lobby.setHoldingADiceMoveInProgress(d);
     }
 
     public Dice getHoldingADiceMoveInProgress(){
-        Dice tmp= holdingADiceMoveInProgress;
-        holdingADiceMoveInProgress=null;
-        return tmp;
+        return lobby.getHoldingADiceMoveInProgress();
     }
 
 
@@ -119,14 +122,42 @@ public class ControllerAction {
         return lobby.peopleCounter();
     }
 
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void SimpleMove(){
-        //todo
+    public void simpleMove(SimpleMove move){
+        try{
+            String dude = move.getPlayer();
+            Dice picked = pickFromReserve(move.getDiceIndex());
+            ArrayList<Integer> coords = move.getCoord();
+            int row = coords.get(0);
+            int col = coords.get(1);
+
+            workOnSide(dude, picked, row, col);
+            //success yeeeeaaaaaaa
+            lobby.setUpdateReserve();
+            lobby.callPlayerByName(dude).setUpdateSide();
+            lobby.responder().notifyObserver(new SuccessSimpleMove(dude));
+        }
+        catch(Exception e){
+            String destination=lobby.callPlayerByItsHisTurn().getName();
+            lobby.responder().notifyObserver(new ErrorSelection(destination));
+        }
+    }
+
+
+    public void refresher(UpdateReq m){
+        try{
+        lobby.refresh(m);
+        controller.getTurn().refresh(m);}
+        catch (Exception e ){
+            lobby.responder().notifyObserver(new
+                    ErrorSomethingNotGood());
+        }
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////
-    public void sendErrorWasNotGood(String name){
-        lobby.responder().notifyObserver(new ErrorSomethingNotGood(name));
-    }
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////
     public void hook(HookMessage message){
         lobby.responder().register(message.getObserver());
     }

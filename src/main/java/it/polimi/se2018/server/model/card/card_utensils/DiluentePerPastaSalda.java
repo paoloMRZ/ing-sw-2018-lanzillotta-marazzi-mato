@@ -1,6 +1,8 @@
 package it.polimi.se2018.server.model.card.card_utensils;
 
 import it.polimi.se2018.server.controller.Controller;
+import it.polimi.se2018.server.controller.Visitor;
+import it.polimi.se2018.server.events.responses.SuccessColor;
 import it.polimi.se2018.server.events.tool_mex.ToolCard11;
 import it.polimi.se2018.server.events.tool_mex.ToolCard11Bis;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
@@ -19,14 +21,22 @@ public class DiluentePerPastaSalda extends Utensils {
                 "rispettando tutte le restrizioni di piazzamento");
     }
 
+    public void accept(Visitor c, ToolCard11 m){
+        c.visit(this,m);
+    }
+    public void accept(Visitor c, ToolCard11Bis m){
+        c.visit(this,m);
+    }
+
     public void function(Controller controller, ToolCard11 myMessage) throws InvalidValueException, InvalidSomethingWasNotDoneGood {
         String name= myMessage.getPlayer();
         int die= myMessage.getDie();
         Dice picked=controller.getcAction().extractDieAgain(controller.getcAction().pickFromReserve(die));
         controller.getcAction()
                    .setHoldingADiceMoveInProgress(picked);
-        //todo aggiornare responder sul table
-        controller.getcAction().responder("SuccessColor","",picked.getColor().name());
+
+        controller.getcChat().notifyObserver(
+                new SuccessColor(myMessage.getCard(),"",name,picked.getColor().name(),die));
     }
 
     public void function(Controller controller, ToolCard11Bis myMessage) throws InvalidValueException, InvalidCellException {
