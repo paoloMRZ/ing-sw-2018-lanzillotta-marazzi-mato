@@ -207,10 +207,16 @@ public class ServerMessageCreator {
      * Il metodo restiuisce il messaggio da mandare ai client per informarli dell'inizio di un nuovo round.
      *
      * @param nickname nickaname del giocatore che deve giocare il primo turno del round.
+     * @param diceList lista dei dadi rimasti nella riserva che devono essere aggiunti alla roundgrid.
      * @return messaggio.
      */
-    public static String getUpdateRoundMessage(String nickname) {
-        return "/###/!/update/round/" + nickname + "\n";
+    public static String getUpdateRoundMessage(String nickname, List<Dice> diceList) {
+        String message =  "/###/!/update/round/" + nickname;
+
+        for(Dice die : diceList)
+            message = message.concat("&" + die.getColor().toString().toLowerCase() + die.getNumber());
+
+        return message.concat("\n");
     }
 
 
