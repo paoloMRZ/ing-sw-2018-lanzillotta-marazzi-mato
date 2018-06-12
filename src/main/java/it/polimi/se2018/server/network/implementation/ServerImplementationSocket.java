@@ -2,6 +2,7 @@ package it.polimi.se2018.server.network.implementation;
 
 import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
+import it.polimi.se2018.server.message.network.NetworkMessageCreator;
 import it.polimi.se2018.server.network.Lobby;
 import it.polimi.se2018.server.network.fake_client.FakeClient;
 import it.polimi.se2018.server.network.fake_client.FakeClientSocket;
@@ -78,18 +79,15 @@ public class ServerImplementationSocket implements Runnable {
 
                 lobby.add(fakeClient); //Provo ad aggiungerlo alla lobby.
 
-                out.write("/###/" + fakeClient.getNickname() + "/rete/?/ok\n"); //Se l'inserimento va a buon fine lo notifico al client.
-                out.flush();
-
                 (new Thread(fakeClient)).start(); //Avvio il thread dedicato all'ascolto dei messaggi destinati al fake client.
 
             } catch (InvalidNicknameException e) {
                 //Se il nickname non è valido viene sollevata questa eccezione dal metodo 'add' della classe lobby.
-                sendMessageAndClose(fakeClient, "/###/" + fakeClient.getNickname() + "/rete/?/ko_nickname\n");
+                sendMessageAndClose(fakeClient, NetworkMessageCreator.getConnectionErrorInvalidNickanmeMessage(fakeClient.getNickname()));
 
             } catch (GameStartedException e) {
                 //Se la partita è già stata avviata ed il client che si è connesso non era stato congelato viene sollevata questa eccezione.
-                sendMessageAndClose(fakeClient,"/###/" + fakeClient.getNickname() + "/rete/?/ko_gamestarted\n");
+                sendMessageAndClose(fakeClient, NetworkMessageCreator.getConnectionErrorGameStartedMessage(fakeClient.getNickname()));
 
             } catch (IOException e) {
                 if(fakeClient != null)

@@ -3,7 +3,10 @@ package it.polimi.se2018.server.network.fake_client;
 import it.polimi.se2018.server.exceptions.ConnectionCloseException;
 import it.polimi.se2018.server.network.Lobby;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 
@@ -83,7 +86,7 @@ public class FakeClientSocket extends FakeClient implements Runnable {
                 out.write(message);
                 out.flush();
             } catch (IOException e) {
-               throw new ConnectionCloseException();
+                throw new ConnectionCloseException();
             }
         }
     }
