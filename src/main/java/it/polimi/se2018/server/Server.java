@@ -50,20 +50,6 @@ public class Server {
         }
 
 
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("[*]Premi q per chiudere il server.");
-
-        if(scanner.next().equals("q")){
-            try {
-                serverImplementationSocket.close();
-                serverImplementationRMI.close();
-                System.exit(0);
-
-            } catch (IOException | NotBoundException e) {
-                System.exit(0);
-            }
-        }
-
     }
 
 
