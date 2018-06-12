@@ -52,7 +52,7 @@ public class ShadeVarietyTest {
 
         ShadeVariety shadesVarietyTest = new ShadeVariety();
         obj = new Objective("TestName", "TestDescription", 3, shadesVarietyTest, false);
-        player = new Player(obj, "Tester");
+        player = new Player(obj, "Tester", null);
 
 
     }

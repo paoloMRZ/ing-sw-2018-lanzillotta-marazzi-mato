@@ -1,6 +1,7 @@
 package it.polimi.se2018.client.connection_handler;
 
 
+import it.polimi.se2018.graphic.InitWindow;
 import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 import it.polimi.se2018.server.network.fake_client.FakeClientRMIInterface;
