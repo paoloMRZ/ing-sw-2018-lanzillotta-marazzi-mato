@@ -4,12 +4,17 @@ package it.polimi.se2018.server.network;
 import it.polimi.se2018.server.exceptions.ConnectionCloseException;
 import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
+import it.polimi.se2018.server.message.network.NetworkMessageCreator;
+import it.polimi.se2018.server.message.network.NetworkMessageParser;
+import it.polimi.se2018.server.message.server.ServerMessageCreator;
 import it.polimi.se2018.server.network.fake_client.FakeClient;
 import it.polimi.se2018.server.timer.ObserverTimer;
 import it.polimi.se2018.server.timer.SagradaTimer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 
 /**
@@ -39,31 +44,6 @@ public class Lobby implements ObserverTimer {
         connections = new ArrayList<>();
     }
 
-
-//----------------------------------------------------------------------------------------------------------------------
-    //TODO Sarebbe comodo raccogliere tutti i metodi di parsing in una classe statica!
-
-    private boolean isDisconnectMessage(String message){
-        String[] token = message.replace("\n","").split("/");
-
-        return token[3].equals("rete") && token[5].equals("disconnect");
-    }
-
-    private boolean isTimeoutMessage(String message){
-        String[] token = message.split("/");
-
-        return token[3].equals("rete") && token[5].equals("timeout");
-    }
-
-    private String getSenderOfMessage(String message){
-        return message.split("/")[1];
-    }
-
-    private String getAddresseeFromMessage(String message){
-        return message.split("/")[2];
-    }
-//----------------------------------------------------------------------------------------------------------------------
-
     /**
      * Questa classe crea una nuova partita. Per fare questo crea FakeView, Controller e Model e li collega fra loro.
      */
@@ -71,6 +51,29 @@ public class Lobby implements ObserverTimer {
         this.isOpen = false; //Come prima cosa chiudo la lobby.
         this.timer.stop();
         //TODO Implementare il metodo.
+
+        boolean loop = true;
+        Scanner scanner = new Scanner(System.in);
+
+
+        System.out.println("Scegli quale messaggio inviare\n");
+        System.out.println("[1]Invia messaggio che contiene le 4 carte schema tra cui un giocatore deve scegliere");
+
+
+        System.out.print("> ");
+
+        while(loop){
+            int scelta = scanner.nextInt();
+
+            switch (scelta){
+
+                case 1:{
+                    String [] cardNames = {"aurora-sagradis", "aurorae-magnificus", "balboa-bay", "batllo"};
+                    this.sendNotify(ServerMessageCreator.getChoseSideMessage( "!", Arrays.asList(cardNames)));
+                } break;
+            }
+        }
+
     }
 
     /**
@@ -100,6 +103,8 @@ public class Lobby implements ObserverTimer {
             if (numberOfClient == 1 && !timer.isStarted()) { //Quando si connette il primo client avvio il timer.
                 timer.start();
             }
+
+            sendNotify(NetworkMessageCreator.getConnectMessage(connection.getNickname()));
         } else {
             throw new GameStartedException();
         }
@@ -119,6 +124,8 @@ public class Lobby implements ObserverTimer {
 
                 if(numberOfClient + 1 == 2 && isOpen){ //Se la partita non è ancora stata avviata (lobby aperta) ed il numero di giocatori scende sotto i due resetto il timer.
                     timer.reset();
+
+                    sendNotify(NetworkMessageCreator.getDisconnectMessage(nickname));
                 }
 
                 return;
@@ -128,8 +135,10 @@ public class Lobby implements ObserverTimer {
 
     private void freezeFakeClient(String nickname){ //Congelare un client significa chiudere la sua connessione senza toglierlo dalla lobby.
         for(FakeClient client : connections){
-            if(client.getNickname().equals(nickname))
+            if(client.getNickname().equals(nickname)) {
                 client.closeConnection();
+                sendNotify(NetworkMessageCreator.getDisconnectMessage(nickname));
+            }
         }
     }
 
@@ -137,6 +146,7 @@ public class Lobby implements ObserverTimer {
         for(FakeClient client : connections){ //Individuo il vecchio client tramite il nickname.
             if(client.getNickname().equals(newConnection.getNickname())) {
                 this.connections.set(connections.indexOf(client), newConnection); //Sostituisco il client congelato con quello nuovo.
+                sendNotify(NetworkMessageCreator.getDisconnectMessage(newConnection.getNickname()));
             }
         }
     }
@@ -156,11 +166,9 @@ public class Lobby implements ObserverTimer {
      */
 
     public synchronized void receiveNotify(String message){
-        if(isDisconnectMessage(message)){ //Controllo se il messaggio ricevuto è una richiesta di disconnessione.
-            remove(getSenderOfMessage(message));
-        } else if( isTimeoutMessage(message)){ //Controllo se il messaggio ricevuto è una richiesta di congelamento.
-            freezeFakeClient(getSenderOfMessage(message));
-        } else {
+        if(NetworkMessageParser.isDisconnectMessage(message)){ //Controllo se il messaggio ricevuto è una richiesta di disconnessione.
+            remove(NetworkMessageParser.getMessageSender(message));
+        }  else {
             //TODO in tutti gli altri casi devo girare il messaggio al controller.
         }
     }
@@ -170,32 +178,22 @@ public class Lobby implements ObserverTimer {
      * @param message messaggio da passare al vero client tramite il metodo update.
      */
 
-    public void sendNotify(String message){ //TODO sarà da gestire bene in base a cosa si decide di fare col timer.
+    public void sendNotify(String message){
+        //TODO sarà da gestire bene in base a cosa si decide di fare col timer.
+        //TODO distinguere tra l'invio di messaggi privati o in broadcast.
 
-        if(getAddresseeFromMessage(message).equals("!")){ //Controllo se è un messaggio di broadcast, se si lo mando a tutti.
-            for(FakeClient client : connections){ //Mando il messaggio ad ogni client non congelato.
-                if(!client.isFreezed()) {
-                    try {
+        if(NetworkMessageParser.isTimeoutMessage(message)) //Se ricevo un messaggio di time out del turno congelo il fake client associato.
+            freezeFakeClient(NetworkMessageParser.getMessageAddressee(message));
+        else {
+            for (FakeClient client : connections) { //Viene mandato tutto in broascast.
+                try {
+                    if(!client.isFreezed())
                         client.update(message);
-                    } catch (ConnectionCloseException e) {
-                        if(this.isOpen)
-                            remove(client.getNickname());
-                        else
-                            freezeFakeClient(client.getNickname());
-                    }
-                }
-            }
-        }else{ //Se il messaggio non è broadcast lo mando solo al destinatario.
-            for(FakeClient client : connections){
-                if(!client.isFreezed() && client.getNickname().equals(getAddresseeFromMessage(message))) {
-                    try {
-                        client.update(message);
-                    } catch (ConnectionCloseException e) {
-                        if(this.isOpen)
-                            remove(client.getNickname());
-                        else
-                            freezeFakeClient(client.getNickname());
-                    }
+                } catch (ConnectionCloseException e) { //Se la connessione con un client è caduta lo congelo solo se il gioco è stato avviato, se no lo tolgo dalla lobby.
+                    if (isOpen)
+                        freezeFakeClient(client.getNickname());
+                    else
+                        remove(client.getNickname());
                 }
             }
         }
@@ -219,7 +217,7 @@ public class Lobby implements ObserverTimer {
 
         if(numberOfClient >= 2){
             createGame();
-            System.out.println("[*]Ci sono " + numberOfClient + " client --> Avvio la partita"); //TODO da rimuovere.
+            System.out.println("\n[*]Ci sono " + numberOfClient + " client --> Avvio la partita\n"); //TODO da rimuovere.
             this.sendNotify("/###/!/Partita creata\n"); //TODO da rimuovere.
         }
         else
@@ -227,8 +225,17 @@ public class Lobby implements ObserverTimer {
             //TODO vedere sulle specifiche del progetto cosa si dice di fare. --> Non è specificato ... io svuoterei la lobby e resetterei il timer.
             System.out.println("[*]Ci sono " + numberOfClient + " clients --> Non avvio la partita"); //TODO da rimuovere.
             timer.stop();
-            for(FakeClient client: connections)
-                client.closeConnection();
+            for(FakeClient client: connections) {
+
+                try {
+                    client.update(NetworkMessageCreator.getDisconnectMessage(client.getNickname()));
+                    client.closeConnection();
+                } catch (ConnectionCloseException e) {
+                    client.closeConnection();
+                }
+
+            }
+            connections = new ArrayList<>(); //Ricreo l'array list delle connessioni.
         }
     }
 }

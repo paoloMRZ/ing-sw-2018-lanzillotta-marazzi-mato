@@ -37,7 +37,7 @@ public class TableTest {
         ScoreGrid scoreGrid = null;
         RoundGrid roundGrid = new RoundGrid();
 
-        table = new Table(utensilsDeck, objectiveDeck,players, diceSachet, scoreGrid, roundGrid);
+        table = new Table(utensilsDeck, objectiveDeck,players, null);
 
     }
 
@@ -46,7 +46,7 @@ public class TableTest {
     @Test
     public void singlePlayerExtraction() throws IOException, InvalidCoordinatesException, InvalidShadeValueException {
 
-        players.add(new Player(obj, "Tester"));
+        players.add(new Player(obj, "Tester", null));
 
         table.setCardPlayer(players);
         players.get(0).setMySide(0);
@@ -57,10 +57,10 @@ public class TableTest {
     @Test
     public void completePlayersExtraction() throws IOException, InvalidCoordinatesException, InvalidShadeValueException {
 
-        players.add(new Player(obj, "Tester1"));
-        players.add(new Player(obj, "Tester2"));
-        players.add(new Player(obj, "Tester3"));
-        players.add(new Player(obj, "Tester4"));
+        players.add(new Player(obj, "Tester1", null));
+        players.add(new Player(obj, "Tester2", null));
+        players.add(new Player(obj, "Tester3", null));
+        players.add(new Player(obj, "Tester4", null));
 
         table.setCardPlayer(players);
         players.get(0).setMySide(0);

@@ -1,9 +1,14 @@
 package it.polimi.se2018.client.connection_handler;
 
+
+import it.polimi.se2018.client.message.ClientMessageParser;
 import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 /**
@@ -16,7 +21,6 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
     private OutputStreamWriter out;
     private BufferedReader reader;
 
-    private String nickname;
 
     /**
      * Costruttore della classe.
@@ -28,16 +32,16 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
      * @param nickname nickname con cui collegarsi al server.
      * @throws InvalidNicknameException viene sollevata quando il nickanme scelto è già utilizzato da un'altro client connesso al server.
      */
-    public ConnectionHandlerSocket(String nickname) throws InvalidNicknameException, GameStartedException, IOException {
+    public ConnectionHandlerSocket(String nickname, InitWindow view, String host, int port) throws InvalidNicknameException, GameStartedException, IOException {
 
-        super();
-
-        this.nickname = nickname;
+        super(view, nickname);
 
         String tmp;
 
+        //TODO controllo su host port??
+
         //Mi collego al server.
-        socket = new Socket("localhost", 1234);
+        socket = new Socket(host, port);
         out = new OutputStreamWriter(socket.getOutputStream());
         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
@@ -49,26 +53,15 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
         //Attendo la convalida del nickname.
         tmp = reader.readLine();
 
-        if (isInvalidNicknameMessage(tmp))
+        if (ClientMessageParser.isErrorConnectionInvalidNicknameMessage(tmp))
             throw new InvalidNicknameException(); //Nickname non valido.
-        else if (isGameStartedErrorMessage(tmp))
+        else if (ClientMessageParser.isErrorConnectionGameStartedMessage(tmp))
             throw new GameStartedException(); //Partita già iniziata.
-        else if (isClientConnectedMessage(tmp))
+        else if (ClientMessageParser.isNewConnectionMessage(tmp)){
             super.notifica(tmp); //Nickname valido.
+            (new Thread(this)).start();
+        }
 
-    }
-
-
-    private boolean isInvalidNicknameMessage(String message){
-        return message.replace("\n", "").split("/")[3].equals("rete") && message.replace("\n", "").split("/")[5].equals("ko_nickname");
-    }
-
-    private boolean isGameStartedErrorMessage(String message){
-       return message.replace("\n", "").split("/")[3].equals("rete") && message.replace("\n", "").split("/")[5].equals("ko_gamestarted");
-    }
-
-    private boolean isClientConnectedMessage(String message){
-        return message.replace("\n", "").split("/")[3].equals("rete") && message.replace("\n", "").split("/")[5].equals("ok");
     }
 
     /**
@@ -81,7 +74,7 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
             out.write(message);
             out.flush();
         } catch (IOException e) {
-            super.notifica("/###/" + nickname + "/rete/?/disconnect\n");
+            super.notifica("/###/!/network/disconnected/" + super.getNickname() + "\n"); //TODO da sistemare
         }
     }
 
@@ -109,6 +102,6 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
                 isOpen = false;
             }
         }
-        super.notifica("/###/" + this.nickname.replace("\n", "") + "/rete/?/disconnect\n");
+        super.notifica("/###/!/network/disconnected/" + super.getNickname() + "\n"); //TODO da sistemare
     }
 }

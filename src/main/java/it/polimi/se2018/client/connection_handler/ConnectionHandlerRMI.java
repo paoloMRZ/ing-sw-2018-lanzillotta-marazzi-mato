@@ -1,5 +1,6 @@
 package it.polimi.se2018.client.connection_handler;
 
+
 import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 import it.polimi.se2018.server.network.fake_client.FakeClientRMIInterface;
@@ -18,7 +19,6 @@ import java.rmi.server.UnicastRemoteObject;
 public class ConnectionHandlerRMI extends ConnectionHandler implements ClientInterface {
 
     private FakeClientRMIInterface fakeClientInterface;
-    private String nickname;
 
     /**
      * Costruttore della classe.
@@ -29,19 +29,16 @@ public class ConnectionHandlerRMI extends ConnectionHandler implements ClientInt
      * @param nickname nickname scelto dall'utente.
      * @throws InvalidNicknameException viene sollevata se il nickname scelto è già in uso sul server.
      */
-    public ConnectionHandlerRMI(String nickname) throws InvalidNicknameException, GameStartedException, NotBoundException, MalformedURLException, RemoteException {
+    public ConnectionHandlerRMI(String nickname, InitWindow view, String host) throws InvalidNicknameException, GameStartedException, NotBoundException, MalformedURLException, RemoteException {
 
-        super();
+        super(view, nickname);
 
-        this.nickname = nickname;
         ServerInterface serverInterface;
 
-        serverInterface = (ServerInterface) Naming.lookup("//localhost/MyServer");
+        serverInterface = (ServerInterface) Naming.lookup("//"+ host + "/MyServer");
         ClientInterface remoteRef = (ClientInterface) UnicastRemoteObject.exportObject(this, 0); //Lo faccio perchè non posso far estendere unicast a questa classe visto che ne estende già una.
 
         serverInterface.add(remoteRef, nickname);
-
-        super.notifica("/###/" + nickname + "/rete/?/ok\n");
 
     }
 
@@ -54,7 +51,7 @@ public class ConnectionHandlerRMI extends ConnectionHandler implements ClientInt
         try {
             fakeClientInterface.sendToserver(message);
         } catch (RemoteException e) {
-            super.notifica("/###/" + nickname + "/rete/?/disconnect\n");
+            super.notifica("/###/!/network/disconnected/" + super.getNickname() + "\n");
         }
     }
 
@@ -77,7 +74,8 @@ public class ConnectionHandlerRMI extends ConnectionHandler implements ClientInt
     public void accept(FakeClientRMIInterface fakeClientInterface) {
         this.fakeClientInterface = fakeClientInterface;
         if(this.fakeClientInterface == null)
-            super.notifica("/###/" + nickname + "/rete/?/disconnect\n");
+            super.notifica("/###/!/network/disconnected/" + super.getNickname() + "\n");
 
     }
+
 }
