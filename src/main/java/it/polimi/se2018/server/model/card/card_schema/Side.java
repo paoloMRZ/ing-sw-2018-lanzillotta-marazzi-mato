@@ -413,7 +413,7 @@ public class Side {
         String who = this.getClass().getName();
         String content = this.toString();
 
-        return new UpdateM(who, content);
+        return new UpdateM(null,who, content);
     }
     //todo toString da fare
 

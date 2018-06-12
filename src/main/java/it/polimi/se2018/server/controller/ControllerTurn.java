@@ -1,16 +1,24 @@
 package it.polimi.se2018.server.controller;
 
+import it.polimi.se2018.server.events.EventMVC;
+import it.polimi.se2018.server.events.responses.ChangingTurn;
+import it.polimi.se2018.server.events.responses.ErrorSomethingNotGood;
+import it.polimi.se2018.server.events.responses.TimeIsUp;
 import it.polimi.se2018.server.exceptions.InvalidHowManyTimes;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.Table;
+import it.polimi.se2018.server.timer.ObserverTimer;
+import it.polimi.se2018.server.timer.SagradaTimer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ControllerTurn {
+public class ControllerTurn implements ObserverTimer {
     private final Table lobby;
     private final Controller controller;
+    private final SagradaTimer sagradaTimer;
 
     private int round=0;
     private String turnOf=null;
@@ -25,60 +33,137 @@ public class ControllerTurn {
     private boolean upDown=true;
     private boolean andata=true;
     private boolean started=false;
+    private boolean timeIsOn=false;
 
 
-    public ControllerTurn(Table LOBBY,Controller controller){
-
-        this.lobby=LOBBY;
-        this.numbOfPlayers=lobby.peopleCounter();
+    public ControllerTurn(Table table,Controller controller){
+        this.lobby=table;
         this.controller=controller;
+        this.numbOfPlayers=lobby.peopleCounter();;
+        this.sagradaTimer=new SagradaTimer(60);
+        sagradaTimer.add(this);
     }
 
     public Player getTurn() throws InvalidValueException {
             return lobby.callPlayerByName(turnOf);
     }
 
-    public int getRound() {
-        return round;
-    }
-
     public List<String> getOrderOfTurning() {
         return orderOfTurning;
     }
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //il primo metodo a venire lanciato in questa classe
     public void setRound() throws InvalidHowManyTimes, InvalidValueException {
+
+        firstPlayer = lobby.callPlayerByNumber(caller).getName();
+        round = round + 1;
+
         if(!started) {
-            firstPlayer = lobby.callPlayerByNumber(caller).getName();
-            round = round + 1;
+            started=true;
             setTurn();
         }
         else {
-            firstPlayer = lobby.callPlayerByNumber(caller).getName();
-            round = round + 1;
             isGameFinished();
+            setTurn();
         }
     }
 
-    public void setTurn() throws InvalidHowManyTimes, InvalidValueException {
+    private void setTurn() throws InvalidHowManyTimes, InvalidValueException {
 
-        lobby.callPlayerByName(turnOf).setIsMyTurner();
+        if(turnOf!=null) lobby.callPlayerByName(turnOf).setIsMyTurner();
 
-        turnOf=lobby.callPlayerByNumber(caller).getName();
-        recorder(turnOf);
-        lobby.callPlayerByNumber(caller).reductor();
-        lobby.callPlayerByNumber(caller).setIsMyTurner();
-
-
-        if(!andata && turnOf.equals(firstPlayer) ){
-            andata = true;
-            callerModifier();
-            setRound();
+        if(lobby.callPlayerByNumber(caller).canYouPlay()) {//determina se un giocatore è stato disconnesso
+            turnOf = lobby.callPlayerByNumber(caller).getName();
+            recorder(turnOf);
+            lobby.callPlayerByNumber(caller).reductor();
+            lobby.callPlayerByNumber(caller).setIsMyTurner();
+            sagradaTimer.start();
+            timeIsOn = true;
+            controller.getcChat().notifyObserver(new ChangingTurn(turnOf));
+            //parte il timer
         }
-        else callerModifier();
+        else closeTurn();
+    }
+    private void closeTurn(){
+        //azione del timer quando scade il turno posso dividere in due parti
+        //o quando messaggi mi dicono che ha già fatto le cose che deve fare da checker
+        try{
+            sagradaTimer.stop();
+            timeIsOn=false;
+            controller.getcChat().notifyObserver( new TimeIsUp(turnOf));
+            if(!lobby.callPlayerByNumber(caller).getDidPlayDie() && !lobby.callPlayerByNumber(caller).getDidPlayCard()) lobby.callPlayerByNumber(caller).forget();
+
+            if(!andata && turnOf.equals(firstPlayer) ){
+                andata = true;
+                callerModifier();
+                setRound();
+            }
+            else {
+                callerModifier();
+                setTurn();
+            }
+        }
+        catch (Exception e){
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+        }
+
 
     }
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+public void setThePlayers() throws InvalidValueException {
+    try{
+        lobby.preparePlayers();
+    }
+    catch(IOException e){
+        controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+    }
+    anotherPlayer();
+}
 
+    private void anotherPlayer() throws InvalidValueException{
+        if(turnOf!=null) lobby.callPlayerByName(turnOf).setIsMyTurner();
+
+            turnOf = lobby.callPlayerByNumber(caller).getName();
+            lobby.callPlayerByNumber(caller).setIsMyTurner();
+
+            sagradaTimer.start();
+            timeIsOn = true;
+            lobby.callPlayerByName(turnOf).ask();
+            //parte il timer
+
+    }
+    private void actualPlayerIsDone(){
+        //azione del timer quando scade il turno posso dividere in due parti
+        //o quando messaggi mi dicono che ha già fatto le cose che deve fare da checker
+        try{
+            sagradaTimer.stop();
+            timeIsOn=false;
+            controller.getcChat().notifyObserver( new TimeIsUp(turnOf));
+            if() lobby.callPlayerByNumber(caller).forgetForever();
+
+            if(!andata && turnOf.equals(firstPlayer) ){
+                andata = true;
+                callerModifier();
+                resetQualities();
+            }
+            else {
+                callerModifier();
+                anotherPlayer();
+            }
+        }
+        catch (Exception e){
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+        }
+    }
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     private void callerModifier(){
@@ -111,5 +196,42 @@ public class ControllerTurn {
 
     private void isGameFinished(){
         if(round>10) controller.finalizeTheGame();
+    }
+    public boolean messageComingChecking(EventMVC m){
+        try{
+            if(!timeIsOn) return false;
+            else{
+                if(lobby.callPlayerByName(m.getPlayer()).getDidPlayDie()&&lobby.callPlayerByName(m.getPlayer()).getDidPlayCard()){
+                    closeTurn();
+                    return false;
+                }
+                else return true;
+            }
+        }
+        catch(InvalidValueException e){
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+            return  false;
+        }
+
+    }
+    private void resetQualities() throws InvalidHowManyTimes, InvalidValueException {
+        round=0;
+        turnOf=null;
+        firstPlayer=null;
+
+        numbOfPlayers=lobby.peopleCounter();
+        caller=0;
+        orderOfTurning = new ArrayList<>();
+
+        upDown=true;
+        andata=true;
+        started=false;
+        timeIsOn=false;
+        setRound();
+    }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void timerUpdate(){
+        closeTurn();
     }
 }

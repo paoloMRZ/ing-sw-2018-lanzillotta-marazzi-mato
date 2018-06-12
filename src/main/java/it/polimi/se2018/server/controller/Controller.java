@@ -1,5 +1,6 @@
 package it.polimi.se2018.server.controller;
 
+import it.polimi.se2018.server.events.EventMVC;
 import it.polimi.se2018.server.events.tool_mex.Activate;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.model.Color;
@@ -311,7 +312,9 @@ public class Controller{
         return cChat;
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+    public boolean messageComingChecking(EventMVC m){
+        return cTurn.messageComingChecking(m);
+    }
 
 
 }

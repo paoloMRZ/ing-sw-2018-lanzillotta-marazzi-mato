@@ -33,6 +33,7 @@ public class Player {
     private final Objective myObjective;
     private int favours = 0;
     private boolean isMyTurn=false;
+    private boolean canIPlay=true;
     private int howManyTurns;
     private boolean didPlayDie;
     private boolean didPlayCard;
@@ -179,8 +180,7 @@ public class Player {
      */
 
     public void setDidPlayCard(){
-        if(didPlayCard) didPlayCard=false;
-        else didPlayCard=true;
+        didPlayCard= !didPlayCard;
     }
 
 
@@ -190,8 +190,7 @@ public class Player {
      */
 
     public void setDidPlayDie(){
-        if(didPlayDie) didPlayDie=false;
-        else didPlayDie=true;
+        didPlayDie=!didPlayDie;
     }
 
 
@@ -357,5 +356,25 @@ public void refresh(UpdateReq m){
 
     public void setUpdateSide(){
         launchCommunication(mySide.setUpdate());
+    }
+    //metodo per dcisconnettere il giocatore se non ha fatto la sua giocata
+    public void forget(){
+        //todo
+    }
+    public void forgetForever(){
+        //todo
+    }
+    //metodo per reinsisre il giocatore nel gioco
+    public void remember(){
+        //todo
+    }
+    public boolean canYouPlay(){
+        return canIPlay;
+    }
+    public void ask(){
+        //todo
+    }
+    public void chooseForPlayer(){
+        //todo
     }
 }

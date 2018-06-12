@@ -61,16 +61,23 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
 */
     private boolean checker(EventMVC mex){
         try{
-        if(mex.getPlayer().equals(controller.getTurn().getName())) return true;
-        else return  false;
+            if(controller.messageComingChecking(mex)){
+                if(mex.getPlayer().equals(controller.getTurn().getName())) return true;
+                else return  false;
+            }
+            else{notifyObserver( new TimeIsUp(mex.getPlayer()));
+                 return false;
+            }
         }
         catch(InvalidValueException e){
             notifyObserver(new ErrorSomethingNotGood());
             return false;
         }
+
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public void notifyObserver(SuccessColor mex){
     view.update(mex);
 }
@@ -92,4 +99,12 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
     public void notifyObserver(ErrorSomethingNotGood mex){
         view.update(mex);
     }
+    public void notifyObserver( TimeIsUp mex){
+        view.update(mex);
+    }
+    public void notifyObserver( ChangingTurn mex){
+        view.update(mex);
+    }
+
+
 }

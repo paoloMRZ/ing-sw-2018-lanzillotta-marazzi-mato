@@ -100,4 +100,10 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
     }
     public void update(UpdateM mex){//todo
     }
+    public void update( TimeIsUp mex){
+     //todo
+    }
+    public void update( ChangingTurn mex){
+        //todo
+    }
 }

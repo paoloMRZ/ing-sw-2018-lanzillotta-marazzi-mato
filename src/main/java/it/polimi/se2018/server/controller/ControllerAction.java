@@ -133,6 +133,7 @@ public class ControllerAction {
             int col = coords.get(1);
 
             workOnSide(dude, picked, row, col);
+            lobby.callPlayerByName(dude).setDidPlayDie();
             //success yeeeeaaaaaaa
             lobby.setUpdateReserve();
             lobby.callPlayerByName(dude).setUpdateSide();

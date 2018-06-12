@@ -306,6 +306,9 @@ public class Table {
         return chat;
     }
 
+    public void preparePlayers() throws IOException {
+        setCardPlayer(playersList);
+    }
 ////////////////////////////////////////////////////////////////////////////////
     public void refresh(UpdateReq m){
         launchCommunication(reserve.updateForcer(m));
