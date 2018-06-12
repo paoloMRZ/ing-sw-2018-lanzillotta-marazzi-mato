@@ -57,7 +57,7 @@ public class ShadesOfCardTest {
 
             ShadesOfCard shadesOfPurple = new ShadesOfCard(Color.PURPLE);
             obj = new Objective("TestName", "TestDescription", 3, shadesOfPurple, false);
-            player = new Player(obj, "Tester");
+            player = new Player(obj, "Tester", null);
 
             casualSide.put(0,0,new Dice(Color.RED, 3));
             casualSide.put(1,1,new Dice(Color.PURPLE, 2));
@@ -83,7 +83,7 @@ public class ShadesOfCardTest {
         try {
             ShadesOfCard shadesOfRed = new ShadesOfCard(Color.RED);
             obj = new Objective("TestName", "TestDescription", 3, shadesOfRed, false);
-            player = new Player(obj, "Tester");
+            player = new Player(obj, "Tester", null);
 
             casualSide.put(0,0,new Dice(Color.RED, 3));
             casualSide.put(1,1,new Dice(Color.PURPLE, 3));
@@ -109,7 +109,7 @@ public class ShadesOfCardTest {
 
             ShadesOfCard shadesOfYellow = new ShadesOfCard(Color.YELLOW);
             obj = new Objective("TestName", "TestDescription", 3, shadesOfYellow, false);
-            player = new Player(obj, "Tester");
+            player = new Player(obj, "Tester", null);
 
             casualSide.put(0,0,new Dice(Color.RED, 3));
             casualSide.put(1,1,new Dice(Color.PURPLE, 3));

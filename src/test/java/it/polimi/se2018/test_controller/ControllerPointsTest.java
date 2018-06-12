@@ -139,7 +139,7 @@ public class ControllerPointsTest {
         objectivePrivateOne = new Objective("TesterNamePrivate", "TesterDescriptionPrivate", 0, new ShadesOfCard(Color.YELLOW), true);
 
         //Settaggio manuale dei player
-        players.add(new Player(objectivePrivateOne, "SIMONE"));
+        players.add(new Player(objectivePrivateOne, "SIMONE", null));
 
 
         //Settaggio carta Side per i player
@@ -147,8 +147,8 @@ public class ControllerPointsTest {
         players.get(0).setMySide(0);
         players.get(0).setFavours();
 
-        lobby = new Table(null, objectives, players, new DiceSachet(), new ScoreGrid(players.size()),new RoundGrid());
-        controllerPoints = new ControllerPoints(lobby);
+        lobby = new Table(null, objectives, players, null);
+        controllerPoints = new ControllerPoints(lobby, null);
 
         controllerPoints.updateScoreOfPlayer();
 
@@ -185,14 +185,14 @@ public class ControllerPointsTest {
         //Settaggio manuale della carta obbiettivo Privata del player 2
         objectivePrivateTwo = new Objective("TesterNamePrivate", "TesterDescriptionPrivate", 0, new ShadesOfCard(Color.RED), true);
 
-        players.add(new Player(objectivePrivateTwo, "MARCO"));
+        players.add(new Player(objectivePrivateTwo, "MARCO", null));
 
         players.get(1).setSideSelection(sides);
         players.get(1).setMySide(1);
         players.get(1).setFavours();
 
-        lobby = new Table(null, objectives, players, new DiceSachet(), new ScoreGrid(players.size()),new RoundGrid());
-        controllerPoints = new ControllerPoints(lobby);
+        lobby = new Table(null, objectives, players, null);
+        controllerPoints = new ControllerPoints(lobby, null);
 
         assertEquals("SIMONE", controllerPoints.nameOfWinner());
     }
