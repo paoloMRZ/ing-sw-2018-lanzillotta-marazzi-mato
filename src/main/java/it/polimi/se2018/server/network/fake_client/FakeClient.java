@@ -11,7 +11,7 @@ import it.polimi.se2018.server.network.Lobby;
 public abstract class FakeClient {
 
     private String nickname; //Nickname del client.
-    protected Lobby lobby; //Stanza che raccoglie i giocatori.
+    protected FakeClientObserver lobby; //Stanza che raccoglie i giocatori.
     private boolean isFreezed;
 
     /**
@@ -20,7 +20,7 @@ public abstract class FakeClient {
      * @param lobby    stanza di gioco.
      * @param nickname nickname scelto dal giocatore.
      */
-    public FakeClient(Lobby lobby, String nickname) {
+    public FakeClient(FakeClientObserver lobby, String nickname) {
         if (lobby != null && nickname != null) {
             this.lobby = lobby;
             this.nickname = nickname;

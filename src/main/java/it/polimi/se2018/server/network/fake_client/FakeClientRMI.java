@@ -91,7 +91,7 @@ public class FakeClientRMI extends FakeClient implements FakeClientRMIInterface 
     @Override
     public void sendToserver(String message) {
         if(isOpen) {
-            lobby.receiveNotify(message);
+            lobby.notifyFromFakeClient(message);
         }
     }
 }
