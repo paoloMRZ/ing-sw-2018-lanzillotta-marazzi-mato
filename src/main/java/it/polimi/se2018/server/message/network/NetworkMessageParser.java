@@ -12,6 +12,10 @@ public class NetworkMessageParser {
         return message.split("/")[3].equals("network") && message.split("/")[4].equals("timeout");
     }
 
+    public static boolean isBroadcastMessage(String message){
+        return message.split("/")[2].equals("!");
+    }
+
     public static String getMessageSender(String message){
         return message.split("/")[1];
     }
