@@ -48,10 +48,10 @@ public class ServerImplementationSocket implements Runnable {
         try {
             out.write(message); //viene notificata al client l'invalidità del nickname.
             out.flush();
-            fakeClient.closeConnection(); //La connessione viene chiusa anche se la receiveNotify del nickname non valido non è andata a buon fine.
+            fakeClient.closeConnection(); //La connessione viene chiusa anche se la notifyFromFakeView del nickname non valido non è andata a buon fine.
 
         } catch (IOException e) {
-            fakeClient.closeConnection(); //La connessione viene chiusa anche se la receiveNotify del nickname non valido non è andata a buon fine.
+            fakeClient.closeConnection(); //La connessione viene chiusa anche se la notifyFromFakeView del nickname non valido non è andata a buon fine.
         }
     }
 

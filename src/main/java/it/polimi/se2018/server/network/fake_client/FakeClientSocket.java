@@ -44,7 +44,7 @@ public class FakeClientSocket extends FakeClient implements Runnable {
 
     /**
      * Loop di ascolto sulla socket che deve essere lancito su un thread dedicato.
-     * Appene viene ricevuto un messaggio sulla socket la classe lo receiveNotify alla lobby che si occuperà di
+     * Appene viene ricevuto un messaggio sulla socket la classe lo notifyFromFakeView alla lobby che si occuperà di
      * passare l'informazione ai destinatari.
      *
      * Nel caso in cui viene ricevuto un messaggio di chiusura della comunicazione, oltre a notificarlo alla lobby, viene interrotto il loop.
@@ -92,7 +92,7 @@ public class FakeClientSocket extends FakeClient implements Runnable {
     }
 
     /**
-     * Il metodo chiude la connessione col client inviandogli un messaggio di receiveNotify e chiudendo la socket.
+     * Il metodo chiude la connessione col client inviandogli un messaggio di notifyFromFakeView e chiudendo la socket.
      */
     @Override
     public void closeConnection() {

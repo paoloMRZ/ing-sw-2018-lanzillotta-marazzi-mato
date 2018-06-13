@@ -259,7 +259,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
      * @param message messaggio da passare al vero client tramite il metodo update.
      */
 
-    public void receiveNotify(String message){
+    public void notifyFromFakeView(String message){
         if(NetworkMessageParser.isTimeoutMessage(message)) //Se ricevo un messaggio di time out del turno congelo il fake client associato.
             freezeFakeClient(NetworkMessageParser.getMessageAddressee(message));
         else {
