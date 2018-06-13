@@ -4,18 +4,16 @@ package it.polimi.se2018.server.network;
 import it.polimi.se2018.server.exceptions.ConnectionCloseException;
 import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
+import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.message.network.NetworkMessageCreator;
 import it.polimi.se2018.server.message.network.NetworkMessageParser;
-import it.polimi.se2018.server.message.server.ServerMessageCreator;
 import it.polimi.se2018.server.network.fake_client.FakeClient;
+import it.polimi.se2018.server.network.fake_client.FakeClientObserver;
 import it.polimi.se2018.server.timer.ObserverTimer;
 import it.polimi.se2018.server.timer.SagradaTimer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
-
 
 /**
  * Questa classe rappresenta una stanza di gioco ed ha il compito di raccogliere tutti i fake client che gestiscono le connessioni dei client connessi
@@ -23,7 +21,8 @@ import java.util.Scanner;
  * Oltre a questo fa da tramite tra view (client) e fake view (server).
  * @author Marazzi Paolo
  */
-public class Lobby implements ObserverTimer {
+public class Lobby implements ObserverTimer, FakeClientObserver {
+    private FakeView fakeView;
     private int numberOfClient;
     private ArrayList<FakeClient> connections;
     private SagradaTimer timer;
@@ -42,46 +41,174 @@ public class Lobby implements ObserverTimer {
         isOpen = true;
         numberOfClient = 0;
         connections = new ArrayList<>();
+        fakeView = null;
     }
 
     /**
-     * Questa classe crea una nuova partita. Per fare questo crea FakeView, Controller e Model e li collega fra loro.
+     * Questa classe crea il "triangolo MVC" richiamando il costruttore della fake view.
      */
     private void createGame(){
         this.isOpen = false; //Come prima cosa chiudo la lobby.
-        this.timer.stop();
-        //TODO Implementare il metodo.
+        this.timer.stop(); //Fermo il timer.
+        fakeView = new FakeView(); //Creo MVC.
+    }
 
-        boolean loop = true;
-        Scanner scanner = new Scanner(System.in);
+    /**
+     * Il metodo restituisce i nickname dei fake client contenuti nella lobby.
+     *
+     * @return lista dei nickname.
+     */
+    private synchronized List<String> getNicknames(){
+        ArrayList<String> nicknames = new ArrayList<>();
+
+        for(FakeClient client: connections)
+            nicknames.add(client.getNickname());
+
+        return nicknames;
+    }
 
 
-        System.out.println("Scegli quale messaggio inviare\n");
-        System.out.println("[1]Invia messaggio che contiene le 4 carte schema tra cui un giocatore deve scegliere");
+    /**
+     * Il metodo effettua una ricerca per nickname.
+     *
+     * @param nickname nickname del fakeClient che si vuole trovare.
+     * @return riferimento al fakeClient. Se non viene trovate nessun fake client si restituisce null
+     */
+    private FakeClient serachByNickname(String nickname){
+        for(FakeClient client : connections){
+            if(client.getNickname().equals(nickname))
+                return client;
+        }
 
+        return null;
+    }
 
-        System.out.print("> ");
+    /**
+     * Il metodo congela un fake client.
+     *
+     * @param nickname nickname del fake client che si vuole congelare.
+     */
+    private void freezeFakeClient(String nickname) { //Congelare un client significa chiudere la sua connessione senza toglierlo dalla lobby.
 
-        while(loop){
-            int scelta = scanner.nextInt();
-
-            switch (scelta){
-
-                case 1:{
-                    String [] cardNames = {"aurora-sagradis", "aurorae-magnificus", "balboa-bay", "batllo"};
-                    this.sendNotify(ServerMessageCreator.getChoseSideMessage( "!", Arrays.asList(cardNames)));
-                } break;
-            }
+        FakeClient fakeClient = serachByNickname(nickname); //Ricerco il client tramite il suo nickname.
+        if (fakeClient != null) { //Se l'ho trovato lo congelo, cioè chiudo la sua connessione ma non non rimuovo dalla lobby.
+            fakeClient.closeConnection();
+            numberOfClient--;
+            notifyFromFakeClient(NetworkMessageCreator.getDisconnectMessage(nickname)); //Notifico tutti gli altri giocatori della disconnessione del client.
         }
 
     }
 
     /**
-     * Il metodo aggiunge un fake client alla lobby solo se il suo nickname non è già utilizzato da un'altro fake client già inserito.
+     * Il metodo scongela un fake client precedentemente congelato.
+     * Questo metodo non fa altro che sostituire il vecchio fakeClient (quello congelato) con quello nuovo (cioè la
+     * nuova connessione ricevuta).
+     *
+     * @param newConnection nuova connessione da sostituire a quella vecchia.
+     */
+    private void unfreezeFakeClient(FakeClient newConnection) { //Scongelare un client significa togliere dalla lobby il fake client congelato e sostituirlo con quello nuovo.
+        FakeClient fakeClient = serachByNickname(newConnection.getNickname());//Individuo il vecchio client tramite il nickname.
+        if (fakeClient != null) {
+            this.connections.set(connections.indexOf(fakeClient), newConnection); //Sostituisco il client congelato con quello nuovo.
+            numberOfClient++;
+            notifyFromFakeClient(NetworkMessageCreator.getDisconnectMessage(newConnection.getNickname())); //Notifico tutti i giocatori della connessione appena avvenuta.
+        }
+
+    }
+
+    /**
+     * Il metodo restituisce lo stato del fake client richiesto.
+     * Se il fake client richiesto non è presente nella lobby il metodo restituisce true, cioè il fake client viene
+     * considerato congelato.
+     *
+     * @param nickname nickanme del fake client su cui si vuole conoscere lo stato.
+     * @return true se il fake client è congelato, false in caso contrario.
+     */
+    private boolean isFreezedFakeClient(String nickname){
+        FakeClient fakeClient =  serachByNickname(nickname);
+        return  fakeClient == null || fakeClient.isFreezed();
+    }
+
+    /**
+     * Il metodo invia un messaggio in broadcast, cioè invia lo stesso messaggio a tutti i client connessi.
+     * Se si trova un fakeClient con la connessione chiusa lo si congela o lo si rimuove in base allo stato della partita,
+     * se la partita è iniziata(lobby chiusa) lo si congela, in caso contrario lo si rimuove.
+     *
+     * @param message mesaggio da inviare.
+     */
+    private void sendBroadcast(String message){
+        for(FakeClient fakeClient: connections){
+            if(!fakeClient.isFreezed()) {
+                try {
+                    fakeClient.update(message);
+                } catch (ConnectionCloseException e) {
+                    if(isOpen)
+                        remove(fakeClient.getNickname());
+                    else
+                        this.freezeFakeClient(fakeClient.getNickname());
+                }
+            }
+        }
+    }
+
+    /**
+     * Il metodo invia un messaggio al suo destinatario.
+     * Se il destiantario non è raggiungibile si congela o si rimuove il fake client in base allo stato della partita.
+     *
+     * @param message messaggio da inviare.
+     */
+    private void sendPrivate(String message){
+        FakeClient fakeClient = serachByNickname(NetworkMessageParser.getMessageAddressee(message));
+
+        try {
+            fakeClient.update(message);
+        } catch (ConnectionCloseException e) {
+            if(isOpen)
+                remove(fakeClient.getNickname());
+            else
+                freezeFakeClient(fakeClient.getNickname());
+        }
+    }
+
+
+    /**
+     * Il metodo rimuove dalla lobby il fake client specificato tramite il nickname e chiude la connessione ad esso dedicata.
+     * Nel caso in cui il nickname passato non è presente nella lobby il metodo non effettua nessuna operazione.
+     *
+     * @param nickname nickname del fake client da rimuovere.
+     */
+    private synchronized void remove(String nickname) {
+        FakeClient fakeClient = serachByNickname(nickname);
+
+        if (fakeClient != null) {
+            fakeClient.closeConnection(); //Chiudo la sua connessione.
+            connections.remove(fakeClient); //Lo rimuovo dalla lobby.
+            numberOfClient--; //Decremento il numero di giocatori.
+
+            notifyFromFakeClient(NetworkMessageCreator.getDisconnectMessage(nickname)); //Notifico i giocatori presenti nella lobby della disconnessione.
+
+            if (numberOfClient + 1 == 2 && isOpen) { //Se la partita non è ancora stata avviata (lobby aperta) ed il numero di giocatori scende sotto i due resetto il timer.
+                timer.reset();
+
+            }
+        }
+    }
+
+
+    /**
+     * Il metodo aggiunge un fake client alla lobby solo se:
+     *  - il suo nickname non è già utilizzato da un'altro fake client già inserito.
+     *  - la partita non è ancora iniziata ( cioè la lobby è aperta ).
+     *
+     * Se si tenta di aggiungere un nuovo client che possiede un nick già presente nella lobby si verifica se il fake client
+     * corrispondente a quel nickname è congelato. In caso positivo lo si scongela (si permette al giocatore che si era disconesso di riprendere a giocare).
+     * In caso negativo il client che ha fatto richiesta non viene inserito nella lobby.
+     *
      * @param connection fake client da inserire.
      * @throws InvalidNicknameException viene sollevata se il nickname del fake client da inserire è già utilizzato da un altro fake client contenuto nella lobby.
+     * @throws GameStartedException viene sollevata se si tenta di aggiungere un nuovo fake client alla lobby quando la partita è già inizita.
      */
-    public synchronized void add (FakeClient connection) throws InvalidNicknameException, GameStartedException {
+    public synchronized void add (FakeClient connection) throws GameStartedException, InvalidNicknameException {
 
         if (getNicknames().contains(connection.getNickname())) { //Controlle se esiste un client con lo stesso nick.
 
@@ -93,7 +220,7 @@ public class Lobby implements ObserverTimer {
 
         } else if (isOpen) { //Se il nick non è già utilizzato aggiungo il client alla lobby solo se la partita non è ancora iniziata.
 
-            connections.add(connection);
+            connections.add(connection); //Aggiungo il fake client all'ArrayList.
             numberOfClient++; //Incremento il contatore dei client.
 
             if (numberOfClient == 4) { //Se è stato raggiunto il numero massimo di giocatori viene fermato il timer, chiusa la lobby e avviata la partita.
@@ -104,70 +231,24 @@ public class Lobby implements ObserverTimer {
                 timer.start();
             }
 
-            sendNotify(NetworkMessageCreator.getConnectMessage(connection.getNickname()));
+            notifyFromFakeClient(NetworkMessageCreator.getConnectMessage(connection.getNickname())); //Notifico tutti i client già presenti della connessione di un nuovo giocatore.
         } else {
-            throw new GameStartedException();
+            throw new GameStartedException(); //Se la partita è già iniziata sollevo un'eccezione.
         }
     }
 
-    /**
-     * Il metodo rimuove dalla lobby il fake client specificato tramite il nickname e chiude la connessione ad esso dedicata.
-     * Nel caso in cui il nickname passato non è presente nella lobby il metodo non effettua nessuna operazione.
-     * @param nickname nickname del fake client da rimuovere.
-     */
-    public synchronized void remove(String nickname){
-        for(FakeClient client: connections){ //Cerco il client darimuovere.
-            if(client.getNickname().equals(nickname)) {
-                client.closeConnection(); //Chiudo la sua connessione.
-                connections.remove(client); //Lo rimuovo dalla lobby.
-                numberOfClient--; //Decremento il numero di giocatori.
-
-                if(numberOfClient + 1 == 2 && isOpen){ //Se la partita non è ancora stata avviata (lobby aperta) ed il numero di giocatori scende sotto i due resetto il timer.
-                    timer.reset();
-
-                    sendNotify(NetworkMessageCreator.getDisconnectMessage(nickname));
-                }
-
-                return;
-            }
-        }
-    }
-
-    private void freezeFakeClient(String nickname){ //Congelare un client significa chiudere la sua connessione senza toglierlo dalla lobby.
-        for(FakeClient client : connections){
-            if(client.getNickname().equals(nickname)) {
-                client.closeConnection();
-                sendNotify(NetworkMessageCreator.getDisconnectMessage(nickname));
-            }
-        }
-    }
-
-    private void unfreezeFakeClient(FakeClient newConnection){ //Scongelare un client significa togliere dalla lobby il fake client congelato e sostituirlo con quello nuovo.
-        for(FakeClient client : connections){ //Individuo il vecchio client tramite il nickname.
-            if(client.getNickname().equals(newConnection.getNickname())) {
-                this.connections.set(connections.indexOf(client), newConnection); //Sostituisco il client congelato con quello nuovo.
-                sendNotify(NetworkMessageCreator.getDisconnectMessage(newConnection.getNickname()));
-            }
-        }
-    }
-
-    private boolean isFreezedFakeClient(String nickname){
-        for(FakeClient client : connections){
-            if(client.getNickname().equals(nickname))
-                return client.isFreezed();
-        }
-
-        return false;
-    }
 
     /**
      * Richiamato da un fake client qundo riceve un messaggio.
-     * @param message
+     * @param message messaggio ricevuto dal fake client.
      */
-
-    public synchronized void receiveNotify(String message){
+    @Override
+    public synchronized void notifyFromFakeClient (String message){
         if(NetworkMessageParser.isDisconnectMessage(message)){ //Controllo se il messaggio ricevuto è una richiesta di disconnessione.
-            remove(NetworkMessageParser.getMessageSender(message));
+            if(isOpen)
+                remove(NetworkMessageParser.getMessageSender(message));
+            else
+                freezeFakeClient(NetworkMessageParser.getMessageAddressee(message));
         }  else {
             //TODO in tutti gli altri casi devo girare il messaggio al controller.
         }
@@ -178,54 +259,32 @@ public class Lobby implements ObserverTimer {
      * @param message messaggio da passare al vero client tramite il metodo update.
      */
 
-    public void sendNotify(String message){
-        //TODO sarà da gestire bene in base a cosa si decide di fare col timer.
-        //TODO distinguere tra l'invio di messaggi privati o in broadcast.
-
+    public void receiveNotify(String message){
         if(NetworkMessageParser.isTimeoutMessage(message)) //Se ricevo un messaggio di time out del turno congelo il fake client associato.
             freezeFakeClient(NetworkMessageParser.getMessageAddressee(message));
         else {
-            for (FakeClient client : connections) { //Viene mandato tutto in broascast.
-                try {
-                    if(!client.isFreezed())
-                        client.update(message);
-                } catch (ConnectionCloseException e) { //Se la connessione con un client è caduta lo congelo solo se il gioco è stato avviato, se no lo tolgo dalla lobby.
-                    if (isOpen)
-                        freezeFakeClient(client.getNickname());
-                    else
-                        remove(client.getNickname());
-                }
+            if(NetworkMessageParser.isBroadcastMessage(message)){ //Se è un messaggio di broadcast lo mando in broadcat.
+                sendBroadcast(message);
+            }else{ //Se no lo mando privato.
+                sendPrivate(message);
             }
         }
     }
 
+
     /**
-     * Il metodo restituisce la lista dei nickname dei fake client contenuti nella lobby
-     * @return lista dei nickname.
+     * Il metodo viene richiamato allo scadere del tempo dall'oggetto 'SagradaTimer' che si sta osservando.
      */
-    public synchronized List<String> getNicknames(){
-        ArrayList<String> nicknames = new ArrayList<>();
-
-        for(FakeClient client: connections)
-            nicknames.add(client.getNickname());
-
-        return nicknames;
-    }
-
     @Override
     public void timerUpdate() {
 
-        if(numberOfClient >= 2){
+        if(numberOfClient >= 2){ //Se ho due o più giocatori creo la partita.
             createGame();
-            System.out.println("\n[*]Ci sono " + numberOfClient + " client --> Avvio la partita\n"); //TODO da rimuovere.
-            this.sendNotify("/###/!/Partita creata\n"); //TODO da rimuovere.
         }
         else
         {
-            //TODO vedere sulle specifiche del progetto cosa si dice di fare. --> Non è specificato ... io svuoterei la lobby e resetterei il timer.
-            System.out.println("[*]Ci sono " + numberOfClient + " clients --> Non avvio la partita"); //TODO da rimuovere.
             timer.stop();
-            for(FakeClient client: connections) {
+            for(FakeClient client: connections) { //In caso contrario disconnetto tutti e svuoto la lobby.
 
                 try {
                     client.update(NetworkMessageCreator.getDisconnectMessage(client.getNickname()));
