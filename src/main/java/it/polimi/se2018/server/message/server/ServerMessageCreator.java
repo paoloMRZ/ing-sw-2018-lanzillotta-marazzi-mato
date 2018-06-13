@@ -1,6 +1,7 @@
 package it.polimi.se2018.server.message.server;
 
 import it.polimi.se2018.server.model.dice_sachet.Dice;
+import it.polimi.se2018.server.model.card.card_schema.*;
 
 import java.util.List;
 
@@ -92,19 +93,24 @@ public class ServerMessageCreator {
     /**
      * Il metodo restituisce il messaggio da mandare al client a inizio partita per permettergli di scegliere
      * con quale carta schema giocare.
+     * Le informazioni passate al client sono i nomi delle carte ed il numero di segnalini favore
+     * associati ad ogni carta.
      *
      * @param addressee destinatario del messaggio.
-     * @param cardname  lista dei nomi delle carte tra cui il giocatore può scegliere.
+     * @param cardList  lista delle carte tra cui il giocatore può scegliere.
      * @return messaggio.
      */
-    public static String getChoseSideMessage(String addressee, List<String> cardname) {
+    public static String getChoseSideMessage(String addressee, List<Side> cardList) {
         String message = "/###/" + addressee + "/start/chose_side/";
+        int i=0;
 
-        for (int i = 0; i < 4; i++) {
+        for (Side card: cardList) {
             if (i == 0)
-                message = message.concat(cardname.get(i));
+                message = message.concat(card.getName() + "&" + card.getFavours());
             else
-                message = message.concat("&" + cardname.get(i));
+                message = message.concat("&" + card.getName() + "&" + card.getFavours());
+
+            i++;
         }
 
         message = message.concat("\n");
