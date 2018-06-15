@@ -144,7 +144,7 @@ public void setThePlayers() throws InvalidValueException {
             sagradaTimer.stop();
             timeIsOn=false;
             controller.getcChat().notifyObserver( new TimeIsUp(turnOf));
-            if() lobby.callPlayerByNumber(caller).forgetForever();
+            //if() lobby.callPlayerByNumber(caller).forgetForever();
 
             if(!andata && turnOf.equals(firstPlayer) ){
                 andata = true;

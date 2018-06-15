@@ -21,6 +21,7 @@ import java.util.Arrays;
 
 import static junit.framework.TestCase.fail;
 
+/*
 public class MartellettoTest {
 
     private Martelletto mar= new Martelletto();
@@ -155,3 +156,4 @@ public class MartellettoTest {
         }
     }
 }
+*/

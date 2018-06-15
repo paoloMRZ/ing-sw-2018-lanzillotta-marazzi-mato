@@ -66,8 +66,8 @@ public class TaglierinaCircolareTest {
 
         this.chosenOne=new Side("toTEST",5,this.sideContent);
         sides.add(chosenOne);
-        Player player1= new Player(null,"primo");
-        Player player2= new Player(null,"secondo");
+        Player player1= new Player(null,"primo",null);
+        Player player2= new Player(null,"secondo",null);
         player1.setSideSelection(sides);
         player1.setMySide(0);
         player1.setFavours();
