@@ -7,6 +7,7 @@ import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.message.network.NetworkMessageCreator;
 import it.polimi.se2018.server.message.network.NetworkMessageParser;
+import it.polimi.se2018.server.message.server.ServerMessageCreator;
 import it.polimi.se2018.server.network.fake_client.FakeClient;
 import it.polimi.se2018.server.network.fake_client.FakeClientObserver;
 import it.polimi.se2018.server.timer.ObserverTimer;
@@ -51,6 +52,13 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
         this.isOpen = false; //Come prima cosa chiudo la lobby.
         this.timer.stop(); //Fermo il timer.
         fakeView = new FakeView(); //Creo MVC.
+
+        //Todo le cose quì sono solo di prova.
+        String msgSideSimone = "/###/simone/start/chose_side/kaleidoscopic-dream&1&virtus&1&aurorae-magnificus&1&via-lux&1\n";
+        String msgSidePaolo = "/###/paolo/start/chose_side/sun-catcher&1&bellesguard&1&firmitas&1&aurora-sagradis&1\n";
+
+        this.notifyFromFakeView(msgSidePaolo);
+        this.notifyFromFakeView(msgSideSimone);
     }
 
     /**
@@ -161,13 +169,17 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
         FakeClient fakeClient = serachByNickname(NetworkMessageParser.getMessageAddressee(message));
 
         try {
+
             fakeClient.update(message);
+            System.out.println(message); //TODO da rimuovere.
         } catch (ConnectionCloseException e) {
             if(isOpen)
                 remove(fakeClient.getNickname());
             else
                 freezeFakeClient(fakeClient.getNickname());
         }
+
+
     }
 
 
