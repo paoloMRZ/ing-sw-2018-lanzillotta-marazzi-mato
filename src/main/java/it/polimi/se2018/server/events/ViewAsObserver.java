@@ -13,5 +13,7 @@ public interface ViewAsObserver {
     public void update(ErrorActivation mex);
     public void update(ErrorSomethingNotGood mex);
     public void update(UpdateM mex);
+    public void update(AskPlayer mex);
 
+    public void update(TimeIsUp mex);
 }

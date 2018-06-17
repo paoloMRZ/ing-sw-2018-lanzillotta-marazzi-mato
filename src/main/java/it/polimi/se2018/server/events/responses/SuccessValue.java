@@ -4,8 +4,8 @@ public class SuccessValue extends SuccessActivation {
     private int value;
     private int die;
 
-    public SuccessValue(int indexedCard,String mess,String name,int value,int die){
-        super(mess,indexedCard, 0,0, name);
+    public SuccessValue(int type,int index, int plfavours,int price,int value, String player,int die){
+        super(type,index, plfavours, price,player);
         this.value=value;
         this.die=die;
     }

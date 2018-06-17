@@ -1,9 +1,7 @@
 package it.polimi.se2018.server.controller;
 
 import it.polimi.se2018.server.events.EventMVC;
-import it.polimi.se2018.server.events.responses.ChangingTurn;
-import it.polimi.se2018.server.events.responses.ErrorSomethingNotGood;
-import it.polimi.se2018.server.events.responses.TimeIsUp;
+import it.polimi.se2018.server.events.responses.*;
 import it.polimi.se2018.server.exceptions.InvalidHowManyTimes;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.model.Player;
@@ -30,6 +28,7 @@ public class ControllerTurn implements ObserverTimer {
 
     private ArrayList<String> orderOfTurning = new ArrayList<>();
 //gestione delle fasi
+    private boolean setting=true;
     private boolean upDown=true;
     private boolean andata=true;
     private boolean started=false;
@@ -55,7 +54,7 @@ public class ControllerTurn implements ObserverTimer {
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //il primo metodo a venire lanciato in questa classe
-    public void setRound() throws InvalidHowManyTimes, InvalidValueException {
+    public void setRound() throws Exception {
 
         firstPlayer = lobby.callPlayerByNumber(caller).getName();
         round = round + 1;
@@ -81,12 +80,12 @@ public class ControllerTurn implements ObserverTimer {
             lobby.callPlayerByNumber(caller).setIsMyTurner();
             sagradaTimer.start();
             timeIsOn = true;
-            controller.getcChat().notifyObserver(new ChangingTurn(turnOf));
+            controller.getcChat().notifyObserver(new UpdateM(turnOf,this.getClass().getName(),turnOf));
             //parte il timer
         }
         else closeTurn();
     }
-    private void closeTurn(){
+    public void closeTurn(){
         //azione del timer quando scade il turno posso dividere in due parti
         //o quando messaggi mi dicono che ha già fatto le cose che deve fare da checker
         try{
@@ -137,18 +136,19 @@ public void setThePlayers() throws InvalidValueException {
             //parte il timer
 
     }
-    private void actualPlayerIsDone(){
+    public void actualPlayerIsDone(){
         //azione del timer quando scade il turno posso dividere in due parti
         //o quando messaggi mi dicono che ha già fatto le cose che deve fare da checker
         try{
             sagradaTimer.stop();
             timeIsOn=false;
-            controller.getcChat().notifyObserver( new TimeIsUp(turnOf));
-            //if() lobby.callPlayerByNumber(caller).forgetForever();
 
-            if(!andata && turnOf.equals(firstPlayer) ){
-                andata = true;
-                callerModifier();
+            controller.getcChat().notifyObserver( new TimeIsUp(turnOf));
+            if(lobby.callPlayerByName(turnOf).getMySide()==null) lobby.callPlayerByNumber(caller).forgetForever();
+
+            lobby.callPlayerByNumber(caller).setIsMyTurner();
+
+            if(caller!=lobby.peopleCounter()-1 ){
                 resetQualities();
             }
             else {
@@ -194,9 +194,10 @@ public void setThePlayers() throws InvalidValueException {
         if(!orderOfTurning.contains(name)) orderOfTurning.add(name);
     }
 
-    private void isGameFinished(){
+    private void isGameFinished() throws Exception {
         if(round>10) controller.finalizeTheGame();
     }
+
     public boolean messageComingChecking(EventMVC m){
         try{
             if(!timeIsOn) return false;
@@ -214,7 +215,7 @@ public void setThePlayers() throws InvalidValueException {
         }
 
     }
-    private void resetQualities() throws InvalidHowManyTimes, InvalidValueException {
+    private void resetQualities() throws Exception {
         round=0;
         turnOf=null;
         firstPlayer=null;
@@ -227,11 +228,21 @@ public void setThePlayers() throws InvalidValueException {
         andata=true;
         started=false;
         timeIsOn=false;
+        setting=false;
         setRound();
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void timerUpdate(){
-        closeTurn();
+        if(setting) actualPlayerIsDone();
+        else closeTurn();
+    }
+    public void passTurn(PassTurn m){
+        if(m.getPlayer().equals(turnOf)){
+            if(setting) actualPlayerIsDone();
+            else closeTurn();
+        }
+
+
     }
 }

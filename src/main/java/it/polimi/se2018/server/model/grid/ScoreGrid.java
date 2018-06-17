@@ -4,6 +4,8 @@ import it.polimi.se2018.server.events.UpdateReq;
 import it.polimi.se2018.server.events.responses.UpdateM;
 import it.polimi.se2018.server.model.Table;
 
+import java.util.ArrayList;
+
 /**
  * La classe rappresenta il tracciato per il calcolo finale dei punti da associare a ciascun giocatore
  *
@@ -14,6 +16,9 @@ import it.polimi.se2018.server.model.Table;
 public class ScoreGrid {
 
     private int[] scoreLines;
+    private ArrayList<String> names= new ArrayList<>();
+    private ArrayList<Integer> scorie= new ArrayList<>();
+    private String nameWinner;
 
     /**
      * Costruttore della classe che setta la dimensione dell'array scoreLines uguale al numero di gicatori partecipanti alla
@@ -37,7 +42,6 @@ public class ScoreGrid {
 
     public void updatePoints(int player, int howMuch){
         scoreLines[player] = scoreLines[player]+howMuch;
-        //setUpdate();
     }
 
 
@@ -64,13 +68,33 @@ public class ScoreGrid {
     }
 
     /////////////Comunicazione/////
+    public void add(String name){
+        names.add(name);
+    }
+    public void addi(int amount){
+        scorie.add(amount);
+    }
+    public void setNameWinner(String name){
+        if(name!=null) nameWinner=name;
+    }
+
     private UpdateM createResponse(){
         String who = this.getClass().getName();
         String content = this.toString();
-
         return new UpdateM(null,who, content);
     }
     //todo toString da fare
+    public String toString(){
+        String message="";
+        for(int i=0;i<scorie.size();i++){
+            message = message.concat(names.get(i));
+            message =message.concat("&");
+            message =message.concat(String.valueOf(scorie.get(i)));
+            message =message.concat("&");
+        }
+        message =message.concat(nameWinner+"\n");
+        return message;
+    }
 
     public UpdateM updateForcer(UpdateReq m){
         if(m.getWhat().contains(this.getClass().getName())){

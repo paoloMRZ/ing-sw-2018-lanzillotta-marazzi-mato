@@ -4,6 +4,7 @@ package it.polimi.se2018.server.fake_view;
 import it.polimi.se2018.server.events.*;
 import it.polimi.se2018.server.events.responses.*;
 import it.polimi.se2018.server.events.tool_mex.*;
+import it.polimi.se2018.server.message.server.ServerMessageCreator;
 
 
 public class FakeVChat implements ViewAsObserver,ViewAsObservable {
@@ -75,35 +76,57 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
     public void notifyObserver(HookMessage mex){
         controller.update(mex);
     }
+    public void notifyObserver(PassTurn mex){controller.update(mex);}
+    public void notifyObserver(Choice mex){controller.update(mex);}
+
 
 
     public void notifyObserver(UpdateReq mex){
         controller.update(mex);
     }
 
-    public void update(SuccessSimpleMove mex){//todo
+    public void update(SuccessSimpleMove mex){
+        String out= ServerMessageCreator.getPutDieSuccesMessage(
+                mex.getPlayer(),
+                String.valueOf(mex.getDiceIndex()),
+                String.valueOf(mex.getCoord().get(0)),
+                String.valueOf(mex.getCoord().get(1)));
+        fake.messageOutBox(out);
     }
-
+    public void update(ErrorSelection mex){
+        String out= ServerMessageCreator.getPutDieSuccesMessage(
+            mex.getPlayer(),
+            String.valueOf(mex.getDiceIndex()),
+            String.valueOf(mex.getCoord().get(0)),
+            String.valueOf(mex.getCoord().get(1)));
+        fake.messageOutBox(out);
+    }
     public void update(SuccessColor mex){//todo
     }
     public void update(SuccessValue mex) {//todo
     }
     public void update(SuccessActivation mex) {//todo
     }
-    public void update(SuccessActivationFinalized mex){//todo
+    public void update(SuccessActivationFinalized mex){
+        //todo
     }
-    public void update(ErrorSelection mex){//todo
+
+    public void update(ErrorActivation mex){
+        //todo
     }
-    public void update(ErrorActivation mex){//todo
+    public void update(ErrorSomethingNotGood mex){
+        //todo
     }
-    public void update(ErrorSomethingNotGood mex){//todo
-    }
-    public void update(UpdateM mex){//todo
+    public void update(UpdateM mex){
+        //todo
     }
     public void update( TimeIsUp mex){
      //todo
     }
-    public void update( ChangingTurn mex){
-        //todo
+
+    public void update( AskPlayer mex){
+        fake.messageOutBox(
+                ServerMessageCreator.getChoseSideMessage(mex.getPlayer(),mex.getArr());
+        );
     }
 }

@@ -212,6 +212,8 @@ public class ControllerPoints {
                 favoursPoint.add(new ScoreByPlayer(player.getName(), player.getFavours()));
                 objectivePoint.add(new ScoreByPlayer(player.getName(), player.getMyObjective().useAlgorithm(player)));
                 finalPoint.add(new ScoreByPlayer(player.getName(), lobby.getScoreGrid().getPlayersPoint(i)));
+                lobby.getScoreGrid().add(finalPoint.get(i).getNameOfPlayer());
+                lobby.getScoreGrid().addi(finalPoint.get(i).getScoreOfPlayer());
             }
 
 
@@ -240,7 +242,7 @@ public class ControllerPoints {
                     }
                 }
             }
-
+            lobby.getScoreGrid().setNameWinner(nameOfWinner);
             return nameOfWinner;
         }
 

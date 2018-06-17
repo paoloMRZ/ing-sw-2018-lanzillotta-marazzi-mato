@@ -1,5 +1,7 @@
 package it.polimi.se2018.server.model.card.card_objective;
 
+import it.polimi.se2018.server.events.UpdateReq;
+import it.polimi.se2018.server.events.responses.UpdateM;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_objective.obj_algos.StrategyAlgorithm;
 
@@ -85,5 +87,23 @@ public class Objective {
 
     public int useAlgorithm(Player player) throws Exception {
         return myObjective.use(player);
+    }
+///////////////////////////////////////////////////////////////////////////////
+private UpdateM createResponse(){
+    String who = this.getClass().getName();
+    String content = this.toString();
+
+    return new UpdateM(null,who, content);
+}
+    //todo toString da fare
+
+    public UpdateM updateForcer(UpdateReq m){
+        if(m.getWhat().contains(this.getClass().getName())){
+            return createResponse();}
+        return null;
+    }
+
+    public UpdateM setUpdate(){
+        return createResponse();
     }
 }

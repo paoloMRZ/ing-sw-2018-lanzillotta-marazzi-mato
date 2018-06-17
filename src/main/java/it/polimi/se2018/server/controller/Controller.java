@@ -1,6 +1,10 @@
 package it.polimi.se2018.server.controller;
 
 import it.polimi.se2018.server.events.EventMVC;
+import it.polimi.se2018.server.events.SimpleMove;
+import it.polimi.se2018.server.events.responses.Choice;
+import it.polimi.se2018.server.events.responses.PassTurn;
+import it.polimi.se2018.server.events.responses.UpdateM;
 import it.polimi.se2018.server.events.tool_mex.Activate;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.model.Color;
@@ -298,19 +302,38 @@ public class Controller{
 
     public List<String> getOrderOfTurning(){ return cTurn.getOrderOfTurning();}
 
-    protected void finalizeTheGame(){
-        //todo metodo che viene lanciato quando il decimo round si è concluso e lancia la parte finale del gioco
-        //todo
-        //todo
+    protected void finalizeTheGame() throws Exception{
+        cPoints.updateScoreOfPlayer();
+        cPoints.nameOfWinner();
+        lobby.setUpdateScoreGrid();
     }
 
     public void callThrough(Activate mex){
         lobby.getUtensils(mex.getCard()).accept(cCard,mex);
+        if(messageComingChecking(mex)) cTurn.closeTurn();
     }
-
+    public void simpleMove(SimpleMove mex){
+        cAction.simpleMove(mex);
+        if(messageComingChecking(mex)) cTurn.closeTurn();
+    }
     public ControllerChat getcChat() {
         return cChat;
     }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void chosen(Choice m) throws InvalidValueException {
+        lobby.callPlayerByName(m.getPlayer()).setMySide(m.getCard());
+        passTurn(new PassTurn(m.getPlayer()));
+    }
+    public void passTurn(PassTurn m){
+        cTurn.passTurn(m);
+    }
+
+    public void chaginTurn(String name){
+        if(name!=null){
+            cChat.notifyObserver(new UpdateM(null,"turn",name));
+        }
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public boolean messageComingChecking(EventMVC m){
         return cTurn.messageComingChecking(m);

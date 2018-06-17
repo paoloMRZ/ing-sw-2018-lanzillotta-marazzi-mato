@@ -7,10 +7,10 @@ public class SuccessActivation extends EventMVC {
     private int i;
     private int plfavour;
     private int cardPrice;
-    private String typo;
+    private int typo;
 
 
-    public SuccessActivation(String type,int index, int plfavours,int price, String player){
+    public SuccessActivation(int type,int index, int plfavours,int price, String player){
         super(player);
         this.i=index;
         this.plfavour= plfavours;
@@ -27,7 +27,7 @@ public class SuccessActivation extends EventMVC {
     public int getIndex(){
         return i;
     }
-    public String getTypo(){
+    public int getTypo(){
         return typo;
     }
 }

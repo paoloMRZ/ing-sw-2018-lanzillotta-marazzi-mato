@@ -4,8 +4,8 @@ public class SuccessColor extends SuccessActivation {
     private String value;
     private int die;
 
-    public SuccessColor(int indexedCard,String mess,String name,String color,int die){
-        super(mess,indexedCard, 0,0, name);
+    public SuccessColor(int type,int index, int plfavours,int price,String color, String player,int die){
+        super(type,index, plfavours, price,player);
         this.value=color ;
         this.die=die;
     }

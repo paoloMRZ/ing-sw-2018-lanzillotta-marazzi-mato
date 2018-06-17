@@ -416,6 +416,22 @@ public class Side {
         return new UpdateM(null,who, content);
     }
     //todo toString da fare
+    public String toString() {
+        String message = "";
+        for (int colo=0;colo<5;colo++){
+            for (int riga=0;riga<6;riga++) {
+                Dice die= matrix[riga][colo].showDice();
+                if (die != null)
+                    message = message.concat("&" + die.getColor().toString().toLowerCase() + die.getNumber());
+                else
+                    message = message.concat("&white0");
+            }
+          }
+
+            message = message.concat("\n");
+
+            return message;
+    }
 
     public UpdateM updateForcer(UpdateReq m){
         if(m.getWhat().contains(this.getClass().getName())){

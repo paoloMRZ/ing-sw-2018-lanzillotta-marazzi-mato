@@ -192,8 +192,10 @@ public class Table {
      */
 
     public Player callPlayerByName(String name) throws InvalidValueException {
-        for (Player p : playersList) {
-            if (p.getName().equals(name)) return p;
+        if(name!=null){
+            for (Player p : playersList) {
+                if (p.getName().equals(name)) return p;
+            }
         }
         throw new InvalidValueException();
     }
@@ -326,6 +328,7 @@ public class Table {
         launchCommunication(roundGrid.setUpdate());
     }
     public void setUpdateScoreGrid(){
+
         launchCommunication(scoreGrid.setUpdate());
     }
 
@@ -338,5 +341,38 @@ public class Table {
         Dice tmp= holdingADiceMoveInProgress;
         holdingADiceMoveInProgress=null;
         return tmp;
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
+    public void setStartMexObjs(){
+        String content= objectiveDeck.get(0).getName()+"&"+
+                        objectiveDeck.get(1).getName()+"&"+
+                        objectiveDeck.get(2).getName()+"\n";
+
+        launchCommunication(new UpdateM(null,"public_objective",content));
+    }
+    public void setStartMexUtensils(){
+        String content= utensilsDeck.get(0).getMyType()+"&"+
+                utensilsDeck.get(1).getMyType()+"&"+
+                utensilsDeck.get(2).getMyType()+"\n";
+
+        launchCommunication(new UpdateM(null,"utensils",content));
+    }
+    public void showEnemiesChoice(){
+        String content= "";
+        for(int i=0;i<playersList.size();i++){
+            content=content.concat(playersList.get(i).getMySide().getName());
+            content = content.concat("&");
+            content=content.concat(playersList.get(i).getMySide().getName());
+            if(i!=playersList.size()-1) content = content.concat("&");
+            else content = content.concat("\n");
+        }
+        launchCommunication(new UpdateM(null,"side_list",content));
+    }
+    public void showPrivate(String turner) throws InvalidValueException {
+        if(turner!=null){
+            launchCommunication(new UpdateM(
+                    turner,"private_objective",callPlayerByName(turner).getMyObjective().getName()));
+        }
     }
 }

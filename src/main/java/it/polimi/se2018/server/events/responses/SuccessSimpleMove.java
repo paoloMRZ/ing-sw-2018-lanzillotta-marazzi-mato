@@ -1,10 +1,10 @@
 package it.polimi.se2018.server.events.responses;
 
-import it.polimi.se2018.server.events.EventMVC;
+import it.polimi.se2018.server.events.SimpleMove;
 
-public class SuccessSimpleMove extends EventMVC {
+public class SuccessSimpleMove extends SimpleMove{
 
-    public SuccessSimpleMove(String player){
-        super(player);
+    public SuccessSimpleMove(int dieI, int row, int col, String player){
+        super(dieI, row, col, player);
     }
 }

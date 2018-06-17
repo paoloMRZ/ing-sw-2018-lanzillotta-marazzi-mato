@@ -1,6 +1,7 @@
 package it.polimi.se2018.server.model;
 
 import it.polimi.se2018.server.events.UpdateReq;
+import it.polimi.se2018.server.events.responses.AskPlayer;
 import it.polimi.se2018.server.events.responses.UpdateM;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidHowManyTimes;
@@ -13,6 +14,7 @@ import it.polimi.se2018.server.model.card.card_schema.Cell;
 import it.polimi.se2018.server.model.card.card_schema.Side;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,6 +36,7 @@ public class Player {
     private int favours = 0;
     private boolean isMyTurn=false;
     private boolean canIPlay=true;
+    private boolean canIRenter=true;
     private int howManyTurns;
     private boolean didPlayDie;
     private boolean didPlayCard;
@@ -357,24 +360,37 @@ public void refresh(UpdateReq m){
     public void setUpdateSide(){
         launchCommunication(mySide.setUpdate());
     }
+    public void setUpdateObj(){launchCommunication(myObjective.setUpdate());}
     //metodo per dcisconnettere il giocatore se non ha fatto la sua giocata
+
     public void forget(){
-        //todo
+        canIPlay=false;
     }
     public void forgetForever(){
-        //todo
+        canIRenter=false;
     }
     //metodo per reinsisre il giocatore nel gioco
     public void remember(){
-        //todo
+        if(!canIPlay && canIRenter) canIPlay =true;
     }
     public boolean canYouPlay(){
         return canIPlay;
     }
     public void ask(){
-        //todo
+        setUpdateObj();
+        notifier.notifyObserver(askingMessage());
     }
-    public void chooseForPlayer(){
-        //todo
+    public void chooseForPlayer(int i){
+        setMySide(i);
+    }
+
+    private AskPlayer askingMessage(){
+        ArrayList<String> ret=new ArrayList<>(4);
+        for(Side s: mySideSelection){
+            ret.add(s.getName());
+            ret.add(String.valueOf(s.getFavours()));
+        }
+
+        return new AskPlayer(name,"",ret);
     }
 }

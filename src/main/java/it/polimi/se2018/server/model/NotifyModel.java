@@ -26,5 +26,9 @@ public class NotifyModel implements ModelObservable {
     public void notifyObserver(UpdateM mex){
         view.update(mex);
     }
+    public void notifyObserver(AskPlayer mex){
+        view.update(mex);
+    }
+
 
 }

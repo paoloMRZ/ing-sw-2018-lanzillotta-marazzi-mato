@@ -11,6 +11,7 @@ import it.polimi.se2018.server.model.dice_sachet.Dice;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 public class RoundGrid {
     private ArrayList<ArrayList<Dice>> roundDices;
@@ -107,6 +108,27 @@ public class RoundGrid {
             String content = this.toString();
 
             return new UpdateM(null,who, content);
+    }
+    public String toString(){
+
+            String message = "";
+
+            for (List<Dice> diceList : roundDices) {
+
+                if (roundDices.indexOf(diceList) != 0)
+                    message = message.concat("&");
+
+                for (Dice die : diceList) {
+                    if (diceList.indexOf(die) == 0)
+                        message = message.concat(die.getColor().toString().toLowerCase() + die.getNumber());
+                    else
+                        message = message.concat(":" + die.getColor().toString().toLowerCase() + die.getNumber());
+                }
+            }
+
+            message = message.concat("\n");
+
+            return message;
     }
     //todo toString da fare
 

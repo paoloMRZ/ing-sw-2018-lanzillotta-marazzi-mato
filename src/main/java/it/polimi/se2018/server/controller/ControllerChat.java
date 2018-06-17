@@ -24,26 +24,10 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
         if(checker(mex)) controller.callThrough(mex);
     }
     public void update(SimpleMove mex){
-        if(checker(mex)) controller.getcAction().simpleMove(mex);
+        if(checker(mex)) controller.simpleMove(mex);
     }
-/*
-    public void update(MoreThanSimple mex){
 
-    }
-    public void update(ToolCard2 mex);
-    public void update(ToolCard3 mex);
-    public void update(ToolCard4 mex);
-    public void update(ToolCard5 mex);
-    public void update(ToolCard6 mex);
-    public void update(ToolCard6Bis mex);
-    public void update(ToolCard7 mex);
-    public void update(ToolCard8 mex);
-    public void update(ToolCard9 mex);
-    public void update(ToolCard10 mex);
-    public void update(ToolCard11 mex);
-    public void update(ToolCard11Bis mex);
-    public void update(ToolCard12 mex);
-*/
+
     //in questo momento solo il turnante può richiedere update, se tolto checker può chiunque
     public void update(UpdateReq mex){
         if(checker(mex)) controller.getcAction().refresher(mex);
@@ -52,6 +36,12 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
     public void update(HookMessage m){
         register(m.getObserver());
         controller.getcAction().hook(m);
+    }
+    public void update(PassTurn m){
+        controller.passTurn(m);
+    }
+    public void update(Choice m) throws InvalidValueException {
+        controller.chosen(m);
     }
 
 /* NEL CASO SI VOGLIAMO LASCIARE INTERAGIRE GLI UTENTI QUANDO NON è IL LORO TURNO
@@ -102,9 +92,10 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
     public void notifyObserver( TimeIsUp mex){
         view.update(mex);
     }
-    public void notifyObserver( ChangingTurn mex){
+    public void notifyObserver( UpdateM mex){
         view.update(mex);
     }
+
 
 
 }
