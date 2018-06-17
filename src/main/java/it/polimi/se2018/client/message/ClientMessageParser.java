@@ -85,7 +85,18 @@ public class ClientMessageParser {
      * @return true se è un messaggio di conferma dell'attivazione, false in caso contrario.
      */
     public static boolean isSuccessActivateUtensilMessage(String message){
-        return message.split("/")[3].equals("success") && message.split("/")[4].equals("utensil") ;
+        return message.split("/")[3].equals("success") && message.split("/")[4].equals("activate") ;
+    }
+
+
+    /**
+     * Il metodo controlla se il messaggio è un messaggio di conferma dell'utilizzo di un utensile.
+     *
+     * @param message messaggio da controllare.
+     * @return true se è un messaggio di conferma dell'utilizzo, false in caso contrario.
+     */
+    public static boolean isSuccessUseUtensilMessage(String message){
+        return message.split("/")[3].equals("success") && message.split("/")[4].equals("use") ;
     }
 
     /**

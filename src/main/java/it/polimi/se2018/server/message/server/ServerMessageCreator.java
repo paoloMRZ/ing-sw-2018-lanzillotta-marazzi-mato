@@ -1,8 +1,5 @@
 package it.polimi.se2018.server.message.server;
 
-import it.polimi.se2018.server.model.dice_sachet.Dice;
-import it.polimi.se2018.server.model.card.card_schema.*;
-
 import java.util.List;
 
 /**
@@ -50,30 +47,28 @@ public class ServerMessageCreator {
      * buon fine.
      *
      * @param addressee destinatario del messaggio.
-     * @param index     indice che identifica la carta utensile scelta dal client.
+     * @param cardIndex indice che identifica la carta utensile scelta dal client.
      * @param price     nuovo prezzo della carta utensile che è stata attivata.
      * @return messaggio.
      */
-    public static String getActivateUtensilSuccessMessage(String addressee, String index, String price) {
-        return "/###/" + addressee + "/success/utensil/" + index + "&" + price + "\n";
-    }
-
+    public static String getActivateUtensilSuccessMessage(String addressee, String cardIndex, String cardNumber, String price, String playerFavours) {
+        return "/###/" + addressee + "/success/activate/" + cardIndex + "&" + cardNumber + "&" + price + "&" + playerFavours + "\n";
+    } //Todo modificare il relativo parser.
 
     /**
-     * Il messaggio restituito dal metodo indica che l'attivazione della carta utensile scelta dal client è andata a
-     * buon fine.
-     * Questo metodo prende in ingresso un parametro in più, infatti le carte utensili 1, 6, 10, 11 devono passare un parametro
-     * al client per permettergli di utilizzare l'effetto della carta.
+     * Il metodo restituisce un messaggio che indica che l'uso di una carta utensile è andato a buon fine.
+     * Alcune carte utensili devono restituire informazioni ai giocatori, queste informazioni sono contenute nelle variabili
+     * param1 e param2.
      *
      * @param addressee destinatario del messaggio.
-     * @param index     indice che identifica la carta utensile scelta dal client.
-     * @param price     nuovo prezzo della carta utensile che è stata attivata.
-     * @param param     parametro da passare al client per permettergli di usare la carta.
+     * @param index     indice della carta.
+     * @param param1    primo parametro.
+     * @param param2    secondo parametro.
      * @return messaggio.
      */
-    public static String getActivateUtensilSuccessMessage(String addressee, String index, String price, String param) {
-        return "/###/" + addressee + "/success/utensil/" + index + "&" + price + "&" + param + "\n";
-    }
+    public static String getUseUtensilSuccessMessage(String addressee, String index, String param1, String param2) {
+        return "/###/" + addressee + "/success/use/" + index + "&" + param1 + "&" + param2 + "\n";
+    } //TODO fare il parser relativo.
 
     /**
      * Il messaggio restituito dal metodo indica che l'attivazione della carta utensile scelta dal client è andata a
@@ -97,21 +92,19 @@ public class ServerMessageCreator {
      * associati ad ogni carta.
      *
      * @param addressee destinatario del messaggio.
-     * @param cardList  lista delle carte tra cui il giocatore può scegliere.
+     * @param cardList  coppie di valori nome carta, segnalini favore.
      * @return messaggio.
      */
-    public static String getChoseSideMessage(String addressee, List<Side> cardList) {
+    public static String getChoseSideMessage(String addressee, List<String> cardList) {
         String message = "/###/" + addressee + "/start/chose_side/";
-        int i=0;
 
-        for (Side card: cardList) {
+        for (int i = 0; i < cardList.size(); i = i + 2) {
             if (i == 0)
-                message = message.concat(card.getName() + "&" + card.getFavours());
+                message = message.concat(cardList.get(i) + "&" + cardList.get(i + 1));
             else
-                message = message.concat("&" + card.getName() + "&" + card.getFavours());
-
-            i++;
+                message = message.concat("&" + cardList.get(i) + "&" + cardList.get(i + 1));
         }
+
 
         message = message.concat("\n");
 
@@ -119,30 +112,30 @@ public class ServerMessageCreator {
     }
 
 
-    public static String getUseUtensilEndMessage(String addressee, String index){
+    public static String getUseUtensilEndMessage(String addressee, String index) {
         return "/###/" + addressee + "/utensil/end/" + index + "\n";
     }
 
     /**
      * Il metodo restiruisce il messaggio da mendare ai client per aggiornarli riguardo la carta schema scelta da ogni giocatore.
-     *
+     * <p>
      * Attenzione: l'elenco dei nickname e l'elenco dei nomi devono essere ordinati. Il nome della carta scleta dal nickname
      * in posizione zero si deve trovare anch'essa in posizione zero nella lista dei nomi delle carte, e così via.
      *
-     * @param players elenco dei nickname dei giocatori.
+     * @param players   elenco dei nickname dei giocatori.
      * @param cardNames elenco dei nomi delle carte side scelte.
      * @return messaggio.
      */
-    public static String getSideListMessage(List<String> players, List<String> cardNames){
+    public static String getSideListMessage(List<String> players, List<String> cardNames) {
 
         String message = "/###/!/start/side_list/";
         int i = 0;
 
-        for (String nickname :players){
-            if(i == 0)
+        for (String nickname : players) {
+            if (i == 0)
                 message = message.concat(nickname + "&" + cardNames.get(i));
             else
-                message =  message.concat("&" + nickname + "&" + cardNames.get(i));
+                message = message.concat("&" + nickname + "&" + cardNames.get(i));
 
             i++;
         }
@@ -212,17 +205,12 @@ public class ServerMessageCreator {
     /**
      * Il metodo restiuisce il messaggio da mandare ai client per informarli dell'inizio di un nuovo round.
      *
-     * @param nickname nickaname del giocatore che deve giocare il primo turno del round.
-     * @param diceList lista dei dadi rimasti nella riserva che devono essere aggiunti alla roundgrid.
+     * @param nickname    nickaname del giocatore che deve giocare il primo turno del round.
+     * @param infoReserve lista dei dadi rimasti nella riserva che devono essere aggiunti alla roundgrid.
      * @return messaggio.
      */
-    public static String getUpdateRoundMessage(String nickname, List<Dice> diceList) {
-        String message =  "/###/!/update/round/" + nickname;
-
-        for(Dice die : diceList)
-            message = message.concat("&" + die.getColor().toString().toLowerCase() + die.getNumber());
-
-        return message.concat("\n");
+    public static String getUpdateRoundMessage(String nickname, String infoReserve) {
+        return "/###/!/update/round/" + nickname + "&" + infoReserve;
     }
 
 
@@ -239,74 +227,35 @@ public class ServerMessageCreator {
     /**
      * Il metodo restituisce il messaggio da inviare ai client per aggiornarli sullo stato della riserva.
      *
-     * @param dice lista dei dadi della riserva.
+     * @param infoReserve rappresentazione in stringa della riserva.
      * @return messaggio.
      */
-    public static String getUpdateReserveMessage(List<Dice> dice) {
-        String message = "/###/!/update/reserve/";
+    public static String getUpdateReserveMessage(String infoReserve) {
+        return "/###/!/update/reserve/" + infoReserve + "\n";
 
-        for (Dice die : dice) {
-            if (dice.indexOf(die) == 0)
-                message = message.concat(die.getColor().toString().toLowerCase() + die.getNumber());
-            else
-                message = message.concat("&" + die.getColor().toString().toLowerCase() + die.getNumber());
-        }
 
-        message = message.concat("\n");
-
-        return message;
     }
 
     /**
      * Il metodo restituisce il messaggio da inviare ai client per aggiornarli sullo stato della roundgrid.
      *
-     * @param dice dadi contenuti nella roundgrid. Ad ogni slot della roundgrid corrisponde una lista di dadi.
+     * @param infoRoundgrid rappresentazione della roundgrid.
      * @return messaggio.
      */
-    public static String getUpdeteRoundgridMessage(List<List<Dice>> dice) {
-        String message = "/###/!/update/roundgrid/";
-
-        for (List<Dice> diceList : dice) {
-
-            if (dice.indexOf(diceList) != 0)
-                message = message.concat("&");
-
-            for (Dice die : diceList) {
-                if (diceList.indexOf(die) == 0)
-                    message = message.concat(die.getColor().toString().toLowerCase() + die.getNumber());
-                else
-                    message = message.concat(":" + die.getColor().toString().toLowerCase() + die.getNumber());
-            }
-        }
-
-        message = message.concat("\n");
-
-        return message;
+    public static String getUpdeteRoundgridMessage(String infoRoundgrid) {
+        return "/###/!/update/roundgrid/" + infoRoundgrid + "\n";
     }
 
     /**
      * Il metodo restituisce il messaggio da mandare ai client per aggiornarli sullo stato di una carta schema.
      *
      * @param nickname proprietario della carta schema descritta dal messaggio.
-     * @param dice dadi (in ordine di riga) contenuti nella carta schema. Ad una casella vuota corrisponde un "dado" bianco
-     *             di valore 0.
+     * @param infoSide rapressentazione della side.
      * @return messaggio.
      */
-    public static String getUpdateSideMessage(String nickname, List<Dice> dice) {
-        String message = "/###/!/update/side/" + nickname;
-
-        for (Dice die : dice) {
-            if (die != null)
-                message = message.concat("&" + die.getColor().toString().toLowerCase() + die.getNumber());
-            else
-                message = message.concat("&white0");
-        }
-
-        message = message.concat("\n");
-
-        return message;
+    public static String getUpdateSideMessage(String nickname, String infoSide) {
+        return "/###/!/update/side/" + nickname + "&" + infoSide + "\n";
     }
-
 
 
     //Messaggio relativo alla rete.
@@ -320,5 +269,32 @@ public class ServerMessageCreator {
     public static String getTimeoutMessage(String addressee) {
         return "/###/" + addressee + "/network/timeout/?\n";
     }
+
+    /**
+     * Il metodo restituisce un messaggio che indica la fine della partita e contiene il punteggio associato ad ogni
+     * giocatore.
+     *
+     * @param nicknames elenco dei nickname.
+     * @param scores punteggio di ogni giocatore.
+     * @param nameOfWinner nickname del vincitore.
+     * @return messaggio.
+     */
+    public static String getEndGameMessage(List<String> nicknames, List<String> scores, String nameOfWinner) {
+        String message = "/###/!/end/winner/";
+        int i = 0;
+
+        for (String nick : nicknames) {
+
+            if (i == 0)
+                message = message.concat(nick + "&" + scores.get(i));
+            else
+                message = message.concat("&" + nick + "&" + scores.get(i));
+
+            i++;
+        }
+
+        return message.concat("&" + nameOfWinner + "\n");
+    }
+
 
 }

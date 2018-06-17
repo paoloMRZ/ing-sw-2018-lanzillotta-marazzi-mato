@@ -38,13 +38,6 @@ public class ClientMessageCreator {
         return "/" + sender + "/###/utensil/activate/" + cardIndex + "\n";
     }
 
-    public static String getActivateUtensilMessage(String sender, String cardIndex, String param1){
-        return "/" + sender + "/###/utensil/activate/" + cardIndex + "&" + param1 + "\n";
-    }
-
-    public static String getActivateUtensilMessage(String sender, String cardIndex, String param1, String param2){
-        return "/" + sender + "/###/utensil/activate/" + cardIndex + "&" + param1 + "&" + param2 + "\n";
-    }
 
     public static String getSideReplyMessage(String addressee, String cardName){
         return "/" + addressee + "/###/start/side_reply/" + cardName + "\n";
@@ -55,7 +48,7 @@ public class ClientMessageCreator {
     }
 
     public static String getUseUtensilMessage(String sender, String cardIndex ,List<String> paramList){
-        String message = "/" + sender + "/###/utensil/use/" + cardIndex;
+        String message = "/" + sender + "/###/utensil/use/" + cardIndex ; //TODO da modificare dopo !!!
 
         for(String param: paramList)
             message = message.concat("&" + param);
