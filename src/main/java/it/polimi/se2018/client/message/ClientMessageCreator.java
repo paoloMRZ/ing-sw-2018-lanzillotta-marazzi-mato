@@ -39,8 +39,8 @@ public class ClientMessageCreator {
     }
 
 
-    public static String getSideReplyMessage(String addressee, String cardName){
-        return "/" + addressee + "/###/start/side_reply/" + cardName + "\n";
+    public static String getSideReplyMessage(String addressee, String cardIndex){
+        return "/" + addressee + "/###/start/side_reply/" + cardIndex + "\n";
     }
 
     public static String getPassTurnMessage(String sender){
