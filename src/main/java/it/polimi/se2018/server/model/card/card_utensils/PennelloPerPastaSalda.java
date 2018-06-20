@@ -35,7 +35,6 @@ public class PennelloPerPastaSalda extends Utensils {
         Dice picked = controller.getcAction().pickFromReserve(indexDie);
         picked.rollDice();
         controller.getcAction().setHoldingADiceMoveInProgress(picked);
-        controller.getcChat().notifyObserver(new SuccessValue(myMessage.getCard(),"",name,picked.getNumber(),indexDie));
    }
 
     public void function(Controller controller, ToolCard6Bis myMessage) throws InvalidValueException, InvalidCellException {
@@ -43,14 +42,14 @@ public class PennelloPerPastaSalda extends Utensils {
 
         if(myMessage.getDecision()){
             controller.getcAction().putBackInReserve();
-            controller.getcAction().playerActivatedCard(name);
+            controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
         }
         else{
             ArrayList<Integer> cont= myMessage.getAttributes();
             int row=cont.get(0);
             int col=cont.get(1);
             controller.getcAction().workOnSide(name,controller.getcAction().getHoldingADiceMoveInProgress(),row,col);
-            controller.getcAction().playerActivatedCard(name);
+            controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
         }
     }
 

@@ -56,9 +56,7 @@ public class Table {
      * @param utensilsDeck  carte Utensili selezionate per la sessione di gioco
      * @param objectiveDeck carte Obbiettivo della sessione di gioco
      * @param playersList   lista dei giocatori della sessione di gioco
-     * @param// diceSachet    sacchetto dei dadi della sessione di gioco
-     * @param //scoreGrid     griglia dei punti della sessione di gioco
-     * @param //roundGrid     griglia dei round della sessione di gioco
+     * @param notifyBack    istanza della classe comunicatore dl model
      */
 
     public Table(List<Utensils> utensilsDeck, List<Objective> objectiveDeck, List<Player> playersList,NotifyModel notifyBack) {
@@ -310,6 +308,9 @@ public class Table {
 
     public void preparePlayers() throws IOException {
         setCardPlayer(playersList);
+        setStartMexObjs();
+        setStartMexUtensils();
+
     }
 ////////////////////////////////////////////////////////////////////////////////
     public void refresh(UpdateReq m){
@@ -344,21 +345,31 @@ public class Table {
     }
 /////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////
-    public void setStartMexObjs(){
-        String content= objectiveDeck.get(0).getName()+"&"+
-                        objectiveDeck.get(1).getName()+"&"+
-                        objectiveDeck.get(2).getName()+"\n";
+    private void setStartMexObjs(){
+        String message ="";
+        for (int i = 0; i < 3; i++) {
+            if (i == 0)
+                message = message.concat(objectiveDeck.get(i).getName());
+            else
+                message = message.concat("&" + objectiveDeck.get(i).getName());
+        }
+        message= message.concat("\n");
 
-        launchCommunication(new UpdateM(null,"public_objective",content));
+        launchCommunication(new UpdateM(null,"public_objective",message));
     }
-    public void setStartMexUtensils(){
-        String content= utensilsDeck.get(0).getMyType()+"&"+
-                utensilsDeck.get(1).getMyType()+"&"+
-                utensilsDeck.get(2).getMyType()+"\n";
+    private void setStartMexUtensils(){
+        String message ="";
+        for (int i = 0; i < 3; i++) {
+            if (i == 0)
+                message = message.concat(utensilsDeck.get(i).getMyType());
+            else
+                message = message.concat("&" + utensilsDeck.get(i).getMyType());
+        }
+        message= message.concat("\n");
 
-        launchCommunication(new UpdateM(null,"utensils",content));
+        launchCommunication(new UpdateM(null,"utensils",message));
     }
-    public void showEnemiesChoice(){
+    private void showEnemiesChoice(){
         String content= "";
         for(int i=0;i<playersList.size();i++){
             content=content.concat(playersList.get(i).getMySide().getName());

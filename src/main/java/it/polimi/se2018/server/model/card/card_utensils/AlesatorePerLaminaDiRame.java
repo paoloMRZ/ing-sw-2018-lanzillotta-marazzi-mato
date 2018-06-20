@@ -33,6 +33,6 @@ public class AlesatorePerLaminaDiRame extends Utensils {
         controller.getcAction()
                 .workOnSideIgnoreValue(name,oldRow,oldCol,newRow,newCol);
 
-        controller.getcAction().playerActivatedCard(name);
+        controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
     }
 }

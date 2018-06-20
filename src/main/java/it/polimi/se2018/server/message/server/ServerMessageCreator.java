@@ -122,46 +122,26 @@ public class ServerMessageCreator {
      * Attenzione: l'elenco dei nickname e l'elenco dei nomi devono essere ordinati. Il nome della carta scleta dal nickname
      * in posizione zero si deve trovare anch'essa in posizione zero nella lista dei nomi delle carte, e così via.
      *
-     * @param players   elenco dei nickname dei giocatori.
-     * @param cardNames elenco dei nomi delle carte side scelte.
+     * @param list  stringa elenco dei nickname dei giocatori.
      * @return messaggio.
      */
-    public static String getSideListMessage(List<String> players, List<String> cardNames) {
-
+    public static String getSideListMessage(String list) {
         String message = "/###/!/start/side_list/";
-        int i = 0;
+        message = message.concat(list);
+        return message;
 
-        for (String nickname : players) {
-            if (i == 0)
-                message = message.concat(nickname + "&" + cardNames.get(i));
-            else
-                message = message.concat("&" + nickname + "&" + cardNames.get(i));
-
-            i++;
-        }
-
-        return message.concat("\n");
     }
 
     /**
      * Il metodo restituisce il messaggio da mandare ai client ad inizio partita per informarli su quali obiettivi pubblici
      * sono stati estratti.
      *
-     * @param cardname lista dei nomi degli obiettivi pubblici.
+     * @param list stringa lista dei nomi degli obiettivi pubblici.
      * @return messaggio.
      */
-    public static String getPublicObjectiveMessage(List<String> cardname) {
+    public static String getPublicObjectiveMessage(String list) {
         String message = "/###/!/start/public_objective/";
-
-        for (int i = 0; i < 3; i++) {
-            if (i == 0)
-                message = message.concat(cardname.get(i));
-            else
-                message = message.concat("&" + cardname.get(i));
-        }
-
-        message = message.concat("\n");
-
+        message = message.concat(list);
         return message;
     }
 
@@ -169,22 +149,14 @@ public class ServerMessageCreator {
      * Il metodo restituisce il messaggio da mandare ai client ad inizio partita per informarli su quali carte utensili
      * sono state estratte.
      *
-     * @param cardname lista dei nomi deelle carte utensili.
+     * @param list stringa lista dei nomi deelle carte utensili.
      * @return messaggio.
      */
-    public static String getSendUtensilsMessage(List<String> cardname) {
+    public static String getSendUtensilsMessage(String list) {
         String message = "/###/!/start/utensil/";
-
-        for (int i = 0; i < 3; i++) {
-            if (i == 0)
-                message = message.concat(cardname.get(i));
-            else
-                message = message.concat("&" + cardname.get(i));
-        }
-
-        message = message.concat("\n");
-
+        message = message.concat(list);
         return message;
+
     }
 
     /**
@@ -249,12 +221,11 @@ public class ServerMessageCreator {
     /**
      * Il metodo restituisce il messaggio da mandare ai client per aggiornarli sullo stato di una carta schema.
      *
-     * @param nickname proprietario della carta schema descritta dal messaggio.
      * @param infoSide rapressentazione della side.
      * @return messaggio.
      */
-    public static String getUpdateSideMessage(String nickname, String infoSide) {
-        return "/###/!/update/side/" + nickname + "&" + infoSide + "\n";
+    public static String getUpdateSideMessage(String infoSide) {
+        return "/###/!/update/side/" +  infoSide + "\n";
     }
 
 
@@ -274,14 +245,14 @@ public class ServerMessageCreator {
      * Il metodo restituisce un messaggio che indica la fine della partita e contiene il punteggio associato ad ogni
      * giocatore.
      *
-     * @param nicknames elenco dei nickname.
-     * @param scores punteggio di ogni giocatore.
-     * @param nameOfWinner nickname del vincitore.
+     * @param statistics elenco dei nickname.
      * @return messaggio.
      */
-    public static String getEndGameMessage(List<String> nicknames, List<String> scores, String nameOfWinner) {
+    public static String getEndGameMessage(String statistics){
         String message = "/###/!/end/winner/";
-        int i = 0;
+        if(statistics!=null) message = message.concat(statistics);
+
+       /* int i = 0; //(List<String> nicknames, List<String> scores, String nameOfWinner) prototipo vecchio
 
         for (String nick : nicknames) {
 
@@ -293,7 +264,9 @@ public class ServerMessageCreator {
             i++;
         }
 
-        return message.concat("&" + nameOfWinner + "\n");
+        return message.concat("&" + nameOfWinner + "\n");*/
+
+       return message;
     }
 
 

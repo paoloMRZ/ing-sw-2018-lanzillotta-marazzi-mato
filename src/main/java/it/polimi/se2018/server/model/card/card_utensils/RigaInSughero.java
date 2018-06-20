@@ -33,6 +33,6 @@ public class RigaInSughero extends Utensils {
 
         controller.getcAction().putNoNeighbours(name,die,row,col);
 
-        controller.getcAction().playerActivatedCard(name);
+        controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());;
     }
 }

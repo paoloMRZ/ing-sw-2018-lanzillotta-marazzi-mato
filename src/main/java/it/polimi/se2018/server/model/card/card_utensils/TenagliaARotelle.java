@@ -36,7 +36,8 @@ public class TenagliaARotelle extends Utensils {
             controller.getcAction().workOnSide(name,controller.getcAction().pickFromReserve(die),row,col);
             controller.getTurn().reductor();
 
-            controller.getcAction().playerActivatedCard(name);}
+                controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
+            }
             else throw new InvalidActivationException();
         }
         else throw  new InvalidValueException();

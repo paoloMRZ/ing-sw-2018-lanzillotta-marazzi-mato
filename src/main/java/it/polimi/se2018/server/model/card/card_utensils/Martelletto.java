@@ -33,7 +33,7 @@ public class Martelletto extends  Utensils {
                 rolled.put(D);
             }
             controller.getcAction().resettingReserve(rolled);
-            controller.getcAction().playerActivatedCard(controller.getTurn().getName());
+            controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
         }
         else throw new InvalidActivationException();
     }

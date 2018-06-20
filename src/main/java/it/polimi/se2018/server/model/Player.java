@@ -179,11 +179,12 @@ public class Player {
 
     /**
      * Metodo di aggiornamento del parametro didPlayCard
-     *
+     *@param price prezzo della carta che ha appena attivato
      */
 
-    public void setDidPlayCard(){
+    public void setDidPlayCard(int price){
         didPlayCard= !didPlayCard;
+        favours= favours - price;
     }
 
 
@@ -307,13 +308,14 @@ public class Player {
 
 
     /**
-     * Metodo che assegna al giocatore la carta Side scelta
+     * Metodo che assegna al giocatore la carta Side scelta e assegna un proprietario alla carta
      *
      * @param pos riferimento alla posizione della carta selezionata all'interno della collezione di carte Side distribuite
      */
 
     public void setMySide(int pos){
         mySide = mySideSelection.get(pos);
+        mySide.setOwner(name);
         setFavours();
     }
 

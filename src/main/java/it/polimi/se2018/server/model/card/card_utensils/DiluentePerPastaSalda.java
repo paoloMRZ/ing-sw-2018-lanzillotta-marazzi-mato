@@ -34,9 +34,6 @@ public class DiluentePerPastaSalda extends Utensils {
         Dice picked=controller.getcAction().extractDieAgain(controller.getcAction().pickFromReserve(die));
         controller.getcAction()
                    .setHoldingADiceMoveInProgress(picked);
-
-        controller.getcChat().notifyObserver(
-                new SuccessColor(myMessage.getCard(),"",name,picked.getColor().name(),die));
     }
 
     public void function(Controller controller, ToolCard11Bis myMessage) throws InvalidValueException, InvalidCellException {
@@ -50,7 +47,7 @@ public class DiluentePerPastaSalda extends Utensils {
         dadozzo.manualSet(value);
         controller.getcAction().workOnSide(name,dadozzo,row,col);
 
-        controller.getcAction().playerActivatedCard(name);
+        controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
     }
 
 

@@ -18,9 +18,11 @@ import it.polimi.se2018.server.model.card.card_utensils.*;
 public class ControllerCard implements Visitor {
 
     private final Controller controller;
+    private final Table lobby;
 
 
-    public ControllerCard(Controller controller){
+    public ControllerCard(Table table,Controller controller){
+        this.lobby=table;
         this.controller=controller;
     }
 
@@ -39,15 +41,19 @@ public class ControllerCard implements Visitor {
             if(itemPinza.getIsBusy()){
                 itemPinza.function(controller,m);
                 itemPinza.setTheUse();
-                controller.getcChat().notifyObserver(new SuccessActivationFinalized(m.getCard(),"",m.getPlayer()));
+                controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemPinza.getNumber(),m.getCard(),
+                                                        controller.getTurn().getFavours(),
+                                                        itemPinza.getCost(),m.getPlayer()));
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemPinza.getNumber(),"",m.getPlayer()));
+            else controller.getcChat().notifyObserver(new ErrorActivation(itemPinza.getNumber(),m.getCard(),
+                                                            controller.getTurn().getFavours(),
+                                                            itemPinza.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException e){
             controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
         }
         catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
     }
 
@@ -56,15 +62,19 @@ public class ControllerCard implements Visitor {
             if(itemPennelloEglo.getIsBusy()){
                 itemPennelloEglo.function(controller,m);
                 itemPennelloEglo.setTheUse();
-                controller.getcChat().notifyObserver(new SuccessActivationFinalized(m.getCard(),"",m.getPlayer()));
+                controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemPennelloEglo.getNumber(),m.getCard(),
+                                                                controller.getTurn().getFavours(),
+                                                                itemPennelloEglo.getCost(),m.getPlayer()));
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemPennelloEglo.getNumber(),"",m.getPlayer()));
+            else controller.getcChat().notifyObserver(new ErrorActivation(itemPennelloEglo.getNumber(),m.getCard(),
+                                                        controller.getTurn().getFavours(),
+                                                             itemPennelloEglo.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException | InvalidCellException e){
             controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
         }
         catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
     }
 
@@ -73,15 +83,19 @@ public class ControllerCard implements Visitor {
             if(itemLathekin.getIsBusy()){
                 itemLathekin.function(controller,m);
                 itemLathekin.setTheUse();
-                controller.getcChat().notifyObserver(new SuccessActivationFinalized(m.getCard(),"",m.getPlayer()));
+                controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemLathekin.getNumber(),m.getCard(),
+                                                                            controller.getTurn().getFavours(),
+                                                                            itemLathekin.getCost(),m.getPlayer()));
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemLathekin.getNumber(),"",m.getPlayer()));
+            else controller.getcChat().notifyObserver(new ErrorActivation(itemLathekin.getNumber(),m.getCard(),
+                                                                    controller.getTurn().getFavours(),
+                                                                        itemLathekin.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException | InvalidCellException e){
             controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
         }
         catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
     }
 
@@ -90,14 +104,17 @@ public class ControllerCard implements Visitor {
         try{
             if(itemPennelloPasta.getIsBusy()){
                 itemPennelloPasta.function(controller,m);
+                controller.getcChat().notifyObserver(new SuccessValue());
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemPennelloPasta.getNumber(),"",m.getPlayer()));
+            else controller.getcChat().notifyObserver(new ErrorActivation(itemPennelloPasta.getNumber(),m.getCard(),
+                                                                            controller.getTurn().getFavours(),
+                                                                                 itemPennelloPasta.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException e){
             controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
         }
         catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
     }
 
@@ -105,14 +122,20 @@ public class ControllerCard implements Visitor {
         try{
             if(itemPennelloPasta.getIsBusy()){
                 itemPennelloPasta.function(controller,m);
+                itemPennelloPasta.setTheUse();
+                controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemPennelloPasta.getNumber(),m.getCard(),
+                                                                                controller.getTurn().getFavours(),
+                                                                                itemPennelloPasta.getCost(),m.getPlayer()));
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemPennelloPasta.getNumber(),"",m.getPlayer()));
+            else controller.getcChat().notifyObserver(new ErrorActivation(itemPennelloPasta.getNumber(),m.getCard(),
+                                                                    controller.getTurn().getFavours(),
+                                                                    itemPennelloPasta.getCost(),m.getPlayer())));
         }
         catch(InvalidValueException e){
             controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
         }
         catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
     }
 
@@ -121,15 +144,19 @@ public class ControllerCard implements Visitor {
             if(itemAlesatore.getIsBusy()){
                 itemAlesatore.function(controller,m);
                 itemAlesatore.setTheUse();
-                controller.getcChat().notifyObserver(new SuccessActivationFinalized(m.getCard(),"",m.getPlayer()));
+                controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemAlesatore.getNumber(),m.getCard(),
+                                                                                    controller.getTurn().getFavours(),
+                                                                                    itemAlesatore.getCost(),m.getPlayer()));
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemAlesatore.getNumber(),"",m.getPlayer()));
+            else controller.getcChat().notifyObserver(new ErrorActivation(itemAlesatore.getNumber(),m.getCard(),
+                                                                        controller.getTurn().getFavours(),
+                                                                        itemAlesatore.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException | InvalidCellException e){
             controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
         }
         catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
     }
 
@@ -138,18 +165,24 @@ public class ControllerCard implements Visitor {
             if(itemMartelletto.getIsBusy()){
                 itemMartelletto.function(controller);
                 itemMartelletto.setTheUse();
-                controller.getcChat().notifyObserver(new SuccessActivationFinalized(m.getCard(),"",m.getPlayer()));
+                controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemMartelletto.getNumber(),m.getCard(),
+                                                                                    controller.getTurn().getFavours(),
+                                                                                    itemMartelletto.getCost(),m.getPlayer()));
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemMartelletto.getNumber(),"",m.getPlayer()));
+            else controller.getcChat().notifyObserver(new ErrorActivation(itemMartelletto.getNumber(),m.getCard(),
+                                                                controller.getTurn().getFavours(),
+                                                                  itemMartelletto.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException e){
             controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
         }
         catch( InvalidActivationException e){
-            controller.getcChat().notifyObserver(new ErrorActivation(m.getCard(),"",m.getPlayer()));
+            controller.getcChat().notifyObserver(new ErrorActivation(itemMartelletto.getNumber(),m.getCard(),
+                                                                        controller.getTurn().getFavours(),
+                                                                        itemMartelletto.getCost(),m.getPlayer()));
         }
         catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
     }
 
@@ -158,14 +191,18 @@ public class ControllerCard implements Visitor {
         try{
             if(itemDiluente.getIsBusy()){
                 itemDiluente.function(controller,m);
+                controller.getcChat().notifyObserver(
+                        new SuccessColor());
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemDiluente.getNumber(),"",m.getPlayer()));
+            else controller.getcChat().notifyObserver(new ErrorActivation(itemDiluente.getNumber(),m.getCard(),
+                                                                         controller.getTurn().getFavours(),
+                                                                itemDiluente.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException e){
             controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
         }
         catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
     }
 
@@ -174,15 +211,19 @@ public class ControllerCard implements Visitor {
             if(itemDiluente.getIsBusy()){
                 itemDiluente.function(controller,m);
                 itemDiluente.setTheUse();
-                controller.getcChat().notifyObserver(new SuccessActivationFinalized(m.getCard(),"",m.getPlayer()));
+                controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemDiluente.getNumber(),m.getCard(),
+                                                                                controller.getTurn().getFavours(),
+                                                                                 itemDiluente.getCost(),m.getPlayer()));
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemDiluente.getNumber(),"",m.getPlayer()));
+            else controller.getcChat().notifyObserver(new ErrorActivation(itemDiluente.getNumber(),m.getCard(),
+                                                                        controller.getTurn().getFavours(),
+                                                                         itemDiluente.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException | InvalidCellException e){
             controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
         }
         catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
     }
 
@@ -192,15 +233,19 @@ public class ControllerCard implements Visitor {
             if(itemRiga.getIsBusy()){
                 itemRiga.function(controller,m);
                 itemRiga.setTheUse();
-                controller.getcChat().notifyObserver(new SuccessActivationFinalized(m.getCard(),"",m.getPlayer()));
+                controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemRiga.getNumber(),m.getCard(),
+                                                                                    controller.getTurn().getFavours(),
+                                                                                     itemRiga.getCost(),m.getPlayer()));
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemRiga.getNumber(),"",m.getPlayer()));
+            else controller.getcChat().notifyObserver(new ErrorActivation(itemRiga.getNumber(),m.getCard(),
+                                                                            controller.getTurn().getFavours(),
+                                                                            itemRiga.getCost(),m.getPlayer()));
         }
         catch( InvalidValueException| InvalidShadeException| NotEmptyCellException| InvalidColorException e){
             controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
         }
         catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
     }
 
@@ -209,15 +254,19 @@ public class ControllerCard implements Visitor {
             if(itemT.getIsBusy()){
                 itemT.function(controller,m);
                 itemT.setTheUse();
-                controller.getcChat().notifyObserver(new SuccessActivationFinalized(m.getCard(),"",m.getPlayer()));
+                controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemT.getNumber(),m.getCard(),
+                                                                                    controller.getTurn().getFavours(),
+                                                                                    itemT.getCost(),m.getPlayer()));
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemT.getNumber(),"",m.getPlayer()));
+            else controller.getcChat().notifyObserver(new ErrorActivation(itemT.getNumber(),m.getCard(),
+                                                                            controller.getTurn().getFavours(),
+                                                                            itemT.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException e){
             controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
         }
         catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
     }
 
@@ -227,15 +276,19 @@ public class ControllerCard implements Visitor {
             if(itemTM.getIsBusy()){
                 itemTM.function(controller,m);
                 itemTM.setTheUse();
-                controller.getcChat().notifyObserver(new SuccessActivationFinalized(m.getCard(),"",m.getPlayer()));
+                controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemTM.getNumber(),m.getCard(),
+                                                                                    controller.getTurn().getFavours(),
+                                                                                    itemTM.getCost(),m.getPlayer()));
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemTM.getNumber(),"",m.getPlayer()));
+            else controller.getcChat().notifyObserver(new ErrorActivation(itemTM.getNumber(),m.getCard(),
+                                                                            controller.getTurn().getFavours(),
+                                                                            itemTM.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException | InvalidCellException e){
             controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
         }
         catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
     }
 
@@ -244,15 +297,19 @@ public class ControllerCard implements Visitor {
             if(itemTD.getIsBusy()){
                 itemTD.function(controller,m);
                 itemTD.setTheUse();
-                controller.getcChat().notifyObserver(new SuccessActivationFinalized(m.getCard(),"",m.getPlayer()));
+                controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemTD.getNumber(),m.getCard(),
+                                                                                        controller.getTurn().getFavours(),
+                                                                                           itemTD.getCost(),m.getPlayer()));
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemTD.getNumber(),"",m.getPlayer()));
+            else controller.getcChat().notifyObserver(new ErrorActivation(itemTD.getNumber(),m.getCard(),
+                                                                                    controller.getTurn().getFavours(),
+                                                                                    itemTD.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException e){
             controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
         }
         catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
     }
 
@@ -261,18 +318,24 @@ public class ControllerCard implements Visitor {
             if(itemTe.getIsBusy()){
                 itemTe.function(controller,m);
                 itemTe.setTheUse();
-                controller.getcChat().notifyObserver(new SuccessActivationFinalized(m.getCard(),"",m.getPlayer()));
+                controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemTe.getNumber(),m.getCard(),
+                                                                                    controller.getTurn().getFavours(),
+                                                                                      itemTe.getCost(),m.getPlayer()));
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemTe.getNumber(),"",m.getPlayer()));
+            else controller.getcChat().notifyObserver(new ErrorActivation(itemTe.getNumber(),m.getCard(),
+                                                                            controller.getTurn().getFavours(),
+                                                                            itemTe.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException | InvalidCellException e){
             controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
         }
         catch( InvalidActivationException | InvalidHowManyTimes e){
-            controller.getcChat().notifyObserver(new ErrorActivation(m.getCard(),"",m.getPlayer()));
+            controller.getcChat().notifyObserver(new ErrorActivation(itemTe.getNumber(),m.getCard(),
+                                                                        controller.getTurn().getFavours(),
+                                                                        itemTe.getCost(),m.getPlayer()));
         }
         catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
     }
 

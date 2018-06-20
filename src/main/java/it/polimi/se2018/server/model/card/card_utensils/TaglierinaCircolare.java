@@ -37,7 +37,7 @@ public class TaglierinaCircolare extends Utensils{
         controller.getcAction().putBackInReserve(fromGrid);
 
 
-        controller.getcAction().playerActivatedCard(name);
+        controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
 
 
     }

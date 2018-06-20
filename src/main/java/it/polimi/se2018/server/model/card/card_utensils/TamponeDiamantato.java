@@ -26,7 +26,7 @@ public class TamponeDiamantato extends Utensils {
                                                  flip(controller.getcAction()
                                                          .pickFromReserve(die)));
 
-        controller.getcAction().playerActivatedCard(name);
+        controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
     }
 
     private Dice flip(Dice d){

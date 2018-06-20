@@ -79,8 +79,8 @@ public class ControllerAction {
             throw new InvalidSomethingWasNotDoneGood();
         }
     }
-    public void playerActivatedCard(String name)throws InvalidValueException{
-        lobby.callPlayerByName(name).setDidPlayCard();
+    public void playerActivatedCard(String name,int price)throws InvalidValueException{
+        lobby.callPlayerByName(name).setDidPlayCard(price);
     }
 
     public void resettingReserve(Reserve reserve){
@@ -137,11 +137,14 @@ public class ControllerAction {
             //success yeeeeaaaaaaa
             lobby.setUpdateReserve();
             lobby.callPlayerByName(dude).setUpdateSide();
-            lobby.responder().notifyObserver(new SuccessSimpleMove(dude));
+            lobby.responder().notifyObserver(new SuccessSimpleMove(move.getDiceIndex(),row,col,dude));
         }
         catch(Exception e){
             String destination=lobby.callPlayerByItsHisTurn().getName();
-            lobby.responder().notifyObserver(new ErrorSelection(destination));
+            ArrayList<Integer> coords = move.getCoord();
+            int row = coords.get(0);
+            int col = coords.get(1);
+            lobby.responder().notifyObserver(new ErrorSelection(move.getDiceIndex(),row,col,destination));
         }
     }
 
@@ -152,7 +155,7 @@ public class ControllerAction {
         controller.getTurn().refresh(m);}
         catch (Exception e ){
             lobby.responder().notifyObserver(new
-                    ErrorSomethingNotGood());
+                    ErrorSomethingNotGood(e));
         }
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////

@@ -24,12 +24,15 @@ public abstract class Utensils implements Visitable{
     private boolean isFirstTime;
     private boolean isBusy=false;
 
+    private int previousCost;
+
     public Utensils(int numb, String typo, Color color, String desc){
         this.number=numb;
         this.myType=typo;
         this.squareColor=color;
         this.description=desc;
         this.cost=1;
+        this.previousCost=cost;
         this.isFirstTime=true;
     }
     public void accept(Visitor visitor,Activate m){
@@ -50,6 +53,14 @@ public abstract class Utensils implements Visitable{
         return number;
     }
 
+    public int getCost(){
+        return cost;
+    }
+
+    public int getPreviousCost() {
+        return previousCost;
+    }
+
     public Color getSquareColor(){
         return squareColor;
     }
@@ -65,6 +76,7 @@ public abstract class Utensils implements Visitable{
            cost=cost+1;
            isFirstTime=false;
        }
+       else previousCost=cost;
     }
     private boolean checkerPrice(Controller controller,Activate m) throws InvalidValueException {
         if(cost<=controller.getPlayerByName(m.getPlayer()).getFavours()){
@@ -79,17 +91,20 @@ public abstract class Utensils implements Visitable{
     public void firstActivation(Controller controller,Activate m){
         try {
             if (checkerPrice(controller, m)) {
-                controller.getcChat().notifyObserver(new SuccessActivation(myType, m.getCard(),
+                controller.getcChat().notifyObserver(new SuccessActivation(number, m.getCard(),
                         controller.getTurn().getFavours(),
                         cost,
                         controller.getTurn().getName()));
             } else
                 controller.getcChat().notifyObserver(
-                        new ErrorActivation(m.getCard(), "", controller.getTurn().getName()));
+                        new ErrorActivation(number, m.getCard(),
+                                controller.getTurn().getFavours(),
+                                cost,
+                                controller.getTurn().getName()));
         }
         catch(InvalidValueException e){
             controller.getcChat().notifyObserver(
-                    new ErrorSomethingNotGood());
+                    new ErrorSomethingNotGood(e));
         }
 
     }

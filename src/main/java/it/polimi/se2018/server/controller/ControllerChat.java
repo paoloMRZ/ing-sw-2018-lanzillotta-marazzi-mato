@@ -60,7 +60,7 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
             }
         }
         catch(InvalidValueException e){
-            notifyObserver(new ErrorSomethingNotGood());
+            notifyObserver(new ErrorSomethingNotGood(e));
             return false;
         }
 

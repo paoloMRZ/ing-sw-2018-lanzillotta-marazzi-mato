@@ -58,7 +58,7 @@ public class ControllerTurn implements ObserverTimer {
 
         firstPlayer = lobby.callPlayerByNumber(caller).getName();
         round = round + 1;
-
+        controller.getcChat().notifyObserver(new UpdateM(turnOf,"round",String.valueOf(round)));
         if(!started) {
             started=true;
             setTurn();
@@ -80,7 +80,7 @@ public class ControllerTurn implements ObserverTimer {
             lobby.callPlayerByNumber(caller).setIsMyTurner();
             sagradaTimer.start();
             timeIsOn = true;
-            controller.getcChat().notifyObserver(new UpdateM(turnOf,this.getClass().getName(),turnOf));
+            controller.getcChat().notifyObserver(new UpdateM(turnOf,"turn",turnOf));
             //parte il timer
         }
         else closeTurn();
@@ -105,7 +105,7 @@ public class ControllerTurn implements ObserverTimer {
             }
         }
         catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
 
 
@@ -119,19 +119,19 @@ public void setThePlayers() throws InvalidValueException {
         lobby.preparePlayers();
     }
     catch(IOException e){
-        controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+        controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
     }
     anotherPlayer();
 }
 
     private void anotherPlayer() throws InvalidValueException{
-        if(turnOf!=null) lobby.callPlayerByName(turnOf).setIsMyTurner();
 
             turnOf = lobby.callPlayerByNumber(caller).getName();
             lobby.callPlayerByNumber(caller).setIsMyTurner();
 
             sagradaTimer.start();
             timeIsOn = true;
+
             lobby.callPlayerByName(turnOf).ask();
             //parte il timer
 
@@ -142,8 +142,8 @@ public void setThePlayers() throws InvalidValueException {
         try{
             sagradaTimer.stop();
             timeIsOn=false;
-
             controller.getcChat().notifyObserver( new TimeIsUp(turnOf));
+
             if(lobby.callPlayerByName(turnOf).getMySide()==null) lobby.callPlayerByNumber(caller).forgetForever();
 
             lobby.callPlayerByNumber(caller).setIsMyTurner();
@@ -157,7 +157,7 @@ public void setThePlayers() throws InvalidValueException {
             }
         }
         catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -210,7 +210,7 @@ public void setThePlayers() throws InvalidValueException {
             }
         }
         catch(InvalidValueException e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood());
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
             return  false;
         }
 

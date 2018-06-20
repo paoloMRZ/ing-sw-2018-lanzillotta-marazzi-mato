@@ -50,7 +50,7 @@ public class Controller{
         if (!nameOfPlayers.isEmpty()) {
             NotifyModel notifier= new NotifyModel();
             this.lobby = new Table(setListOfUtensils(), setListOfObjectivePublic(), setListOfPlayers(nameOfPlayers,notifier),notifier);
-            this.cCard = new ControllerCard(this);
+            this.cCard = new ControllerCard(lobby,this);
             this.cAction = new ControllerAction(lobby,this);
             this.cPoints = new ControllerPoints(lobby, this);
             this.cTurn = new ControllerTurn(lobby,this);
@@ -326,12 +326,6 @@ public class Controller{
     }
     public void passTurn(PassTurn m){
         cTurn.passTurn(m);
-    }
-
-    public void chaginTurn(String name){
-        if(name!=null){
-            cChat.notifyObserver(new UpdateM(null,"turn",name));
-        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

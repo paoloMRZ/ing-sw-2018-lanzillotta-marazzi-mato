@@ -41,7 +41,7 @@ public class PinzaSgrossatrice extends Utensils {
         controller.getcAction().putBackInReserve(D);
 
         setTheUse();
-        controller.getcAction().playerActivatedCard(name);
+        controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
 
     }
 

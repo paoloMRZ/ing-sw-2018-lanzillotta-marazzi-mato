@@ -20,7 +20,7 @@ import java.util.List;
  * @author Marazzi Paolo
  */
 public class Side {
-
+    private String owner;
     private static final int MAX_ROW = 3;
     private static final int MAX_COL = 4;
 
@@ -408,7 +408,9 @@ public class Side {
 //////////////////////////////////////////////////////////
 ///////////////////////////Comunicazione//////////////////
 //////////////////////////////////////////////////////////
-
+    public void setOwner(String name){
+        owner=name;
+    }
     private UpdateM createResponse(){
         String who = this.getClass().getName();
         String content = this.toString();
@@ -417,7 +419,7 @@ public class Side {
     }
     //todo toString da fare
     public String toString() {
-        String message = "";
+        String message = owner+"&";
         for (int colo=0;colo<5;colo++){
             for (int riga=0;riga<6;riga++) {
                 Dice die= matrix[riga][colo].showDice();
@@ -427,8 +429,6 @@ public class Side {
                     message = message.concat("&white0");
             }
           }
-
-            message = message.concat("\n");
 
             return message;
     }

@@ -27,7 +27,7 @@ public class SuccessActivation extends EventMVC {
     public int getIndex(){
         return i;
     }
-    public int getTypo(){
+    public int getMyNumber(){
         return typo;
     }
 }
