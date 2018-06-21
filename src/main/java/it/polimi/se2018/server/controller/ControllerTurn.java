@@ -43,8 +43,14 @@ public class ControllerTurn implements ObserverTimer {
         sagradaTimer.add(this);
     }
 
-    public Player getTurn() throws InvalidValueException {
+    public Player getTurn(){
+        try{
             return lobby.callPlayerByName(turnOf);
+        }
+        catch(InvalidValueException e){
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
+        }
+        return null;
     }
 
     public List<String> getOrderOfTurning() {

@@ -50,7 +50,7 @@ public class ControllerCard implements Visitor {
                                                             itemPinza.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException e){
-            controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
+            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
         }
         catch (Exception e){
             controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
@@ -71,7 +71,7 @@ public class ControllerCard implements Visitor {
                                                              itemPennelloEglo.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException | InvalidCellException e){
-            controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
+            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
         }
         catch (Exception e){
             controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
@@ -92,7 +92,7 @@ public class ControllerCard implements Visitor {
                                                                         itemLathekin.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException | InvalidCellException e){
-            controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
+            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
         }
         catch (Exception e){
             controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
@@ -103,15 +103,15 @@ public class ControllerCard implements Visitor {
     public void visit(PennelloPerPastaSalda itemPennelloPasta,ToolCard6 m){
         try{
             if(itemPennelloPasta.getIsBusy()){
-                itemPennelloPasta.function(controller,m);
-                controller.getcChat().notifyObserver(new SuccessValue());
+                int value= itemPennelloPasta.function(controller,m);
+                controller.getcChat().notifyObserver(new SuccessValue(m.getPlayer(),m.getCard(),value));
             }
             else controller.getcChat().notifyObserver(new ErrorActivation(itemPennelloPasta.getNumber(),m.getCard(),
                                                                             controller.getTurn().getFavours(),
                                                                                  itemPennelloPasta.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException e){
-            controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
+            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
         }
         catch (Exception e){
             controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
@@ -129,10 +129,10 @@ public class ControllerCard implements Visitor {
             }
             else controller.getcChat().notifyObserver(new ErrorActivation(itemPennelloPasta.getNumber(),m.getCard(),
                                                                     controller.getTurn().getFavours(),
-                                                                    itemPennelloPasta.getCost(),m.getPlayer())));
+                                                                    itemPennelloPasta.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException e){
-            controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
+            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
         }
         catch (Exception e){
             controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
@@ -153,7 +153,7 @@ public class ControllerCard implements Visitor {
                                                                         itemAlesatore.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException | InvalidCellException e){
-            controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
+            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
         }
         catch (Exception e){
             controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
@@ -174,7 +174,7 @@ public class ControllerCard implements Visitor {
                                                                   itemMartelletto.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException e){
-            controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
+            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
         }
         catch( InvalidActivationException e){
             controller.getcChat().notifyObserver(new ErrorActivation(itemMartelletto.getNumber(),m.getCard(),
@@ -190,16 +190,16 @@ public class ControllerCard implements Visitor {
     public void visit(DiluentePerPastaSalda itemDiluente,ToolCard11 m){
         try{
             if(itemDiluente.getIsBusy()){
-                itemDiluente.function(controller,m);
+                String color= itemDiluente.function(controller,m);
                 controller.getcChat().notifyObserver(
-                        new SuccessColor());
+                        new  SuccessColor(m.getPlayer(),m.getCard(),color));
             }
             else controller.getcChat().notifyObserver(new ErrorActivation(itemDiluente.getNumber(),m.getCard(),
                                                                          controller.getTurn().getFavours(),
                                                                 itemDiluente.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException e){
-            controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
+            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
         }
         catch (Exception e){
             controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
@@ -220,7 +220,7 @@ public class ControllerCard implements Visitor {
                                                                          itemDiluente.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException | InvalidCellException e){
-            controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
+            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
         }
         catch (Exception e){
             controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
@@ -242,7 +242,7 @@ public class ControllerCard implements Visitor {
                                                                             itemRiga.getCost(),m.getPlayer()));
         }
         catch( InvalidValueException| InvalidShadeException| NotEmptyCellException| InvalidColorException e){
-            controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
+            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
         }
         catch (Exception e){
             controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
@@ -263,7 +263,7 @@ public class ControllerCard implements Visitor {
                                                                             itemT.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException e){
-            controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
+            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
         }
         catch (Exception e){
             controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
@@ -285,7 +285,7 @@ public class ControllerCard implements Visitor {
                                                                             itemTM.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException | InvalidCellException e){
-            controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
+            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
         }
         catch (Exception e){
             controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
@@ -306,7 +306,7 @@ public class ControllerCard implements Visitor {
                                                                                     itemTD.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException e){
-            controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
+            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
         }
         catch (Exception e){
             controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
@@ -327,7 +327,7 @@ public class ControllerCard implements Visitor {
                                                                             itemTe.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException | InvalidCellException e){
-            controller.getcChat().notifyObserver(new ErrorSelection(m.getPlayer()));
+            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
         }
         catch( InvalidActivationException | InvalidHowManyTimes e){
             controller.getcChat().notifyObserver(new ErrorActivation(itemTe.getNumber(),m.getCard(),

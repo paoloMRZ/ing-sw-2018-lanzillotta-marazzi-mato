@@ -50,7 +50,7 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
     per il fill dei campi destinatario per le risposte
 */
     private boolean checker(EventMVC mex){
-        try{
+
             if(controller.messageComingChecking(mex)){
                 if(mex.getPlayer().equals(controller.getTurn().getName())) return true;
                 else return  false;
@@ -58,11 +58,6 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
             else{notifyObserver( new TimeIsUp(mex.getPlayer()));
                  return false;
             }
-        }
-        catch(InvalidValueException e){
-            notifyObserver(new ErrorSomethingNotGood(e));
-            return false;
-        }
 
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,6 +78,9 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
     public void notifyObserver(ErrorSelection mex){
         view.update(mex);
     }
+    public void notifyObserver(ErrorSelectionUtensil mex){
+        view.update(mex);
+    }
     public void notifyObserver(ErrorActivation mex){
         view.update(mex);
     }
@@ -95,6 +93,7 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
     public void notifyObserver( UpdateM mex){
         view.update(mex);
     }
+
 
 
 

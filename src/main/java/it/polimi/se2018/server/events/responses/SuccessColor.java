@@ -1,11 +1,13 @@
 package it.polimi.se2018.server.events.responses;
 
-public class SuccessColor extends SuccessActivation {
+import it.polimi.se2018.server.events.tool_mex.Activate;
+
+public class SuccessColor extends Activate {
     private String value;
     private int die;
 
-    public SuccessColor(int type,int index, int plfavours,int price,String color, String player,int die){
-        super(type,index, plfavours, price,player);
+    public SuccessColor( String player,int index,String color){
+        super(player,index);
         this.value=color ;
         this.die=die;
     }

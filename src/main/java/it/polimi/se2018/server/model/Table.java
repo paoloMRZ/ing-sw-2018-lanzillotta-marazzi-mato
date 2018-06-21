@@ -194,8 +194,9 @@ public class Table {
             for (Player p : playersList) {
                 if (p.getName().equals(name)) return p;
             }
+            throw new InvalidValueException();
         }
-        throw new InvalidValueException();
+        throw new NullPointerException();
     }
     //davvero utile????????'vedremo
     //non lancia eccezioni non se se legale

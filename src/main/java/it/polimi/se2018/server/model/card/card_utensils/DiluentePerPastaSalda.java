@@ -28,12 +28,13 @@ public class DiluentePerPastaSalda extends Utensils {
         c.visit(this,m);
     }
 
-    public void function(Controller controller, ToolCard11 myMessage) throws InvalidValueException, InvalidSomethingWasNotDoneGood {
+    public String function(Controller controller, ToolCard11 myMessage) throws InvalidValueException, InvalidSomethingWasNotDoneGood {
         String name= myMessage.getPlayer();
         int die= myMessage.getDie();
         Dice picked=controller.getcAction().extractDieAgain(controller.getcAction().pickFromReserve(die));
         controller.getcAction()
                    .setHoldingADiceMoveInProgress(picked);
+        return picked.getColor().name();
     }
 
     public void function(Controller controller, ToolCard11Bis myMessage) throws InvalidValueException, InvalidCellException {

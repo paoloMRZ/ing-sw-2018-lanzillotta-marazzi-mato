@@ -296,7 +296,7 @@ public class Controller{
      * @return riferimento a player turnanate
      */
 
-    public Player getTurn() throws InvalidValueException {
+    public Player getTurn(){
         return cTurn.getTurn();
     }
 

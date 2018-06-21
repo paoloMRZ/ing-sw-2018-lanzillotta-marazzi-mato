@@ -101,13 +101,17 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
             String.valueOf(mex.getCoord().get(1)));
         fake.messageOutBox(out);
     }
+    public void update(ErrorSelectionUtensil mex){
+        //todo
+        //todo fake.messageOutBox(out);
+    }
     public void update(SuccessColor mex){
         //todo discutere
-        fake.messageOutBox(ServerMessageCreator.getUseUtensilSuccessMessage(mex.getPlayer(),String.valueOf(mex.getIndex()),"Color",mex.getValue()));
+        fake.messageOutBox(ServerMessageCreator.getUseUtensilSuccessMessage(mex.getPlayer(),String.valueOf(mex.getCard()),"Color",mex.getValue()));
     }
     public void update(SuccessValue mex) {
         //todo discutere
-        fake.messageOutBox(ServerMessageCreator.getUseUtensilSuccessMessage(mex.getPlayer(),String.valueOf(mex.getIndex()),"Number",String.valueOf(mex.getValue())));
+        fake.messageOutBox(ServerMessageCreator.getUseUtensilSuccessMessage(mex.getPlayer(),String.valueOf(mex.getCard()),"Number",String.valueOf(mex.getValue())));
     }
     public void update(SuccessActivation mex) {
         fake.messageOutBox(ServerMessageCreator.getActivateUtensilSuccessMessage(
@@ -119,17 +123,22 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
         ));
     }
     public void update(SuccessActivationFinalized mex){
-        fake.messageOutBox(ServerMessageCreator.getUseUtensilEndMessage
-                (
+        fake.messageOutBox(ServerMessageCreator.getActivateUtensilSuccessMessage(
                 mex.getPlayer(),
-                String.valueOf(mex.getCard())
+                String.valueOf(mex.getIndex()),
+                String.valueOf(mex.getMyNumber()),
+                String.valueOf(mex.getCardPrice()),
+                String.valueOf(mex.getFavs())
         ));
     }
 
     public void update(ErrorActivation mex){
-        fake.messageOutBox(ServerMessageCreator.getUseUtensilErrorMessage(
+        fake.messageOutBox(ServerMessageCreator.getActivateUtensilSuccessMessage(
                 mex.getPlayer(),
-                String.valueOf(mex.getIndex())
+                String.valueOf(mex.getIndex()),
+                String.valueOf(mex.getMyNumber()),
+                String.valueOf(mex.getCardPrice()),
+                String.valueOf(mex.getFavs())
         ));
     }
     public void update(ErrorSomethingNotGood mex){

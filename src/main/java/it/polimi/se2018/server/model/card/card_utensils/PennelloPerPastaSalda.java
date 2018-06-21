@@ -28,13 +28,14 @@ public class PennelloPerPastaSalda extends Utensils {
         c.visit(this,m);
     }
 
-    public void function(Controller controller, ToolCard6 myMessage) throws InvalidValueException, InvalidSomethingWasNotDoneGood {
+    public int function(Controller controller, ToolCard6 myMessage) throws InvalidValueException, InvalidSomethingWasNotDoneGood {
         String name= myMessage.getPlayer();
 
         int indexDie= myMessage.getDie();
         Dice picked = controller.getcAction().pickFromReserve(indexDie);
         picked.rollDice();
         controller.getcAction().setHoldingADiceMoveInProgress(picked);
+        return picked.getNumber();
    }
 
     public void function(Controller controller, ToolCard6Bis myMessage) throws InvalidValueException, InvalidCellException {

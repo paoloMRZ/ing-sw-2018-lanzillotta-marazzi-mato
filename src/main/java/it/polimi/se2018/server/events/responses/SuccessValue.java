@@ -1,12 +1,14 @@
 package it.polimi.se2018.server.events.responses;
 
-public class SuccessValue extends SuccessActivation {
+import it.polimi.se2018.server.events.tool_mex.Activate;
+
+public class SuccessValue extends Activate{
     private int value;
     private int die;
 
-    public SuccessValue(int type,int index, int plfavours,int price,int value, String player,int die){
-        super(type,index, plfavours, price,player);
-        this.value=value;
+    public SuccessValue( String player,int index,int numb){
+        super(player,index);
+        this.value= numb ;
         this.die=die;
     }
     public int getDie(){

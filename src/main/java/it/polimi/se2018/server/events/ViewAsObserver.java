@@ -16,4 +16,6 @@ public interface ViewAsObserver {
     public void update(AskPlayer mex);
 
     public void update(TimeIsUp mex);
+
+    public void update(ErrorSelectionUtensil mex);
 }
