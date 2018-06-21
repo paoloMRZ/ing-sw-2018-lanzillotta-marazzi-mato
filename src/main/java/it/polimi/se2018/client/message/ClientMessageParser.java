@@ -6,6 +6,13 @@ import java.util.List;
 
 public class ClientMessageParser {
 
+    private static final String SUCCESS = "success";
+    private static final String ERROR = "error";
+    private static final String START = "start";
+    private static final String UPDATE = "update";
+    private static final String NETWORK = "network";
+
+
     private ClientMessageParser(){}
 
     /**
@@ -14,7 +21,7 @@ public class ClientMessageParser {
      * @return true se è un messaggio di successo, false in caso contrario.
      */
     public static boolean isSuccessMessage(String message){
-        return message.split("/")[3].equals("success");
+        return message.split("/")[3].equals(SUCCESS);
     }
 
     /**
@@ -24,37 +31,37 @@ public class ClientMessageParser {
      * @return true se è un messaggio di errore, false in caso contrario.
      */
     public static boolean isErrorMessage(String message){
-        return message.split("/")[3].equals("error");
+        return message.split("/")[3].equals(ERROR);
     }
 
     /**
-     * Il metodo controlla se il messaggio passato è un messaggio di tipo "start".
+     * Il metodo controlla se il messaggio passato è un messaggio di tipo START.
      *
      * @param message messaggio da controllare.
      * @return true se è un messaggio di start, false in caso contrario.
      */
     public static boolean isStartMessage(String message){
-        return message.split("/")[3].equals("start");
+        return message.split("/")[3].equals(START);
     }
 
     /**
-     * Il metodo controlla se il messaggio passato è un messaggio di tipo "update".
+     * Il metodo controlla se il messaggio passato è un messaggio di tipo UPDATE.
      *
      * @param message messaggio da controllare.
      * @return true se è un messaggio di update, false in caso contrario.
      */
     public static boolean isUpdateMessage(String message){
-        return message.split("/")[3].equals("update");
+        return message.split("/")[3].equals(UPDATE);
     }
 
     /**
-     * Il metodo controlla se il messaggio passato è un messaggio di tipo "network".
+     * Il metodo controlla se il messaggio passato è un messaggio di tipo NETWORK.
      *
      * @param message messaggio da controllare.
      * @return true se è un messaggio di network, false in caso contrario.
      */
     public static boolean isNetworkMessage(String message){
-        return message.split("/")[3].equals("network");
+        return message.split("/")[3].equals(NETWORK);
     }
 
 
@@ -65,7 +72,7 @@ public class ClientMessageParser {
      * @return true se è un messaggio di conferma del posizionamento, false in caso contrario.
      */
     public static boolean isSuccessPutMessage(String message){
-        return message.split("/")[3].equals("success") && message.split("/")[4].equals("put") ;
+        return message.split("/")[3].equals(SUCCESS) && message.split("/")[4].equals("put") ;
     }
 
     /**
@@ -75,7 +82,7 @@ public class ClientMessageParser {
      * @return true se è un messaggio di errore del posizionamento, false in caso contrario.
      */
     public static boolean isErrorPutMessage(String message){
-        return message.split("/")[3].equals("error") && message.split("/")[4].equals("put") ;
+        return message.split("/")[3].equals(ERROR) && message.split("/")[4].equals("put") ;
     }
 
     /**
@@ -85,7 +92,7 @@ public class ClientMessageParser {
      * @return true se è un messaggio di conferma dell'attivazione, false in caso contrario.
      */
     public static boolean isSuccessActivateUtensilMessage(String message){
-        return message.split("/")[3].equals("success") && message.split("/")[4].equals("activate") ;
+        return message.split("/")[3].equals(SUCCESS) && message.split("/")[4].equals("activate") ;
     }
 
 
@@ -96,7 +103,7 @@ public class ClientMessageParser {
      * @return true se è un messaggio di conferma dell'utilizzo, false in caso contrario.
      */
     public static boolean isSuccessUseUtensilMessage(String message){
-        return message.split("/")[3].equals("success") && message.split("/")[4].equals("use") ;
+        return message.split("/")[3].equals(SUCCESS) && message.split("/")[4].equals("use") ;
     }
 
     /**
@@ -111,13 +118,23 @@ public class ClientMessageParser {
     }
 
     /**
+     * Il metodo controlla se il messaggio è un messaggio di errore riguardante l'uso di un utensile.
+     *
+     * @param message messaggio da controllare.
+     * @return true se è un messaggio di errore, false in caso contrario.
+     */
+    public static boolean isErrorUseUtensilMessage(String message){
+        return message.split("/")[3].equals(ERROR) && message.split("/")[4].equals("use") ;
+    }
+
+    /**
      * Il metodo controlla se il messaggio è un messaggio di errore dell'attivazione di un utensile.
      *
      * @param message messaggio da controllare.
      * @return true se è un messaggio di errore dell'attivazione, false in caso contrario.
      */
-    public static boolean isErrorUseUtensilMessage(String message){
-        return message.split("/")[3].equals("error") && message.split("/")[4].equals("utensil") ;
+    public static boolean isErrorActivateUtensilMessage(String message){
+        return message.split("/")[3].equals(ERROR) && message.split("/")[4].equals("activate") ;
     }
 
 
@@ -128,7 +145,7 @@ public class ClientMessageParser {
      * @return true se è un messaggio che invita il giocatore a scegliere una carta schema, false in caso contrario.
      */
     public static boolean isStartChoseSideMessage(String message){
-        return message.split("/")[3].equals("start") && message.split("/")[4].equals("chose_side");
+        return message.split("/")[3].equals(START) && message.split("/")[4].equals("chose_side");
     }
 
     /**
@@ -138,7 +155,7 @@ public class ClientMessageParser {
      * @return true se il messaggio trasporta gli obiettivi pubblici, false in caso contrario.
      */
     public static boolean isStartPublicObjectiveMessage(String message){
-        return message.split("/")[3].equals("start") && message.split("/")[4].equals("public_objective");
+        return message.split("/")[3].equals(START) && message.split("/")[4].equals("public_objective");
     }
 
     /**
@@ -148,7 +165,7 @@ public class ClientMessageParser {
      * @return true se il messaggio trasporta un obiettivo privato, false in caso contrario.
      */
     public static boolean isStartPrivateObjectiveMessage(String message){
-        return message.split("/")[3].equals("start") && message.split("/")[4].equals("private_objective");
+        return message.split("/")[3].equals(START) && message.split("/")[4].equals("private_objective");
     }
 
 
@@ -159,7 +176,7 @@ public class ClientMessageParser {
      * @return true se il messaggio trasporta le carte utensili, false in caso contrario.
      */
     public static boolean isStartUtensilMessage(String message){
-        return message.split("/")[3].equals("start") && message.split("/")[4].equals("utensil");
+        return message.split("/")[3].equals(START) && message.split("/")[4].equals("utensil");
     }
 
     /**
@@ -169,7 +186,7 @@ public class ClientMessageParser {
      * @return true se è un messaggio di inizializzazione false in caso contrario.
      */
     public static boolean isStartSideListMessage(String message){
-        return message.split("/")[3].equals("start") && message.split("/")[4].equals("side_list");
+        return message.split("/")[3].equals(START) && message.split("/")[4].equals("side_list");
     }
 
     /**
@@ -179,7 +196,7 @@ public class ClientMessageParser {
      * @return true se il messaggio notifica il cambio turno, false in caso contrario.
      */
     public static boolean isUpdateTurnMessage(String message){
-        return message.split("/")[3].equals("update") && message.split("/")[4].equals("turn");
+        return message.split("/")[3].equals(UPDATE) && message.split("/")[4].equals("turn");
     }
 
     /**
@@ -189,7 +206,7 @@ public class ClientMessageParser {
      * @return true se il messaggio notifica il cambio del round, false in caso conrtario.
      */
     public static boolean isUpdateRoundMessage(String message){
-        return message.split("/")[3].equals("update") && message.split("/")[4].equals("round");
+        return message.split("/")[3].equals(UPDATE) && message.split("/")[4].equals("round");
     }
 
     /**
@@ -199,7 +216,7 @@ public class ClientMessageParser {
      * @return true se il messaggio è un messaggio di aggiornamento della riserva, false in caso contrario.
      */
     public static boolean isUpdateReserveMessage(String message){
-        return message.split("/")[3].equals("update") && message.split("/")[4].equals("reserve");
+        return message.split("/")[3].equals(UPDATE) && message.split("/")[4].equals("reserve");
     }
 
     /**
@@ -209,7 +226,7 @@ public class ClientMessageParser {
      * @return true se il messaggio è un messaggio di aggiornamento della roundgrid, false in caso contrario.
      */
     public static boolean isUpdateRoundgridMessage(String message){
-        return message.split("/")[3].equals("update") && message.split("/")[4].equals("roundgrid");
+        return message.split("/")[3].equals(UPDATE) && message.split("/")[4].equals("roundgrid");
     }
 
     /**
@@ -219,7 +236,7 @@ public class ClientMessageParser {
      * @return true se il messaggio è un messaggio di aggiornamento di una carta schema, false in caso contrario.
      */
     public static boolean isUpdateSideMessage(String message){
-        return message.split("/")[3].equals("update") && message.split("/")[4].equals("side");
+        return message.split("/")[3].equals(UPDATE) && message.split("/")[4].equals("side");
     }
 
 
@@ -230,7 +247,7 @@ public class ClientMessageParser {
      * @return true se il messaggio notifica la connessione di un giocatore, false in caso contrario.
      */
     public static boolean isNewConnectionMessage(String message){
-        return message.split("/")[3].equals("network") && message.split("/")[4].equals("connected");
+        return message.split("/")[3].equals(NETWORK) && message.split("/")[4].equals("connected");
     }
 
     /**
@@ -240,7 +257,7 @@ public class ClientMessageParser {
      * @return true se il messaggio notifica la disconnessione di un giocatore, false in caso contrario.
      */
     public static boolean isClientDisconnectedMessage(String message){
-        return message.split("/")[3].equals("network") && message.split("/")[4].equals("disconnected");
+        return message.split("/")[3].equals(NETWORK) && message.split("/")[4].equals("disconnected");
     }
 
     /**
@@ -251,7 +268,7 @@ public class ClientMessageParser {
      * @return true se il messaggio notifica il fallito login, false in caso contrario.
      */
     public static boolean isErrorConnectionInvalidNicknameMessage(String message){
-        return message.split("/")[3].equals("network") && message.split("/")[4].equals("ko_nickname");
+        return message.split("/")[3].equals(NETWORK) && message.split("/")[4].equals("ko_nickname");
     }
 
     /**
@@ -262,7 +279,7 @@ public class ClientMessageParser {
      * @return true se il messaggio notifica il fallito login, false in caso contrario.
      */
     public static boolean isErrorConnectionGameStartedMessage(String message){
-        return message.split("/")[3].equals("network") && message.split("/")[4].equals("ko_gamestarted");
+        return message.split("/")[3].equals(NETWORK) && message.split("/")[4].equals("ko_gamestarted");
     }
 
 
