@@ -46,14 +46,15 @@ public class ServerMessageCreator {
      * Il messaggio restituito dal metodo indica che l'attivazione della carta utensile scelta dal client è andata a
      * buon fine.
      *
-     * @param addressee destinatario del messaggio.
-     * @param cardIndex indice che identifica la carta utensile scelta dal client.
-     * @param price     nuovo prezzo della carta utensile che è stata attivata.
+     * @param addressee  destinatario del messaggio.
+     * @param cardIndex  indice che identifica la carta utensile scelta dal client.
+     * @param cardNumber numero della carta utensile.
+     * @param price      nuovo prezzo della carta utensile che è stata attivata.
      * @return messaggio.
      */
-    public static String getActivateUtensilSuccessMessage(String addressee, String cardIndex, String cardNumber, String price, String playerFavours) {
-        return "/###/" + addressee + "/success/activate/" + cardIndex + "&" + cardNumber + "&" + price + "&" + playerFavours + "\n";
-    } //Todo modificare il relativo parser.
+    public static String getActivateUtensilSuccessMessage(String addressee, String cardIndex, String cardNumber, String price) {
+        return "/###/" + addressee + "/success/activate/" + cardIndex + "&" + cardNumber + "&" + price + "&" +"\n";
+    }
 
     /**
      * Il metodo restituisce un messaggio che indica che l'uso di una carta utensile è andato a buon fine.
@@ -68,10 +69,10 @@ public class ServerMessageCreator {
      */
     public static String getUseUtensilSuccessMessage(String addressee, String index, String param1, String param2) {
         return "/###/" + addressee + "/success/use/" + index + "&" + param1 + "&" + param2 + "\n";
-    } //TODO fare il parser relativo.
+    }
 
     /**
-     * Il messaggio restituito dal metodo indica che l'attivazione della carta utensile scelta dal client è andata a
+     * Il messaggio restituito dal metodo indica che l'uso della carta utensile scelta dal client non è andato a
      * buon fine.
      *
      * @param addressee destinatario del messaggio.
@@ -79,9 +80,20 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getUseUtensilErrorMessage(String addressee, String index) {
-        return "/###/" + addressee + "/error/utensil/" + index + "\n";
+        return "/###/" + addressee + "/error/use/" + index + "\n";
     }
 
+    /**
+     * Il messaggio restituito dal metodo indica che l'attivazione della carta utensile scelta dal client non è andato a
+     * buon fine.
+     *
+     * @param addressee destinatario del messaggio.
+     * @param index     indice che identifica la carta utensile scelta dal client.
+     * @return messaggio.
+     */
+    public static String getActivateUtensilErrorMessage(String addressee, String index) {
+        return "/###/" + addressee + "/error/activate/" + index + "\n";
+    }
     //Messaggi relativi all'avvio della partita.
 
 
@@ -112,13 +124,22 @@ public class ServerMessageCreator {
     }
 
 
-    public static String getUseUtensilEndMessage(String addressee, String index) {
-        return "/###/" + addressee + "/utensil/end/" + index + "\n";
+    /**
+     * Il metodo restituisce il messaggio da mandare al client avvisarlo che la fase di gioco della carta utensile è
+     * terminata.
+     *
+     * @param addressee destinatario del messaggio.
+     * @param index indice della carta utensile.
+     * @param playerFavours segnalini riamsti al giocatore dopo l'uso della carta.
+     * @return messaggio.
+     */
+    public static String getUseUtensilEndMessage(String addressee, String index, String playerFavours) {
+        return "/###/" + addressee + "/utensil/end/" + index + "&" + playerFavours + "\n";
     }
 
     /**
      * Il metodo restiruisce il messaggio da mendare ai client per aggiornarli riguardo la carta schema scelta da ogni giocatore.
-     * <p>
+     *
      * Attenzione: l'elenco dei nickname e l'elenco dei nomi devono essere ordinati. Il nome della carta scleta dal nickname
      * in posizione zero si deve trovare anch'essa in posizione zero nella lista dei nomi delle carte, e così via.
      *
