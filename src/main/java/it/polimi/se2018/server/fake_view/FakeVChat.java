@@ -103,7 +103,7 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
     }
     public void update(ErrorSelectionUtensil mex){
         //todo
-        //todo fake.messageOutBox(out);
+        fake.messageOutBox(ServerMessageCreator.getUseUtensilErrorMessage(mex.getPlayer(),String.valueOf(mex.getCard())));
     }
     public void update(SuccessColor mex){
         //todo discutere

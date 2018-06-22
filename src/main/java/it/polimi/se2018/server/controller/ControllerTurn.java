@@ -31,7 +31,6 @@ public class ControllerTurn implements ObserverTimer {
     private boolean setting=true;
     private boolean upDown=true;
     private boolean andata=true;
-    private boolean started=false;
     private boolean timeIsOn=false;
 
 
@@ -65,25 +64,19 @@ public class ControllerTurn implements ObserverTimer {
         firstPlayer = lobby.callPlayerByNumber(caller).getName();
         round = round + 1;
         controller.getcChat().notifyObserver(new UpdateM(turnOf,"round",String.valueOf(round)));
-        if(!started) {
-            started=true;
-            setTurn();
-        }
-        else {
-            isGameFinished();
-            setTurn();
-        }
+
+        isGameFinished();
+        setTurn();
+
     }
 
-    private void setTurn() throws InvalidHowManyTimes, InvalidValueException {
-
-        if(turnOf!=null) lobby.callPlayerByName(turnOf).setIsMyTurner();
+    private void setTurn() throws InvalidHowManyTimes {
 
         if(lobby.callPlayerByNumber(caller).canYouPlay()) {//determina se un giocatore è stato disconnesso
             turnOf = lobby.callPlayerByNumber(caller).getName();
             recorder(turnOf);
             lobby.callPlayerByNumber(caller).reductor();
-            lobby.callPlayerByNumber(caller).setIsMyTurner();
+            lobby.rotatingPlayerTurn(caller);
             sagradaTimer.start();
             timeIsOn = true;
             controller.getcChat().notifyObserver(new UpdateM(turnOf,"turn",turnOf));
@@ -98,7 +91,9 @@ public class ControllerTurn implements ObserverTimer {
             sagradaTimer.stop();
             timeIsOn=false;
             controller.getcChat().notifyObserver( new TimeIsUp(turnOf));
-            if(!lobby.callPlayerByNumber(caller).getDidPlayDie() && !lobby.callPlayerByNumber(caller).getDidPlayCard()) lobby.callPlayerByNumber(caller).forget();
+            if(!lobby.callPlayerByNumber(caller).getDidPlayDie() && !lobby.callPlayerByNumber(caller).getDidPlayCard()){
+                lobby.callPlayerByNumber(caller).forget();
+            }
 
             if(!andata && turnOf.equals(firstPlayer) ){
                 andata = true;
@@ -133,12 +128,13 @@ public void setThePlayers() throws InvalidValueException {
     private void anotherPlayer() throws InvalidValueException{
 
             turnOf = lobby.callPlayerByNumber(caller).getName();
-            lobby.callPlayerByNumber(caller).setIsMyTurner();
+             lobby.rotatingPlayerTurn(caller);
 
             sagradaTimer.start();
             timeIsOn = true;
 
-            lobby.callPlayerByName(turnOf).ask();
+             getTurn().ask();
+             lobby.showPrivate(turnOf);
             //parte il timer
 
     }
@@ -150,11 +146,10 @@ public void setThePlayers() throws InvalidValueException {
             timeIsOn=false;
             controller.getcChat().notifyObserver( new TimeIsUp(turnOf));
 
-            if(lobby.callPlayerByName(turnOf).getMySide()==null) lobby.callPlayerByNumber(caller).forgetForever();
-
-            lobby.callPlayerByNumber(caller).setIsMyTurner();
+            if(getTurn().getMySide()==null) lobby.callPlayerByNumber(caller).forgetForever();
 
             if(caller!=lobby.peopleCounter()-1 ){
+                lobby.showEnemiesChoice();
                 resetQualities();
             }
             else {
@@ -221,7 +216,7 @@ public void setThePlayers() throws InvalidValueException {
         }
 
     }
-    private void resetQualities() throws Exception {
+    private void resetQualities(){
         round=0;
         turnOf=null;
         firstPlayer=null;
@@ -232,10 +227,8 @@ public void setThePlayers() throws InvalidValueException {
 
         upDown=true;
         andata=true;
-        started=false;
         timeIsOn=false;
         setting=false;
-        setRound();
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

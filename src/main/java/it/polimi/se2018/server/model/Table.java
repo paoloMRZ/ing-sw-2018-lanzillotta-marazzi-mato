@@ -313,6 +313,12 @@ public class Table {
         setStartMexUtensils();
 
     }
+    public void rotatingPlayerTurn(int call){
+        for (Player p :playersList){
+            if(p.getIsMyTurn()) p.setIsMyTurner();
+        }
+        callPlayerByNumber(call).setIsMyTurner();
+    }
 ////////////////////////////////////////////////////////////////////////////////
     public void refresh(UpdateReq m){
         launchCommunication(reserve.updateForcer(m));
@@ -370,7 +376,7 @@ public class Table {
 
         launchCommunication(new UpdateM(null,"utensils",message));
     }
-    private void showEnemiesChoice(){
+    public void showEnemiesChoice(){
         String content= "";
         for(int i=0;i<playersList.size();i++){
             content=content.concat(playersList.get(i).getMySide().getName());

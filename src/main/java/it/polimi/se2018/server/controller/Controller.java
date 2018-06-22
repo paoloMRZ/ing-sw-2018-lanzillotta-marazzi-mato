@@ -332,6 +332,11 @@ public class Controller{
     public boolean messageComingChecking(EventMVC m){
         return cTurn.messageComingChecking(m);
     }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void START() throws Exception {
+        cTurn.setThePlayers();
+        cTurn.setRound();
+    }
 
 
 }
