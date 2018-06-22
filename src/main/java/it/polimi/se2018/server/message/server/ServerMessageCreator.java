@@ -50,10 +50,11 @@ public class ServerMessageCreator {
      * @param cardIndex  indice che identifica la carta utensile scelta dal client.
      * @param cardNumber numero della carta utensile.
      * @param price      nuovo prezzo della carta utensile che è stata attivata.
+     * @param favours
      * @return messaggio.
      */
-    public static String getActivateUtensilSuccessMessage(String addressee, String cardIndex, String cardNumber, String price) {
-        return "/###/" + addressee + "/success/activate/" + cardIndex + "&" + cardNumber + "&" + price + "&" +"\n";
+    public static String getActivateUtensilSuccessMessage(String addressee, String cardIndex, String cardNumber, String price, String favours) {
+        return "/###/" + addressee + "/success/activate/" + cardIndex + "&" + cardNumber + "&" + price + "&" + favours+"\n";
     }
 
     /**
@@ -80,7 +81,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getUseUtensilErrorMessage(String addressee, String index) {
-        return "/###/" + addressee + "/error/use/" + index + "\n";
+        return "/###/" + addressee + "/error/use/" + index +"\n";
     }
 
     /**
@@ -89,10 +90,13 @@ public class ServerMessageCreator {
      *
      * @param addressee destinatario del messaggio.
      * @param index     indice che identifica la carta utensile scelta dal client.
+     * @param cardNumber numero della carta
+     * @param cardPrice prezzo della carta in una determinata fase
+     * @param favours favori del giocatore
      * @return messaggio.
      */
-    public static String getActivateUtensilErrorMessage(String addressee, String index) {
-        return "/###/" + addressee + "/error/activate/" + index + "\n";
+    public static String getActivateUtensilErrorMessage(String addressee, String index, String cardNumber, String cardPrice, String favours ) {
+        return "/###/" + addressee + "/error/activate/" + index + "&"+ cardNumber + "&"+ cardPrice + "&"+ favours+  "\n";
     }
     //Messaggi relativi all'avvio della partita.
 
@@ -130,11 +134,13 @@ public class ServerMessageCreator {
      *
      * @param addressee destinatario del messaggio.
      * @param index indice della carta utensile.
-     * @param playerFavours segnalini riamsti al giocatore dopo l'uso della carta.
+     * @param cardNumber numero della carta
+     * @param cardPrice prezzo della carta in una determinata fase
+     * @param favours favori del giocatore
      * @return messaggio.
      */
-    public static String getUseUtensilEndMessage(String addressee, String index, String playerFavours) {
-        return "/###/" + addressee + "/utensil/end/" + index + "&" + playerFavours + "\n";
+    public static String getUseUtensilEndMessage(String addressee, String index, String cardNumber, String cardPrice, String favours ){
+        return "/###/" + addressee + "/utensil/end/" + index + "&"+ cardNumber + "&"+ cardPrice + "&"+ favours+  "\n";
     }
 
     /**

@@ -52,8 +52,7 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
     private boolean checker(EventMVC mex){
 
             if(controller.messageComingChecking(mex)){
-                if(mex.getPlayer().equals(controller.getTurn().getName())) return true;
-                else return  false;
+                return mex.getPlayer().equals(controller.getTurn().getName());
             }
             else{notifyObserver( new TimeIsUp(mex.getPlayer()));
                  return false;

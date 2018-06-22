@@ -1,6 +1,7 @@
 package it.polimi.se2018.server.network;
 
 
+import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.exceptions.ConnectionCloseException;
 import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
@@ -24,6 +25,7 @@ import java.util.List;
  */
 public class Lobby implements ObserverTimer, FakeClientObserver {
     private FakeView fakeView;
+    private Controller controller;
     private int numberOfClient;
     private ArrayList<FakeClient> connections;
     private SagradaTimer timer;
@@ -51,8 +53,10 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
     private void createGame(){
         this.isOpen = false; //Come prima cosa chiudo la lobby.
         this.timer.stop(); //Fermo il timer.
-        fakeView = new FakeView(); //Creo MVC.
-
+        fakeView = new FakeView(this); //Creo MVC.
+        //todo guardare come far partire il gioco
+        //controller = new Controller(getNicknames());
+        //controller.START();
         //Todo le cose quì sono solo di prova.
         String msgSideSimone = "/###/simone/start/chose_side/kaleidoscopic-dream&1&virtus&1&aurorae-magnificus&1&via-lux&1\n";
         String msgSidePaolo = "/###/paolo/start/chose_side/sun-catcher&1&bellesguard&1&firmitas&1&aurora-sagradis&1\n";

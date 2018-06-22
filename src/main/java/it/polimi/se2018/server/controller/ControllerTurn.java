@@ -37,7 +37,7 @@ public class ControllerTurn implements ObserverTimer {
     public ControllerTurn(Table table,Controller controller){
         this.lobby=table;
         this.controller=controller;
-        this.numbOfPlayers=lobby.peopleCounter();;
+        this.numbOfPlayers=lobby.peopleCounter();
         this.sagradaTimer=new SagradaTimer(60);
         sagradaTimer.add(this);
     }

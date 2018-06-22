@@ -123,7 +123,7 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
         ));
     }
     public void update(SuccessActivationFinalized mex){
-        fake.messageOutBox(ServerMessageCreator.getActivateUtensilSuccessMessage(
+        fake.messageOutBox(ServerMessageCreator.getUseUtensilEndMessage(
                 mex.getPlayer(),
                 String.valueOf(mex.getIndex()),
                 String.valueOf(mex.getMyNumber()),
@@ -133,7 +133,7 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
     }
 
     public void update(ErrorActivation mex){
-        fake.messageOutBox(ServerMessageCreator.getActivateUtensilSuccessMessage(
+        fake.messageOutBox(ServerMessageCreator.getActivateUtensilErrorMessage(
                 mex.getPlayer(),
                 String.valueOf(mex.getIndex()),
                 String.valueOf(mex.getMyNumber()),

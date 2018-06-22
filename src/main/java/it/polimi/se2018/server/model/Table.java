@@ -318,6 +318,12 @@ public class Table {
             if(p.getIsMyTurn()) p.setIsMyTurner();
         }
         callPlayerByNumber(call).setIsMyTurner();
+        toggleToResetUtensils();
+    }
+    private void toggleToResetUtensils(){
+        for (Utensils u : utensilsDeck){
+            if(u.getIsBusy()) u.setTheUse();
+        }
     }
 ////////////////////////////////////////////////////////////////////////////////
     public void refresh(UpdateReq m){
