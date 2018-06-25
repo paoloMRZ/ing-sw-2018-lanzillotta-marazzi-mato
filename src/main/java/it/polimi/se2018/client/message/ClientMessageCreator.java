@@ -47,8 +47,8 @@ public class ClientMessageCreator {
         return "/" + sender + "/###/update/turn/?\n";
     }
 
-    public static String getUseUtensilMessage(String sender, String cardIndex ,List<String> paramList){
-        String message = "/" + sender + "/###/utensil/use/" + cardIndex ; //TODO da modificare dopo !!!
+    public static String getUseUtensilMessage(String sender, String cardIndex, String numberCard, List<String> paramList){
+        String message = "/" + sender + "/###/utensil/use/" + cardIndex + "&" + numberCard;
 
         for(String param: paramList)
             message = message.concat("&" + param);

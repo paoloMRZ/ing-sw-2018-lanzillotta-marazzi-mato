@@ -50,19 +50,18 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
     /**
      * Questa classe crea il "triangolo MVC" richiamando il costruttore della fake view.
      */
-    private void createGame(){
+    private void createGame() {
         this.isOpen = false; //Come prima cosa chiudo la lobby.
         this.timer.stop(); //Fermo il timer.
         fakeView = new FakeView(this); //Creo MVC.
-        //todo guardare come far partire il gioco
-        //controller = new Controller(getNicknames());
-        //controller.START();
-        //Todo le cose quì sono solo di prova.
-        String msgSideSimone = "/###/simone/start/chose_side/kaleidoscopic-dream&1&virtus&1&aurorae-magnificus&1&via-lux&1\n";
-        String msgSidePaolo = "/###/paolo/start/chose_side/sun-catcher&1&bellesguard&1&firmitas&1&aurora-sagradis&1\n";
 
-        this.notifyFromFakeView(msgSidePaolo);
-        this.notifyFromFakeView(msgSideSimone);
+        controller = new Controller(getNicknames());
+        try {
+            controller.START();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -224,7 +223,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
      * @throws InvalidNicknameException viene sollevata se il nickname del fake client da inserire è già utilizzato da un altro fake client contenuto nella lobby.
      * @throws GameStartedException viene sollevata se si tenta di aggiungere un nuovo fake client alla lobby quando la partita è già inizita.
      */
-    public synchronized void add (FakeClient connection) throws GameStartedException, InvalidNicknameException {
+    public synchronized void add (FakeClient connection) throws InvalidNicknameException, GameStartedException {
 
         if (getNicknames().contains(connection.getNickname())) { //Controlle se esiste un client con lo stesso nick.
 
@@ -267,7 +266,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
             else
                 freezeFakeClient(NetworkMessageParser.getMessageAddressee(message));
         }  else {
-            //TODO in tutti gli altri casi devo girare il messaggio al controller.
+            fakeView.messageIncoming(message);
         }
     }
 

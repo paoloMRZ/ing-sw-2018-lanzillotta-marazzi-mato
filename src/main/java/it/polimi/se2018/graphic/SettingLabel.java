@@ -17,8 +17,10 @@ public class SettingLabel implements ChangeListener<String> {
 
 
     private static final String STYLELABEL = "-fx-background-color: transparent;";
+    private static final String EXTENSION = ".png";
+    private static final String SUBDIRECTORY = "/iconPack/";
     private static final int SPACE = 10;
-    private HBox settingLabel;
+    private HBox settingHBox;
     private HBox nickNameLabel;
     private HBox favoursLabel;
     private HBox actionLabel;
@@ -26,7 +28,6 @@ public class SettingLabel implements ChangeListener<String> {
     private TextField turnOf = new TextField();
     private TextField favours = new TextField();
     private TextField action = new TextField();
-    private boolean isFirstUse = true;
 
     public SettingLabel(String nickName, String action, String favours, String turnOf){
 
@@ -34,14 +35,14 @@ public class SettingLabel implements ChangeListener<String> {
         this.favours.setText(favours);
         this.turnOf.setText(turnOf);
 
-        nickNameLabel = configureNode(SPACE,"iconPack/icon-sagrada",55,55,nickName,32);
-        favoursLabel = configureNode(SPACE,"iconPack/icon-favours",55,55,favours,32);
-        actionLabel = configureNode(SPACE,"iconPack/icon-mosse",55,55,action,32);
-        turnOfLabel = configureNode(SPACE,"iconPack/icon-player",53,53,turnOf,25);
+        nickNameLabel = configureNode(SPACE,"icon-sagrada",55,55,nickName,24);
+        favoursLabel = configureNode(SPACE,"icon-favours",55,55,favours,24);
+        actionLabel = configureNode(SPACE,"icon-mosse",55,55,action,24);
+        turnOfLabel = configureNode(SPACE,"icon-player",53,53,turnOf,24);
 
-        settingLabel = new HBox(40);
-        settingLabel.setStyle(STYLELABEL);
-        settingLabel.getChildren().addAll(nickNameLabel,favoursLabel,actionLabel,turnOfLabel);
+        settingHBox = new HBox(30);
+        settingHBox.setStyle(STYLELABEL);
+        settingHBox.getChildren().addAll(nickNameLabel,favoursLabel,actionLabel,turnOfLabel);
 
         }
 
@@ -52,41 +53,43 @@ public class SettingLabel implements ChangeListener<String> {
             TextField textField = (TextField) textProperty.getBean();
 
             if(textField == turnOf){
-                turnOfLabel = configureNode(SPACE,"iconPack/icon-player",55,55,newValue,28);
-                settingLabel = new HBox(nickNameLabel,favoursLabel,actionLabel,turnOfLabel);
-                settingLabel.setSpacing(40d);
-                settingLabel.setStyle(STYLELABEL);
+                turnOfLabel = configureNode(SPACE,"icon-player",55,55,newValue,24);
+                settingHBox = new HBox(nickNameLabel,favoursLabel,actionLabel,turnOfLabel);
+                settingHBox.setSpacing(30d);
+                settingHBox.setStyle(STYLELABEL);
             }
 
             else if(textField == favours){
-                favoursLabel = configureNode(SPACE,"iconPack/icon-favours",55,55,newValue,32);
-                settingLabel = new HBox(nickNameLabel,favoursLabel,actionLabel,turnOfLabel);
-                settingLabel.setSpacing(40d);
-                settingLabel.setStyle(STYLELABEL);
+                favoursLabel = configureNode(SPACE,"icon-favours",55,55,newValue,24);
+                settingHBox = new HBox(nickNameLabel,favoursLabel,actionLabel,turnOfLabel);
+                settingHBox.setSpacing(30d);
+                settingHBox.setStyle(STYLELABEL);
             }
 
             else if(textField == action){
-                actionLabel = configureNode(SPACE,"iconPack/icon-mosse",55,55,newValue,32);
-                settingLabel = new HBox(nickNameLabel,favoursLabel,actionLabel,turnOfLabel);
-                settingLabel.setSpacing(40d);
-                settingLabel.setStyle(STYLELABEL);
+                actionLabel = configureNode(SPACE,"icon-mosse",55,55,newValue,24);
+                settingHBox = new HBox(nickNameLabel,favoursLabel,actionLabel,turnOfLabel);
+                settingHBox.setSpacing(30d);
+                settingHBox.setStyle(STYLELABEL);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    private HBox configureNode(int spaceHBox, String path, int requestedWidth, int requestedHeight, String text, int sixeText){
+    private HBox configureNode(int spaceHBox, String nameResources, int requestedWidth, int requestedHeight, String text, int sizeText){
         HBox node = new HBox(spaceHBox);
-        ImageView iconPlayer = configureImageView(path,requestedWidth,requestedHeight);
-        Label labelName = setFontStyle(new Label(text),sixeText);
+        ImageView iconPlayer = configureImageView(SUBDIRECTORY,nameResources,EXTENSION,requestedWidth,requestedHeight);
+        iconPlayer.setFitWidth(35);
+        iconPlayer.setFitHeight(35);
+        Label labelName = setFontStyle(new Label(text),sizeText);
         node.getChildren().addAll(iconPlayer,labelName);
         node.setAlignment(Pos.CENTER);
         return node;
     }
 
     public HBox getSettingLabel() {
-        return settingLabel;
+        return settingHBox;
     }
 
     public void updateTurn(String turnOf){
@@ -97,11 +100,7 @@ public class SettingLabel implements ChangeListener<String> {
         changed(action.textProperty(),this.action.getText(),String.valueOf(parseInt(this.action.getText())-1));
     }
 
-    public void updateFavours(){
-            if(isFirstUse) {
-                changed(favours.textProperty(),this.favours.getText(),String.valueOf(parseInt(this.favours.getText())-1));
-                isFirstUse = false;
-            }
-            else  changed(favours.textProperty(),this.favours.getText(),String.valueOf(parseInt(this.favours.getText())-2));
+    public void updateFavours(String updateFavours){
+        changed(favours.textProperty(),this.favours.getText(),String.valueOf(parseInt(updateFavours)));
     }
 }

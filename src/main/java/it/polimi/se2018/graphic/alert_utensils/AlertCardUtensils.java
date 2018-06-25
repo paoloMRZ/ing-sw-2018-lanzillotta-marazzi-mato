@@ -1,9 +1,11 @@
 package it.polimi.se2018.graphic.alert_utensils;
 
 import it.polimi.se2018.client.connection_handler.ConnectionHandler;
-import it.polimi.se2018.graphic.alert_box.AlertValidation;
+import it.polimi.se2018.client.message.ClientMessageCreator;
+import it.polimi.se2018.graphic.CardCreatorLabel;
 import it.polimi.se2018.graphic.ReserveLabel;
 import it.polimi.se2018.graphic.SideCardLabel;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -18,22 +20,66 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
 import static it.polimi.se2018.graphic.Utility.*;
 
+
+/**
+ * Classe che rappresenta un ALertBox relativo alle carte Utensili. A seguito del click sul pulsante "USA UTENSILE" del Parent, viene visualizzata una finestra in cui l'utente può
+ * interagire con le carte Utensili disponibili nella partita, scegliendone poi una per la sua attivazione.
+ *
+ * @author  Simone Lanzillotta
+ *
+ */
+
+
 public class AlertCardUtensils {
 
-    private static String selection;
-    private static HashMap<StackPane, Boolean> cardHash = new HashMap<>();
-    private static Group groupCard;
-    private static ArrayList<String> nameOfCard = new ArrayList<>();
+    private static final String EXTENSION = ".png";
+    private static final String SUBDIRECTORY = "";
 
-    public static void display(String title, String message, List<String> cardUtensils, ConnectionHandler connectionHandler, ReserveLabel reserve, Boolean useUtensils, SideCardLabel playerSide){
+    private String selection;
+    private HashMap<StackPane, Boolean> cardHash = new HashMap<>();
+    private Group groupCard;
 
-        Stage window = new Stage();
+    private CardCreatorLabel cardUtensils;
+    private ConnectionHandler connectionHandler;
+    private ReserveLabel reserve;
+    private SideCardLabel playerSide;
+    private Stage window;
+
+
+    /**
+     * Costruttore della classe
+     *
+     * @param cardUtensils Riferimento alla collezione di carte Utensili disponibile nella partita
+     * @param connectionHandler Riferimento all'oggetto ConnectionHandler rappresentante il giocatore
+     * @param reserve Riferimento alla riserva attuale
+     * @param playerSide Riferimento alla carta Side del giocatore
+     */
+
+    public AlertCardUtensils(CardCreatorLabel cardUtensils, ConnectionHandler connectionHandler, ReserveLabel reserve, SideCardLabel playerSide){
+        this.cardUtensils = cardUtensils;
+        this.connectionHandler = connectionHandler;
+        this.reserve = reserve;
+        this.playerSide = playerSide;
+    }
+
+
+    /**
+     * Metodo che configura la finestra che permette la visualizzazione delle carte Utensili disponibili
+     *
+     * @param title Titolo della finestra
+     * @param message Header della finestra
+     */
+
+    public void display(String title, String message){
+
+
+        window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
         window.setWidth(1200);
@@ -48,67 +94,41 @@ public class AlertCardUtensils {
         rect.setStrokeWidth(5d);
         groupCard.getChildren().add(rect);
 
-        ImageView backWindow = configureImageView("cardUtensils/retro", 754,1049);
+        ImageView backWindow = configureImageView("/cardUtensils/","retro", EXTENSION,  754,1049);
         backWindow.setFitHeight(1200);
         backWindow.setFitWidth(1500);
         backWindow.setOpacity(0.4);
-
 
 
         //Label Text
         Label labelText = setFontStyle(new Label(message),40);
         labelText.setAlignment(Pos.CENTER);
 
+
         //Layout Button
-        ImageView backButton = shadowEffect(configureImageView("button-back",160,80));
-        ImageView continueButton = shadowEffect(configureImageView("button-continue",180,80));
+        ImageView backButton = shadowEffect(configureImageView(SUBDIRECTORY,"button-back",EXTENSION,160,80));
+        ImageView continueButton = shadowEffect(configureImageView(SUBDIRECTORY,"button-continue",EXTENSION,180,80));
         backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> window.close());
-        continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+        continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> connectionHandler.sendToServer(ClientMessageCreator.getActivateUtensilMessage(connectionHandler.getNickname(), selection)));
+        HBox layoutButton = new HBox(25);
+        layoutButton.getChildren().addAll(backButton, continueButton);
+        layoutButton.setAlignment(Pos.CENTER);
 
-            //connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), selection, null));
-
-            if(useUtensils) {
-                ActionUtensils actionUtensils = new ActionUtensils(String.valueOf(cardUtensils.get(Integer.parseInt(selection))), reserve, connectionHandler,selection, playerSide);
-                Scene scene = new Scene(actionUtensils.getWindow());
-                window.setWidth(1200);
-                window.setHeight(900);
-                window.centerOnScreen();
-                window.setScene(scene);
-            }
-
-            else {
-                AlertValidation.display("Errore", "Non puoi usare questa carta!");
-                window.close();
-            }
-        });
-
-        HBox layuotButton = new HBox(25);
-        layuotButton.getChildren().addAll(backButton, continueButton);
-        layuotButton.setAlignment(Pos.CENTER);
 
         //Layout card
         HBox layoutCard = new HBox(40);
         layoutCard.setAlignment(Pos.CENTER);
 
-        for (String card:cardUtensils) {
+        for (String card:cardUtensils.getCardName()) {
             VBox vbox = new VBox(10);
             StackPane node = new StackPane();
             node.setPrefSize(302,452);
 
-            ImageView item = shadowEffect(configureImageView(card,302,452));
+            ImageView item = shadowEffect(configureImageView("/cardUtensils/",card,EXTENSION,302,452));
             cardHash.put(node, false);
             item.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-
-                if(!cardHash.get(node)){
-                    node.getChildren().add(groupCard);
-                    cardHash.replace(node, false, true);
-                }
-                else {
-                    node.getChildren().remove(groupCard);
-                    cardHash.replace(node, true, false);
-                }
-
-                selection = String.valueOf(cardUtensils.indexOf(card));
+                setFocusStyle(cardHash,node,groupCard);
+                selection = String.valueOf(cardUtensils.getCardName().indexOf(card));
             });
 
             //TODO: modificare aggiornamento con listener
@@ -125,13 +145,35 @@ public class AlertCardUtensils {
         //Layout finale
         VBox layoutFinal = new VBox(37);
         layoutFinal.setAlignment(Pos.CENTER);
-        layoutFinal.getChildren().addAll(labelText, layoutCard, layuotButton);
+        layoutFinal.getChildren().addAll(labelText, layoutCard, layoutButton);
 
         baseWindow.getChildren().addAll(backWindow, layoutFinal);
 
         Scene scene = new Scene(baseWindow);
         window.setScene(scene);
         window.showAndWait();
+    }
+
+
+    /**
+     * Metodo richiamato a seguito della convalida da parte del server dell'utilizo della carta Utensile selezionata
+     *
+     */
+
+    public void launchExecutionUtensil(){
+        ActionUtensils actionUtensils = null;
+        try {
+            actionUtensils = new ActionUtensils(cardUtensils.getDictionaryUtensils(),String.valueOf(cardUtensils.getCardName().get(Integer.parseInt(selection))), reserve, connectionHandler,selection, playerSide, window);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        Scene scene = new Scene(actionUtensils.getWindow());
+        window.setWidth(1200);
+        window.setHeight(900);
+        window.centerOnScreen();
+
+        Platform.runLater(() -> window.setScene(scene));
+
     }
 
 }

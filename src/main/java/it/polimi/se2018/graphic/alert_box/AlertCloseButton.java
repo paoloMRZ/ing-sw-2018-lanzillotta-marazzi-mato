@@ -26,7 +26,7 @@ public class AlertCloseButton{
         Label label = Utility.setFontStyle(new Label(),25);
         label.setText(messagge);
 
-        ImageView continueButton = shadowEffect(configureImageView("button-continue", 178, 81));
+        ImageView continueButton = shadowEffect(configureImageView("","button-continue", ".png", 178, 81));
 
         continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             answer = true;

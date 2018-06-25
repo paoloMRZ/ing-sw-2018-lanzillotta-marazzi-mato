@@ -27,7 +27,7 @@ public class AlertValidation{
         label.setText(message);
         label.setTextAlignment(TextAlignment.CENTER);
 
-        ImageView backButton = shadowEffect(configureImageView("button-back",128,61));
+        ImageView backButton = shadowEffect(configureImageView("","button-back", ".png",128,61));
         backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> window.close());
 
         VBox layout = new VBox(10);

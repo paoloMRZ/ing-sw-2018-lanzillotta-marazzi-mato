@@ -13,38 +13,44 @@ import static it.polimi.se2018.graphic.Utility.*;
 
 public class ButtonGameLabel {
 
+    private static final String EXTENSION = ".png";
+    private static final String SUBDIRECTORY = "";
+
     private VBox labelButtonGame;
     private ImageView buttonGame;
     private ImageView buttonUtensils;
     private ImageView buttonTurn;
-    private Boolean useUtensils = true;
+    private AlertCardUtensils alertCardUtensils;
+
 
 
     public ButtonGameLabel(ConnectionHandler connectionHandler, ReserveLabel reserve, SideCardLabel playerSide, CardCreatorLabel cardUtensils){
-        buttonGame = shadowEffect(configureImageView("button-game-die", 352, 104));
-        buttonGame.setFitWidth(250);
-        buttonGame.setFitHeight(80);
+
+        alertCardUtensils = new AlertCardUtensils(cardUtensils,connectionHandler,reserve,playerSide);
+        buttonGame = shadowEffect(configureImageView(SUBDIRECTORY,"button-game-die", EXTENSION,352, 104));
+        buttonGame.setFitWidth(180);
+        buttonGame.setFitHeight(60);
         buttonGame.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             connectionHandler.sendToServer(ClientMessageCreator.getPutDiceMessage(connectionHandler.getNickname(), reserve.getPos(), playerSide.getPosX(), playerSide.getPosY()));
         });
 
-        buttonUtensils = Utility.shadowEffect(configureImageView("button-game-utensil", 352, 104));
-        buttonUtensils.setFitWidth(250);
-        buttonUtensils.setFitHeight(80);
-        buttonUtensils.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> AlertCardUtensils.display("Sagrada", "Scegli al carta che vuoi attivare", cardUtensils.getCardName(), connectionHandler, reserve, useUtensils, playerSide));
+        buttonUtensils = shadowEffect(configureImageView(SUBDIRECTORY,"button-game-utensil",EXTENSION, 352, 104));
+        buttonUtensils.setFitWidth(180);
+        buttonUtensils.setFitHeight(60);
+        buttonUtensils.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> alertCardUtensils.display("Sagrada", "Scegli al carta che vuoi attivare"));
 
-        buttonTurn = Utility.shadowEffect(configureImageView("button-game-turn", 352, 104));
-        buttonTurn.setFitWidth(250);
-        buttonTurn.setFitHeight(80);
+        buttonTurn = shadowEffect(configureImageView(SUBDIRECTORY,"button-game-turn",EXTENSION, 352, 104));
+        buttonTurn.setFitWidth(180);
+        buttonTurn.setFitHeight(60);
         buttonTurn.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
             connectionHandler.sendToServer(ClientMessageCreator.getPassTurnMessage(connectionHandler.getNickname()));
         });
 
 
-        labelButtonGame = new VBox(20);
+        labelButtonGame = new VBox(10);
         labelButtonGame.setAlignment(Pos.CENTER);
 
-        HBox labelButton = new HBox(40);
+        HBox labelButton = new HBox(30);
         labelButton.setAlignment(Pos.CENTER);
         labelButton.getChildren().addAll(buttonGame, buttonUtensils);
 
@@ -55,8 +61,7 @@ public class ButtonGameLabel {
         return labelButtonGame;
     }
 
-    public void setUseUtensils(boolean value){
-        this.useUtensils = value;
+    public AlertCardUtensils getAlertCardUtensils() {
+        return alertCardUtensils;
     }
-
 }

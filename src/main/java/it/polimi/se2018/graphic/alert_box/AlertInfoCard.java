@@ -23,8 +23,10 @@ import java.util.List;
 
 public class AlertInfoCard {
 
-    private static ArrayList<String> nameCard = new ArrayList<>();
+    private static final String EXTENSION = ".png";
 
+    private static ArrayList<String> nameCard = new ArrayList<>();
+    private static String infoData;
 
     public static void display(List<String> cardSelection, String path){
 
@@ -32,14 +34,14 @@ public class AlertInfoCard {
         window.setWidth(650);
         window.setHeight(770);
 
-        ImageView back = configureImageView(path + "/retro",700,850);
+        ImageView back = configureImageView(path, "retro", EXTENSION,700,850);
         back.setOpacity(0.2);
 
         ArrayList<ImageView> imageCard = new ArrayList<>();
         ArrayList<Label> labelName = new ArrayList<>();
 
         for (String card: cardSelection) {
-            imageCard.add(configureImageView(card,300,450));
+            imageCard.add(configureImageView(path, card, EXTENSION,300,450));
             String[] slashSplit = card.split("/");
             String[] stretchSplit = slashSplit[1].split("-");
 
@@ -74,13 +76,13 @@ public class AlertInfoCard {
 
 
 
-        view1.getChildren().addAll(setOpacity(setRotation(180d),0.6),imageCard.get(0),shadowEffect(setActionOnImage(labelView2,labelView1,root,0d)));
+        view1.getChildren().addAll(setOpacity(setRotation(180d),0.6),imageCard.get(0),shadowEffect(setActionOnImage(labelView2,labelView1,root,0d,false,null)));
         view1.setAlignment(Pos.CENTER);
 
-        view2.getChildren().addAll(shadowEffect(setActionOnImage(labelView1,labelView2,root,180d)),imageCard.get(1),shadowEffect(setActionOnImage(labelView3,labelView2,root,0d)));
+        view2.getChildren().addAll(shadowEffect(setActionOnImage(labelView1,labelView2,root,180d,false,null)),imageCard.get(1),shadowEffect(setActionOnImage(labelView3,labelView2,root,0d,false,null)));
         view2.setAlignment(Pos.CENTER);
 
-        view3.getChildren().addAll(shadowEffect(setActionOnImage(labelView2,labelView3,root,180d)),imageCard.get(2),setOpacity(setRotation(0d),0.6));
+        view3.getChildren().addAll(shadowEffect(setActionOnImage(labelView2,labelView3,root,180d,false,null)),imageCard.get(2),setOpacity(setRotation(0d),0.6));
         view3.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(root);
@@ -90,7 +92,7 @@ public class AlertInfoCard {
     }
 
 
-    private static ImageView setActionOnImage(Node switchWindow, Node actualWindow, StackPane root, Double rotate){
+    public static ImageView setActionOnImage(Node switchWindow, Node actualWindow, StackPane root, Double rotate, Boolean accessUtensil, ImageView dieUtensil){
         ImageView button = new ImageView(new Image("iconPack/icon-next.png",80,80,false,true));
         button.setRotate(rotate);
         button.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
@@ -102,32 +104,37 @@ public class AlertInfoCard {
             KeyFrame end = new KeyFrame(Duration.millis(0.1),
                     new KeyValue(switchWindow.translateXProperty(), 0),
                     new KeyValue(actualWindow.translateXProperty(), -width));
+
+            if(accessUtensil) infoData = dieUtensil.getUserData().toString();
             Timeline slide = new Timeline(start, end);
             slide.setOnFinished(ex -> root.getChildren().remove(actualWindow));
             slide.play();
         });
-
         return button;
     }
 
-    private static ImageView setOpacity(ImageView node, Double opacity){
+    public static ImageView setOpacity(ImageView node, Double opacity){
         node.setOpacity(opacity);
         return node;
     }
 
-    private static ImageView setRotation(Double grade){
+    public static ImageView setRotation(Double grade){
         ImageView button = new ImageView(new Image("iconPack/icon-next.png",80,80,false,true));
         button.setRotate(grade);
         return button;
     }
 
     private static ImageView setActionOnBack(Stage window,int requestWidth, int requestHeight){
-        ImageView backButton = shadowEffect(configureImageView("button-back",requestWidth,requestHeight));
+        ImageView backButton = shadowEffect(configureImageView("","button-back", EXTENSION,requestWidth,requestHeight));
         backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> window.close());
         return backButton;
     }
 
     public static ArrayList<String> getNameCard() {
         return nameCard;
+    }
+
+    public static String getInfoData() {
+        return infoData;
     }
 }
