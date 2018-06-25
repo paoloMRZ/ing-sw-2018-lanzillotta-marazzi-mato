@@ -194,7 +194,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getPrivateObjectiveMesage(String addressee, String cardName) {
-        return "/" + addressee + "/###/start/private_objective/" + cardName + "\n";
+        return "/###/"+ addressee + "/start/private_objective/" + cardName + "\n";
     }
 
 
