@@ -54,8 +54,8 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
         this.isOpen = false; //Come prima cosa chiudo la lobby.
         this.timer.stop(); //Fermo il timer.
         fakeView = new FakeView(this); //Creo MVC.
-
         controller = new Controller(getNicknames());
+        fakeView.register(controller);
         try {
             controller.START();
         } catch (Exception e) {

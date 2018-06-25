@@ -2,6 +2,8 @@ package it.polimi.se2018.server.fake_view;
 
 
 
+import it.polimi.se2018.server.controller.Controller;
+import it.polimi.se2018.server.events.ControllerAsObserver;
 import it.polimi.se2018.server.events.SimpleMove;
 import it.polimi.se2018.server.events.responses.*;
 import it.polimi.se2018.server.events.tool_mex.*;
@@ -22,6 +24,9 @@ public class FakeView{
         this.toOut= blob;
     }
     //directed to out
+    public void register(Controller controller){
+        chat.register((ControllerAsObserver) controller);
+    }
 
     public void messageIncoming(String m){
         String sender= ServerMessageParser.getSender(m);
@@ -124,7 +129,5 @@ public class FakeView{
         }
         return ret;
     }
-
-
 
 }
