@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class AlesatorePerLaminaDiRame extends Utensils {
 
         public AlesatorePerLaminaDiRame(){
-            super(3,"alesatore-per-laminaDiRame", Color.RED,"Muovi un qualsiasi dado nella tua vetrata ignorando le restrizioni di " +
+            super(3,"alesatore-per-lamina-di-rame", Color.RED,"Muovi un qualsiasi dado nella tua vetrata ignorando le restrizioni di " +
                     "valore Devi rispettare tutte le altre restrizioni di piazzamento");
         }
 
