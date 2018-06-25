@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class Martelletto extends  Utensils {
 
     public Martelletto(){
-        super(7,"Martelletto", Color.BLUE,"Tira nuovamente tutti i dadi della" +
+        super(7,"martelletto", Color.BLUE,"Tira nuovamente tutti i dadi della" +
                 " Riserva Questa carta può essera usata solo durante il tuo secondo turno, prima di " +
                 "scegliere il secondo dad");
     }

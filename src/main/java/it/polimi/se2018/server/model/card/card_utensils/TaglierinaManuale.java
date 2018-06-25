@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class TaglierinaManuale extends Utensils {
 
     public TaglierinaManuale(){
-        super(12,"TaglierinaManuale", Color.BLUE,"Muovi fino a due dadi dello stesso colore di un solo dado sul" +
+        super(12,"taglierina-manuale", Color.BLUE,"Muovi fino a due dadi dello stesso colore di un solo dado sul" +
                 " Tracciato dei Round Devi rispettare tutte le restrizioni di piazzamento");
     }
 

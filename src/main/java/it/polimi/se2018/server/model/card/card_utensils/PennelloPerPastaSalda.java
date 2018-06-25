@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class PennelloPerPastaSalda extends Utensils {
 
    public PennelloPerPastaSalda(){
-       super(6,"PennelloPerPastaSalda", Color.PURPLE,"Dopo aver scelto un dado, " +
+       super(6,"pennello-per-pasta-salda", Color.PURPLE,"Dopo aver scelto un dado, " +
                "tira nuovamente quel dado Se non puoi piazzarlo, " +
                "riponilo nella Riserva");
    }

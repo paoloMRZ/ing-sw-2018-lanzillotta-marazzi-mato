@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class PinzaSgrossatrice extends Utensils {
 //OVERVIEW classe di ...
     public PinzaSgrossatrice(){
-        super(1,"PinzaSgrossatrice", Color.PURPLE,"Dopo aver scelto un dado, " +
+        super(1,"pinza-sgrossatrice", Color.PURPLE,"Dopo aver scelto un dado, " +
                 "aumenta o dominuisci il valore del dado scelto di 1 " +
                 "Non puoi cambiare un 6 in 1 o un 1 in 6");
 

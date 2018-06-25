@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class RigaInSughero extends Utensils {
 
     public RigaInSughero(){
-        super(9,"RigaInSughero", Color.YELLOW,"Dopo aver scelto un dado, piazzalo in una casella " +
+        super(9,"riga-in-sughero", Color.YELLOW,"Dopo aver scelto un dado, piazzalo in una casella " +
                 "che non sia adiacente a un altro dado Devi rispettare tutte le restrizioni di piazzamento");
 
     }

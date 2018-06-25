@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class TenagliaARotelle extends Utensils {
 
     public TenagliaARotelle(){
-        super(8,"TenagliaARotelle", Color.RED,"Dopo il tuo primo turno scegli immediatamente" +
+        super(8,"tenaglia-a-rotelle", Color.RED,"Dopo il tuo primo turno scegli immediatamente" +
                 " un altro dado Salta il tuo secondo turno in questo round");
     }
     public void accept(Visitor c, ToolCard8 m){

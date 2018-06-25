@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class DiluentePerPastaSalda extends Utensils {
 
     public DiluentePerPastaSalda(){
-        super(11,"DiluentePerPastaSalda", Color.PURPLE,"Dopo aver scelto un dado, riponilo nel Sacchetto, poi pescane uno dal" +
+        super(11,"diluente-per-pasta-salda", Color.PURPLE,"Dopo aver scelto un dado, riponilo nel Sacchetto, poi pescane uno dal" +
                 " Sacchetto Scegli il valore del nuovo dado e piazzalo, " +
                 "rispettando tutte le restrizioni di piazzamento");
     }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class PennelloPerEglomise extends Utensils {
 
     public PennelloPerEglomise(){
-        super(2,"PennelloPerEglomise", Color.BLUE,"Muovi un qualsiasi dado nella tua vetrata" +
+        super(2,"pennello-per-eglomise", Color.BLUE,"Muovi un qualsiasi dado nella tua vetrata" +
                 " ignorando le restrizioni di colore... " +
                 "Devi rispettare tutte le altre restrizioni di piazzamento");
     }
