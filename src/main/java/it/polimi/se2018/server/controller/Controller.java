@@ -178,11 +178,11 @@ public class Controller{
 
         for (Color c: Color.values()) {
             switch(c){
-                case RED: objectives.add(new Objective("Sfumature Rosse", "Somma dei valori su tutti i dadi rossi", 0, new ShadesOfCard(Color.RED),true)); break;
-                case BLUE: objectives.add(new Objective("Sfumature Blu", "Somma dei valori su tutti i dadi blu", 0, new ShadesOfCard(Color.BLUE),true)); break;
-                case GREEN: objectives.add(new Objective("Sfumature Verdi", "Somma dei valori su tutti i dadi verdi", 0, new ShadesOfCard(Color.GREEN),true)); break;
-                case YELLOW: objectives.add(new Objective("Sfumature Gialle", "Somma dei valori su tutti i dadi gialli", 0, new ShadesOfCard(Color.YELLOW),true)); break;
-                case PURPLE: objectives.add(new Objective("Sfumature Viola", "Somma dei valori su tutti i dadi viola", 0, new ShadesOfCard(Color.PURPLE),true)); break;
+                case RED: objectives.add(new Objective("sfumature-rosse-privata", "Somma dei valori su tutti i dadi rossi", 0, new ShadesOfCard(Color.RED),true)); break;
+                case BLUE: objectives.add(new Objective("sfumature-blu-privata", "Somma dei valori su tutti i dadi blu", 0, new ShadesOfCard(Color.BLUE),true)); break;
+                case GREEN: objectives.add(new Objective("sfumature-verdi-privata", "Somma dei valori su tutti i dadi verdi", 0, new ShadesOfCard(Color.GREEN),true)); break;
+                case YELLOW: objectives.add(new Objective("sfumature-gialle-privata", "Somma dei valori su tutti i dadi gialli", 0, new ShadesOfCard(Color.YELLOW),true)); break;
+                case PURPLE: objectives.add(new Objective("sfumature-viola-privata", "Somma dei valori su tutti i dadi viola", 0, new ShadesOfCard(Color.PURPLE),true)); break;
                 default: break;
             }
         }
@@ -200,19 +200,19 @@ public class Controller{
 
         ArrayList<Objective> objectives = new ArrayList<>();
 
-        objectives.add(new Objective("Diagonali Colorate", "Numero di dadi dello stesso colore diagonalmente adiacenti", 0, new ColorDiagonals(), false));
-        objectives.add(new Objective("Varietà di Colore", "Set di dadi di ogni colore ovunque", 4, new ColorVariety(),false));
-        objectives.add(new Objective("Sfumature Diverse",  "Set di dadi di ogni valore ovunque", 5, new ShadeVariety(), false));
+        objectives.add(new Objective("diagonali-colorate", "Numero di dadi dello stesso colore diagonalmente adiacenti", 0, new ColorDiagonals(), false));
+        objectives.add(new Objective("varietà-di-colore", "Set di dadi di ogni colore ovunque", 4, new ColorVariety(),false));
+        objectives.add(new Objective("sfumature-diverse",  "Set di dadi di ogni valore ovunque", 5, new ShadeVariety(), false));
 
-        objectives.add(new Objective("Sfumature Chiare", "Set di 1 & 2 ovunque",2, new CoupleOfShades(1,2), false));
-        objectives.add(new Objective("Sfumature Medie","Set di 3 & 4 ovunque",2, new CoupleOfShades(3,4), false));
-        objectives.add(new Objective("Sfumature Scure", "Set di 5 & 6 ovunque",2, new CoupleOfShades(5,6), false));
+        objectives.add(new Objective("sfumature-chiare", "Set di 1 & 2 ovunque",2, new CoupleOfShades(1,2), false));
+        objectives.add(new Objective("sfumature-medie","Set di 3 & 4 ovunque",2, new CoupleOfShades(3,4), false));
+        objectives.add(new Objective("sfumature-scure", "Set di 5 & 6 ovunque",2, new CoupleOfShades(5,6), false));
 
-        objectives.add(new Objective("Sfumature diverse - Riga", "Righe senza sfumature ripetute", 5, new SpecificShadeVariety(4,5), false));
-        objectives.add(new Objective("Sfumature diverse - Colonna", "Colonne senza sfumature ripetute", 5, new SpecificShadeVariety(5,4), false));
+        objectives.add(new Objective("sfumature-diverse-riga", "Righe senza sfumature ripetute", 5, new SpecificShadeVariety(4,5), false));
+        objectives.add(new Objective("sfumature-diverse-colonna", "Colonne senza sfumature ripetute", 5, new SpecificShadeVariety(5,4), false));
 
-        objectives.add(new Objective("Colori diversi - Riga", "Righe senza colori ripetuti", 6, new SpecificShadeVariety(4,5), false));
-        objectives.add(new Objective("Colori diversi - Colonna", "Colonne senza colori ripetuti", 5, new SpecificShadeVariety(5,4), false));
+        objectives.add(new Objective("colori-diversi-riga", "Righe senza colori ripetuti", 6, new SpecificShadeVariety(4,5), false));
+        objectives.add(new Objective("colori-diversi-colonna", "Colonne senza colori ripetuti", 5, new SpecificShadeVariety(5,4), false));
 
         return objectives;
     }

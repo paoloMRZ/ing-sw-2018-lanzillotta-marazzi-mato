@@ -87,7 +87,7 @@ public class FakeView{
                     chat.notifyObserver(new ToolCard12(sender,Integer.parseInt(data.get(0)),transformer(data,2)));
                     break;
                 default:
-                    messageOutBox("ERROR");
+                    break;
             }
 
             chat.notifyObserver(new Activate(sender,Integer.parseInt(data.get(0))));

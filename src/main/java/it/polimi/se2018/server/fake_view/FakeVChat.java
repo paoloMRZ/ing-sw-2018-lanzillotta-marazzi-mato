@@ -180,7 +180,7 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
                 fake.messageOutBox(ServerMessageCreator.getPrivateObjectiveMesage(mex.getPlayer(),mex.getContent()));
                 break;
             default:
-                fake.messageOutBox("ERROR");
+                break;
         }
     }
     public void update( TimeIsUp mex){

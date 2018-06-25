@@ -230,6 +230,8 @@ public class InitWindow extends Application {
                     Scene sceneChoice = new Scene(sideChoiceLabel.getSideChoise(), 1150, 900);
                     Platform.runLater(() -> {
                         alertSwitcher.closeAlert();
+                        primaryStage.setMaxHeight(900);
+                        primaryStage.setMaxWidth(1150);
                         primaryStage.setScene(sceneChoice);
                     });
 
