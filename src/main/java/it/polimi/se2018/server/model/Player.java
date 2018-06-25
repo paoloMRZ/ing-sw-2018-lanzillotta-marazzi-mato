@@ -379,7 +379,7 @@ public void refresh(UpdateReq m){
         return canIPlay;
     }
     public void ask(){
-        setUpdateObj();
+        // veniva fatto già setUpdateObj();
         notifier.notifyObserver(askingMessage());
     }
     public void chooseForPlayer(int i){
