@@ -25,7 +25,7 @@ public class FakeView{
     }
     //directed to out
     public void register(Controller controller){
-        chat.register((ControllerAsObserver) controller);
+        chat.register( controller.getcChat());
     }
 
     public void messageIncoming(String m){
