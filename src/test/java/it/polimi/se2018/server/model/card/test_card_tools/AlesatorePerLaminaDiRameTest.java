@@ -225,12 +225,9 @@ public class AlesatorePerLaminaDiRameTest {
             //vedo se il dado contenuto nella cella è effettivamente il mio
             //il dado è stato posizionato dalla funzione nella cella
             Dice itsHim = controller.getcAction().takeALookToDie(message.getPlayer(), 0, 0);
-            try {
+
                 assertEquals(4, itsHim.getNumber());
                 assertEquals(Color.BLUE, itsHim.getColor());
-            } catch (Exception e) {
-                fail("errore su uguaglinza");
-            }
 
         } catch (Exception e) {
             fail("Fail: ha lanciato eccezione!");
