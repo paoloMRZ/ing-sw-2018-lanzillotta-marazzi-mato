@@ -20,4 +20,12 @@ public class NetworkMessageCreator {
         return "/###/" + addressee + "/network/ko_nickname/?\n";
     }
 
+    public static String getFreezeMessage(String nickname){
+        return "/###/###/network/freeze/"+ nickname  +"\n";
+    }
+
+    public static String getUnfreezeMessage(String nickname){
+        return "/###/###/network/unfreeze/"+ nickname  +"\n";
+    }
+
 }
