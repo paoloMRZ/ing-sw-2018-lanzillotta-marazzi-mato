@@ -417,7 +417,7 @@ public class Side {
 
         return new UpdateM(null,who, content);
     }
-    //todo toString da fare
+
     public String toString() {
         String message = owner+"&";
         for (int colo=0;colo<5;colo++){

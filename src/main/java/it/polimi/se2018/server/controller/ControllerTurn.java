@@ -128,13 +128,15 @@ public void setThePlayers() throws InvalidValueException {
     private void anotherPlayer() throws InvalidValueException{
 
             turnOf = lobby.callPlayerByNumber(caller).getName();
-             lobby.rotatingPlayerTurn(caller);
+            lobby.rotatingPlayerTurn(caller);
+
+            lobby.showPrivate(turnOf);
 
             sagradaTimer.start();
             timeIsOn = true;
 
              getTurn().ask();
-             lobby.showPrivate(turnOf);
+
             //parte il timer
 
     }
