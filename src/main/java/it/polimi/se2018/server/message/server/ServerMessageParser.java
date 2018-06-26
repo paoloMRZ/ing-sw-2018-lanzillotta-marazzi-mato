@@ -85,4 +85,21 @@ public class ServerMessageParser {
     }
 
 
+    /**
+     * Il metodo controlla se il messaggio è un messaggio che indica che un giocatore è stato congelato.
+     * @param message messaggio da controllare.
+     * @return true se il messaggio indica il congelamento di un giocatore.
+     */
+    public static boolean isFreezeMessage(String message){
+        return message.split("/")[4].equals("freeze");
+    }
+
+    /**
+     * Il metodo controlla se il messaggio è un messaggio che indica che un giocatore è stato scongelato.
+     * @param message messaggio da controllare.
+     * @return true se il messaggio indica lo scongelamento di un giocatore.
+     */
+    public static boolean isUnfreezeMessage(String message){
+        return message.split("/")[4].equals("unfreeze");
+    }
 }

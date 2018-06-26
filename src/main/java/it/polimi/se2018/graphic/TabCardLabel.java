@@ -41,7 +41,6 @@ public class TabCardLabel {
         objectiveTab = new Tab();
         borderPane.setCenter(tabPane);
         root.getChildren().add(borderPane);
-        root.setAutoSizeChildren(true);
     }
 
     public void configureTabUtensils(AnchorPane cardUtensils){
@@ -85,7 +84,7 @@ public class TabCardLabel {
      * @return Riferimento all'elemento grafico configurato
      */
 
-    public Group getGroupPane() {
-        return root;
+    public BorderPane getGroupPane() {
+        return borderPane;
     }
 }

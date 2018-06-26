@@ -16,6 +16,10 @@ public class NetworkMessageParser {
         return message.split("/")[2].equals("!");
     }
 
+    public static boolean isFreezeMessage(String message){
+        return message.split("/")[4].equals("freeze");
+    }
+
     public static String getMessageSender(String message){
         return message.split("/")[1];
     }
@@ -24,7 +28,8 @@ public class NetworkMessageParser {
         return message.split("/")[2];
     }
 
-    public static String getMessageInfo(String message){
+    public static String getMessageInfo(String message) {
         return message.split("/")[5];
     }
+
 }

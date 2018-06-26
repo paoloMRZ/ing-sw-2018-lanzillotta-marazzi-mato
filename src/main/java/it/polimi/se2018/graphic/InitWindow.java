@@ -3,12 +3,12 @@ package it.polimi.se2018.graphic;
 import it.polimi.se2018.client.connection_handler.ConnectionHandler;
 import it.polimi.se2018.client.message.ClientMessageParser;
 import it.polimi.se2018.graphic.alert_box.AlertCloseButton;
+import it.polimi.se2018.graphic.alert_box.AlertLoadingGame;
 import it.polimi.se2018.graphic.alert_box.AlertSwitcher;
 import it.polimi.se2018.graphic.alert_box.AlertValidation;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -18,7 +18,6 @@ import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -95,15 +94,12 @@ public class InitWindow extends Application {
         //AnchorPane su cui ancorare gli elementi della schermata di gioco
         AnchorPane anchorGame = new AnchorPane();
 
-        //StackPane da utilizzare solamente alla fine perchè ha priorità maggiore
-        StackPane gameStack = new StackPane(anchorGame);
-
         ImageView imageView = new ImageView("prova-sfondo.png");
         imageView.setFitWidth(Screen.getPrimary().getVisualBounds().getWidth());
         imageView.setFitHeight(Screen.getPrimary().getVisualBounds().getHeight());
         anchorGame.setStyle("-fx-background-image: url(prova-sfondo.png); -fx-background-size: contain; -fx-background-position: center; -fx-background-repeat: no-repeat;");
 
-        /*
+/*
         //Aggiungo gli elementi della schermata -> SOLO PROVA POSIZIONE NELLA SCHERMATA -> TESTING
 
         //ROUNDGRID -> PROVA SENZA MESSAGGIO PER POSIZIONE
@@ -124,31 +120,31 @@ public class InitWindow extends Application {
         //CARTA OBBIETTIVO PRIVATA -> PROVA SENZA MESSAGGIO PER POSIZIONE
         ArrayList<String> cardInfoPrivate = new ArrayList<>();
         cardInfoPrivate.add("sfumature-gialle-privata");
-        CardCreatorLabel objectivePrivate = new CardCreatorLabel(cardInfoPrivate, true, null);
+        CardCreatorLabel objectivePrivate = new CardCreatorLabel(cardInfoPrivate, null, true, null);
         AnchorPane anchorPaneObjective = objectivePrivate.getCardObjective();
         anchorPaneObjective.setMaxSize(240,300);
         anchorPaneObjective.setMinSize(240,300);
-        configureAnchorPane(anchorGame, anchorPaneObjective, 0d, 390d, 635d, 300d);
+        configureAnchorPane(anchorGame, anchorPaneObjective, 0d, 310d, 635d, 300d);
 
 
         //CARTE OBBIETTIVO PUBBLICHE E UTENSILI-> PROVA SENZA MESSAGGIO PER POSIZIONE
-        ArrayList<String> cardInfoPubblic = new ArrayList<>(Arrays.asList("cardObjective/sfumature-scure","cardObjective/sfumature-medie","cardObjective/sfumature-diverse"));
+        ArrayList<String> cardInfoPubblic = new ArrayList<>(Arrays.asList("sfumature-scure","sfumature-medie","sfumature-diverse"));
         ArrayList<String> cardInfoPubblic2 = new ArrayList<>(Arrays.asList("cardUtensils/alesatore-per-la-laminda-di-rame","cardUtensils/diluente-per-pasta-salda","cardUtensils/lathekin"));
         ArrayList<String> cardInfoPubblic3 = new ArrayList<>(Arrays.asList("cardUtensils/martelletto","cardUtensils/pennello-per-eglomise","cardUtensils/pennello-per-pasta-salda"));
         ArrayList<String> cardInfoPubblic4 = new ArrayList<>(Arrays.asList("cardUtensils/pinza-sgrossatrice","cardUtensils/riga-in-sughero","cardUtensils/tenaglia-a-rotelle"));
-        ArrayList<String> cardInfoPubblic5 = new ArrayList<>(Arrays.asList("cardUtensils/lathekin","cardUtensils/taglierina-manuale","cardUtensils/tampone-diamantato"));
+        ArrayList<String> cardInfoPubblic5 = new ArrayList<>(Arrays.asList("lathekin","taglierina-manuale","tampone-diamantato"));
 
 
-        CardCreatorLabel objectivePubblic = new CardCreatorLabel(cardInfoPubblic, false, "cardObjective");
+        CardCreatorLabel objectivePubblic = new CardCreatorLabel(cardInfoPubblic, null,false, "/cardObjective/");
         //CardCreatorLabel utensilsPubblic = new CardCreatorLabel(cardInfoPubblic2, false, "cardUtensils");
         //CardCreatorLabel utensilsPubblic = new CardCreatorLabel(cardInfoPubblic3, false, "cardUtensils");
         //CardCreatorLabel utensilsPubblic = new CardCreatorLabel(cardInfoPubblic4, false, "cardUtensils");
-        CardCreatorLabel utensilsPubblic = new CardCreatorLabel(cardInfoPubblic5, false, "cardUtensils");
+        CardCreatorLabel utensilsPubblic = new CardCreatorLabel(cardInfoPubblic5, null,false, "/cardUtensils/");
         TabCardLabel tabCardLabelEX = new TabCardLabel();
         tabCardLabelEX.configureTabObjective(objectivePubblic.getCardObjective());
         tabCardLabelEX.configureTabUtensils(utensilsPubblic.getCardObjective());
-        BorderPane borderPaneEX = tabCardLabelEX.getBorderPane();
-        configureAnchorPane(anchorGame, borderPaneEX, 40d, 410d, 880d, 260d);
+        BorderPane borderPaneEX = tabCardLabelEX.getGroupPane();
+        configureAnchorPane(anchorGame, borderPaneEX, 40d, 330d, 880d, 210d);
 
 
         //RISERVA -> PROVA SENZA MESSAGGIO PER POSIZIONE
@@ -163,7 +159,7 @@ public class InitWindow extends Application {
         SideEnemyLabel enemies = new SideEnemyLabel(nOfP, sName);
         HBox sideEnemy = (enemies.getLabelSideEnemy());
         sideEnemy.setMaxHeight(200);
-        configureAnchorPane(anchorGame, sideEnemy, 20d, 70d, 610d, 600d);
+        configureAnchorPane(anchorGame, sideEnemy, 20d, 60d, 610d, 585d);
         ArrayList<String> infDie = new ArrayList<>(Arrays.asList("Gennaro", "blue2", "blue1","blue5","white0","white0","white0","white0","white0","white0","white0","white0",
                 "white0","white0","white0","white0","white0","white0","white0","white0","white0"));
         enemies.updateSideEnemies(infDie);
@@ -180,7 +176,7 @@ public class InitWindow extends Application {
         playerAnchorePane.setPrefSize(450, 393);
         ButtonGameLabel buttonGameEX = new ButtonGameLabel(connectionHandler,reserveEX,pSide,utensilsPubblic);
 
-        configureAnchorPane(anchorGame, playerAnchorePane, 835d, 240d, 50d, 420d);
+        configureAnchorPane(anchorGame, playerAnchorePane, 835d, 190d, 50d, 370d);
         configureAnchorPane(anchorGame, buttonGameEX.getLabelButtonGame(), 880d, 500d, 100d, 200d);
 
         //ArrayList<String> putEX = new ArrayList<>(Arrays.asList("2","2","3"));
@@ -190,20 +186,18 @@ public class InitWindow extends Application {
         //NICKNAME LABEL -> PROVA SENZA MESSAGGIO PER POSIZIONAMENTO
         SettingLabel nick = new SettingLabel("Paolo", "5", "4", "Kevin");
         nick.updateTurn("Simone");
-        configureAnchorPane(anchorGame, nick.getSettingLabel(), 835d, 160d, 70d, 800d);
+        configureAnchorPane(anchorGame, nick.getSettingLabel(), 835d, 80d, 70d, 800d);
 
 
         //SCENA E LANCIO -> PROVA PERPOSIZIONAMENTO
-        gameStack.getChildren().add(anchorGame);
-        primaryStage.setScene(new Scene(gameStack));
+        primaryStage.setScene(new Scene(anchorGame));
         primaryStage.centerOnScreen();
         primaryStage.setMaxWidth(1400);
         primaryStage.setMaxHeight(900);
         primaryStage.setMinWidth(1400);
         primaryStage.setMinHeight(900);
         primaryStage.show();
-
-        */
+*/
 
         //Listener per il cambio di scena e valutazione del messaggio
         message.textProperty().addListener((obs, oldText, newText) -> {
@@ -222,6 +216,7 @@ public class InitWindow extends Application {
                         alertSwitcher.closeAlert();
                         primaryStage.setMaxHeight(900);
                         primaryStage.setMaxWidth(1400);
+                        primaryStage.centerOnScreen();
                         primaryStage.setScene(sceneChoice);
                     });
 
@@ -234,14 +229,16 @@ public class InitWindow extends Application {
                     Stream<String> nameOfPlayers = sideInfo.stream().filter(s -> (sideInfo.indexOf(s) % 2 == 0));
                     Stream<String> sideName = sideInfo.stream().filter(s -> (sideInfo.indexOf(s) % 2 != 0));
                     enemiesSide = new SideEnemyLabel(nameOfPlayers.collect(Collectors.toList()), sideName.collect(Collectors.toList()));
-                    configureAnchorPane(anchorGame, enemiesSide.getLabelSideEnemy(), 20d, 70d, 610d, 600d);
+                    configureAnchorPane(anchorGame, enemiesSide.getLabelSideEnemy(), 20d, 60d, 610d, 585d);
+
                 }
 
 
                 //MESSAGGIO START PER L'ASSEGNAMENTO DELLA CARTA OBBIETTIVO PRIVATA
                 if (ClientMessageParser.isStartPrivateObjectiveMessage(message.getText())) {
                     privateObjective = new CardCreatorLabel(ClientMessageParser.getInformationsFromMessage(message.getText()), null,true,null);
-                    configureAnchorPane(anchorGame, privateObjective.getCardObjective(), 0d, 390d, 635d, 300d);
+                    configureAnchorPane(anchorGame, privateObjective.getCardObjective(), 0d, 310d, 635d, 300d);
+
                 }
 
 
@@ -298,7 +295,7 @@ public class InitWindow extends Application {
                     if(startGame){
 
                         //Posiziono le carte Utensili e Pubbliche
-                        configureAnchorPane(anchorGame, tabCardLabel.getGroupPane(), 40d, 410d, 880d, 260d);
+                        configureAnchorPane(anchorGame, tabCardLabel.getGroupPane(), 40d, 330d, 880d, 210d);
 
                         //Posiziono la roundGrid
                         ArrayList<Double> positionGridRound = new ArrayList<>(Arrays.asList(20d, 0d, 0d, 0d));
@@ -307,29 +304,30 @@ public class InitWindow extends Application {
 
                         //Posiziono la griglia con le informazioni sul giocatore
                         settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
-                        configureAnchorPane(anchorGame, settingLabel.getSettingLabel(), 835d, 160d, 70d, 800d);
+                        configureAnchorPane(anchorGame, settingLabel.getSettingLabel(), 835d, 80d, 70d, 800d);
 
+                        
                         //Posiziono la carta scelta dal giocatore
                         ArrayList<Integer> sizeGridPlayer = new ArrayList<>(Arrays.asList(67, 66));
                         ArrayList<Integer> sizeSidePlayer = new ArrayList<>(Arrays.asList(340, 290));
                         ArrayList<Double> positionGridPlayer = new ArrayList<>(Arrays.asList(4d, 0d, 3d, 21d));
                         ArrayList<Double> sizeRectPlayer = new ArrayList<>(Arrays.asList(65d, 65d));
                         playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), sizeGridPlayer, positionGridPlayer, sizeSidePlayer,sizeRectPlayer, true, reserve);
-                        configureAnchorPane(anchorGame, playerSide.getAnchorPane(), 835d, 240d, 50d, 420d);
+                        configureAnchorPane(anchorGame, playerSide.getAnchorPane(), 835d, 190d, 50d, 370d);
 
                         //Posiziono la griglia dei pulsanti
                         buttonGameLabel = new ButtonGameLabel(connectionHandler,reserve,playerSide,cardUtensils);
-                        configureAnchorPane(anchorGame, buttonGameLabel.getLabelButtonGame(), 880d, 480d, 100d, 200d);
+                        configureAnchorPane(anchorGame, buttonGameLabel.getLabelButtonGame(), 880d, 500d, 100d, 200d);
 
-                        Scene sceneGame = new Scene(gameStack, 1880, 1073);
+                        Scene sceneGame = new Scene(anchorGame, 1880, 1073);
                         startGame=false;
                         Platform.runLater(() ->{
-                            Screen screen = Screen.getPrimary();
-                            Rectangle2D bounds = screen.getVisualBounds();
-                            primaryStage.setX(bounds.getMinX());
-                            primaryStage.setY(bounds.getMinY());
-                            primaryStage.setWidth(bounds.getWidth());
-                            primaryStage.setHeight(bounds.getHeight());
+                            AlertLoadingGame.closeAlert();
+                            primaryStage.centerOnScreen();
+                            primaryStage.setMaxWidth(1400);
+                            primaryStage.setMaxHeight(900);
+                            primaryStage.setMinWidth(1400);
+                            primaryStage.setMinHeight(900);
                             primaryStage.setScene(sceneGame);
                         });
                     }

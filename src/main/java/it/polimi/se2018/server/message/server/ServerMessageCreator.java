@@ -271,6 +271,16 @@ public class ServerMessageCreator {
     }
 
     /**
+     * Il metodo restituisce un messaggio che indica che un giocatore è stato congelato.
+     * @param nickname nickname del giocatore che è stato congelato.
+     * @return messaggio.
+     */
+    public static String getFreezeMessage(String nickname){
+        return "/###/###/network/freeze/"+ nickname  +"\n";
+    }
+
+
+    /**
      * Il metodo restituisce un messaggio che indica la fine della partita e contiene il punteggio associato ad ogni
      * giocatore.
      *

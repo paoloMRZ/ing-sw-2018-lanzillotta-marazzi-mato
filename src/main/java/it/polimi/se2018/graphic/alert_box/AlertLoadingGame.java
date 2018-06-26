@@ -17,9 +17,11 @@ import javafx.stage.StageStyle;
 
 public class AlertLoadingGame {
 
+        private static Stage window;
+
         public static void display(String title,String message){
 
-            Stage window = new Stage();
+            window = new Stage();
             window.initModality(Modality.APPLICATION_MODAL);
             window.setTitle(title);
             window.setWidth(450);
@@ -44,6 +46,10 @@ public class AlertLoadingGame {
 
             window.setScene(scene);
             window.showAndWait();
+        }
+
+        public static void closeAlert(){
+            window.close();
         }
 
 }
