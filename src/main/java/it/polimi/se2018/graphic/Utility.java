@@ -66,7 +66,6 @@ public class Utility {
 
 
 
-
     /**
      * Metodo che crea un elemento ImageView ristretto solo alle immagini native di formato bmp
      *
@@ -81,20 +80,6 @@ public class Utility {
     }
 
 
-
-    /**
-     * Metodo che crea un elemento ImageView ristretto solo alle immagini native di formato png
-     *
-     * @param path Percorso della risorsa
-     * @param requestedWidth Larghezza richiesta
-     * @param requestedHeight Altezza richiesta
-     * @return Riferimento all'oggetto ImageView contenente l'immagine desiderata
-     */
-/*
-    public static ImageView configureImageView(String path, int requestedWidth, int requestedHeight){
-        return new ImageView(new Image(path + ".png",requestedWidth,requestedHeight,false,true));
-    }
-*/
 
 
     /**
@@ -185,6 +170,12 @@ public class Utility {
     }
 
 
+    /**
+     * Metodo che crea una collezione di coppie di valori String
+     *
+     * @param selectedInfo Riferimento alla collezione da cui prelevare gli elementi per creare il dizionario
+     * @return Riferimento alla collezione di coppie di valori
+     */
 
     public static Map<String,String> createDictionary(List<String> selectedInfo){
 

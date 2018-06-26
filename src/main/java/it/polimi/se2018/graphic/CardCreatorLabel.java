@@ -6,17 +6,16 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static it.polimi.se2018.graphic.Utility.*;
 
 public class CardCreatorLabel{
 
-    //Il nome della carta quando viene ricercata la risorsa devo contenere direttamente in ingresso anche la subDirectory
-
+    private static final String EXTENSION = ".png";
+    private static final String MATCHDIRECTORY = "/cardUtensils/";
     private AnchorPane cardObjective;
     private VBox cardObjectiveLabel;
     private ArrayList<String> cardName = new ArrayList<>();
@@ -37,7 +36,7 @@ public class CardCreatorLabel{
             labelName.setText("Obbiettivo Privato");
             labelName.setAlignment(Pos.CENTER);
 
-            ImageView objectivePrivate = configureImageView("/cardObjective/", nameOfCard.get(0), ".png", 200, 300);
+            ImageView objectivePrivate = configureImageView("/cardObjective/", nameOfCard.get(0), EXTENSION, 200, 300);
             objectivePrivate.setFitHeight(280);
             objectivePrivate.setFitWidth(200);
             cardObjectiveLabel.getChildren().addAll(labelName,objectivePrivate);
@@ -48,18 +47,9 @@ public class CardCreatorLabel{
         else{
 
             cardObjectiveLabel.setPrefSize(200*3,350);
-            HBox cardSequence = new HBox(5);
+            HBox cardSequence = configureCardSequence(path,nameOfCard,200,300);
             cardSequence.setPrefSize(200*3,300);
             cardSequence.setAlignment(Pos.CENTER);
-
-            for (String nameCard: nameOfCard) {
-                ImageView item = shadowEffect(configureImageView(path, nameCard, ".png", 200, 300));
-                item.setFitWidth(150);
-                item.setFitHeight(225);
-                item.addEventHandler(MouseEvent.MOUSE_CLICKED, e-> AlertInfoCard.display(cardName,path));
-                cardSequence.getChildren().add(item);
-                cardName.add(nameCard);
-            }
 
             cardObjectiveLabel.getChildren().addAll(cardSequence);
             configureAnchorPane(cardObjective,cardObjectiveLabel,0d,0d,0d,0d);
@@ -78,4 +68,32 @@ public class CardCreatorLabel{
     public Map<String, String> getDictionaryUtensils() {
         return dictionaryUtensils;
     }
+
+    private HBox configureCardSequence(String path, List<String> nameOfCard, int requestedWidth, int requestedHeight){
+
+        List <String> valueNumber = new ArrayList<>();
+        List <String> keyName;
+        ArrayList<String> tempCollection = new ArrayList<>(nameOfCard);
+
+        if(nameOfCard.size()>3){
+            keyName = nameOfCard.stream().filter(s -> (nameOfCard.indexOf(s) % 2 == 0)).collect(Collectors.toList());
+            valueNumber = nameOfCard.stream().filter(s -> (nameOfCard.indexOf(s) % 2 != 0)).collect(Collectors.toList());
+            tempCollection.clear();
+            tempCollection.addAll(keyName);
+        }
+
+        HBox cardSequence = new HBox(5);
+        for (String nameCard: tempCollection) {
+            ImageView item = shadowEffect(configureImageView(path, nameCard, EXTENSION, requestedWidth, requestedHeight));
+            item.setFitWidth(150);
+            item.setFitHeight(225);
+            item.addEventHandler(MouseEvent.MOUSE_CLICKED, e-> AlertInfoCard.display(cardName,path));
+            cardSequence.getChildren().add(item);
+            cardName.add(nameCard);
+            if(nameOfCard.size()>3) cardName.add(valueNumber.get(tempCollection.indexOf(nameCard)));
+        }
+
+        return cardSequence;
+    }
+
 }
