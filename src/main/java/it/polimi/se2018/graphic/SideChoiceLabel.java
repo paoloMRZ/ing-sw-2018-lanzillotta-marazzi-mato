@@ -3,12 +3,17 @@ package it.polimi.se2018.graphic;
 import it.polimi.se2018.client.connection_handler.ConnectionHandler;
 import it.polimi.se2018.client.message.ClientMessageCreator;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+
 import static it.polimi.se2018.graphic.Utility.*;
 import java.net.MalformedURLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,15 +36,26 @@ public class SideChoiceLabel{
     private String numberChoice;
     private String nameChoice;
     private String favours;
+    private HashMap<StackPane, Boolean> cell = new HashMap<>();
+    private Group group = new Group();
 
     public SideChoiceLabel(List<String> sideSelection, ConnectionHandler connectionHandler){
+
+        //Settaggio Focus Style
+        Rectangle rect = new Rectangle(20, 20, 360, 303);
+        rect.setFill(Color.TRANSPARENT);
+        rect.setStroke(Color.RED);
+        rect.setStrokeWidth(3d);
+        group.getChildren().add(rect);
 
         //Settaggio della finestra
         Label labelRequest = setFontStyle(new Label("Scegli la tua carta Window:"),35);
         labelRequest.setAlignment(Pos.CENTER);
 
         ImageView continueButton = shadowEffect(configureImageView("","button-continue", ".png",250,110));
-        continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> connectionHandler.sendToServer(ClientMessageCreator.getSideReplyMessage(connectionHandler.getNickname(), numberChoice)));
+        continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            connectionHandler.sendToServer(ClientMessageCreator.getSideReplyMessage(connectionHandler.getNickname(), numberChoice));
+        });
 
         Stream<String> firstStream = sideSelection.stream().filter(s -> (sideSelection.indexOf(s) % 2 == 0));
         Stream<String> secondStream = sideSelection.stream().filter(s -> (sideSelection.indexOf(s) % 2 != 0));
@@ -67,30 +83,40 @@ public class SideChoiceLabel{
     }
 
     private HBox configureLevelSide(String firstSide, String firstUserData, String firstFavours, String secondSide, String secondUserData, String secondFavours){
+        StackPane buttonSideFirst = new StackPane();
+        StackPane buttonSideSecond = new StackPane();
         HBox hBox = new HBox(70);
+
         ImageView choiceOne = shadowEffect(configureImageView(SUBDIRECTORY, firstSide, EXTENSION, 360,303));
         choiceOne.setFitWidth(360);
         choiceOne.setFitHeight(303);
+        buttonSideFirst.getChildren().add(choiceOne);
 
         ImageView choiceTwo = shadowEffect(configureImageView(SUBDIRECTORY, secondSide, EXTENSION, 360,303));
         choiceTwo.setFitWidth(360);
         choiceTwo.setFitHeight(303);
+        buttonSideSecond.getChildren().add(choiceTwo);
 
         choiceOne.setUserData(firstUserData);
         choiceTwo.setUserData(secondUserData);
 
+        cell.put(buttonSideFirst,false);
+        cell.put(buttonSideSecond,false);
+
         choiceOne.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            setFocusStyle(cell,buttonSideFirst,group);
             numberChoice = choiceOne.getUserData().toString();
             nameChoice = firstSide;
             favours = firstFavours;
         });
         choiceTwo.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            setFocusStyle(cell,buttonSideSecond,group);
             numberChoice = choiceTwo.getUserData().toString();
             nameChoice = secondSide;
             favours = secondFavours;
         });
 
-        hBox.getChildren().addAll(choiceOne,choiceTwo);
+        hBox.getChildren().addAll(buttonSideFirst,buttonSideSecond);
         hBox.setAlignment(Pos.CENTER);
         return hBox;
     }

@@ -63,7 +63,7 @@
   },
 
   {
-    "name": "symphony-of-light",
+    "name": "simphony-of-light",
     "favours": 6,
     "matrix": [[{"color": "WHITE", "number" : 2}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 1}],
                [{"color": "YELLOW", "number" : 0}, {"color": "WHITE", "number" : 6}, {"color": "PURPLE", "number" : 0}, {"color": "WHITE", "number" : 2}, {"color": "RED", "number" : 0}],
@@ -144,7 +144,7 @@
   },
 
   {
-    "name": "fireLight",
+    "name": "firelight",
     "favours": 5,
     "matrix": [[{"color": "WHITE", "number" : 3}, {"color": "WHITE", "number" : 4}, {"color": "WHITE", "number" : 1}, {"color": "WHITE", "number" : 5}, {"color": "WHITE", "number" : 0}],
                [{"color": "WHITE", "number" : 0}, {"color": "WHITE", "number" : 6}, {"color": "WHITE", "number" : 2}, {"color": "WHITE", "number" : 0}, {"color": "YELLOW", "number" : 0}],

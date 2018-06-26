@@ -1,7 +1,6 @@
 package it.polimi.se2018.graphic.alert_box;
 
 import it.polimi.se2018.graphic.InitWindow;
-import it.polimi.se2018.graphic.Utility;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -30,24 +29,24 @@ import static it.polimi.se2018.graphic.Utility.*;
 
 public class AlertSwitcher{
 
-    private static String connectionType = null;
-    private static String interfaceType = null;
-    private static String font = "Matura MT Script Capitals";
-    private static ToggleGroup groupConnection;
-    private static ToggleGroup groupInterface;
-    private static VBox portConfiguration = new VBox(5);
-    private static VBox iPConfiguration = new VBox(5);
-
+    private static final String FONT = "Matura MT Script Capitals";
+    private static final String TEXTFILL = "-fx-text-fill: black;";
+    private static final String SOCKET = "Socket";
+    private static final String RMI = "Rmi";
+    private String connectionType = null;
+    private String interfaceType = null;
+    private ToggleGroup groupConnection;
+    private ToggleGroup groupInterface;
+    private VBox portConfiguration = new VBox(5);
+    private VBox iPConfiguration = new VBox(5);
 
     private static Scene sceneConnection;
     private static Scene sceneNickName;
     private static Scene sceneLoading;
 
-    private static Stage window;
+    private Stage window;
 
-    public AlertSwitcher(){}
-
-    public static void display(String title, String messagge, InitWindow init) {
+    public void display(String title, String messagge, InitWindow init) {
 
         window = new Stage();
 
@@ -61,11 +60,11 @@ public class AlertSwitcher{
         //Label "SCEGLI CONNESSIONE"
         Label labelChooseConnection = setFontStyle(new Label(messagge),22);
 
-        RadioButton socketButton = new RadioButton("Socket");
-        socketButton.setFont(Font.font (font, 20));
-        RadioButton rmiButton = new RadioButton("Rmi");
-        rmiButton.setFont(Font.font (font, 20));
-        configureToggleGroup("Socket", "RMI", "connectionContent", socketButton,rmiButton);
+        RadioButton socketButton = new RadioButton(SOCKET);
+        socketButton.setFont(Font.font (FONT, 20));
+        RadioButton rmiButton = new RadioButton(RMI);
+        rmiButton.setFont(Font.font (FONT, 20));
+        configureToggleGroup(SOCKET, RMI, "connectionContent", socketButton,rmiButton);
 
 
 
@@ -85,9 +84,9 @@ public class AlertSwitcher{
         Label labelChooseModality = setFontStyle(new Label("Scegli la modalità di gioco:"),22);
 
         RadioButton guiButton = new RadioButton("Gui");
-        guiButton.setFont(Font.font (font, 20));
+        guiButton.setFont(Font.font (FONT, 20));
         RadioButton cliButton = new RadioButton("Cli");
-        cliButton.setFont(Font.font (font, 20));
+        cliButton.setFont(Font.font (FONT, 20));
         configureToggleGroup("Gui", "Cli", "interfaceContent", guiButton, cliButton);
 
 
@@ -96,9 +95,9 @@ public class AlertSwitcher{
         ImageView continueButton = shadowEffect(configureImageView("","button-continue",".png",158,61));
         continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             Platform.runLater(() -> {
-                if(isValidInput(connectionType,interfaceType, textPort.getText(), textIP.getText(),window,init)) {
+                if(isValidInput(connectionType,interfaceType, textPort.getText(), textIP.getText())) {
                     int portValue = 0;
-                    if(connectionType.equals("Socket")) portValue= Integer.parseInt(textPort.getText());
+                    if(connectionType.equals(SOCKET)) portValue= Integer.parseInt(textPort.getText());
                     sceneLoading = new SceneLoading(window,init).getSceneLoading();
                     sceneNickName = new SceneNickName(window,connectionType,init,portValue,textIP.getText(),sceneLoading, sceneConnection).getSceneNickName();
                     window.setScene(sceneNickName);
@@ -133,7 +132,7 @@ public class AlertSwitcher{
         window.showAndWait();
     }
 
-    private static void configureToggleGroup(String firstContent, String secondContent, String kindOfSelection, RadioButton firstButton, RadioButton secondButton){
+    private void configureToggleGroup(String firstContent, String secondContent, String kindOfSelection, RadioButton firstButton, RadioButton secondButton){
 
         switch(kindOfSelection){
             case "connectionContent": groupConnection = new ToggleGroup();
@@ -165,38 +164,38 @@ public class AlertSwitcher{
         }
     }
 
-    private static void setVisible(VBox portConfiguration, VBox iPConfiguration){
+    private void setVisible(VBox portConfiguration, VBox iPConfiguration){
         switch (connectionType){
-            case "Socket": portConfiguration.setDisable(false);
+            case SOCKET: portConfiguration.setDisable(false);
                 iPConfiguration.setDisable(false);
-                portConfiguration.getChildren().get(0).setStyle("-fx-text-fill: black;");
-                iPConfiguration.getChildren().get(0).setStyle("-fx-text-fill: black;");
+                portConfiguration.getChildren().get(0).setStyle(TEXTFILL);
+                iPConfiguration.getChildren().get(0).setStyle(TEXTFILL);
                 break;
 
-            case "RMI": iPConfiguration.setDisable(false);
-                iPConfiguration.getChildren().get(0).setStyle("-fx-text-fill: black;");
+            case RMI: iPConfiguration.setDisable(false);
+                iPConfiguration.getChildren().get(0).setStyle(TEXTFILL);
                 portConfiguration.setDisable(true);
                 portConfiguration.getChildren().get(0).setStyle("-fx-text-fill: grey;");
         }
 
     }
 
-    private static void configureToggleVBox(VBox vBox, Node textPort, Node text){
+    private void configureToggleVBox(VBox vBox, Node textPort, Node text){
         vBox.setAlignment(Pos.CENTER);
         vBox.setDisable(true);
         vBox.getChildren().addAll(textPort, text);
         vBox.getChildren().get(0).setStyle("-fx-text-fill: grey;");
     }
 
-    private static boolean isValidInput(String connectionInput, String interfaceInput, String portText, String ipText, Stage window, InitWindow init) {
+    private boolean isValidInput(String connectionInput, String interfaceInput, String portText, String ipText) {
 
         boolean isValue = false;
         try{
             switch(connectionType){
-                case "Socket": if(connectionInput == null || interfaceInput == null || portText.trim().isEmpty() || ipText.trim().isEmpty()) throw new NullPointerException();
+                case SOCKET: if(connectionInput == null || interfaceInput == null || portText.trim().isEmpty() || ipText.trim().isEmpty()) throw new NullPointerException();
                                else isValue = true;
                                break;
-                case "RMI":    if(connectionInput == null || interfaceInput == null || ipText.trim().isEmpty()) throw new NullPointerException();
+                case RMI:    if(connectionInput == null || interfaceInput == null || ipText.trim().isEmpty()) throw new NullPointerException();
                                else isValue = true;
                                break;
             }
@@ -212,7 +211,7 @@ public class AlertSwitcher{
         return sceneNickName;
     }
 
-    public static void closeAlert(){
+    public void closeAlert(){
         window.close();
     }
 }
