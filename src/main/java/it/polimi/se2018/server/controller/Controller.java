@@ -319,7 +319,7 @@ public class Controller{
     /**
      * Metodo tunnel per l'attivazione delle carte utensile.
      * Controlla inoltre che le mosse a disposizione nel turno siano state fatte tutte.
-     * @param mex
+     * @param mex messagio di attivazione
      */
     public void callThrough(Activate mex){
         lobby.getUtensils(mex.getCard()).accept(cCard,mex);
@@ -327,30 +327,58 @@ public class Controller{
     }
 
     /**
-     *
-     * @param mex
+     *Metodo tunnel per l'attuazione di un piazzamento.
+     *  Controlla inoltre che le mosse a disposizione nel turno siano state fatte tutte.
+     * @param mex messaggio di piazzamento
      */
     public void simpleMove(SimpleMove mex){
         cAction.simpleMove(mex);
         if(messageComingChecking(mex)) cTurn.closeTurn();
     }
+
+    /**
+     * Metodo che ritorna il riferimento del comunicatore del controller.
+     * @return
+     */
     public ControllerChat getcChat() {
         return cChat;
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Metodo che setta la scelta del giocatore della side.
+     * @param m messaggio contenente il nome del giocatore e l'indice della side scelta.
+     * @throws InvalidValueException
+     */
     public void chosen(Choice m) throws InvalidValueException {
         lobby.callPlayerByName(m.getPlayer()).setMySide(m.getIndex());
         passTurn(new PassTurn(m.getPlayer()));
     }
+
+    /**
+     * Metodo che segnala il volere di passare il turno del giocatore.
+     * @param m
+     */
     public void passTurn(PassTurn m){
         cTurn.passTurn(m);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Metodo che controlla la validità del messaggio in ingresso.
+     * @param m messaggio da controllare.
+     * @return
+     */
     public boolean messageComingChecking(EventMVC m){
         return cTurn.messageComingChecking(m);
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Metodo che fa partire l'intero gioco.
+     * @throws Exception
+     */
     public void START() throws Exception {
         cTurn.setThePlayers();
     }

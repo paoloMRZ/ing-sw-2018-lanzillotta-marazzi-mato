@@ -391,7 +391,7 @@ public class Table {
     public void showEnemiesChoice(){
         String content= "";
         for(int i=0;i<playersList.size();i++){
-            content=content.concat(playersList.get(i).getMySide().getName());
+            content=content.concat(playersList.get(i).getName());
             content = content.concat("&");
             content=content.concat(playersList.get(i).getMySide().getName());
             if(i!=playersList.size()-1) content = content.concat("&");
