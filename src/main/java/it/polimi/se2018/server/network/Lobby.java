@@ -8,7 +8,6 @@ import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.message.network.NetworkMessageCreator;
 import it.polimi.se2018.server.message.network.NetworkMessageParser;
-import it.polimi.se2018.server.message.server.ServerMessageCreator;
 import it.polimi.se2018.server.network.fake_client.FakeClient;
 import it.polimi.se2018.server.network.fake_client.FakeClientObserver;
 import it.polimi.se2018.server.timer.ObserverTimer;
@@ -105,7 +104,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
         if (fakeClient != null) { //Se l'ho trovato lo congelo, cioè chiudo la sua connessione ma non non rimuovo dalla lobby.
             fakeClient.closeConnection();
             numberOfClient--;
-            notifyFromFakeClient(NetworkMessageCreator.getDisconnectMessage(nickname)); //Notifico tutti gli altri giocatori della disconnessione del client.
+            notifyFromFakeView(NetworkMessageCreator.getDisconnectMessage(nickname)); //Notifico tutti gli altri giocatori della disconnessione del client.
         }
 
     }
@@ -122,7 +121,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
         if (fakeClient != null) {
             this.connections.set(connections.indexOf(fakeClient), newConnection); //Sostituisco il client congelato con quello nuovo.
             numberOfClient++;
-            notifyFromFakeClient(NetworkMessageCreator.getDisconnectMessage(newConnection.getNickname())); //Notifico tutti i giocatori della connessione appena avvenuta.
+            notifyFromFakeView(NetworkMessageCreator.getDisconnectMessage(newConnection.getNickname())); //Notifico tutti i giocatori della connessione appena avvenuta.
         }
 
     }
@@ -266,7 +265,8 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
             else
                 freezeFakeClient(NetworkMessageParser.getMessageAddressee(message));
         }  else {
-            fakeView.messageIncoming(message);
+            if(fakeView != null)
+                fakeView.messageIncoming(message);
         }
     }
 
