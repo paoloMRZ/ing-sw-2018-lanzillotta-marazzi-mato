@@ -338,11 +338,12 @@ public class Table {
     public void setUpdateReserve(){
         launchCommunication(reserve.setUpdate());
     }
+
     public void setUpdateRoundGrid(){
         launchCommunication(roundGrid.setUpdate());
     }
-    public void setUpdateScoreGrid(){
 
+    public void setUpdateScoreGrid(){
         launchCommunication(scoreGrid.setUpdate());
     }
 

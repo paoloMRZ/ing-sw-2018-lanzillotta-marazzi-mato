@@ -52,7 +52,7 @@ public class Reserve {
         String who = this.getClass().getName();
         String content = this.toString();
 
-        return new UpdateM(null,who, content);
+        return new UpdateM(null,"reserve", content);
     }
     //todo toString da fare
     public String toString(){

@@ -62,8 +62,9 @@ public class ControllerTurn implements ObserverTimer {
 
         firstPlayer = lobby.callPlayerByNumber(caller).getName();
         round = round + 1;
-        //controller.getcChat().notifyObserver(new UpdateM(turnOf,"round",String.valueOf(round)));
+
         lobby.newRiserva4Game();
+
         // riserva e no roundgrid
         if(!isGameFinished()) setTurn();
 
