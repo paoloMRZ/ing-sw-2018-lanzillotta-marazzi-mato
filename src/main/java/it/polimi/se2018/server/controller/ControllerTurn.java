@@ -29,7 +29,6 @@ public class ControllerTurn implements ObserverTimer {
     private ArrayList<String> orderOfTurning = new ArrayList<>();
 //gestione delle fasi
     private boolean setting=true;
-    private boolean upDown=true;
     private boolean andata=true;
     private boolean timeIsOn=false;
 
@@ -72,13 +71,14 @@ public class ControllerTurn implements ObserverTimer {
     }
 
     private void setTurn() throws InvalidHowManyTimes {
-
-        if(lobby.callPlayerByNumber(caller).canYouPlay()) {//determina se un giocatore è stato disconnesso
             turnOf = lobby.callPlayerByNumber(caller).getName();
+
+        if(getTurn().canYouPlay()) {//determina se un giocatore è stato disconnesso
+
             controller.getcChat().notifyObserver(new UpdateM(turnOf,"turn",turnOf));
 
             recorder(turnOf);
-            lobby.callPlayerByNumber(caller).reductor();
+            getTurn().reductor();
             lobby.rotatingPlayerTurn(caller);
             sagradaTimer.start();
             timeIsOn = true;
@@ -94,8 +94,9 @@ public class ControllerTurn implements ObserverTimer {
             sagradaTimer.stop();
             timeIsOn=false;
             controller.getcChat().notifyObserver( new TimeIsUp(turnOf));
-            if(!lobby.callPlayerByNumber(caller).getDidPlayDie() && !lobby.callPlayerByNumber(caller).getDidPlayCard()){
-                lobby.callPlayerByNumber(caller).forget();
+
+            if(!getTurn().getDidPlayDie() && !getTurn().getDidPlayCard()){
+                getTurn().forget();
             }
 
             if(!andata && turnOf.equals(firstPlayer) ){
@@ -175,16 +176,8 @@ public void setThePlayers() throws InvalidValueException {
 
 
     private void callerModifier(){
-        if(andata) {
-            if (caller == 0) upDown = true;
-            if (caller == numbOfPlayers - 1) upDown = true;
-        }
-        else{
-            if (caller == 0) upDown = false;
-            if (caller == numbOfPlayers - 1) upDown = false;
-        }
 
-        if(upDown) caller=caller+1;
+        if(andata) caller=caller+1;
         else caller=caller-1;
 
         if(caller<0){
@@ -234,7 +227,6 @@ public void setThePlayers() throws InvalidValueException {
         caller=0;
         orderOfTurning = new ArrayList<>();
 
-        upDown=true;
         andata=true;
         timeIsOn=false;
         setting=false;
