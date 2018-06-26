@@ -155,6 +155,7 @@ public class ServerMessageCreator {
     public static String getSideListMessage(String list) {
         String message = "/###/!/start/side_list/";
         message = message.concat(list);
+        message = message.concat("\n");
         return message;
 
     }
@@ -169,6 +170,7 @@ public class ServerMessageCreator {
     public static String getPublicObjectiveMessage(String list) {
         String message = "/###/!/start/public_objective/";
         message = message.concat(list);
+        message = message.concat("\n");
         return message;
     }
 
@@ -182,6 +184,7 @@ public class ServerMessageCreator {
     public static String getSendUtensilsMessage(String list) {
         String message = "/###/!/start/utensil/";
         message = message.concat(list);
+        message = message.concat("\n");
         return message;
 
     }
@@ -209,7 +212,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getUpdateRoundMessage(String nickname, String infoReserve) {
-        return "/###/!/update/round/" + nickname + "&" + infoReserve;
+        return "/###/!/update/round/" + nickname + "&" + infoReserve + "\n";
     }
 
 
