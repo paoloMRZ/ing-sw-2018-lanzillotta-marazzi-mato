@@ -31,7 +31,7 @@ public class Player {
     private final NotifyModel notifier;
     private List<Side> mySideSelection;
     private final String name;
-    private Side mySide;
+    private Side mySide=null;
     private final Objective myObjective;
     private int favours = 0;
     private boolean isMyTurn=false;
