@@ -151,14 +151,17 @@ public void setThePlayers() throws InvalidValueException {
             controller.getcChat().notifyObserver( new TimeIsUp(turnOf));
 
             if(getTurn().getMySide()==null) lobby.callPlayerByNumber(caller).forgetForever();
+            else{
 
-            if(caller!=lobby.peopleCounter()-1 ){
-                lobby.showEnemiesChoice();
-                resetQualities();
-            }
-            else {
-                callerModifier();
-                anotherPlayer();
+                if(caller == numbOfPlayers-1 ){
+                    lobby.showEnemiesChoice();
+                    resetQualities();
+                }
+                else {
+                    callerModifier();
+                    anotherPlayer();
+                }
+
             }
         }
         catch (Exception e){
