@@ -59,9 +59,9 @@ public class Reserve {
         String message = "";
         for (Dice die : dices) {
             if (dices.indexOf(die) == 0)
-                message = message.concat(die.getColor().name()+"-" + die.getNumber());
+                message = message.concat(die.getColor().name() + die.getNumber());
             else
-                message = message.concat("&" + die.getColor().name() +"-"+ die.getNumber());
+                message = message.concat("&" + die.getColor().name() + die.getNumber());
         }
 
         message = message.concat("\n");
