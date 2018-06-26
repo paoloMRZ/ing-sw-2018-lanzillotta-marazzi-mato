@@ -407,8 +407,8 @@ public class Table {
     }
 
     public void newRiserva4Game() {
-        reserve= createReserve();
-        reserve.setUpdate();
+        reserve = createReserve();
+        setUpdateReserve();
     }
 
     public void setUpdateDiceToRoundGrid() {
