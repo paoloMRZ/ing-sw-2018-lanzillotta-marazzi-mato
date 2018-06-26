@@ -373,10 +373,16 @@ public class Table {
     private void setStartMexUtensils(){
         String message ="";
         for (int i = 0; i < 3; i++) {
-            if (i == 0)
+            if (i == 0){
                 message = message.concat(utensilsDeck.get(i).getMyType());
-            else
+                message= message.concat("&");
+                message = message.concat(String.valueOf(utensilsDeck.get(i).getNumber()));
+            }
+            else{
                 message = message.concat("&" + utensilsDeck.get(i).getMyType());
+                message= message.concat("&");
+                message = message.concat(String.valueOf(utensilsDeck.get(i).getNumber()));
+            }
         }
         message= message.concat("\n");
 
