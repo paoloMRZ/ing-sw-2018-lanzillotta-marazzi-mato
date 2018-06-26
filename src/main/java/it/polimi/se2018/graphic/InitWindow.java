@@ -81,7 +81,7 @@ public class InitWindow extends Application {
         borderPane.setCenter(layout);
         landscape = new StackPane(borderPane);
 
-        Scene sceneLogin = new Scene(landscape);
+        Scene sceneLogin = new Scene(landscape,718,878);
         primaryStage.setScene(sceneLogin);
         primaryStage.centerOnScreen();
         primaryStage.setMaxHeight(718);
@@ -91,22 +91,16 @@ public class InitWindow extends Application {
 
 
         //TODO: SCHERMATA DI GIOCO
-        //StackPane da utilizzare solamente alla fine perchè ha priorità maggiore
-        StackPane gameStack = new StackPane();
 
         //AnchorPane su cui ancorare gli elementi della schermata di gioco
         AnchorPane anchorGame = new AnchorPane();
 
+        //StackPane da utilizzare solamente alla fine perchè ha priorità maggiore
+        StackPane gameStack = new StackPane(anchorGame);
 
         ImageView imageView = new ImageView("prova-sfondo.png");
         imageView.setFitWidth(Screen.getPrimary().getVisualBounds().getWidth());
         imageView.setFitHeight(Screen.getPrimary().getVisualBounds().getHeight());
-        Screen screen = Screen.getPrimary();
-        Rectangle2D bounds = screen.getVisualBounds();
-        primaryStage.setX(bounds.getMinX());
-        primaryStage.setY(bounds.getMinY());
-        primaryStage.setWidth(bounds.getWidth());
-        primaryStage.setHeight(bounds.getHeight());
         anchorGame.setStyle("-fx-background-image: url(prova-sfondo.png); -fx-background-size: contain; -fx-background-position: center; -fx-background-repeat: no-repeat;");
 
         /*
@@ -213,7 +207,7 @@ public class InitWindow extends Application {
 
         //Listener per il cambio di scena e valutazione del messaggio
         message.textProperty().addListener((obs, oldText, newText) -> {
-
+        if(!message.getText().equals("")){
             //TODO: MESSAGGI DI TIPO START
             if (ClientMessageParser.isStartMessage(message.getText())) {
 
@@ -221,17 +215,13 @@ public class InitWindow extends Application {
                 if (ClientMessageParser.isStartChoseSideMessage(message.getText())) {
                     //SCHERMATA DI SCELTA SIDE
                     List<String> sideSelection = ClientMessageParser.getInformationsFromMessage(message.getText());
-                    try {
-                        sideChoiceLabel = new SideChoiceLabel(sideSelection, connectionHandler);
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
+                    sideChoiceLabel = new SideChoiceLabel(sideSelection, connectionHandler);
 
                     Scene sceneChoice = new Scene(sideChoiceLabel.getSideChoise(), 1150, 900);
                     Platform.runLater(() -> {
                         alertSwitcher.closeAlert();
                         primaryStage.setMaxHeight(900);
-                        primaryStage.setMaxWidth(1150);
+                        primaryStage.setMaxWidth(1400);
                         primaryStage.setScene(sceneChoice);
                     });
 
@@ -277,8 +267,6 @@ public class InitWindow extends Application {
                 //MESSAGGIO UPDATE PER IL CAMBIO DEL ROUND
                 if (ClientMessageParser.isUpdateRoundMessage(message.getText())) {
                     List<String> roundInfo = ClientMessageParser.getInformationsFromMessage(message.getText());
-                    settingLabel.updateTurn(roundInfo.get(0));
-                    roundInfo.remove(0);
                     roundLabel.proceedRound(roundInfo,120,70);
                 }
 
@@ -286,6 +274,7 @@ public class InitWindow extends Application {
                 //MESSAGGIO UPDATE DELLA ROUNDGRID QUANDO EVENTUALMENTE SI CAMBIANO I SUOI DADI (UTILIZZO UTENSILE)
                 if (ClientMessageParser.isUpdateRoundgridMessage(message.getText())) {
                     List<List<String>> roundGridInfo = ClientMessageParser.getInformationsFromUpdateRoundgridMessage(message.getText());
+
                     anchorGame.getChildren().remove(roundLabel);
                     ArrayList<Double> positionGridRound = new ArrayList<>(Arrays.asList(70d, 0d, 15d, 0d));
                     roundLabel = new RoundLabel(70, 70,910,90, positionGridRound);
@@ -334,7 +323,15 @@ public class InitWindow extends Application {
 
                         Scene sceneGame = new Scene(gameStack, 1880, 1073);
                         startGame=false;
-                        Platform.runLater(() ->primaryStage.setScene(sceneGame));
+                        Platform.runLater(() ->{
+                            Screen screen = Screen.getPrimary();
+                            Rectangle2D bounds = screen.getVisualBounds();
+                            primaryStage.setX(bounds.getMinX());
+                            primaryStage.setY(bounds.getMinY());
+                            primaryStage.setWidth(bounds.getWidth());
+                            primaryStage.setHeight(bounds.getHeight());
+                            primaryStage.setScene(sceneGame);
+                        });
                     }
 
                     else settingLabel.updateTurn(ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
@@ -396,7 +393,7 @@ public class InitWindow extends Application {
 
             }
 
-        });
+        }});
     }
 
     public void setNickName (String message){

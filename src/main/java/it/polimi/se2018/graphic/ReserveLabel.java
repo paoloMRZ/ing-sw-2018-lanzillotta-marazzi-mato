@@ -48,7 +48,7 @@ public class ReserveLabel{
             button.setPrefSize(prefWidth,prefHeight);
             button.setStyle("-fx-border-color: transparent; -fx-border-width: 2; -fx-background-radius: 0; -fx-background-color: transparent;");
 
-            ImageView die = shadowEffect(new ImageView(new Image("diePack/die-" + diceInfo.get(i) + ".bmp", prefWidth, prefHeight, false, true)));
+            ImageView die = shadowEffect(new ImageView(new Image("diePack/die-" + diceInfo.get(i).toLowerCase() + ".bmp", prefWidth, prefHeight, false, true)));
             button.getChildren().add(die);
 
             int finalI = i;

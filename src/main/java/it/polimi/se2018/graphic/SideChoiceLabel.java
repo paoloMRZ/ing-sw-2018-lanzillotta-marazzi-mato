@@ -32,7 +32,7 @@ public class SideChoiceLabel{
     private String nameChoice;
     private String favours;
 
-    public SideChoiceLabel(List<String> sideSelection, ConnectionHandler connectionHandler) throws MalformedURLException {
+    public SideChoiceLabel(List<String> sideSelection, ConnectionHandler connectionHandler){
 
         //Settaggio della finestra
         Label labelRequest = setFontStyle(new Label("Scegli la tua carta Window:"),35);
@@ -66,7 +66,7 @@ public class SideChoiceLabel{
         return sideChoise;
     }
 
-    private HBox configureLevelSide(String firstSide, String firstUserData, String firstFavours, String secondSide, String secondUserData, String secondFavours) throws MalformedURLException {
+    private HBox configureLevelSide(String firstSide, String firstUserData, String firstFavours, String secondSide, String secondUserData, String secondFavours){
         HBox hBox = new HBox(70);
         ImageView choiceOne = shadowEffect(configureImageView(SUBDIRECTORY, firstSide, EXTENSION, 360,303));
         choiceOne.setFitWidth(360);
