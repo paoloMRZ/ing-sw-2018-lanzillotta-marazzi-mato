@@ -57,20 +57,15 @@ public class FakeClientSocket extends FakeClient implements Runnable {
             String message;
 
             while(isOpen) {
-
-
                 message = reader.readLine();
 
-                if (message == null) { //Controllo se è caduta la connessione.
-                    lobby.notifyFromFakeClient("/" + getNickname() + "/###/rete/?/disconnect\n");
+                if (message != null)
+                    lobby.notifyFromFakeClient(message); //Notifico la lobby del messaggio ricevuto.
 
-                } else { //In tutti gli altri casi devo passare il messaggio al controllore.
-                    lobby.notifyFromFakeClient((message.concat("\n"))); //Notifico la lobby del messaggio ricevuto.
-                }
             }
 
         } catch (IOException e) {
-            lobby.notifyFromFakeClient(("/" + getNickname() + "/###/rete/?/disconnect\n"));
+            lobby.notifyFromFakeClient(("/" + getNickname() + "/###/rete/?/disconnect\n")); //TODO
         }
     }
 

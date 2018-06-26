@@ -80,7 +80,7 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
     }
 
     /**
-     * Loop di lettura della socket. Appena arriva un messaggio dal server lo receiveNotify alla view tramite il metodo contenuto nel padre "ConnectionHandler".
+     * Loop di lettura della socket. Appena arriva un messaggio dal server lo notifyFromFakeView alla view tramite il metodo contenuto nel padre "ConnectionHandler".
      * Se riceve un messaggio di chiusura della connessione oltre a notificarlo alla view interrompe il loop di lettura.
      */
     @Override
@@ -94,9 +94,7 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
 
                 tmp = reader.readLine();
 
-                if (tmp == null)
-                    isOpen = false;
-                else
+                if (tmp != null)
                     super.notifica(tmp);
 
             } catch (IOException e) {
