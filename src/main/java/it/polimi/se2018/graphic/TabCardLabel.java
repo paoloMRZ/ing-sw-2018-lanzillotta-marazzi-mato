@@ -13,6 +13,12 @@ import javafx.scene.text.TextAlignment;
 
 import static it.polimi.se2018.graphic.Utility.*;
 
+/**
+ * Classe TabCardLabel rappresenta l'elemento grafico che permette la visualizzazione delle carte Utensili e carte Obbiettivo pubbliche estratte per la sessione di gioco
+ *
+ * @author Simone Lanzillotta
+ */
+
 
 public class TabCardLabel {
 
@@ -35,6 +41,7 @@ public class TabCardLabel {
         objectiveTab = new Tab();
         borderPane.setCenter(tabPane);
         root.getChildren().add(borderPane);
+        root.setAutoSizeChildren(true);
     }
 
     public void configureTabUtensils(AnchorPane cardUtensils){
@@ -71,7 +78,14 @@ public class TabCardLabel {
 
     }
 
-    public BorderPane getBorderPane() {
-        return borderPane;
+    
+    /**
+     * Metodo getter che restituisce l'oggetto Group root
+     *
+     * @return Riferimento all'elemento grafico configurato
+     */
+
+    public Group getGroupPane() {
+        return root;
     }
 }

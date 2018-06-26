@@ -40,8 +40,12 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
     public void update(PassTurn m){
         controller.passTurn(m);
     }
-    public void update(Choice m) throws InvalidValueException {
-        controller.chosen(m);
+    public void update(Choice m){
+        try {
+            controller.chosen(m);
+        } catch (InvalidValueException e) {
+            e.printStackTrace();
+        }
     }
 
 /* NEL CASO SI VOGLIAMO LASCIARE INTERAGIRE GLI UTENTI QUANDO NON è IL LORO TURNO

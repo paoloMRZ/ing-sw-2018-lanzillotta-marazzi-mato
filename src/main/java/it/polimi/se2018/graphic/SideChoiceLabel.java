@@ -2,6 +2,7 @@ package it.polimi.se2018.graphic;
 
 import it.polimi.se2018.client.connection_handler.ConnectionHandler;
 import it.polimi.se2018.client.message.ClientMessageCreator;
+import it.polimi.se2018.graphic.alert_box.AlertLoadingGame;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
@@ -55,6 +56,7 @@ public class SideChoiceLabel{
         ImageView continueButton = shadowEffect(configureImageView("","button-continue", ".png",250,110));
         continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             connectionHandler.sendToServer(ClientMessageCreator.getSideReplyMessage(connectionHandler.getNickname(), numberChoice));
+            AlertLoadingGame.display("Sagrada", "Attendere la scelta degli\naltri giocatori...");
         });
 
         Stream<String> firstStream = sideSelection.stream().filter(s -> (sideSelection.indexOf(s) % 2 == 0));

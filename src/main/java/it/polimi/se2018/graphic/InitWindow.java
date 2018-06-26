@@ -298,7 +298,7 @@ public class InitWindow extends Application {
                     if(startGame){
 
                         //Posiziono le carte Utensili e Pubbliche
-                        configureAnchorPane(anchorGame, tabCardLabel.getBorderPane(), 40d, 410d, 880d, 260d);
+                        configureAnchorPane(anchorGame, tabCardLabel.getGroupPane(), 40d, 410d, 880d, 260d);
 
                         //Posiziono la roundGrid
                         ArrayList<Double> positionGridRound = new ArrayList<>(Arrays.asList(20d, 0d, 0d, 0d));

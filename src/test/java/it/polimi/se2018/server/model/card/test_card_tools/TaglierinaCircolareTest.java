@@ -99,7 +99,7 @@ public class TaglierinaCircolareTest {
         taglierina.function(controller, message);
 
         Dice itsHim = controller.getcAction().pickFromReserve(4);
-        Dice itsHim2 = controller.getcAction().pickOnGrid(0, 0);
+        Dice itsHim2 = controller.getcAction().takeFromGrid(0, 0);
         try {
             assertEquals(4, itsHim.getNumber());
             assertEquals(Color.YELLOW, itsHim.getColor());
@@ -131,7 +131,7 @@ public class TaglierinaCircolareTest {
         taglierina.function(controller, message);
 
         Dice itsHim = controller.getcAction().pickFromReserve(4);
-        Dice itsHim2 = controller.getcAction().pickOnGrid(0, 0);
+        Dice itsHim2 = controller.getcAction().takeFromGrid(0, 0);
         try {
             assertEquals(4, itsHim.getNumber());
             assertEquals(Color.YELLOW, itsHim.getColor());
@@ -159,7 +159,7 @@ public class TaglierinaCircolareTest {
         taglierina.function(controller, message);
 
         Dice itsHim = controller.getcAction().pickFromReserve(4);
-        Dice itsHim2 = controller.getcAction().pickOnGrid(0, 0);
+        Dice itsHim2 = controller.getcAction().takeFromGrid(0, 0);
         try {
             assertEquals(4, itsHim.getNumber());
             assertEquals(Color.YELLOW, itsHim.getColor());
