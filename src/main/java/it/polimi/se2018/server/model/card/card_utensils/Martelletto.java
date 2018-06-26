@@ -22,7 +22,7 @@ public class Martelletto extends  Utensils {
     public void accept(Visitor c, ToolCard7 m){
         c.visit(this,m);
     }
-    public void function(Controller controller) throws InvalidValueException, InvalidActivationException {
+    public void function(Controller controller) throws InvalidActivationException {
         if(controller.getTurn().getHowManyTurns() == 0 && !controller.getTurn().getDidPlayDie()) {
             Reserve rolled= new Reserve(new ArrayList<Dice>());
             Reserve tmpRes= controller.getcAction().getReserve();
@@ -33,7 +33,7 @@ public class Martelletto extends  Utensils {
                 rolled.put(D);
             }
             controller.getcAction().resettingReserve(rolled);
-            controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
+            //controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
         }
         else throw new InvalidActivationException();
     }

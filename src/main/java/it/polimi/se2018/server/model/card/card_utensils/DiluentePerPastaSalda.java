@@ -48,7 +48,7 @@ public class DiluentePerPastaSalda extends Utensils {
         dadozzo.manualSet(value);
         controller.getcAction().workOnSide(name,dadozzo,row,col);
 
-        controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
+        //controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
     }
 
 

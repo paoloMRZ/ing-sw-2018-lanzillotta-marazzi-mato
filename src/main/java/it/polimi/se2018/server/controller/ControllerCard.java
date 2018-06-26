@@ -41,6 +41,8 @@ public class ControllerCard implements Visitor {
             if(itemPinza.getIsBusy()){
                 itemPinza.function(controller,m);
                 itemPinza.setTheUse();
+                controller.getcAction().playerActivatedCard(controller.getTurn().getName(),itemPinza.getPreviousCost());
+
                 controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemPinza.getNumber(),m.getCard(),
                                                         controller.getTurn().getFavours(),
                                                         itemPinza.getCost(),m.getPlayer()));
@@ -62,6 +64,8 @@ public class ControllerCard implements Visitor {
             if(itemPennelloEglo.getIsBusy()){
                 itemPennelloEglo.function(controller,m);
                 itemPennelloEglo.setTheUse();
+                controller.getcAction().playerActivatedCard(controller.getTurn().getName(),itemPennelloEglo.getPreviousCost());
+
                 controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemPennelloEglo.getNumber(),m.getCard(),
                                                                 controller.getTurn().getFavours(),
                                                                 itemPennelloEglo.getCost(),m.getPlayer()));
@@ -83,6 +87,8 @@ public class ControllerCard implements Visitor {
             if(itemLathekin.getIsBusy()){
                 itemLathekin.function(controller,m);
                 itemLathekin.setTheUse();
+                controller.getcAction().playerActivatedCard(controller.getTurn().getName(),itemLathekin.getPreviousCost());
+
                 controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemLathekin.getNumber(),m.getCard(),
                                                                             controller.getTurn().getFavours(),
                                                                             itemLathekin.getCost(),m.getPlayer()));
@@ -123,6 +129,8 @@ public class ControllerCard implements Visitor {
             if(itemPennelloPasta.getIsBusy()){
                 itemPennelloPasta.function(controller,m);
                 itemPennelloPasta.setTheUse();
+                controller.getcAction().playerActivatedCard(controller.getTurn().getName(),itemPennelloPasta.getPreviousCost());
+
                 controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemPennelloPasta.getNumber(),m.getCard(),
                                                                                 controller.getTurn().getFavours(),
                                                                                 itemPennelloPasta.getCost(),m.getPlayer()));
@@ -144,6 +152,8 @@ public class ControllerCard implements Visitor {
             if(itemAlesatore.getIsBusy()){
                 itemAlesatore.function(controller,m);
                 itemAlesatore.setTheUse();
+                controller.getcAction().playerActivatedCard(controller.getTurn().getName(),itemAlesatore.getPreviousCost());
+
                 controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemAlesatore.getNumber(),m.getCard(),
                                                                                     controller.getTurn().getFavours(),
                                                                                     itemAlesatore.getCost(),m.getPlayer()));
@@ -165,6 +175,8 @@ public class ControllerCard implements Visitor {
             if(itemMartelletto.getIsBusy()){
                 itemMartelletto.function(controller);
                 itemMartelletto.setTheUse();
+                controller.getcAction().playerActivatedCard(controller.getTurn().getName(),itemMartelletto.getPreviousCost());
+
                 controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemMartelletto.getNumber(),m.getCard(),
                                                                                     controller.getTurn().getFavours(),
                                                                                     itemMartelletto.getCost(),m.getPlayer()));
@@ -211,6 +223,7 @@ public class ControllerCard implements Visitor {
             if(itemDiluente.getIsBusy()){
                 itemDiluente.function(controller,m);
                 itemDiluente.setTheUse();
+                //riga che veniva fatta dentro
                 controller.getcAction().playerActivatedCard(controller.getTurn().getName(),itemDiluente.getPreviousCost());
                 controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemDiluente.getNumber(),m.getCard(),
                                                                                 controller.getTurn().getFavours(),
@@ -234,6 +247,7 @@ public class ControllerCard implements Visitor {
             if(itemRiga.getIsBusy()){
                 itemRiga.function(controller,m);
                 itemRiga.setTheUse();
+                controller.getcAction().playerActivatedCard(controller.getTurn().getName(),itemRiga.getPreviousCost());
                 controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemRiga.getNumber(),m.getCard(),
                                                                                     controller.getTurn().getFavours(),
                                                                                      itemRiga.getCost(),m.getPlayer()));
@@ -255,6 +269,8 @@ public class ControllerCard implements Visitor {
             if(itemT.getIsBusy()){
                 itemT.function(controller,m);
                 itemT.setTheUse();
+                controller.getcAction().playerActivatedCard(controller.getTurn().getName(),itemT.getPreviousCost());
+
                 controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemT.getNumber(),m.getCard(),
                                                                                     controller.getTurn().getFavours(),
                                                                                     itemT.getCost(),m.getPlayer()));
@@ -277,6 +293,8 @@ public class ControllerCard implements Visitor {
             if(itemTM.getIsBusy()){
                 itemTM.function(controller,m);
                 itemTM.setTheUse();
+                controller.getcAction().playerActivatedCard(controller.getTurn().getName(),itemTM.getPreviousCost());
+
                 controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemTM.getNumber(),m.getCard(),
                                                                                     controller.getTurn().getFavours(),
                                                                                     itemTM.getCost(),m.getPlayer()));
@@ -298,6 +316,8 @@ public class ControllerCard implements Visitor {
             if(itemTD.getIsBusy()){
                 itemTD.function(controller,m);
                 itemTD.setTheUse();
+                controller.getcAction().playerActivatedCard(controller.getTurn().getName(),itemTD.getPreviousCost());
+
                 controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemTD.getNumber(),m.getCard(),
                                                                                         controller.getTurn().getFavours(),
                                                                                            itemTD.getCost(),m.getPlayer()));
@@ -319,6 +339,8 @@ public class ControllerCard implements Visitor {
             if(itemTe.getIsBusy()){
                 itemTe.function(controller,m);
                 itemTe.setTheUse();
+                controller.getcAction().playerActivatedCard(controller.getTurn().getName(),itemTe.getPreviousCost());
+
                 controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemTe.getNumber(),m.getCard(),
                                                                                     controller.getTurn().getFavours(),
                                                                                       itemTe.getCost(),m.getPlayer()));

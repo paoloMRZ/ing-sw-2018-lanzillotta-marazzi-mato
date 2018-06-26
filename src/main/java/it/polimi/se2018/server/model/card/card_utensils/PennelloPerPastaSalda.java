@@ -50,7 +50,7 @@ public class PennelloPerPastaSalda extends Utensils {
             int row=cont.get(0);
             int col=cont.get(1);
             controller.getcAction().workOnSide(name,controller.getcAction().getHoldingADiceMoveInProgress(),row,col);
-            controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
+            //controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
         }
     }
 

@@ -34,7 +34,7 @@ public class PennelloPerEglomise extends Utensils {
         controller.getcAction()
                 .workOnSideIgnoreColor(name,oldRow,oldCol,newRow,newCol);
 
-        controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
+        //controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
     }
 
 }

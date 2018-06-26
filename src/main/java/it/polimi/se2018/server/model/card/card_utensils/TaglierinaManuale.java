@@ -48,7 +48,7 @@ public class TaglierinaManuale extends Utensils {
             controller.getcAction()
                     .moveStuffOnSide(name,oldRow2,oldCol2,newRow2,newCol2);
 
-            controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
+            //controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
         }
         else throw new InvalidValueException();
 
