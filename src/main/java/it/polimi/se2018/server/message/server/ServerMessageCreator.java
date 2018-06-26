@@ -207,12 +207,11 @@ public class ServerMessageCreator {
     /**
      * Il metodo restiuisce il messaggio da mandare ai client per informarli dell'inizio di un nuovo round.
      *
-     * @param nickname    nickaname del giocatore che deve giocare il primo turno del round.
      * @param infoReserve lista dei dadi rimasti nella riserva che devono essere aggiunti alla roundgrid.
      * @return messaggio.
      */
-    public static String getUpdateRoundMessage(String nickname, String infoReserve) {
-        return "/###/!/update/round/" + nickname + "&" + infoReserve + "\n";
+    public static String getUpdateRoundMessage(String infoReserve) {
+        return "/###/!/update/round/" + infoReserve + "\n";
     }
 
 

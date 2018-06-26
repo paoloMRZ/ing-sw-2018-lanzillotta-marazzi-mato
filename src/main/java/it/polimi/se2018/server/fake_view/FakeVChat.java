@@ -147,7 +147,7 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
     public void update(UpdateM mex){
         switch(mex.getWhat()){
             case "round":
-                fake.messageOutBox(ServerMessageCreator.getUpdateReserveMessage(mex.getContent()));
+                fake.messageOutBox(ServerMessageCreator.getUpdateRoundMessage(mex.getContent()));
                 break;
             case "RoundGrid":
                 fake.messageOutBox(ServerMessageCreator.getUpdeteRoundgridMessage(mex.getContent()));
