@@ -239,24 +239,38 @@ public class ControllerAction {
 
     /**
      * Metodo che mette prende in sospeso un dado nel model, dovuto ad uso a più fasi di una carta utensile.
-     * @return
+     * @return dado tenuto in sospeso all'interno del model.
      */
     public Dice getHoldingADiceMoveInProgress(){
         return lobby.getHoldingADiceMoveInProgress();
     }
 
-
+    /**
+     * Metodo che richiede il reinserimento di un dado e l'estrazione di uno nuovo.
+     * @param die riferimento al dado da reinserire.
+     * @return riferimento al dado estratto dal sacchetto.
+     */
     public Dice extractDieAgain(Dice die){
         lobby.getDiceSachet().reput(die);
         return lobby.getDiceSachet().getDiceFromSachet();
     }
 
+    /**
+     * Metodo che ritorna semplicemente quanti giocatori ci sono nella partita attuale.
+     * @return numero di giocatori.
+     */
     public int peopleCounter(){
         return lobby.peopleCounter();
     }
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Metodo che esegue un piazzamento semplice di un dado, da trarre dalla riserva, riponenedolo sulla carta
+     * schema del giocatore che invia il messaggio.
+     * @param move messaggio contenente le info per il piazzamento.
+     */
     public void simpleMove(SimpleMove move){
         try{
             String dude = move.getPlayer();
@@ -281,7 +295,10 @@ public class ControllerAction {
         }
     }
 
-
+    /**
+     * Metodo che richiede  messaggi di aggiornamento su alcune parti del model.
+     * @param m messaggio con una stringa nella quale sono indicati gli elementi da aggiornare.
+     */
     public void refresher(UpdateReq m){
         try{
         lobby.refresh(m);
@@ -295,6 +312,11 @@ public class ControllerAction {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Metedo che si occupa di agganciare il notificatore del MODEL con la FAKEVIEW.
+     * @param message contiene la reference della fakeview chat
+     */
     public void hook(HookMessage message){
         lobby.responder().register(message.getObserver());
     }

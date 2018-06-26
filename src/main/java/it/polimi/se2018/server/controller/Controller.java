@@ -59,13 +59,13 @@ public class Controller{
         else throw new NullPointerException();
     }
 
-
     /**
-     * Metodo utilizzato per la creazione delle istanze della classe Player partendo dalla lista dei propri nickname
      *
-     * @return riferimento alla collezione di player
+     * Metodo utilizzato per la creazione delle istanze della classe Player partendo dalla lista dei propri nickname
+     * @param nameOfPlayers lista dei nomi dei giocatori della partita
+     * @param notifier notificatore del model di cui ogni giocatore deve conoscere la reference per comunicare nel mvc.
+     * @return Lista di istanze di giocatori.
      */
-
     private List<Player> setListOfPlayers(List<String> nameOfPlayers,NotifyModel notifier) {
 
         if (!nameOfPlayers.isEmpty()) {
@@ -300,18 +300,36 @@ public class Controller{
         return cTurn.getTurn();
     }
 
+    /**
+     * Metodo che ritorna i noi dei giocatori in ordine di turnazione nel round appena passato
+     * @return lista di nomi in ordine di comparizione in un round.
+     */
     public List<String> getOrderOfTurning(){ return cTurn.getOrderOfTurning();}
 
+    /**
+     * Metodo che si occupa di indicare il vincitore della partota e di comunicarlo ai giocatori.
+     * @throws Exception
+     */
     protected void finalizeTheGame() throws Exception{
         cPoints.updateScoreOfPlayer();
         cPoints.nameOfWinner();
         lobby.setUpdateScoreGrid();
     }
 
+    /**
+     * Metodo tunnel per l'attivazione delle carte utensile.
+     * Controlla inoltre che le mosse a disposizione nel turno siano state fatte tutte.
+     * @param mex
+     */
     public void callThrough(Activate mex){
         lobby.getUtensils(mex.getCard()).accept(cCard,mex);
         if(messageComingChecking(mex)) cTurn.closeTurn();
     }
+
+    /**
+     *
+     * @param mex
+     */
     public void simpleMove(SimpleMove mex){
         cAction.simpleMove(mex);
         if(messageComingChecking(mex)) cTurn.closeTurn();
