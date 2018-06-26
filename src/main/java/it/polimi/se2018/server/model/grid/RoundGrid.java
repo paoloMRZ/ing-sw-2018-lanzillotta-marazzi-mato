@@ -120,9 +120,9 @@ public class RoundGrid {
 
                 for (Dice die : diceList) {
                     if (diceList.indexOf(die) == 0)
-                        message = message.concat(die.getColor().toString().toLowerCase() + die.getNumber());
+                        message = message.concat(die.getColor().toString().toLowerCase() + "-" + die.getNumber());
                     else
-                        message = message.concat(":" + die.getColor().toString().toLowerCase() + die.getNumber());
+                        message = message.concat(":" + die.getColor().toString().toLowerCase() +"-"+ die.getNumber());
                 }
             }
 

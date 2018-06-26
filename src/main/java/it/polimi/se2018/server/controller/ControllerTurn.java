@@ -63,10 +63,11 @@ public class ControllerTurn implements ObserverTimer {
 
         firstPlayer = lobby.callPlayerByNumber(caller).getName();
         round = round + 1;
-        controller.getcChat().notifyObserver(new UpdateM(turnOf,"round",String.valueOf(round)));
+        //controller.getcChat().notifyObserver(new UpdateM(turnOf,"round",String.valueOf(round)));
+        lobby.newRiserva4Game();
+        // riserva e no roundgrid
+        if(!isGameFinished()) setTurn();
 
-        isGameFinished();
-        setTurn();
 
     }
 
@@ -74,12 +75,14 @@ public class ControllerTurn implements ObserverTimer {
 
         if(lobby.callPlayerByNumber(caller).canYouPlay()) {//determina se un giocatore è stato disconnesso
             turnOf = lobby.callPlayerByNumber(caller).getName();
+            controller.getcChat().notifyObserver(new UpdateM(turnOf,"turn",turnOf));
+
             recorder(turnOf);
             lobby.callPlayerByNumber(caller).reductor();
             lobby.rotatingPlayerTurn(caller);
             sagradaTimer.start();
             timeIsOn = true;
-            controller.getcChat().notifyObserver(new UpdateM(turnOf,"turn",turnOf));
+
             //parte il timer
         }
         else closeTurn();
@@ -98,6 +101,7 @@ public class ControllerTurn implements ObserverTimer {
             if(!andata && turnOf.equals(firstPlayer) ){
                 andata = true;
                 callerModifier();
+                lobby.setUpdateDiceToRoundGrid();
                 setRound();
             }
             else {
@@ -135,7 +139,7 @@ public void setThePlayers() throws InvalidValueException {
             sagradaTimer.start();
             timeIsOn = true;
 
-             getTurn().ask();
+            getTurn().ask();
 
             //parte il timer
 
@@ -197,8 +201,10 @@ public void setThePlayers() throws InvalidValueException {
         if(!orderOfTurning.contains(name)) orderOfTurning.add(name);
     }
 
-    private void isGameFinished() throws Exception {
-        if(round>10) controller.finalizeTheGame();
+    private boolean isGameFinished() throws Exception {
+        if(round>10){controller.finalizeTheGame();
+                    return true;}
+        return  false;
     }
 
     public boolean messageComingChecking(EventMVC m){

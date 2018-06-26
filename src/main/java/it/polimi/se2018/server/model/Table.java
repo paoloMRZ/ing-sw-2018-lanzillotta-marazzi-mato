@@ -405,4 +405,13 @@ public class Table {
                     turner,"private_objective",callPlayerByName(turner).getMyObjective().getName()));
         }
     }
+
+    public void newRiserva4Game() {
+        reserve= createReserve();
+        reserve.setUpdate();
+    }
+
+    public void setUpdateDiceToRoundGrid() {
+        launchCommunication(new UpdateM(null,"round",reserve.toString()));
+    }
 }
