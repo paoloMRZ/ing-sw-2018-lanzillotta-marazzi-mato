@@ -13,11 +13,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import static it.polimi.se2018.graphic.Utility.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -33,7 +36,7 @@ public class AlertInfoCard {
         Stage window = new Stage();
         window.setWidth(650);
         window.setHeight(770);
-
+        window.initModality(Modality.APPLICATION_MODAL);
         ImageView back = configureImageView(path, "retro", EXTENSION,700,850);
         back.setOpacity(0.2);
 
@@ -42,12 +45,16 @@ public class AlertInfoCard {
 
         for (String card: cardSelection) {
             imageCard.add(configureImageView(path, card, EXTENSION,300,450));
-            String[] slashSplit = card.split("/");
-            String[] stretchSplit = slashSplit[1].split("-");
+            ArrayList<String> stretchSplit;
+            if(card.indexOf('-')!= -1) stretchSplit = new ArrayList<>(Arrays.asList(card.split("-")));
+            else {
+                stretchSplit = new ArrayList<>(Collections.singletonList(card));
+            }
 
-            String name = stretchSplit[0].substring(0,1).toUpperCase().concat(stretchSplit[0].substring(1));
-            for(int i=1; i<stretchSplit.length;i++){
-                name = name.concat(" ".concat(stretchSplit[i].substring(0,1).toUpperCase().concat(stretchSplit[i].substring(1))));
+            String name = stretchSplit.get(0).substring(0,1).toUpperCase().concat(stretchSplit.get(0).substring(1));
+            stretchSplit.remove(0);
+            for (String subWord: stretchSplit) {
+                name = name.concat(" ".concat(subWord.substring(0,1).toUpperCase().concat(subWord.substring(1))));
             }
             Label item = setFontStyle(new Label(name), 40);
             item.setAlignment(Pos.CENTER);

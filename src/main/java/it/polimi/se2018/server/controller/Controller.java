@@ -201,7 +201,7 @@ public class Controller{
         ArrayList<Objective> objectives = new ArrayList<>();
 
         objectives.add(new Objective("diagonali-colorate", "Numero di dadi dello stesso colore diagonalmente adiacenti", 0, new ColorDiagonals(), false));
-        objectives.add(new Objective("varietà-di-colore", "Set di dadi di ogni colore ovunque", 4, new ColorVariety(),false));
+        objectives.add(new Objective("varietà-di-colori", "Set di dadi di ogni colore ovunque", 4, new ColorVariety(),false));
         objectives.add(new Objective("sfumature-diverse",  "Set di dadi di ogni valore ovunque", 5, new ShadeVariety(), false));
 
         objectives.add(new Objective("sfumature-chiare", "Set di 1 & 2 ovunque",2, new CoupleOfShades(1,2), false));
