@@ -184,7 +184,7 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
         }
     }
     public void update( TimeIsUp mex){
-     fake.messageOutBox(ServerMessageCreator.getTimeoutMessage(mex.getPlayer()));
+        fake.messageOutBox(ServerMessageCreator.getTimeoutMessage(mex.getPlayer()));
     }
 
     public void update( AskPlayer mex){

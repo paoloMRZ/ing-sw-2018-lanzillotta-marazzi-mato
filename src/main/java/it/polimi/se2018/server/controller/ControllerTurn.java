@@ -59,7 +59,7 @@ public class ControllerTurn implements ObserverTimer {
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //il primo metodo a venire lanciato in questa classe
-    public void setRound() throws Exception {
+    private void setRound() throws Exception {
 
         firstPlayer = lobby.callPlayerByNumber(caller).getName();
         round = round + 1;
@@ -136,15 +136,13 @@ public void setThePlayers() throws InvalidValueException {
 
             lobby.showPrivate(turnOf);
 
-            sagradaTimer.start();
-            timeIsOn = true;
-
             getTurn().ask();
 
-            //parte il timer
-
+            sagradaTimer.start();
+            timeIsOn = true;
     }
-    public void actualPlayerIsDone(){
+
+    private void actualPlayerIsDone(){
         //azione del timer quando scade il turno posso dividere in due parti
         //o quando messaggi mi dicono che ha già fatto le cose che deve fare da checker
         try{
@@ -224,7 +222,7 @@ public void setThePlayers() throws InvalidValueException {
         }
 
     }
-    private void resetQualities(){
+    private void resetQualities() throws Exception {
         round=0;
         turnOf=null;
         firstPlayer=null;
@@ -237,6 +235,7 @@ public void setThePlayers() throws InvalidValueException {
         andata=true;
         timeIsOn=false;
         setting=false;
+        setRound();
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
