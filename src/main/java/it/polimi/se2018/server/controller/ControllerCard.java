@@ -211,6 +211,7 @@ public class ControllerCard implements Visitor {
             if(itemDiluente.getIsBusy()){
                 itemDiluente.function(controller,m);
                 itemDiluente.setTheUse();
+                controller.getcAction().playerActivatedCard(controller.getTurn().getName(),itemDiluente.getPreviousCost());
                 controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemDiluente.getNumber(),m.getCard(),
                                                                                 controller.getTurn().getFavours(),
                                                                                  itemDiluente.getCost(),m.getPlayer()));

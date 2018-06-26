@@ -33,6 +33,7 @@ public class ControllerPoints {
      * Costruttore della classe Controlleroints
      *
      * @param lobby riferimento all'oggetto Table della sessione di gioco
+     * @param controller riferimento al controller principale
      */
 
     public ControllerPoints(Table lobby, Controller controller) {

@@ -1,9 +1,15 @@
 package it.polimi.se2018.server.events.responses;
 
-import it.polimi.se2018.server.events.tool_mex.Activate;
+import it.polimi.se2018.server.events.EventMVC;
 
-public class Choice extends Activate {
-    public Choice(String player,int index){
-        super(player,index);
+public class Choice extends EventMVC {
+    private int index;
+    public Choice(String player,int inde){
+        super(player);
+        this.index=inde;
+    }
+
+    public int getIndex() {
+        return index;
     }
 }
