@@ -370,6 +370,7 @@ public void refresh(UpdateReq m){
     }
     public void forgetForever(){
         canIRenter=false;
+        forget();
     }
     //metodo per reinsisre il giocatore nel gioco
     public void remember(){

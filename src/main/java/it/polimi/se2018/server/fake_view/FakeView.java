@@ -35,7 +35,7 @@ public class FakeView{
             List<String> data= ServerMessageParser.getInformationsFromMessage(m);
                 chat.notifyObserver(new Activate(sender,Integer.parseInt(data.get(0))));
         }
-        if(ServerMessageParser.isUseUtensilMessage(m)){
+        else if(ServerMessageParser.isUseUtensilMessage(m)){
             List<String> data= ServerMessageParser.getInformationsFromMessage(m);
             switch(data.get(1)){
                 case "1":
@@ -93,16 +93,16 @@ public class FakeView{
             chat.notifyObserver(new Activate(sender,Integer.parseInt(data.get(0))));
         }
 
-        if(ServerMessageParser.isPutMessage(m)){
+        else if(ServerMessageParser.isPutMessage(m)){
             List<String> data= ServerMessageParser.getInformationsFromMessage(m);
 
             chat.notifyObserver(new SimpleMove(Integer.parseInt(data.get(0)),Integer.parseInt(data.get(1)),
                     Integer.parseInt(data.get(2)),sender));
         }
-        if(ServerMessageParser.isPassTurnMessage(m)){
+        else if(ServerMessageParser.isPassTurnMessage(m)){
                 chat.notifyObserver(new PassTurn(sender));
         }
-        if(ServerMessageParser.isSideReplyMessage(m)){
+        else if(ServerMessageParser.isSideReplyMessage(m)){
                 List<String> data= ServerMessageParser.getInformationsFromMessage(m);
                 chat.notifyObserver(new Choice(sender, Integer.parseInt(data.get(0))));
         }
