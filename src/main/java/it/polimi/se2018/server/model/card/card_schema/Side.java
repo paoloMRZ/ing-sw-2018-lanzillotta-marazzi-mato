@@ -419,8 +419,9 @@ public class Side {
 
     public String toString() {
         String message = owner;
-        for (int colo=0;colo<5;colo++){
-            for (int riga=0;riga<4;riga++) {
+        for (int riga=0;riga<4;riga++)
+        {
+            for (int colo=0;colo<5;colo++) {
                 Dice die= matrix[riga][colo].showDice();
                 if (die != null)
                     message = message.concat("&" + die.getColor().toString().toLowerCase() + die.getNumber());

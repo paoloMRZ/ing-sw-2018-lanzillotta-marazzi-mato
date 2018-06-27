@@ -277,18 +277,20 @@ public class ControllerAction {
     public void simpleMove(SimpleMove move){
         try{
             String dude = move.getPlayer();
-            lobby.setHoldingADiceMoveInProgress(pickFromReserve(move.getDiceIndex()));
+            lobby.setHoldingResDie(pickFromReserve(move.getDiceIndex()));
             ArrayList<Integer> coords = move.getCoord();
             int row = coords.get(0);
             int col = coords.get(1);
 
-            workOnSide(dude, getHoldingADiceMoveInProgress(), row, col);
+            workOnSide(dude, lobby.getHoldingResDie(), row, col);
+            lobby.cleanHoldingResDie();
             lobby.callPlayerByName(dude).setDidPlayDie();
             //success yeeeeaaaaaaa
             lobby.responder().notifyObserver(new SuccessSimpleMove(move.getDiceIndex(),row,col,dude));
         }
         catch(InvalidValueException | InvalidCellException e){
-            putBackInReserve(getHoldingADiceMoveInProgress());
+            putBackInReserve(lobby.getHoldingResDie());
+            lobby.cleanHoldingResDie();
             String destination=controller.getTurn().getName();
             ArrayList<Integer> coords = move.getCoord();
             int row = coords.get(0);

@@ -49,6 +49,8 @@ public class Table {
     private final RoundGrid roundGrid;
     private final NotifyModel chat;
     private Dice holdingADiceMoveInProgress;
+    private Dice holdingResDie;
+    private Dice holdingRoundGDie;
 
     /**
      * costruttore della classe Table che imposta tutti i componenti della sessione di gioco
@@ -319,6 +321,7 @@ public class Table {
         for (Utensils u : utensilsDeck){
             if(u.getIsBusy()) u.setTheUse();
         }
+        cleanHoldingADiceMoveInProgress();
     }
     public void newRoundForPlayers(){
         for (Player p :playersList){
@@ -350,12 +353,33 @@ public class Table {
     /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
     public void setHoldingADiceMoveInProgress(Dice d){
-        this.holdingADiceMoveInProgress=d;
+        holdingADiceMoveInProgress=d;
     }
     public Dice getHoldingADiceMoveInProgress(){
-        Dice tmp= holdingADiceMoveInProgress;
-        return tmp;
+        return holdingADiceMoveInProgress;
     }
+    public void cleanHoldingADiceMoveInProgress(){
+        holdingADiceMoveInProgress=null;
+    }
+    public void setHoldingResDie(Dice d){
+        holdingResDie=d;
+    }
+    public Dice getHoldingResDie(){
+        return holdingResDie;
+    }
+    public void cleanHoldingResDie(){
+        holdingResDie=null;
+    }
+    public void setHoldingRoundGDie(Dice d){
+        holdingRoundGDie=d;
+    }
+    public Dice getHoldingRoundGDie(Dice d){
+        return holdingRoundGDie;
+    }
+    public void cleanHoldingRoundGDie(){
+        holdingRoundGDie=null;
+    }
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////
     private void setStartMexObjs(){
