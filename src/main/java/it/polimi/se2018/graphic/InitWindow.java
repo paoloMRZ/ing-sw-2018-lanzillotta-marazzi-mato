@@ -161,9 +161,7 @@ public class InitWindow extends Application {
 
 
                 //TODO: MESSAGGI DI TIPO UPDATE
-                else if (ClientMessageParser.isUpdateMessage(message.getText())) {
-                    //MESSAGGIO UPDATE DEL TURNO DI GIOCO
-                    if (ClientMessageParser.isUpdateTurnMessage(message.getText())) {
+                else if (ClientMessageParser.isUpdateTurnMessage(message.getText())) {
                         if (startGame) {
 
                             //TODO: SCHERMATA DI GIOCO
@@ -211,7 +209,7 @@ public class InitWindow extends Application {
 
 
                     //MESSAGGIO UPDATE DELLA RISERVA
-                    if (ClientMessageParser.isUpdateReserveMessage(message.getText())) {
+                else if (ClientMessageParser.isUpdateReserveMessage(message.getText())) {
                         reserve = new ReserveLabel(ClientMessageParser.getInformationsFromMessage(message.getText()), 48, 48, 48, 48);
                         if (isInitReserve) {
                             nodeReserve = reserve.getHBox();
@@ -220,7 +218,6 @@ public class InitWindow extends Application {
                         } else {
                             updateGUI(newText);
                         }
-                    }
                 }
 
                 else updateGUI(newText);
@@ -260,10 +257,11 @@ public class InitWindow extends Application {
                 }
 
 
-                //MESSAGGIO UPDATE DELLE CARTE SIDE AVVERSARIE
+                //MESSAGGIO UPDATE DELLE CARTE SIDE
                 if (ClientMessageParser.isUpdateSideMessage(newValue)) {
                     List<String> infoSide = ClientMessageParser.getInformationsFromMessage(newValue);
-                    enemiesSide.updateSideEnemies(infoSide);
+                    if(infoSide.get(0).equals(connectionHandler.getNickname())) playerSide.updateSideAfterPut(ClientMessageParser.getInformationsFromMessage(newValue), 55, 55);
+                    else enemiesSide.updateSideEnemies(infoSide);
                 }
 
 
@@ -281,8 +279,8 @@ public class InitWindow extends Application {
 
                 //MESSAGGIO SUCCESSO PER IL PIAZZAMENTO DEI DADI
                 if (ClientMessageParser.isSuccessPutMessage(newValue)) {
-                    playerSide.updateSideAfterPut(ClientMessageParser.getInformationsFromMessage(newValue), 55, 55);
-                    settingLabel.updateAction();
+                    AlertValidation.display("Sagrada", "La tua azione è andata a buon fine!");
+                    //settingLabel.updateAction();
                 }
 
 

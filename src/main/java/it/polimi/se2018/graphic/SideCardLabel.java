@@ -87,7 +87,7 @@ public class SideCardLabel{
 
     public void updateSideAfterPut(List<String> cellUpdate, int requestedWidth, int requestedHeight){
             dicePutHistory.clear();
-            int k=0;
+            int k=1;
             for(int i=0; i<4; i++) {
                 for (int j=0; j<5; j++) {
                     if (!cellUpdate.get(k).equals("white0")) {
@@ -105,7 +105,7 @@ public class SideCardLabel{
 
 
     public void updateSide(List<String> diceInfo, int requestedWidth, int requestedHeight){
-        int k=0;
+        int k=1;
         for(int i=0; i<4; i++) {
             for (int j=0; j<5; j++) {
                 if (!diceInfo.get(k).equals("white0")) gridPane.add(configureDieView(diceInfo.get(k),requestedWidth,requestedHeight),j,i);

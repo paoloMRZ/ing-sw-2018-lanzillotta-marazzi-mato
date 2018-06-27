@@ -61,7 +61,7 @@ public class SideEnemyLabel{
     }
 
     public void updateSideEnemies(List<String> infoSide){
-        String nameOfEnemy = infoSide.remove(0);
+        String nameOfEnemy = infoSide.get(0);
         for (SideCardLabel side: sideEnemy) {
             if(side.getNickName().equals(nameOfEnemy)) side.updateSide(infoSide,33,33);
         }
