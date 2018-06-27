@@ -14,6 +14,7 @@ import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import static it.polimi.se2018.graphic.Utility.*;
 
@@ -71,9 +72,10 @@ public class RoundLabel{
         hBox.setAlignment(Pos.CENTER);
         hBoxHistory.setAlignment(Pos.CENTER);
         for (String aDieInfo : dieInfo) {
-            hBox.getChildren().addAll(new ImageView(new Image("diePack/die-" + aDieInfo + ".bmp", 40, 40, false, true)));
+            String lowerDieInfo = aDieInfo.toLowerCase(Locale.ENGLISH);
+            hBox.getChildren().addAll(new ImageView(new Image("/diePack/die-" + lowerDieInfo + ".bmp", 40, 40, false, true)));
 
-            ImageView elementHistory = shadowEffect(new ImageView(new Image("diePack/die-" + aDieInfo + ".bmp", 55, 55, false, true)));
+            ImageView elementHistory = shadowEffect(new ImageView(new Image("/diePack/die-" + lowerDieInfo + ".bmp", 55, 55, false, true)));
             StackPane button = new StackPane(elementHistory);
             cell.put(button, false);
             elementHistory.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {

@@ -82,8 +82,8 @@ public class AlertCardUtensils {
         window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
-        window.setWidth(1200);
-        window.setHeight(900);
+        window.setWidth(1100);
+        window.setHeight(800);
 
         StackPane baseWindow = new StackPane();
 
@@ -101,7 +101,7 @@ public class AlertCardUtensils {
 
 
         //Label Text
-        Label labelText = setFontStyle(new Label(message),40);
+        Label labelText = setFontStyle(new Label(message),35);
         labelText.setAlignment(Pos.CENTER);
 
 
@@ -119,12 +119,12 @@ public class AlertCardUtensils {
         HBox layoutCard = new HBox(40);
         layoutCard.setAlignment(Pos.CENTER);
 
-        for (String card:cardUtensils.getCardName()) {
+        for (String card:cardUtensils.getKeyName()) {
             VBox vbox = new VBox(10);
             StackPane node = new StackPane();
             node.setPrefSize(302,452);
 
-            ImageView item = shadowEffect(configureImageView("/cardUtensils/",card,EXTENSION,302,452));
+            ImageView item = shadowEffect(configureImageView("/cardUtensils/",card,EXTENSION,250,402));
             cardHash.put(node, false);
             item.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
                 setFocusStyle(cardHash,node,groupCard);
@@ -163,7 +163,7 @@ public class AlertCardUtensils {
     public void launchExecutionUtensil(){
         ActionUtensils actionUtensils = null;
         try {
-            actionUtensils = new ActionUtensils(cardUtensils.getDictionaryUtensils(),String.valueOf(cardUtensils.getCardName().get(Integer.parseInt(selection))), reserve, connectionHandler,selection, playerSide, window);
+            actionUtensils = new ActionUtensils(cardUtensils.getDictionaryUtensils(),String.valueOf(cardUtensils.getKeyName().get(Integer.parseInt(selection))), reserve, connectionHandler,selection, playerSide, window);
         } catch (IOException e1) {
             e1.printStackTrace();
         }

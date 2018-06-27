@@ -13,6 +13,7 @@ import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import static it.polimi.se2018.graphic.Utility.setFocusStyle;
 import static it.polimi.se2018.graphic.Utility.shadowEffect;
@@ -44,11 +45,12 @@ public class ReserveLabel{
         int num = diceInfo.size();
 
         for (int i = 0; i < num; i++) {
+            String lowerDieInfo = diceInfo.get(i).toLowerCase(Locale.ENGLISH);
             StackPane button = new StackPane();
             button.setPrefSize(prefWidth,prefHeight);
             button.setStyle("-fx-border-color: transparent; -fx-border-width: 2; -fx-background-radius: 0; -fx-background-color: transparent;");
 
-            ImageView die = shadowEffect(new ImageView(new Image("diePack/die-" + diceInfo.get(i).toLowerCase() + ".bmp", prefWidth, prefHeight, false, true)));
+            ImageView die = shadowEffect(new ImageView(new Image("/diePack/die-" + lowerDieInfo + ".bmp", prefWidth, prefHeight, false, true)));
             button.getChildren().add(die);
 
             int finalI = i;
@@ -56,7 +58,7 @@ public class ReserveLabel{
             die.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
                 setFocusStyle(cell,button,group);
                 pos = String.valueOf(finalI);
-                dieName = diceInfo.get(finalI);
+                dieName = diceInfo.get(finalI).toLowerCase();
                 listener.setText(dieName);
             });
 

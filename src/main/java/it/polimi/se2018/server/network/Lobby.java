@@ -101,9 +101,12 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
     private void freezeFakeClient(String nickname) { //Congelare un client significa chiudere la sua connessione senza toglierlo dalla lobby.
 
         FakeClient fakeClient = serachByNickname(nickname); //Ricerco il client tramite il suo nickname.
-        if (fakeClient != null) { //Se l'ho trovato lo congelo, cioè chiudo la sua connessione ma non non rimuovo dalla lobby.
+        if (fakeClient != null) { //Se l'ho trovato lo congelo, cioè chiudo la sua connessione ma non lo rimuovo dalla lobby.
             fakeClient.closeConnection();
             numberOfClient--;
+
+            //Non notifico il fake client in questo metodo perchè la richiesta di congelamento potrebbe venire da lui stesso.
+
             notifyFromFakeView(NetworkMessageCreator.getDisconnectMessage(nickname)); //Notifico tutti gli altri giocatori della disconnessione del client.
         }
 
@@ -121,7 +124,11 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
         if (fakeClient != null) {
             this.connections.set(connections.indexOf(fakeClient), newConnection); //Sostituisco il client congelato con quello nuovo.
             numberOfClient++;
-            notifyFromFakeView(NetworkMessageCreator.getDisconnectMessage(newConnection.getNickname())); //Notifico tutti i giocatori della connessione appena avvenuta.
+
+            if(fakeView != null) //Notifico la fake view  dello scongelamento di un giocatore.
+                fakeView.messageIncoming(NetworkMessageCreator.getUnfreezeMessage(newConnection.getNickname()));
+
+            notifyFromFakeView(NetworkMessageCreator.getConnectMessage(newConnection.getNickname())); //Notifico tutti i giocatori della connessione appena avvenuta.
         }
 
     }
@@ -173,7 +180,6 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
         try {
 
             fakeClient.update(message);
-            System.out.println(message); //TODO da rimuovere.
         } catch (ConnectionCloseException e) {
             if(isOpen)
                 remove(fakeClient.getNickname());
@@ -227,7 +233,6 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
         if (getNicknames().contains(connection.getNickname())) { //Controlle se esiste un client con lo stesso nick.
 
             if (this.isFreezedFakeClient(connection.getNickname())) { //Se il client con lo stesso nick è congelato allora lo scongelo.
-
                 this.unfreezeFakeClient(connection); //Richiamo il metodo privato per scongelare il client.
             } else
                 throw new InvalidNicknameException(); //Se il client con lo stesso nick non è congelato allora sollevao un'eccezione.
@@ -260,11 +265,15 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
     @Override
     public synchronized void notifyFromFakeClient (String message){
         if(NetworkMessageParser.isDisconnectMessage(message)){ //Controllo se il messaggio ricevuto è una richiesta di disconnessione.
-            if(isOpen)
+            if(isOpen)// Se la lobby è ancora aperta (quindi la partita non è stata avviata) rimuovo il giocatore
                 remove(NetworkMessageParser.getMessageSender(message));
-            else
+            else { //In caso contrario lo congelo e lo notifio alla fake view.
                 freezeFakeClient(NetworkMessageParser.getMessageAddressee(message));
-        }  else {
+
+                if(fakeView != null) //Notifico la fake view del congelamento.
+                    fakeView.messageIncoming(NetworkMessageCreator.getFreezeMessage(NetworkMessageParser.getMessageAddressee(message)));
+            }
+        }  else { //Se non è un messaggio di disconnessione lo giro direttamente alla fake view.
             if(fakeView != null)
                 fakeView.messageIncoming(message);
         }
@@ -275,14 +284,24 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
      * @param message messaggio da passare al vero client tramite il metodo update.
      */
 
-    public void notifyFromFakeView(String message) {
-        if (NetworkMessageParser.isBroadcastMessage(message)) { //Se è un messaggio di broadcast lo mando in broadcat.
-            sendBroadcast(message);
-        } else { //Se no lo mando privato.
-            sendPrivate(message);
+    public void notifyFromFakeView(String message){
+        System.out.println(message); //TODO è da rimuovere!
+
+        if(NetworkMessageParser.isFreezeMessage(message)) //Se ricevo un messaggio di congelamento congelo il fake client associato.
+            freezeFakeClient(NetworkMessageParser.getMessageInfo(message));
+
+        else if(NetworkMessageParser.isDisconnectMessage(message)){ //Se ricevo un messaggio di disconnessione disconnetto il fake client associato.
+            this.remove(NetworkMessageParser.getMessageInfo(message)); //Rimuovo dalla lobby il giocatore indicato nel messaggio.
+
+        }else{ //In tutti gli altri casi devo inviare i messaggi a/ai giocatore/i.
+
+            if(NetworkMessageParser.isBroadcastMessage(message)){ //Se è un messaggio di broadcast lo mando in broadcat.
+                sendBroadcast(message);
+            }else{ //Se no lo mando privato.
+                sendPrivate(message);
+            }
         }
     }
-
 
 
     /**

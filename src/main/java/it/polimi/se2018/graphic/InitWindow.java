@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static it.polimi.se2018.graphic.Utility.*;
 
@@ -226,9 +225,11 @@ public class InitWindow extends Application {
                 //MESSAGGIO START PER L'ASSEGNAMENTO DELLE CARTE SIDE AVVERSARIE
                 if (ClientMessageParser.isStartSideListMessage(message.getText())) {
                     List<String> sideInfo = ClientMessageParser.getInformationsFromMessage(message.getText());
-                    Stream<String> nameOfPlayers = sideInfo.stream().filter(s -> (sideInfo.indexOf(s) % 2 == 0));
-                    Stream<String> sideName = sideInfo.stream().filter(s -> (sideInfo.indexOf(s) % 2 != 0));
-                    enemiesSide = new SideEnemyLabel(nameOfPlayers.collect(Collectors.toList()), sideName.collect(Collectors.toList()));
+                    List<String> nameOfPlayers = sideInfo.stream().filter(s -> (sideInfo.indexOf(s) % 2 == 0)).collect(Collectors.toList());
+                    List<String> sideName = sideInfo.stream().filter(s -> (sideInfo.indexOf(s) % 2 != 0)).collect(Collectors.toList());
+                    sideName.remove(nameOfPlayers.indexOf(connectionHandler.getNickname()));
+                    nameOfPlayers.remove(connectionHandler.getNickname());
+                    enemiesSide = new SideEnemyLabel(nameOfPlayers, sideName);
                     configureAnchorPane(anchorGame, enemiesSide.getLabelSideEnemy(), 20d, 60d, 610d, 585d);
 
                 }
@@ -300,13 +301,12 @@ public class InitWindow extends Application {
                         //Posiziono la roundGrid
                         ArrayList<Double> positionGridRound = new ArrayList<>(Arrays.asList(20d, 0d, 0d, 0d));
                         roundLabel = new RoundLabel(70, 70,930,90, positionGridRound);
-                        configureAnchorPane(anchorGame,roundLabel.getLabelRoundGrid(), 20d, 670d, 610d, 60d);
+                        configureAnchorPane(anchorGame,roundLabel.getAnchorRound(), 20d, 670d, 610d, 60d);
 
                         //Posiziono la griglia con le informazioni sul giocatore
                         settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
                         configureAnchorPane(anchorGame, settingLabel.getSettingLabel(), 835d, 80d, 70d, 800d);
 
-                        
                         //Posiziono la carta scelta dal giocatore
                         ArrayList<Integer> sizeGridPlayer = new ArrayList<>(Arrays.asList(67, 66));
                         ArrayList<Integer> sizeSidePlayer = new ArrayList<>(Arrays.asList(340, 290));

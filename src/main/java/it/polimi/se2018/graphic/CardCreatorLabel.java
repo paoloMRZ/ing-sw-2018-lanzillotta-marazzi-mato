@@ -20,6 +20,8 @@ public class CardCreatorLabel{
     private VBox cardObjectiveLabel;
     private ArrayList<String> cardName = new ArrayList<>();
     private HashMap<String, String> dictionaryUtensils;
+    private List <String> valueNumber;
+    private List <String> keyName;
 
     public CardCreatorLabel(List<String> nameOfCard, Map<String, String> dictionaryUtensils, boolean isPrivate, String path) {
 
@@ -71,8 +73,6 @@ public class CardCreatorLabel{
 
     private HBox configureCardSequence(String path, List<String> nameOfCard, int requestedWidth, int requestedHeight){
 
-        List <String> valueNumber = new ArrayList<>();
-        List <String> keyName;
         ArrayList<String> tempCollection = new ArrayList<>(nameOfCard);
 
         if(nameOfCard.size()>3){
@@ -87,7 +87,10 @@ public class CardCreatorLabel{
             ImageView item = shadowEffect(configureImageView(path, nameCard, EXTENSION, requestedWidth, requestedHeight));
             item.setFitWidth(150);
             item.setFitHeight(225);
-            item.addEventHandler(MouseEvent.MOUSE_CLICKED, e-> AlertInfoCard.display(cardName,path));
+            item.addEventHandler(MouseEvent.MOUSE_CLICKED, e-> {
+                if(nameOfCard.size()>3) AlertInfoCard.display(keyName,path);
+                else AlertInfoCard.display(cardName,path);
+            });
             cardSequence.getChildren().add(item);
             cardName.add(nameCard);
             if(nameOfCard.size()>3) cardName.add(valueNumber.get(tempCollection.indexOf(nameCard)));
@@ -96,4 +99,8 @@ public class CardCreatorLabel{
         return cardSequence;
     }
 
+
+    public List<String> getKeyName() {
+        return keyName;
+    }
 }
