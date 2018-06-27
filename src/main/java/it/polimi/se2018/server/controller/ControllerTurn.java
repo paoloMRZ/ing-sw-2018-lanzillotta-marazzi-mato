@@ -60,7 +60,7 @@ public class ControllerTurn implements ObserverTimer {
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //il primo metodo a venire lanciato in questa classe
-    private void setRound() throws Exception {
+    protected void setRound() throws Exception {
         lobby.newRoundForPlayers();
         firstPlayer = lobby.callPlayerByNumber(caller).getName();
         round = round + 1;
@@ -163,6 +163,7 @@ public void setThePlayers() throws InvalidValueException {
                 if(caller == numbOfPlayers-1 ){
                     lobby.showEnemiesChoice();
                     resetQualities();
+                    setRound();
                 }
                 else {
                     callerModifier();
@@ -174,6 +175,7 @@ public void setThePlayers() throws InvalidValueException {
         catch (Exception e){
             controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
+
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -236,7 +238,6 @@ public void setThePlayers() throws InvalidValueException {
         andata=true;
         timeIsOn=false;
         setting=false;
-        setRound();
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

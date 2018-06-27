@@ -418,7 +418,7 @@ public class Side {
     }
 
     public String toString() {
-        String message = owner+"&";
+        String message = owner;
         for (int colo=0;colo<5;colo++){
             for (int riga=0;riga<4;riga++) {
                 Dice die= matrix[riga][colo].showDice();

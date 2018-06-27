@@ -264,6 +264,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
      */
     @Override
     public synchronized void notifyFromFakeClient (String message){
+        System.out.println(message); //TODO è da rimuovere!
         if(NetworkMessageParser.isDisconnectMessage(message)){ //Controllo se il messaggio ricevuto è una richiesta di disconnessione.
             if(isOpen)// Se la lobby è ancora aperta (quindi la partita non è stata avviata) rimuovo il giocatore
                 remove(NetworkMessageParser.getMessageSender(message));
