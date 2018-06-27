@@ -104,6 +104,7 @@ public class InitWindow extends Application {
         //Listener per il cambio di scena e valutazione del messaggio
         message.textProperty().addListener((obs, oldText, newText) -> {
             if (!newText.equals("")) {
+
                 //TODO: MESSAGGI DI TIPO START
                 if (ClientMessageParser.isStartMessage(message.getText())) {
 
@@ -235,6 +236,7 @@ public class InitWindow extends Application {
 
         Platform.runLater(() -> {
             //TODO: MESSAGGI DI TIPO UPDATE
+            System.out.println(newValue);
             if (ClientMessageParser.isUpdateMessage(newValue)) {
 
                 //MESSAGGIO UPDATE PER IL CAMBIO DEL TURNO
@@ -278,7 +280,10 @@ public class InitWindow extends Application {
                 //MESSAGGIO UPDATE DELLA RISERVA
                 if (ClientMessageParser.isUpdateReserveMessage(newValue)) {
                     anchorGame.getChildren().remove(nodeReserve);
+                    anchorGame.getChildren().remove(buttonGameLabel);
                     nodeReserve = reserve.getHBox();
+                    buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils);
+                    configureAnchorPane(anchorGame, buttonGameLabel.getLabelButtonGame(), 880d, 500d, 100d, 200d);
                     configureAnchorPane(anchorGame, nodeReserve, 790d, 760d, 0d, 150d);
                 }
             }

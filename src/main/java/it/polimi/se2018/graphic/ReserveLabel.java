@@ -61,7 +61,7 @@ public class ReserveLabel{
                 dieName = diceInfo.get(finalI).toLowerCase();
                 listener.setText(dieName);
             });
-
+            
             reserve.getChildren().add(button);
         }
 
