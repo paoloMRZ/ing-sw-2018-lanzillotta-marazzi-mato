@@ -18,4 +18,7 @@ public interface ViewAsObserver {
     public void update(TimeIsUp mex);
 
     public void update(ErrorSelectionUtensil mex);
+
+    public void update(Freeze mex);
+    public void update(DisconnectPlayer mex);
 }

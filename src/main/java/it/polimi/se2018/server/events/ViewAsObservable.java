@@ -29,4 +29,7 @@ public interface ViewAsObservable {
 
     public void notifyObserver(HookMessage mex);
 
+    public void notifyObserver(Freeze mex);
+
+    public void notifyObserver(Unfreeze mex);
 }

@@ -1,7 +1,9 @@
 package it.polimi.se2018.server.controller;
 
 import it.polimi.se2018.server.events.EventMVC;
+import it.polimi.se2018.server.events.Freeze;
 import it.polimi.se2018.server.events.SimpleMove;
+import it.polimi.se2018.server.events.Unfreeze;
 import it.polimi.se2018.server.events.responses.Choice;
 import it.polimi.se2018.server.events.responses.PassTurn;
 import it.polimi.se2018.server.events.responses.UpdateM;
@@ -361,6 +363,30 @@ public class Controller{
      */
     public void passTurn(PassTurn m){
         cTurn.passTurn(m);
+    }
+
+    /**
+     * Metodo che congela un giocaotre a richiesta della Lobby.
+     * @param m messaggio contenente il nome del giocatore richiesto.
+     */
+    public void freezer(Freeze m){
+        try {
+            lobby.callPlayerByName(m.getPlayer()).forget();
+        } catch (InvalidValueException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Metdo che scongela un giocatore a richiest della Lobby.
+     * @param m messaggio contenente il nome del giocatore richiesto.
+     */
+    public void unfreeze(Unfreeze m){
+        try {
+            lobby.callPlayerByName(m.getPlayer()).remember();
+        } catch (InvalidValueException e) {
+            e.printStackTrace();
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

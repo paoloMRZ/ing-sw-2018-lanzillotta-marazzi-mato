@@ -78,7 +78,8 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
     }
     public void notifyObserver(PassTurn mex){controller.update(mex);}
     public void notifyObserver(Choice mex){controller.update(mex);}
-
+    public void notifyObserver(Freeze mex){controller.update(mex);}
+    public void notifyObserver(Unfreeze mex){controller.update(mex);}
 
 
     public void notifyObserver(UpdateReq mex){
@@ -191,5 +192,11 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
         fake.messageOutBox(
                 ServerMessageCreator.getChoseSideMessage(mex.getPlayer(),mex.getArr())
         );
+    }
+    public void update(Freeze mex){
+        //todofake.messageOutBox();
+    }
+    public void update(DisconnectPlayer mex){
+        //todofake.messageOutBox();
     }
 }

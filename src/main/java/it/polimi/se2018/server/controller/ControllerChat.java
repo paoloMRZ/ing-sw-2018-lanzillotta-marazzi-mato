@@ -20,6 +20,14 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
         this.controller=controller;
     }
 
+    public void update(Freeze mex){
+        controller.freezer(mex);
+    }
+    public void update(Unfreeze mex){
+        controller.unfreeze(mex);
+    }
+
+
     public void update(Activate mex){
         if(checker(mex)) controller.callThrough(mex);
     }
@@ -94,6 +102,12 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
         view.update(mex);
     }
     public void notifyObserver( UpdateM mex){
+        view.update(mex);
+    }
+    public void notifyObserver( Freeze mex){
+        view.update(mex);
+    }
+    public void notifyObserver( DisconnectPlayer mex){
         view.update(mex);
     }
 

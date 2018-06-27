@@ -16,4 +16,8 @@ public interface ControllerAsObserver {
     public void update(PassTurn mex);
 
     public void update(Choice mex);
+
+    public void update(Freeze mex);
+
+    public void update(Unfreeze mex);
 }

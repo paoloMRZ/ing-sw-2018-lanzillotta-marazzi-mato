@@ -1,6 +1,8 @@
 package it.polimi.se2018.server.controller;
 
+import it.polimi.se2018.server.events.DisconnectPlayer;
 import it.polimi.se2018.server.events.EventMVC;
+import it.polimi.se2018.server.events.Freeze;
 import it.polimi.se2018.server.events.responses.*;
 import it.polimi.se2018.server.exceptions.InvalidHowManyTimes;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
@@ -92,14 +94,16 @@ public class ControllerTurn implements ObserverTimer {
         //azione del timer quando scade il turno posso dividere in due parti
         //o quando messaggi mi dicono che ha già fatto le cose che deve fare da checker
         try{
-            sagradaTimer.stop();
-            timeIsOn=false;
-            controller.getcChat().notifyObserver( new TimeIsUp(turnOf));
+            if(getTurn().canYouPlay()) {
+                sagradaTimer.stop();
+                timeIsOn = false;
+                controller.getcChat().notifyObserver(new TimeIsUp(turnOf));
 
-            if(!getTurn().getDidPlayDie() && !getTurn().getDidPlayCard()){
-                getTurn().forget();
+                if (!getTurn().getDidPlayDie() && !getTurn().getDidPlayCard()) {
+                    getTurn().forget();
+                    controller.getcChat().notifyObserver(new Freeze(turnOf));
+                }
             }
-
             if(!andata && turnOf.equals(firstPlayer) ){
                 andata = true;
                 callerModifier();
@@ -148,11 +152,15 @@ public void setThePlayers() throws InvalidValueException {
         //azione del timer quando scade il turno posso dividere in due parti
         //o quando messaggi mi dicono che ha già fatto le cose che deve fare da checker
         try{
+
             sagradaTimer.stop();
             timeIsOn=false;
             controller.getcChat().notifyObserver( new TimeIsUp(turnOf));
 
-            if(getTurn().getMySide()==null) lobby.callPlayerByNumber(caller).forgetForever();
+            if(getTurn().getMySide()==null){
+                lobby.callPlayerByNumber(caller).forgetForever();
+                controller.getcChat().notifyObserver(new DisconnectPlayer(turnOf));
+            }
             else{
 
                 if(caller == numbOfPlayers-1 ){

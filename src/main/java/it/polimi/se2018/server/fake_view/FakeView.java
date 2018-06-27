@@ -4,7 +4,9 @@ package it.polimi.se2018.server.fake_view;
 
 import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.events.ControllerAsObserver;
+import it.polimi.se2018.server.events.Freeze;
 import it.polimi.se2018.server.events.SimpleMove;
+import it.polimi.se2018.server.events.Unfreeze;
 import it.polimi.se2018.server.events.responses.*;
 import it.polimi.se2018.server.events.tool_mex.*;
 import it.polimi.se2018.server.message.server.ServerMessageCreator;
@@ -105,6 +107,14 @@ public class FakeView{
         else if(ServerMessageParser.isSideReplyMessage(m)){
                 List<String> data= ServerMessageParser.getInformationsFromMessage(m);
                 chat.notifyObserver(new Choice(sender, Integer.parseInt(data.get(0))));
+        }
+        else if (ServerMessageParser.isFreezeMessage(m)){
+            List<String> data= ServerMessageParser.getInformationsFromMessage(m);
+            chat.notifyObserver(new Freeze(data.get(0)));
+        }
+        else if (ServerMessageParser.isUnfreezeMessage(m)){
+            List<String> data= ServerMessageParser.getInformationsFromMessage(m);
+            chat.notifyObserver(new Unfreeze(data.get(0)));
         }
 
 
