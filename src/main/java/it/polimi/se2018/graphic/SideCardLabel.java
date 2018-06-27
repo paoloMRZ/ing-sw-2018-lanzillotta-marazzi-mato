@@ -85,16 +85,24 @@ public class SideCardLabel{
         gridPane.setAlignment(Pos.CENTER);
     }
 
-    public void updateSideAfterPut(List<String> dicePutInfo){
-            dicePutHistory.addAll(dicePutInfo);
-            dicePutHistory.add(posX + "-" + posY);
-            reserve.updateReserve(Integer.parseInt(dicePutInfo.get(0)));
-            ImageView passed = configureDieView(reserve.getDieName(),70,70);
-            passed.setFitHeight(55);
-            passed.setFitWidth(55);
-            gridPane.add(passed, Integer.parseInt(dicePutInfo.get(1)), Integer.parseInt(dicePutInfo.get(2)));
-            GridPane.setHalignment(passed, HPos.CENTER);
+    public void updateSideAfterPut(List<String> cellUpdate, int requestedWidth, int requestedHeight){
+            dicePutHistory.clear();
+            int k=0;
+            for(int i=0; i<4; i++) {
+                for (int j=0; j<5; j++) {
+                    if (!cellUpdate.get(k).equals("white0")) {
+                        ImageView passed = configureImageView("/diePack/die-",cellUpdate.get(k),".bmp",70,70);
+                        dicePutHistory.add(cellUpdate.get(k));
+                        passed.setFitWidth(requestedWidth);
+                        passed.setFitHeight(requestedHeight);
+                        gridPane.add(passed, j, i);
+                        GridPane.setHalignment(passed, HPos.CENTER);
+                    }
+                    k++;
+                }
+            }
     }
+
 
     public void updateSide(List<String> diceInfo, int requestedWidth, int requestedHeight){
         int k=0;

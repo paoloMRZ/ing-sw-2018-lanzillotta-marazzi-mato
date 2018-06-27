@@ -29,7 +29,7 @@ public class ReserveLabel{
     private Group group = new Group();
     private ArrayList<String> diceInfo = new ArrayList<>();
 
-    ReserveLabel(List<String> diceInfo, int prefWidth, int prefHeight, int widthRect, int heightRect){
+    public ReserveLabel(List<String> diceInfo, int prefWidth, int prefHeight, int widthRect, int heightRect){
         this.diceInfo.addAll(diceInfo);
         setReserve(diceInfo,prefWidth,prefHeight,widthRect, heightRect);
     }
