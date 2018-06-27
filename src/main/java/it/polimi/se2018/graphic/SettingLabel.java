@@ -35,12 +35,12 @@ public class SettingLabel implements ChangeListener<String> {
         this.favours.setText(favours);
         this.turnOf.setText(turnOf);
 
-        nickNameLabel = configureNode(SPACE,"icon-sagrada",55,55,nickName,24);
-        favoursLabel = configureNode(SPACE,"icon-favours",55,55,favours,24);
-        actionLabel = configureNode(SPACE,"icon-mosse",55,55,action,24);
-        turnOfLabel = configureNode(SPACE,"icon-player",53,53,turnOf,24);
+        nickNameLabel = configureNode(SPACE,"icon-sagrada",35,35,nickName,24);
+        favoursLabel = configureNode(SPACE,"icon-favours",35,35, favours,24);
+        actionLabel = configureNode(SPACE,"icon-mosse",35,35, action,24);
+        turnOfLabel = configureNode(SPACE,"icon-player",35,35,"Turn of: " + turnOf,20);
 
-        settingHBox = new HBox(30);
+        settingHBox = new HBox(20);
         settingHBox.setStyle(STYLELABEL);
         settingHBox.getChildren().addAll(nickNameLabel,favoursLabel,actionLabel,turnOfLabel);
 
@@ -53,23 +53,23 @@ public class SettingLabel implements ChangeListener<String> {
             TextField textField = (TextField) textProperty.getBean();
 
             if(textField == turnOf){
-                turnOfLabel = configureNode(SPACE,"icon-player",55,55,newValue,24);
+                turnOfLabel = configureNode(SPACE,"icon-player",35,35,"Turn of: " + newValue,20);
                 settingHBox = new HBox(nickNameLabel,favoursLabel,actionLabel,turnOfLabel);
-                settingHBox.setSpacing(30d);
+                settingHBox.setSpacing(20d);
                 settingHBox.setStyle(STYLELABEL);
             }
 
             else if(textField == favours){
-                favoursLabel = configureNode(SPACE,"icon-favours",55,55,newValue,24);
+                favoursLabel = configureNode(SPACE,"icon-favours",35,35,newValue,24);
                 settingHBox = new HBox(nickNameLabel,favoursLabel,actionLabel,turnOfLabel);
-                settingHBox.setSpacing(30d);
+                settingHBox.setSpacing(20d);
                 settingHBox.setStyle(STYLELABEL);
             }
 
             else if(textField == action){
-                actionLabel = configureNode(SPACE,"icon-mosse",55,55,newValue,24);
+                actionLabel = configureNode(SPACE,"icon-mosse",35,35,newValue,24);
                 settingHBox = new HBox(nickNameLabel,favoursLabel,actionLabel,turnOfLabel);
-                settingHBox.setSpacing(30d);
+                settingHBox.setSpacing(20d);
                 settingHBox.setStyle(STYLELABEL);
             }
         }catch (Exception e){
@@ -79,9 +79,9 @@ public class SettingLabel implements ChangeListener<String> {
 
     private HBox configureNode(int spaceHBox, String nameResources, int requestedWidth, int requestedHeight, String text, int sizeText){
         HBox node = new HBox(spaceHBox);
-        ImageView iconPlayer = configureImageView(SUBDIRECTORY,nameResources,EXTENSION,requestedWidth,requestedHeight);
-        iconPlayer.setFitWidth(35);
-        iconPlayer.setFitHeight(35);
+        ImageView iconPlayer = configureImageView(SUBDIRECTORY,nameResources,EXTENSION,55,55);
+        iconPlayer.setFitWidth(requestedWidth);
+        iconPlayer.setFitHeight(requestedHeight);
         Label labelName = setFontStyle(new Label(text),sizeText);
         node.getChildren().addAll(iconPlayer,labelName);
         node.setAlignment(Pos.CENTER);

@@ -52,6 +52,7 @@ public class InitWindow extends Application {
     private static SettingLabel settingLabel;
 
     private HBox nodeReserve;
+    private HBox nodeSetting;
 
 
     public static void main(String[] args) {
@@ -175,7 +176,8 @@ public class InitWindow extends Application {
 
                             //Posiziono la griglia con le informazioni sul giocatore
                             settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
-                            configureAnchorPane(anchorGame, settingLabel.getSettingLabel(), 835d, 80d, 70d, 800d);
+                            nodeSetting = settingLabel.getSettingLabel();
+                            configureAnchorPane(anchorGame, nodeSetting, 835d, 80d, 70d, 800d);
 
                             //Posiziono la carta scelta dal giocatore
                             ArrayList<Integer> sizeGridPlayer = new ArrayList<>(Arrays.asList(67, 66));
@@ -201,8 +203,7 @@ public class InitWindow extends Application {
                                 primaryStage.setScene(sceneGame);
                             });
                         } else {
-                            //updateGUI(newText);
-                            //settingLabel.updateTurn(ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
+                            updateGUI(newText);
                         }
 
                     }
@@ -235,6 +236,15 @@ public class InitWindow extends Application {
         Platform.runLater(() -> {
             //TODO: MESSAGGI DI TIPO UPDATE
             if (ClientMessageParser.isUpdateMessage(newValue)) {
+
+                //MESSAGGIO UPDATE PER IL CAMBIO DEL TURNO
+                if (ClientMessageParser.isUpdateTurnMessage(message.getText())) {
+                    anchorGame.getChildren().remove(nodeSetting);
+                    settingLabel.updateTurn(ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
+                    nodeSetting = settingLabel.getSettingLabel();
+                    configureAnchorPane(anchorGame,nodeSetting,835d, 80d, 70d, 800d);
+                }
+
 
                 //MESSAGGIO UPDATE PER IL CAMBIO DEL ROUND
                 if (ClientMessageParser.isUpdateRoundMessage(newValue)) {
@@ -280,7 +290,10 @@ public class InitWindow extends Application {
                 //MESSAGGIO SUCCESSO PER IL PIAZZAMENTO DEI DADI
                 if (ClientMessageParser.isSuccessPutMessage(newValue)) {
                     AlertValidation.display("Sagrada", "La tua azione è andata a buon fine!");
-                    //settingLabel.updateAction();
+                    anchorGame.getChildren().remove(nodeSetting);
+                    settingLabel.updateAction();
+                    nodeSetting = settingLabel.getSettingLabel();
+                    configureAnchorPane(anchorGame,nodeSetting,835d, 80d, 70d, 800d);
                 }
 
 
@@ -302,8 +315,8 @@ public class InitWindow extends Application {
             //MESSAGGIO SUCCESSO UTILIZZO CARTA UTENSILE
             if (ClientMessageParser.isUseUtensilEndMessage(newValue)) {
                 List<String> updateCost = ClientMessageParser.getInformationsFromMessage(newValue);
-                settingLabel.updateAction();
-                settingLabel.updateFavours(updateCost.get(1));
+                //settingLabel.updateAction();
+                //settingLabel.updateFavours(updateCost.get(1));
             }
 
 

@@ -124,7 +124,7 @@ public class AlertCardUtensils {
             StackPane node = new StackPane();
             node.setPrefSize(302,452);
 
-            ImageView item = shadowEffect(configureImageView("/cardUtensils/",card,EXTENSION,250,402));
+            ImageView item = shadowEffect(configureImageView("/cardUtensils/",card,EXTENSION,270,402));
             cardHash.put(node, false);
             item.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
                 setFocusStyle(cardHash,node,groupCard);
