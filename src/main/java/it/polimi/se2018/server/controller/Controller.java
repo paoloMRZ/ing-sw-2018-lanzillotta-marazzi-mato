@@ -325,7 +325,6 @@ public class Controller{
      */
     public void callThrough(Activate mex){
         lobby.getUtensils(mex.getCard()).accept(cCard,mex);
-        if(messageComingChecking(mex)) cTurn.closeTurn();
     }
 
     /**
@@ -335,7 +334,6 @@ public class Controller{
      */
     public void simpleMove(SimpleMove mex){
         cAction.simpleMove(mex);
-        if(messageComingChecking(mex)) cTurn.closeTurn();
     }
 
     /**
