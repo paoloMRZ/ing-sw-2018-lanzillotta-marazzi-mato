@@ -279,6 +279,14 @@ public class ServerMessageCreator {
         return "/###/###/network/freeze/"+ nickname  +"\n";
     }
 
+    /**
+     * Il metodo restituisce un messaggio che il controller utilizza per richiedere alla lobby di disconnettere un giocatore.
+     * ATTENZIONE: Si tratta di una disconnessione definitiva, non di un congelamento.
+     *
+     * @param nickname nickname del giocatore da disconnettere.
+     * @return message.
+     */
+    public static String getDisconnectedMessage(String nickname){return "/###/###/network/disconnected/"+ nickname  +"\n";}
 
     /**
      * Il metodo restituisce un messaggio che indica la fine della partita e contiene il punteggio associato ad ogni

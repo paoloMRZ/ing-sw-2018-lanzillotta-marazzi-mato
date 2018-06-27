@@ -287,9 +287,14 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
     public void notifyFromFakeView(String message){
         System.out.println(message); //TODO è da rimuovere!
 
-        if(NetworkMessageParser.isFreezeMessage(message)) //Se ricevo un messaggio di time out del turno congelo il fake client associato.
+        if(NetworkMessageParser.isFreezeMessage(message)) //Se ricevo un messaggio di congelamento congelo il fake client associato.
             freezeFakeClient(NetworkMessageParser.getMessageInfo(message));
-        else {
+
+        else if(NetworkMessageParser.isDisconnectMessage(message)){ //Se ricevo un messaggio di disconnessione disconnetto il fake client associato.
+            this.remove(NetworkMessageParser.getMessageInfo(message)); //Rimuovo dalla lobby il giocatore indicato nel messaggio.
+
+        }else{ //In tutti gli altri casi devo inviare i messaggi a/ai giocatore/i.
+
             if(NetworkMessageParser.isBroadcastMessage(message)){ //Se è un messaggio di broadcast lo mando in broadcat.
                 sendBroadcast(message);
             }else{ //Se no lo mando privato.
