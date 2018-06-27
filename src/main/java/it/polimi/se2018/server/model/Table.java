@@ -149,7 +149,9 @@ public class Table {
      */
 
     public Dice pickFromReserve(int position){
-        return reserve.pick(position);
+        Dice dadao= reserve.pick(position);
+        setUpdateReserve();
+        return dadao;
     }
 
 
@@ -162,6 +164,7 @@ public class Table {
     public void setReserve(Reserve toStore) {
         ArrayList<Dice> preStored = toStore.getDices();
         this.reserve = new Reserve(preStored);
+        setUpdateReserve();
     }
 
 
@@ -323,6 +326,11 @@ public class Table {
     private void toggleToResetUtensils(){
         for (Utensils u : utensilsDeck){
             if(u.getIsBusy()) u.setTheUse();
+        }
+    }
+    public void newRoundForPlayers(){
+        for (Player p :playersList){
+            p.restoreValues();
         }
     }
 ////////////////////////////////////////////////////////////////////////////////

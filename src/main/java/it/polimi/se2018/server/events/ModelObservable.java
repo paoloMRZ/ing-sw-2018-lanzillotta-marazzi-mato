@@ -11,6 +11,8 @@ public interface ModelObservable {
     public void notifyObserver(SuccessSimpleMove mex);
     public void notifyObserver(ErrorSomethingNotGood mex);
     public void notifyObserver(UpdateM mex);
+    public void notifyObserver(ErrorSelection mex);
+    public void notifyObserver(AskPlayer mex);
         
     
 

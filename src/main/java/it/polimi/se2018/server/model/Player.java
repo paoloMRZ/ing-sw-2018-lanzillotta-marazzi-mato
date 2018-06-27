@@ -210,6 +210,7 @@ public class Player {
 
     public void putDice(Dice die, int row, int col) throws InvalidCellException, InvalidCoordinatesException {
         this.mySide.put(row,col,die);
+        launchCommunication(mySide.setUpdate());
     }
 
 
@@ -223,7 +224,6 @@ public class Player {
      * @throws InvalidCoordinatesException viene lanciata quando le coordinate inserite non sono valide
      */
 
-    //TODO: Perchè solleva l'eccezione InvalidShadeValueException?
 
     public Cell showSelectedCell(int row, int col) throws InvalidCoordinatesException, InvalidShadeValueException {
         return mySide.showCell(row,col);
@@ -283,6 +283,7 @@ public class Player {
         Dice D=mySide.pick(oldRow,oldCol);
         if(D==null) throw new InvalidValueException();
         mySide.putIgnoringColor(newRow,  newCol,  D  );
+        launchCommunication(mySide.setUpdate());
     }
 
 
@@ -304,6 +305,7 @@ public class Player {
         Dice D=mySide.pick(oldRow,oldCol);
         if(D==null) throw  new InvalidValueException();
         mySide.putIgnoringShade(newRow,  newCol,  D  );
+        launchCommunication(mySide.setUpdate());
     }
 
 
@@ -345,9 +347,12 @@ public class Player {
 
     public void putWithoutDicesNear(int row, int col, Dice die) throws InvalidColorException, NotEmptyCellException, InvalidShadeException, InvalidCoordinatesException {
         mySide.putWithoutDicesNear(row,col,die);
+        launchCommunication(mySide.setUpdate());
     }
     public Dice sidePick(int row, int col) throws InvalidCoordinatesException {
-        return mySide.pick(row,col);
+        Dice dado = mySide.pick(row,col);
+        launchCommunication(mySide.setUpdate());
+        return dado;
     }
 //////////////////////////////////////////////////////////
 ///////////////////////////Comunicazione//////////////////
@@ -362,12 +367,13 @@ public void refresh(UpdateReq m){
     public void setUpdateSide(){
         launchCommunication(mySide.setUpdate());
     }
-    public void setUpdateObj(){launchCommunication(myObjective.setUpdate());}
+
     //metodo per dcisconnettere il giocatore se non ha fatto la sua giocata
 
     public void forget(){
         canIPlay=false;
     }
+
     public void forgetForever(){
         canIRenter=false;
         forget();
@@ -383,9 +389,7 @@ public void refresh(UpdateReq m){
         // veniva fatto già setUpdateObj();
         notifier.notifyObserver(askingMessage());
     }
-    public void chooseForPlayer(int i){
-        setMySide(i);
-    }
+
 
     private AskPlayer askingMessage(){
         ArrayList<String> ret=new ArrayList<>(4);

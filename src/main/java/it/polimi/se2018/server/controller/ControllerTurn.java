@@ -61,7 +61,7 @@ public class ControllerTurn implements ObserverTimer {
 
     //il primo metodo a venire lanciato in questa classe
     private void setRound() throws Exception {
-
+        lobby.newRoundForPlayers();
         firstPlayer = lobby.callPlayerByNumber(caller).getName();
         round = round + 1;
 

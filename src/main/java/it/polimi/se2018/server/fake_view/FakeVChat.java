@@ -193,10 +193,10 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
                 ServerMessageCreator.getChoseSideMessage(mex.getPlayer(),mex.getArr())
         );
     }
-    public void update(Freeze mex){
-        //todofake.messageOutBox();
-    }
     public void update(DisconnectPlayer mex){
-        //todofake.messageOutBox();
+        fake.messageOutBox(ServerMessageCreator.getDisconnectedMessage(mex.getPlayer()));
+    }
+    public void update(Freeze mex){
+        fake.messageOutBox(ServerMessageCreator.getFreezeMessage(mex.getPlayer()));
     }
 }

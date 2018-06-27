@@ -19,7 +19,6 @@ public class NotifyModel implements ModelObservable {
     public void notifyObserver(SuccessSimpleMove mex){
         view.update(mex);
     }
-
     public void notifyObserver(ErrorSomethingNotGood mex){
         view.update(mex);
     }
@@ -27,6 +26,9 @@ public class NotifyModel implements ModelObservable {
         view.update(mex);
     }
     public void notifyObserver(AskPlayer mex){
+        view.update(mex);
+    }
+    public void notifyObserver(ErrorSelection mex){
         view.update(mex);
     }
 

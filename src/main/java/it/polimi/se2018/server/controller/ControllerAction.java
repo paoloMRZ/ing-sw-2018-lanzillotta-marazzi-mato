@@ -192,7 +192,9 @@ public class ControllerAction {
      * @throws InvalidValueException
      */
     public Dice takeFromGrid(int onGrid,int inGrid) throws InvalidValueException {
-        return lobby.getRoundGrid().pick(onGrid,inGrid);
+        Dice d= lobby.getRoundGrid().pick(onGrid,inGrid);
+        lobby.setUpdateRoundGrid();
+        return d;
     }
 
     /**
@@ -204,6 +206,7 @@ public class ControllerAction {
      */
     public void putOnGrid(int onGrid,Dice d) throws InvalidValueException {
         lobby.getRoundGrid().put(onGrid,d);
+        lobby.setUpdateRoundGrid();
     }
 
     /**
@@ -282,8 +285,6 @@ public class ControllerAction {
             workOnSide(dude, picked, row, col);
             lobby.callPlayerByName(dude).setDidPlayDie();
             //success yeeeeaaaaaaa
-            lobby.setUpdateReserve();
-            lobby.callPlayerByName(dude).setUpdateSide();
             lobby.responder().notifyObserver(new SuccessSimpleMove(move.getDiceIndex(),row,col,dude));
         }
         catch(Exception e){
