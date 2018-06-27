@@ -32,8 +32,7 @@ public class DiluentePerPastaSalda extends Utensils {
         String name= myMessage.getPlayer();
         int die= myMessage.getDie();
         Dice picked=controller.getcAction().extractDieAgain(controller.getcAction().pickFromReserve(die));
-        controller.getcAction()
-                   .setHoldingADiceMoveInProgress(picked);
+        controller.setHoldingADiceMoveInProgress(picked);
         return picked.getColor().name();
     }
 
@@ -44,7 +43,7 @@ public class DiluentePerPastaSalda extends Utensils {
         int row=messageCont.get(1);
         int col=messageCont.get(2);
 
-        Dice dadozzo= controller.getcAction().getHoldingADiceMoveInProgress();
+        Dice dadozzo= controller.getHoldingADiceMoveInProgress();
         dadozzo.manualSet(value);
         controller.getcAction().workOnSide(name,dadozzo,row,col);
 

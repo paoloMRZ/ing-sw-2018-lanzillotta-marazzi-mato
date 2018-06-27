@@ -52,6 +52,7 @@ public class ControllerCard implements Visitor {
                                                             itemPinza.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException e){
+            controller.getcAction().putBackInReserve(controller.getHoldingResDie());
             controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
         }
         catch (Exception e){

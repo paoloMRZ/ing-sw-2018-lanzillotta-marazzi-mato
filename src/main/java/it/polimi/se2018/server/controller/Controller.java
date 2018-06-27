@@ -16,6 +16,7 @@ import it.polimi.se2018.server.model.Table;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
 import it.polimi.se2018.server.model.card.card_objective.obj_algos.algos.*;
 import it.polimi.se2018.server.model.card.card_utensils.*;
+import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -386,8 +387,51 @@ public class Controller{
             e.printStackTrace();
         }
     }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Metodo che mette tiene in sospeso un dado nel model, dovuto ad uso a più fasi di una carta utensile.
+     * @param d riferimento del dado in questione.
+     */
+    public void setHoldingADiceMoveInProgress(Dice d){
+        lobby.setHoldingADiceMoveInProgress(d);
+    }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Metodo che mette prende in sospeso un dado nel model, dovuto ad uso a più fasi di una carta utensile.
+     * @return dado tenuto in sospeso all'interno del model.
+     */
+    public Dice getHoldingADiceMoveInProgress(){
+        return lobby.getHoldingADiceMoveInProgress();
+    }
+    public void cleanHoldingADiceMoveInProgress(){
+       lobby.cleanHoldingADiceMoveInProgress();
+    }
+    public void setHoldingResDie(Dice d){
+        lobby.setHoldingResDie(d);
+    }
+    public Dice getHoldingResDie(){
+        return lobby.getHoldingResDie();
+    }
+    public void cleanHoldingResDie(){
+       lobby.cleanHoldingResDie();
+    }
+    public void setHoldingRoundGDie(Dice d){
+        lobby.setHoldingRoundGDie(d);
+    }
+    public Dice getHoldingRoundGDie(){
+        return lobby.getHoldingRoundGDie();
+    }
+    public void cleanHoldingRoundGDie(){
+        lobby.cleanHoldingRoundGDie();
+    }
+    public void cleanAll(){
+        cleanHoldingADiceMoveInProgress();
+        cleanHoldingResDie();
+        cleanHoldingRoundGDie();
+    }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Metodo che controlla la validità del messaggio in ingresso.

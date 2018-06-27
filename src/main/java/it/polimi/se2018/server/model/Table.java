@@ -373,7 +373,7 @@ public class Table {
     public void setHoldingRoundGDie(Dice d){
         holdingRoundGDie=d;
     }
-    public Dice getHoldingRoundGDie(Dice d){
+    public Dice getHoldingRoundGDie(){
         return holdingRoundGDie;
     }
     public void cleanHoldingRoundGDie(){

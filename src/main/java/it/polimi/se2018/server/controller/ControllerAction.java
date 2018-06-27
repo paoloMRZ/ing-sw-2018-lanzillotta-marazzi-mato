@@ -131,7 +131,7 @@ public class ControllerAction {
      */
     public void putBackInReserve(){
         Reserve toStoreAgain=lobby.getReserve();
-        toStoreAgain.put(getHoldingADiceMoveInProgress());
+        toStoreAgain.put(controller.getHoldingADiceMoveInProgress());
         lobby.setReserve(toStoreAgain);
     }
 
@@ -232,21 +232,6 @@ public class ControllerAction {
         return lobby.getRoundGrid().show(onBox,inBox);
     }
 
-    /**
-     * Metodo che mette tiene in sospeso un dado nel model, dovuto ad uso a più fasi di una carta utensile.
-     * @param d riferimento del dado in questione.
-     */
-    public void setHoldingADiceMoveInProgress(Dice d){
-        lobby.setHoldingADiceMoveInProgress(d);
-    }
-
-    /**
-     * Metodo che mette prende in sospeso un dado nel model, dovuto ad uso a più fasi di una carta utensile.
-     * @return dado tenuto in sospeso all'interno del model.
-     */
-    public Dice getHoldingADiceMoveInProgress(){
-        return lobby.getHoldingADiceMoveInProgress();
-    }
 
     /**
      * Metodo che richiede il reinserimento di un dado e l'estrazione di uno nuovo.

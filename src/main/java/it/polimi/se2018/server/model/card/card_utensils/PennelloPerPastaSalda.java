@@ -34,7 +34,7 @@ public class PennelloPerPastaSalda extends Utensils {
         int indexDie= myMessage.getDie();
         Dice picked = controller.getcAction().pickFromReserve(indexDie);
         picked.rollDice();
-        controller.getcAction().setHoldingADiceMoveInProgress(picked);
+        controller.setHoldingADiceMoveInProgress(picked);
         return picked.getNumber();
    }
 
@@ -49,7 +49,7 @@ public class PennelloPerPastaSalda extends Utensils {
             ArrayList<Integer> cont= myMessage.getAttributes();
             int row=cont.get(0);
             int col=cont.get(1);
-            controller.getcAction().workOnSide(name,controller.getcAction().getHoldingADiceMoveInProgress(),row,col);
+            controller.getcAction().workOnSide(name,controller.getHoldingADiceMoveInProgress(),row,col);
             //controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
         }
     }

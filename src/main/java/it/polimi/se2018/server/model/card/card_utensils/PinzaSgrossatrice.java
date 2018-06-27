@@ -35,19 +35,21 @@ public class PinzaSgrossatrice extends Utensils {
         int die=myMessage.getDie();
         boolean up=myMessage.getDecision();
 
-        Dice D=upper(controller.getcAction()
-                            .pickFromReserve(die),up);
+        controller.setHoldingResDie(controller.getcAction().pickFromReserve(die));
+
+        Dice D=upper(controller.getHoldingResDie(),up);
 
         controller.getcAction().putBackInReserve(D);
 
-        setTheUse();
+        //setTheUse();
         //controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
 
     }
 
     private Dice upper(Dice d,boolean decision) throws InvalidValueException{
-        if(decision) d.manualSet(d.getNumber()+1);
-        else d.manualSet(d.getNumber()-1);
-        return d;
+        Dice tmp = new Dice(d.getColor());
+        if(decision) tmp.manualSet(d.getNumber()+1);
+        else tmp.manualSet(d.getNumber()-1);
+        return tmp;
     }
 }

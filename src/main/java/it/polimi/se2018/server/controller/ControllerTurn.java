@@ -115,8 +115,35 @@ public class ControllerTurn implements ObserverTimer {
         catch (Exception e){
             controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
-
-
+    }
+    public void passCloseTurn(){
+        //azione del timer quando scade il turno posso dividere in due parti
+        //o quando messaggi mi dicono che ha già fatto le cose che deve fare da checker
+        try{
+            if(getTurn().canYouPlay()) {
+                sagradaTimer.stop();
+                timeIsOn = false;
+                controller.getcChat().notifyObserver(new TimeIsUp(turnOf));
+                /*
+                if (!getTurn().getDidPlayDie() && !getTurn().getDidPlayCard()) {
+                    getTurn().forget();
+                    controller.getcChat().notifyObserver(new Freeze(turnOf));
+                }*/
+            }
+            if(!andata && turnOf.equals(firstPlayer) ){
+                andata = true;
+                callerModifier();
+                lobby.setUpdateDiceToRoundGrid();
+                setRound();
+            }
+            else {
+                callerModifier();
+                setTurn();
+            }
+        }
+        catch (Exception e){
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
+        }
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -247,7 +274,7 @@ public void setThePlayers() throws InvalidValueException {
     }
     public void passTurn(PassTurn m){
         if(m.getPlayer().equals(turnOf)){
-             closeTurn();
+             passCloseTurn();
         }
 
 
