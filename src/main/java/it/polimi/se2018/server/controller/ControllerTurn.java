@@ -77,15 +77,12 @@ public class ControllerTurn implements ObserverTimer {
             turnOf = lobby.callPlayerByNumber(caller).getName();
 
         if(getTurn().canYouPlay()) {//determina se un giocatore è stato disconnesso
-
-            controller.getcChat().notifyObserver(new UpdateM(turnOf,"turn",turnOf));
-
             recorder(turnOf);
             getTurn().reductor();
             lobby.rotatingPlayerTurn(caller);
             sagradaTimer.start();
             timeIsOn = true;
-
+            controller.getcChat().notifyObserver(new UpdateM(null,"turn",turnOf));
             //parte il timer
         }
         else closeTurn();
@@ -148,15 +145,15 @@ public void setThePlayers() throws InvalidValueException {
             timeIsOn = true;
     }
 
-    private void actualPlayerIsDone(){
+    protected void actualPlayerIsDone(){
         //azione del timer quando scade il turno posso dividere in due parti
         //o quando messaggi mi dicono che ha già fatto le cose che deve fare da checker
         try{
 
             sagradaTimer.stop();
             timeIsOn=false;
-            controller.getcChat().notifyObserver( new TimeIsUp(turnOf));
 
+            controller.getcChat().notifyObserver( new TimeIsUp(turnOf));
             if(getTurn().getMySide()==null){
                 lobby.callPlayerByNumber(caller).forgetForever();
                 controller.getcChat().notifyObserver(new DisconnectPlayer(turnOf));
@@ -249,8 +246,7 @@ public void setThePlayers() throws InvalidValueException {
     }
     public void passTurn(PassTurn m){
         if(m.getPlayer().equals(turnOf)){
-            if(setting) actualPlayerIsDone();
-            else closeTurn();
+             closeTurn();
         }
 
 

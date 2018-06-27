@@ -79,9 +79,8 @@ public class ScoreGrid {
     }
 
     private UpdateM createResponse(){
-        String who = this.getClass().getName();
         String content = this.toString();
-        return new UpdateM(null,who, content);
+        return new UpdateM(null,"ScoreGrid", content);
     }
     //todo toString da fare
     public String toString(){

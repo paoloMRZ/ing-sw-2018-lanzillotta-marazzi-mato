@@ -352,7 +352,7 @@ public class Controller{
      */
     public void chosen(Choice m) throws InvalidValueException {
         lobby.callPlayerByName(m.getPlayer()).setMySide(m.getIndex());
-        passTurn(new PassTurn(m.getPlayer()));
+        cTurn.actualPlayerIsDone();
     }
 
     /**

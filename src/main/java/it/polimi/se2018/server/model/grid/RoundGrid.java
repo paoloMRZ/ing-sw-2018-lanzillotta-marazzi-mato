@@ -104,10 +104,10 @@ public class RoundGrid {
     }
     /////////////Comunicazione/////
     private UpdateM createResponse(){
-            String who = this.getClass().getName();
+
             String content = this.toString();
 
-            return new UpdateM(null,who, content);
+            return new UpdateM(null,"RoundGrid", content);
     }
     public String toString(){
 

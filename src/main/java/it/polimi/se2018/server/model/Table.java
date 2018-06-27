@@ -201,14 +201,6 @@ public class Table {
         }
         throw new NullPointerException();
     }
-    //davvero utile????????'vedremo
-    //non lancia eccezioni non se se legale
-    public  Player callPlayerByItsHisTurn(){
-        for (Player p : playersList) {
-            if (p.getIsMyTurn()) return p;
-        }
-        return null;
-    }
 
 
     /**
@@ -362,7 +354,6 @@ public class Table {
     }
     public Dice getHoldingADiceMoveInProgress(){
         Dice tmp= holdingADiceMoveInProgress;
-        holdingADiceMoveInProgress=null;
         return tmp;
     }
 /////////////////////////////////////////////////////////////////////////////////////////////
