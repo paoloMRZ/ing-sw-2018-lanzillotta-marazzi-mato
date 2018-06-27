@@ -240,7 +240,8 @@ public class InitWindow extends Application {
             if (ClientMessageParser.isUpdateMessage(newValue)) {
 
                 //MESSAGGIO UPDATE PER IL CAMBIO DEL TURNO
-                if (ClientMessageParser.isUpdateTurnMessage(message.getText())) {
+                if (ClientMessageParser.isUpdateTurnMessage(newValue)) {
+                    settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
                     anchorGame.getChildren().remove(nodeSetting);
                     settingLabel.updateTurn(ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
                     nodeSetting = settingLabel.getSettingLabel();
@@ -252,6 +253,10 @@ public class InitWindow extends Application {
                 if (ClientMessageParser.isUpdateRoundMessage(newValue)) {
                     List<String> roundInfo = ClientMessageParser.getInformationsFromMessage(newValue);
                     roundLabel.proceedRound(roundInfo, 120, 70);
+                    anchorGame.getChildren().remove(nodeSetting);
+                    settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
+                    nodeSetting = settingLabel.getSettingLabel();
+                    configureAnchorPane(anchorGame, nodeSetting, 835d, 80d, 70d, 800d);
                 }
 
 
