@@ -26,6 +26,8 @@ public class ControllerTurn implements ObserverTimer {
 
 
     private int caller=0;
+    private int indexAmongPs;
+    private int counterCMod;
     private int numbOfPlayers;
 
     private ArrayList<String> orderOfTurning = new ArrayList<>();
@@ -39,6 +41,8 @@ public class ControllerTurn implements ObserverTimer {
         this.lobby=table;
         this.controller=controller;
         this.numbOfPlayers=lobby.peopleCounter();
+        this.indexAmongPs=numbOfPlayers;
+        this.counterCMod=numbOfPlayers;
         this.sagradaTimer=new SagradaTimer((60*60));
         sagradaTimer.add(this);
     }
@@ -102,7 +106,6 @@ public class ControllerTurn implements ObserverTimer {
                 }
             }
             if(!andata && turnOf.equals(firstPlayer) ){
-                andata = true;
                 callerModifier();
                 lobby.setUpdateDiceToRoundGrid();
                 setRound();
@@ -131,7 +134,6 @@ public class ControllerTurn implements ObserverTimer {
                 }*/
             }
             if(!andata && turnOf.equals(firstPlayer) ){
-                andata = true;
                 callerModifier();
                 lobby.setUpdateDiceToRoundGrid();
                 setRound();
@@ -193,7 +195,7 @@ public void setThePlayers() throws InvalidValueException {
                     setRound();
                 }
                 else {
-                    callerModifier();
+                    caller=caller+1;
                     anotherPlayer();
                 }
 
@@ -211,7 +213,7 @@ public void setThePlayers() throws InvalidValueException {
 
 
     private void callerModifier(){
-
+        /*
         if(andata) caller=caller+1;
         else caller=caller-1;
 
@@ -222,7 +224,39 @@ public void setThePlayers() throws InvalidValueException {
         if(caller>numbOfPlayers-1){
             caller=numbOfPlayers-1;
             andata=false;
+        }*/
+        if(counterCMod!=1){
+            if(andata){
+                indexAmongPs=indexAmongPs+1;
+                System.out.println(indexAmongPs+"index1");
+                counterCMod=counterCMod-1;
+
+            }
+            else {
+                indexAmongPs=indexAmongPs-1;
+                System.out.println(indexAmongPs+"index2");
+                counterCMod=counterCMod-1;
+
+            }
         }
+        else{
+            if(andata){
+                andata=false;
+                indexAmongPs=indexAmongPs+numbOfPlayers;
+                System.out.println(indexAmongPs+"index3");
+                counterCMod=numbOfPlayers;
+            }
+            else {
+                andata=true;
+                indexAmongPs=numbOfPlayers+round;
+                counterCMod=numbOfPlayers;
+            }
+
+        }
+        System.out.println(indexAmongPs+"index");
+        caller= (indexAmongPs % numbOfPlayers );
+        System.out.println(numbOfPlayers+"numb");
+        System.out.println(caller+"calle");
     }
 
 
@@ -260,6 +294,8 @@ public void setThePlayers() throws InvalidValueException {
 
         numbOfPlayers=lobby.peopleCounter();
         caller=0;
+        indexAmongPs=numbOfPlayers;
+        counterCMod=numbOfPlayers;
         orderOfTurning = new ArrayList<>();
 
         andata=true;

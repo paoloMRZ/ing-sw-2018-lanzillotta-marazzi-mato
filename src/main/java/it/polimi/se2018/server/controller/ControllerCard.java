@@ -53,11 +53,13 @@ public class ControllerCard implements Visitor {
         }
         catch(InvalidValueException e){
             controller.getcAction().putBackInReserve(controller.getHoldingResDie());
+
             controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
         }
         catch (Exception e){
             controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
+        controller.cleanAll();
     }
 
     public void visit(PennelloPerEglomise itemPennelloEglo, ToolCard2 m){
