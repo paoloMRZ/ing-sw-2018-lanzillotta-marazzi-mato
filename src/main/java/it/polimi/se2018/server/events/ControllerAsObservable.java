@@ -17,4 +17,6 @@ public interface ControllerAsObservable {
     public void notifyObserver(DisconnectPlayer mex);
 
     public void notifyObserver(Freeze mex);
+
+    public void notifyObserver(IgnoreMex mex);
 }

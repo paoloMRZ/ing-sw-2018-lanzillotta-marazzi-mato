@@ -257,7 +257,7 @@ public void setThePlayers() throws InvalidValueException {
             if(!timeIsOn) return false;
             else{
                 if(lobby.callPlayerByName(m.getPlayer()).getDidPlayDie()&&lobby.callPlayerByName(m.getPlayer()).getDidPlayCard()){
-                    closeTurn();
+                    passCloseTurn();
                     return false;
                 }
                 else return true;

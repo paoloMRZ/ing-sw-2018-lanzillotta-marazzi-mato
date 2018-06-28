@@ -29,10 +29,22 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
 
 
     public void update(Activate mex){
-        if(checker(mex)) controller.callThrough(mex);
+        if(checker(mex)) {
+            try {
+                controller.callThrough(mex);
+            } catch (InvalidValueException e) {
+                e.printStackTrace();
+            }
+        }
     }
     public void update(SimpleMove mex){
-        if(checker(mex)) controller.simpleMove(mex);
+        if(checker(mex)) {
+            try {
+                controller.simpleMove(mex);
+            } catch (InvalidValueException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
@@ -63,8 +75,8 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
 */
     private boolean checker(EventMVC mex){
 
-            if(controller.messageComingChecking(mex)){
-                return mex.getPlayer().equals(controller.getTurn().getName());
+            if(mex.getPlayer().equals(controller.getTurn().getName())){
+                return controller.messageComingChecking(mex);
             }
             else{
                  return false;
@@ -110,6 +122,7 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
     public void notifyObserver( DisconnectPlayer mex){
         view.update(mex);
     }
+    public void notifyObserver(IgnoreMex mex){view.update(mex);}
 
 
 

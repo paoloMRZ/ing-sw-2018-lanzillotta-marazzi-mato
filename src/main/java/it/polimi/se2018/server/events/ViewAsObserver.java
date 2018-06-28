@@ -21,4 +21,6 @@ public interface ViewAsObserver {
 
     public void update(Freeze mex);
     public void update(DisconnectPlayer mex);
+
+    public void update(IgnoreMex mex);
 }

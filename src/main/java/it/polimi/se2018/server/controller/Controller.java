@@ -1,9 +1,6 @@
 package it.polimi.se2018.server.controller;
 
-import it.polimi.se2018.server.events.EventMVC;
-import it.polimi.se2018.server.events.Freeze;
-import it.polimi.se2018.server.events.SimpleMove;
-import it.polimi.se2018.server.events.Unfreeze;
+import it.polimi.se2018.server.events.*;
 import it.polimi.se2018.server.events.responses.Choice;
 import it.polimi.se2018.server.events.responses.PassTurn;
 import it.polimi.se2018.server.events.responses.UpdateM;
@@ -324,8 +321,12 @@ public class Controller{
      * Controlla inoltre che le mosse a disposizione nel turno siano state fatte tutte.
      * @param mex messagio di attivazione
      */
-    public void callThrough(Activate mex){
-        lobby.getUtensils(mex.getCard()).accept(cCard,mex);
+    public void callThrough(Activate mex) throws InvalidValueException {
+        if(lobby.callPlayerByName(mex.getPlayer()).getDidPlayCard()) cChat.notifyObserver(new IgnoreMex(mex.getPlayer()));
+        else{
+            lobby.getUtensils(mex.getCard()).accept(cCard,mex);
+            messageComingChecking(mex);
+        }
     }
 
     /**
@@ -333,8 +334,12 @@ public class Controller{
      *  Controlla inoltre che le mosse a disposizione nel turno siano state fatte tutte.
      * @param mex messaggio di piazzamento
      */
-    public void simpleMove(SimpleMove mex){
-        cAction.simpleMove(mex);
+    public void simpleMove(SimpleMove mex) throws InvalidValueException {
+        if(lobby.callPlayerByName(mex.getPlayer()).getDidPlayDie()) cChat.notifyObserver(new IgnoreMex(mex.getPlayer()));
+        else{
+            cAction.simpleMove(mex);
+            messageComingChecking(mex);
+        }
     }
 
     /**
