@@ -40,6 +40,20 @@ public class ServerMessageCreator {
         return "/###/" + addressee + "/error/put/" + index + "&" + row + "&" + col + "\n";
     }
 
+    /**
+     * Il messaggio restituito dal metodo indica è stata eseguita una put non autorizzata. Questo significa che il giocatore
+     * ha già piazzato un dado nel suo turno.
+     *
+     * @param addressee destinatario del messaggio.
+     * @param index     indice che rappresenta il dado della riserva scelto per l'inserimento.
+     * @param row       riga della cella su cui è stato effettuato l'inserimento.
+     * @param col       colonna della cella su cui è stato effettuato l'inserimento.
+     * @return messaggio.
+     */
+    public static String getUnauthorizedPutMessage(String addressee, String index, String row, String col){
+        return "/###/" + addressee + "/error/unauthorized/" + index + "&" + row + "&" + col + "\n";
+    }
+
     //Messaggi relativi all'uso degli utensili.
 
     /**

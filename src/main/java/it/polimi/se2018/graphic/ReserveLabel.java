@@ -26,7 +26,6 @@ public class ReserveLabel{
     private TextField listener = new TextField();
     private HBox reserve;
     private HashMap<StackPane, Boolean> cell = new HashMap<>();
-    private Group group = new Group();
     private ArrayList<String> diceInfo = new ArrayList<>();
 
     public ReserveLabel(List<String> diceInfo, int prefWidth, int prefHeight, int widthRect, int heightRect){
@@ -39,6 +38,7 @@ public class ReserveLabel{
         rect.setFill(Color.TRANSPARENT);
         rect.setStroke(Color.RED);
         rect.setStrokeWidth(3d);
+        Group group = new Group();
         group.getChildren().add(rect);
         reserve = new HBox(5);
         reserve.setAlignment(Pos.CENTER);

@@ -69,7 +69,7 @@ public class ActionUtensils {
         bodyContent.setAlignment(Pos.CENTER);
 
         //End content
-        ImageView continueButton = shadowEffect(configureImageView(SUBDIRECTORY,"button-continue",EXTENSION,180,90));
+        ImageView continueButton = shadowEffect(configureImageView("","button-continue",EXTENSION,180,90));
         String finalName = name;
         String finalPath = keyNameOfCard;
         continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
