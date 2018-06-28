@@ -3,6 +3,7 @@ package it.polimi.se2018.graphic;
 import it.polimi.se2018.client.connection_handler.ConnectionHandler;
 import it.polimi.se2018.client.message.ClientMessageCreator;
 import it.polimi.se2018.graphic.alert_box.AlertLoadingGame;
+import it.polimi.se2018.graphic.alert_box.AlertValidation;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
@@ -34,7 +35,7 @@ public class SideChoiceLabel{
     private static final String SUBDIRECTORY = "/cardPack/";
 
     private AnchorPane sideChoise;
-    private String numberChoice;
+    private String numberChoice = null;
     private String nameChoice;
     private String favours;
     private HashMap<StackPane, Boolean> cell = new HashMap<>();
@@ -53,10 +54,13 @@ public class SideChoiceLabel{
         Label labelRequest = setFontStyle(new Label("Scegli la tua carta Window:"),35);
         labelRequest.setAlignment(Pos.CENTER);
 
-        ImageView continueButton = shadowEffect(configureImageView("","button-continue", ".png",250,110));
+        ImageView continueButton = shadowEffect(configureImageView("","button-continue", ".png",220,90));
         continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            connectionHandler.sendToServer(ClientMessageCreator.getSideReplyMessage(connectionHandler.getNickname(), numberChoice));
-            AlertLoadingGame.display("Sagrada", "Attendere la scelta degli\naltri giocatori...");
+            if(numberChoice==null) AlertValidation.display("Sagrada", "Selezionare una carta!");
+            else {
+                connectionHandler.sendToServer(ClientMessageCreator.getSideReplyMessage(connectionHandler.getNickname(), numberChoice));
+                AlertLoadingGame.display("Sagrada", "Attendere la scelta degli\naltri giocatori...");
+            }
         });
 
         Stream<String> firstStream = sideSelection.stream().filter(s -> (sideSelection.indexOf(s) % 2 == 0));

@@ -15,7 +15,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -29,31 +28,33 @@ import static it.polimi.se2018.graphic.Utility.*;
 public class InitWindow extends Application {
 
     //Elementi grafici e TextField per l'ascolto dei messaggi in ingresso
-    private StackPane landscape;
     private BorderPane borderPane;
     private ConnectionHandler connectionHandler;
-    private String nickName;
-    private static TextField message = new TextField();
+    private TextField message = new TextField();
     private Boolean startGame = true;
     private Boolean isInitReserve = true;
-    private static AnchorPane anchorGame;
+    private AnchorPane anchorGame;
 
-    //Elementi della schermata game
-    private static SideCardLabel playerSide;
-    private static ReserveLabel reserve;
-    private static CardCreatorLabel privateObjective;
-    private static TabCardLabel tabCardLabel = new TabCardLabel();
-    private static CardCreatorLabel publicObjective;
-    private static CardCreatorLabel cardUtensils;
-    private static SideChoiceLabel sideChoiceLabel;
-    private static SideEnemyLabel enemiesSide;
-    private static RoundLabel roundLabel;
-    private static ButtonGameLabel buttonGameLabel;
-    private static SettingLabel settingLabel;
+    //Elementi grafici della schermata game
+    private SideCardLabel playerSide;
+    private ReserveLabel reserve;
+    private CardCreatorLabel privateObjective;
+    private TabCardLabel tabCardLabel = new TabCardLabel();
+    private CardCreatorLabel publicObjective;
+    private CardCreatorLabel cardUtensils;
+    private SideChoiceLabel sideChoiceLabel;
+    private SideEnemyLabel enemiesSide;
+    private RoundLabel roundLabel;
+    private ButtonGameLabel buttonGameLabel;
+    private SettingLabel settingLabel;
 
+    //Elementi grafici per l'aggiornamento della scehrmata
     private HBox nodeReserve;
     private HBox nodeSetting;
 
+
+    //Costanti di intestazione delle varie finestra
+    private static final String SAGRADA = "Sagrada";
 
     public static void main(String[] args) {
         launch(args);
@@ -64,30 +65,29 @@ public class InitWindow extends Application {
     public void start(Stage primaryStage) {
 
         //Imposto il nome della finestra principale
-        primaryStage.setTitle("Sagrada");
+        primaryStage.setTitle(SAGRADA);
         primaryStage.getIcons().add(new Image("iconPack/icon-sagrada.png", 10, 10, false, true));
         primaryStage.setOnCloseRequest(e -> closeWindow(primaryStage));
 
         //TODO: SCHERMATA LOGIN
-        BackgroundImage init = new BackgroundImage(new Image("back-init.jpg", 878, 718, false, true), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
         ImageView continueButton = shadowEffect(configureImageView("", "button-continue", ".png", 200, 90));
         ImageView startButton = shadowEffect(configureImageView("", "button-start-game", ".png", 200, 90));
         AlertSwitcher alertSwitcher = new AlertSwitcher();
-        startButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> alertSwitcher.display("Sagrada", "Scegli la modalità di connessione:", this));
+        startButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> alertSwitcher.display(SAGRADA, "Scegli la modalità di connessione:", this));
 
         borderPane = new BorderPane();
-        borderPane.setBackground(new Background(init));
+        borderPane.setStyle("-fx-background-image: url(back-init.jpg); -fx-background-size: contain; -fx-background-position: center; -fx-background-repeat: no-repeat;");
+
 
         HBox layout = new HBox(50);
         layout.getChildren().addAll(continueButton, startButton);
         layout.setAlignment(Pos.CENTER);
         borderPane.setCenter(layout);
-        landscape = new StackPane(borderPane);
 
-        Scene sceneLogin = new Scene(landscape, 718, 878);
+        Scene sceneLogin = new Scene(borderPane, 718, 878);
         primaryStage.setScene(sceneLogin);
         primaryStage.centerOnScreen();
-        primaryStage.setMaxHeight(718);
+        primaryStage.setMaxHeight(650);
         primaryStage.setMaxWidth(878);
         primaryStage.show();
 
@@ -95,9 +95,6 @@ public class InitWindow extends Application {
 
         //Formattazione dell'AnchorPane su cui ancorare gli elementi della schermata di gioco
         anchorGame = new AnchorPane();
-        ImageView imageView = new ImageView("prova-sfondo.png");
-        imageView.setFitWidth(Screen.getPrimary().getVisualBounds().getWidth());
-        imageView.setFitHeight(Screen.getPrimary().getVisualBounds().getHeight());
         anchorGame.setStyle("-fx-background-image: url(prova-sfondo.png); -fx-background-size: contain; -fx-background-position: center; -fx-background-repeat: no-repeat;");
 
 
@@ -241,9 +238,10 @@ public class InitWindow extends Application {
 
                 //MESSAGGIO UPDATE PER IL CAMBIO DEL TURNO
                 if (ClientMessageParser.isUpdateTurnMessage(newValue)) {
-                    settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
+                    settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(newValue).get(0));
                     anchorGame.getChildren().remove(nodeSetting);
-                    settingLabel.updateTurn(ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
+                    settingLabel.updateTurn(ClientMessageParser.getInformationsFromMessage(newValue).get(0));
+                    buttonGameLabel.checkPermission(connectionHandler.getNickname(), ClientMessageParser.getInformationsFromMessage(newValue).get(0));
                     nodeSetting = settingLabel.getSettingLabel();
                     configureAnchorPane(anchorGame,nodeSetting,835d, 80d, 70d, 800d);
                 }
@@ -256,6 +254,7 @@ public class InitWindow extends Application {
                     anchorGame.getChildren().remove(nodeSetting);
                     settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
                     nodeSetting = settingLabel.getSettingLabel();
+                    buttonGameLabel.checkPermission(connectionHandler.getNickname(), ClientMessageParser.getInformationsFromMessage(newValue).get(0));
                     configureAnchorPane(anchorGame, nodeSetting, 835d, 80d, 70d, 800d);
                 }
 
@@ -299,7 +298,7 @@ public class InitWindow extends Application {
 
                 //MESSAGGIO SUCCESSO PER IL PIAZZAMENTO DEI DADI
                 if (ClientMessageParser.isSuccessPutMessage(newValue)) {
-                    AlertValidation.display("Sagrada", "La tua azione è andata a buon fine!");
+                    AlertValidation.display(SAGRADA, "La tua azione è andata\n a buon fine!");
                     anchorGame.getChildren().remove(nodeSetting);
                     settingLabel.updateAction();
                     nodeSetting = settingLabel.getSettingLabel();
@@ -324,9 +323,12 @@ public class InitWindow extends Application {
 
             //MESSAGGIO SUCCESSO UTILIZZO CARTA UTENSILE
             if (ClientMessageParser.isUseUtensilEndMessage(newValue)) {
-                List<String> updateCost = ClientMessageParser.getInformationsFromMessage(newValue);
-                //settingLabel.updateAction();
-                //settingLabel.updateFavours(updateCost.get(1));
+                List<String> updateInfoUtensil = ClientMessageParser.getInformationsFromMessage(newValue);
+                anchorGame.getChildren().remove(nodeSetting);
+                settingLabel.updateFavours(updateInfoUtensil.get(1));
+                settingLabel.updateAction();
+                nodeSetting = settingLabel.getSettingLabel();
+                configureAnchorPane(anchorGame,nodeSetting,835d, 80d, 70d, 800d);
             }
 
 
@@ -344,10 +346,6 @@ public class InitWindow extends Application {
     }
 
 
-    public void setNickName(String message) {
-        this.nickName = message;
-    }
-
     public void setConnectionHandler(ConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
     }
@@ -356,12 +354,12 @@ public class InitWindow extends Application {
         return connectionHandler;
     }
 
-    public static TextField getMessage() {
+    public TextField getMessage() {
         return message;
     }
 
     private void closeWindow(Stage primaryStage) {
-        boolean answer = AlertCloseButton.display("Sagrada", "Vuoi davvero uscire da Sagrada?");
+        boolean answer = AlertCloseButton.display(SAGRADA, "Vuoi davvero uscire da Sagrada?");
         if (answer) primaryStage.close();
         else primaryStage.show();
     }

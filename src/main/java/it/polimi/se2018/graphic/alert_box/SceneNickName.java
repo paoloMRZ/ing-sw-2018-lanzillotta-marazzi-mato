@@ -16,6 +16,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -44,6 +46,7 @@ public class SceneNickName {
         TextField textNick = new TextField();
         textNick.setPromptText("nickname");
         textNick.setPrefSize(200,20);
+        textNick.setFont(Font.font("Verdana", FontWeight.THIN, 18));
 
         GridPane.setConstraints(textNick, 0, 0);
         grid.setAlignment(Pos.CENTER);
@@ -78,7 +81,7 @@ public class SceneNickName {
         //Formattazione finale della Finestra
         layout.setBackground(configureBackground("back-init-close", 550,480));
 
-        sceneNickName = new Scene(layout);
+        sceneNickName = new Scene(layout,550,480);
 }
 
 
@@ -95,8 +98,6 @@ public class SceneNickName {
                 }
                 else if (connectionType.equals("Rmi"))
                     init.setConnectionHandler(new ConnectionHandlerRMI(input, init, iP));
-
-                init.setNickName(input);
                 value = true;
             } catch (InvalidNicknameException e) {
                 AlertValidation.display("Sagrada", "Attenzione! Nickname già utilizzato!.");

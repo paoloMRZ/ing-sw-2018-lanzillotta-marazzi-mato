@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import static it.polimi.se2018.graphic.Utility.*;
@@ -53,8 +54,10 @@ public class AlertSwitcher{
         //Configurazione del pannello
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
-        window.setWidth(550);
-        window.setHeight(480);
+        window.setMaxWidth(550);
+        window.setMaxHeight(480);
+        window.setMinWidth(480);
+        window.setMinHeight(350);
 
 
         //Label "SCEGLI CONNESSIONE"
@@ -72,8 +75,12 @@ public class AlertSwitcher{
         Label labelChooseCoordinate = setFontStyle(new Label("Scegli le coordinate di connesione:"),22);
 
         TextField textPort = new TextField();
+        textPort.setPromptText("ex: 1234");
+        textPort.setFont(Font.font("Verdana", FontWeight.THIN, 14));
         Label textPortTag = setFontStyle(new Label("Porta"),20);
         TextField textIP = new TextField();
+        textIP.setPromptText("ex: 127.0.0.1");
+        textIP.setFont(Font.font("Verdana", FontWeight.THIN, 14));
         Label textIPTag = setFontStyle(new Label("Ip Server"),20);
 
         configureToggleVBox(portConfiguration,textPortTag,textPort);
@@ -92,7 +99,7 @@ public class AlertSwitcher{
 
 
         //Label "CONTINUE BUTTON"
-        ImageView continueButton = shadowEffect(configureImageView("","button-continue",".png",158,61));
+        ImageView continueButton = shadowEffect(configureImageView("","button-continue",".png",152,65));
         continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             Platform.runLater(() -> {
                 if(isValidInput(connectionType,interfaceType, textPort.getText(), textIP.getText())) {
@@ -125,8 +132,7 @@ public class AlertSwitcher{
 
         layuot.setBackground(configureBackground("back-init-close",550,480));
         layuot.setAlignment(Pos.CENTER);
-
-        sceneConnection = new Scene(layuot);
+        sceneConnection = new Scene(layuot,550,480);
         window.setScene(sceneConnection);
         window.setOnCloseRequest(e -> window.close());
         window.showAndWait();

@@ -4,6 +4,7 @@ import it.polimi.se2018.client.connection_handler.ConnectionHandler;
 import it.polimi.se2018.client.message.ClientMessageCreator;
 import it.polimi.se2018.graphic.alert_utensils.AlertCardUtensils;
 import javafx.geometry.Pos;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -25,6 +26,7 @@ public class ButtonGameLabel {
 
 
     public ButtonGameLabel(ConnectionHandler connectionHandler, ReserveLabel reserve, SideCardLabel playerSide, CardCreatorLabel cardUtensils){
+
 
         alertCardUtensils = new AlertCardUtensils(cardUtensils,connectionHandler,reserve,playerSide);
         buttonGame = shadowEffect(configureImageView(SUBDIRECTORY,"button-game-die", EXTENSION,352, 104));
@@ -63,5 +65,24 @@ public class ButtonGameLabel {
 
     public AlertCardUtensils getAlertCardUtensils() {
         return alertCardUtensils;
+    }
+
+    public void checkPermission(String nickname, String turnOf){
+
+            if (!nickname.equals(turnOf)) {
+                buttonGame.setDisable(true);
+                buttonUtensils.setDisable(true);
+                buttonTurn.setDisable(true);
+                buttonGame.setOpacity(0.6);
+                buttonUtensils.setOpacity(0.6);
+                buttonTurn.setOpacity(0.6);
+            } else {
+                buttonGame.setDisable(false);
+                buttonUtensils.setDisable(false);
+                buttonTurn.setDisable(false);
+                buttonGame.setOpacity(1.0);
+                buttonUtensils.setOpacity(1.0);
+                buttonTurn.setOpacity(1.0);
+            }
     }
 }

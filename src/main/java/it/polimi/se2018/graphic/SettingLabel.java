@@ -103,4 +103,8 @@ public class SettingLabel implements ChangeListener<String> {
     public void updateFavours(String updateFavours){
         changed(favours.textProperty(),this.favours.getText(),String.valueOf(parseInt(updateFavours)));
     }
+
+    public TextField getTurnOf() {
+        return turnOf;
+    }
 }

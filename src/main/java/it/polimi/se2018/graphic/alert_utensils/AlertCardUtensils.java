@@ -88,7 +88,7 @@ public class AlertCardUtensils {
         StackPane baseWindow = new StackPane();
 
         groupCard = new Group();
-        Rectangle rect = new Rectangle(20, 20, 302, 452);
+        Rectangle rect = new Rectangle(20, 20, 280, 402);
         rect.setFill(Color.TRANSPARENT);
         rect.setStroke(Color.RED);
         rect.setStrokeWidth(5d);
@@ -124,7 +124,7 @@ public class AlertCardUtensils {
             StackPane node = new StackPane();
             node.setPrefSize(302,452);
 
-            ImageView item = shadowEffect(configureImageView("/cardUtensils/",card,EXTENSION,270,402));
+            ImageView item = shadowEffect(configureImageView("/cardUtensils/",card,EXTENSION,280,402));
             cardHash.put(node, false);
             item.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
                 setFocusStyle(cardHash,node,groupCard);

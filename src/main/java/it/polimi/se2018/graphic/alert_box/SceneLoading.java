@@ -45,7 +45,7 @@ public class SceneLoading {
         finalLayout.getChildren().addAll(layuot,backButton);
 
 
-        sceneLoading = new Scene(finalLayout);
+        sceneLoading = new Scene(finalLayout,480,350);
     }
 
     public Scene getSceneLoading() {
