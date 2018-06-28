@@ -29,7 +29,7 @@ public class SelectorContent {
 
     private static final String PINZASGROSSATRICE = "Pinza Sgrossatrice";
     private static final String PENNELLOPEREGLOMISE = "Pennello Per Eglomise";
-    private static final String ALESATOREPERLALAMINDADIRAME = "Alesatore Per La Laminda Di Rame";
+    private static final String ALESATOREPERLALAMINDADIRAME = "Alesatore Per Lamina Di Rame";
     private static final String LATHEKIN = "Lathekin";
     private static final String TAGLIERINACIRCOLARE = "Taglierina Circolare";
     private static final String PENNELLOPERPASTASALDA = "Pennello Per Pasta Salda";
@@ -40,6 +40,7 @@ public class SelectorContent {
     private static final String DILUENTEPERPASTASALDA = "Diluente Per Pasta Salda";
     private static final String TAGLIERINAMANUALE = "Taglierina Manuale";
     private static final String DILUENTEPERPASTASALDABIS = "Diluente Per Pasta Salda Bis";
+    private static final String TITLERESERVE = "Riserva: ";
 
     private static final int WIDTH_GRID = 65;
     private static final int HEIGHT_GRID = 66;
@@ -60,7 +61,6 @@ public class SelectorContent {
 
 
     //UTENSILE 1
-    private String selection;
     private Boolean firstUse = true;
     private StackPane root;
 
@@ -110,7 +110,7 @@ public class SelectorContent {
         switch (cardName){
             case PINZASGROSSATRICE:
 
-                connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Collections.singletonList(selection))));
+                connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(getInfoData(),reserveLabel.getPos()))));
                 break;
 
             case PENNELLOPEREGLOMISE: case ALESATOREPERLALAMINDADIRAME:
@@ -164,7 +164,7 @@ public class SelectorContent {
             case PINZASGROSSATRICE:
                 node = new VBox(15);
                 node.setAlignment(Pos.CENTER);
-                node.getChildren().addAll(setFontStyle(new Label("Riserva: "),30),reserveLabel.callReserve(60,60));
+                node.getChildren().addAll(setFontStyle(new Label(TITLERESERVE),30),reserveLabel.callReserve(60,60));
 
                 reserveLabel.getTextField().textProperty().addListener((obs, oldText, newText) -> {
                     if(firstUse){
@@ -188,7 +188,7 @@ public class SelectorContent {
 
                 node = new VBox(30);
                 node.setAlignment(Pos.TOP_CENTER);
-                node.getChildren().addAll(setFontStyle(new Label("Riserva: "),30),reserveLabel.callReserve(60,60), setFontStyle(new Label("Dadi disponibili nel tracciato: "), 20));
+                node.getChildren().addAll(setFontStyle(new Label(TITLERESERVE),30),reserveLabel.callReserve(60,60), setFontStyle(new Label("Dadi disponibili nel tracciato: "), 20));
                 node.getChildren().add(configureActionOnRound());
                 break;
 
@@ -196,13 +196,13 @@ public class SelectorContent {
 
                 node = new VBox(15);
                 node.setAlignment(Pos.TOP_CENTER);
-                node.getChildren().addAll(setFontStyle(new Label("Riserva: "), 30),reserveLabel.callReserve(60,60));
+                node.getChildren().addAll(setFontStyle(new Label(TITLERESERVE), 30),reserveLabel.callReserve(60,60));
                 break;
 
             case RIGAINSUGHERO: case TENAGLIAAROTELLE: node = new VBox(20);
                 node.setAlignment(Pos.CENTER);
                 node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(), connectionHandler.getNickname(),sizeGridPlayer,positionGridPlayer,sizeSidePlayer,sizeRectPlayer,true,reserveLabel).getAnchorPane(),
-                        setFontStyle(new Label("Riserva: "), 20), reserveLabel.callReserve(60,60));
+                        setFontStyle(new Label(TITLERESERVE), 20), reserveLabel.callReserve(60,60));
                 break;
 
             case TAMPONEDIAMANTATO: case DILUENTEPERPASTASALDA: configureActionOnReserve(); break;
@@ -210,18 +210,18 @@ public class SelectorContent {
             case DILUENTEPERPASTASALDABIS:
                 node = new VBox(25);
                 node.setAlignment(Pos.TOP_CENTER);
-                ImageView dieExtract = configureDieView(this.dieExtract + String.valueOf(1) ,70, 70);
-                node.getChildren().addAll(setFontStyle(new Label("Hai estratto il dado:"), 25), dieExtract);
+                ImageView dieExtractItem = configureDieView(dieExtract + String.valueOf(1) ,70, 70);
+                node.getChildren().addAll(setFontStyle(new Label("Hai estratto il dado:"), 25), dieExtractItem);
 
-                VBox selection = new VBox(15);
+                VBox selectionLabel = new VBox(15);
                 HBox optionDie = new HBox(10);
                 for(int i=1; i<7; i++){
 
                     StackPane button = new StackPane();
                     button.setPrefSize(70,70);
                     button.setStyle("-fx-border-color: transparent; -fx-border-width: 2; -fx-background-radius: 0; -fx-background-color: transparent;");
-                    String pathDie = this.dieExtract + String.valueOf(i);
-                    ImageView die = shadowEffect(new ImageView(new Image("diePack/die-" + pathDie + ".bmp", 70, 70, false, true)));
+                    String pathDie = dieExtract + String.valueOf(i);
+                    ImageView die = shadowEffect(configureImageView("/diePack/", "die-" + pathDie, ".bmp",70,70));
                     button.getChildren().add(die);
 
                     cell.put(button, false);
@@ -240,9 +240,9 @@ public class SelectorContent {
                     optionDie.getChildren().add(button);
                 }
 
-                selection.getChildren().addAll(setFontStyle(new Label("Scegli il valore:"), 25), optionDie);
-                selection.setAlignment(Pos.CENTER);
-                node.getChildren().add(selection);
+                selectionLabel.getChildren().addAll(setFontStyle(new Label("Scegli il valore:"), 25), optionDie);
+                selectionLabel.setAlignment(Pos.CENTER);
+                node.getChildren().add(selectionLabel);
                 break;
 
 
@@ -273,14 +273,18 @@ public class SelectorContent {
                 HBox labelCoordinate = new HBox(firstDie, secondDie);
                 labelCoordinate.setSpacing(20d);
                 labelCoordinate.setAlignment(Pos.CENTER);
-                node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(),/*connectionHandler.getNickname()*/"Simone",sizeGridPlayer,positionGridPlayer,sizeSidePlayer, sizeRectPlayer,true,reserveLabel).getAnchorPane(),
-                        setFontStyle(new Label("Riserva: "), 20), reserveLabel.callReserve(60,60),labelCoordinate);
+                node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(), connectionHandler.getNickname(),sizeGridPlayer,positionGridPlayer,sizeSidePlayer, sizeRectPlayer,true,reserveLabel).getAnchorPane(),
+                        setFontStyle(new Label(TITLERESERVE), 20), reserveLabel.callReserve(60,60),labelCoordinate);
                 break;
 
         }
 
         return node;
     }
+
+
+
+
 
 
 
@@ -298,10 +302,10 @@ public class SelectorContent {
 
         ArrayList<Integer> sizeGridPlayer = new ArrayList<>(Arrays.asList(65, 65));
         ArrayList<Integer> sizeSidePlayer = new ArrayList<>(Arrays.asList(330, 293));
-        ArrayList<Double> positionGridPlayer = new ArrayList<>(Arrays.asList(0d, 0d, 0d, 18d));
+        ArrayList<Double> positionGridPlayer = new ArrayList<>(Arrays.asList(0d, 5d, 5d, 15d));
         ArrayList<Double> sizeRectPlayer = new ArrayList<>(Arrays.asList(60d, 60d));
 
-        node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(),/*connectionHandler.getNickname()*/"Simone",sizeGridPlayer,positionGridPlayer,sizeSidePlayer,sizeRectPlayer,false,reserveLabel).getAnchorPane(),labelCoordinate);
+        node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(), connectionHandler.getNickname(),sizeGridPlayer,positionGridPlayer,sizeSidePlayer,sizeRectPlayer,false,reserveLabel).getAnchorPane(),labelCoordinate);
     }
 
     private void configureMovingWithRestrict(){
@@ -351,7 +355,7 @@ public class SelectorContent {
     private void configureActionOnReserve(){
         node = new VBox(20);
         node.setAlignment(Pos.CENTER);
-        node.getChildren().addAll(setFontStyle(new Label("Riserva: "),25),reserveLabel.callReserve(60,60));
+        node.getChildren().addAll(setFontStyle(new Label(TITLERESERVE),25),reserveLabel.callReserve(60,60));
     }
 
     private HBox configureCoordinateInput(Double spacingVBox, Double spacingHBox, ArrayList<TextField> coordonateBox, Boolean isDisabled){
@@ -383,10 +387,106 @@ public class SelectorContent {
         return coordinateFirstDie;
     }
 
+
+    //METODI CONFIGURAZIONE PER LA CARTA UTENSILE 1
+    private ImageView configureImageDie(String path, int increment, int prefWidth, int prefHight, boolean activateEffect, boolean mustBeIncremented){
+        Image item;
+        ImageView die;
+        if(activateEffect){
+            String dieInfo;
+            char lastIndex = path.charAt(path.length()-1);
+            if(mustBeIncremented){
+                dieInfo = path.replace(lastIndex, String.valueOf(Integer.parseInt(String.valueOf(lastIndex))+increment).charAt(0));
+                item = new Image("diePack/die-" + dieInfo + ".bmp", prefWidth,prefHight, false, true);
+                die = new ImageView(item);
+                die.setUserData("1");
+
+            }
+            else {
+                char  substitute = String.valueOf(Integer.parseInt(String.valueOf(lastIndex))-increment).charAt(0);
+                dieInfo = path.replace(lastIndex, substitute);
+                item = new Image("diePack/die-" + dieInfo + ".bmp", prefWidth,prefHight, false, true);
+                die = new ImageView(item);
+                die.setUserData("0");
+            }
+        }
+        else {
+            item =  new Image("diePack/die-" + path + ".bmp", prefWidth,prefHight, false, true);
+            die = new ImageView(item);
+            die.setUserData("invalidate");
+        }
+
+
+        return die;
+    }
+
+    private StackPane configureBoxSelection(String path, int prefWidth, int prefhight) {
+        char lastIndex = path.charAt(path.length()-1);
+        int increment = 1;
+        StackPane rootLabel = new StackPane();
+        ImageView dieInit = configureImageDie(path, increment, prefWidth, prefhight, false, false);
+        ImageView dieLeft = null;
+        if((path.charAt(path.length()-1)!='1')) dieLeft = configureImageDie(path, increment, prefWidth, prefhight, true, false);
+        ImageView dieRight = null;
+        if((path.charAt(path.length()-1)!='6')) dieRight = configureImageDie(path, increment, prefWidth, prefhight, true, true);
+        HBox view1 = new HBox(20);
+        HBox view2 = new HBox(20);
+        HBox view3 = new HBox(20);
+        VBox labelView1 = configureNodeBox("Scegli il tuo valore:",25,25,view1);
+        VBox labelView2 = configureNodeBox("Scegli il tuo valore:",25,25,view2);
+        VBox labelView3 = configureNodeBox("Scegli il tuo valore:",25,25,view3);
+        rootLabel.setStyle("-fx-background-color: transparent;");
+        switch (lastIndex) {
+
+            case '1':
+                rootLabel.getChildren().add(labelView1);
+                view1.getChildren().addAll(setOpacity(setRotation(180d), 0.6),dieInit, shadowEffect(setActionOnImage(labelView2, labelView1, rootLabel, 0d,true,dieRight)));
+                view1.setAlignment(Pos.CENTER);
+
+                view2.getChildren().addAll(shadowEffect(setActionOnImage(labelView1, labelView2, rootLabel, 180d,true,dieInit)),dieRight, setOpacity(setRotation(0d), 0.6));
+                view2.setAlignment(Pos.CENTER);
+                break;
+
+            case '6':
+                rootLabel.getChildren().add(labelView2);
+                view1.getChildren().addAll(setOpacity(setRotation(180d), 0.6), dieLeft, shadowEffect(setActionOnImage(labelView2, labelView1, rootLabel, 0d,true,dieInit)));
+                view1.setAlignment(Pos.CENTER);
+
+                view2.getChildren().addAll(shadowEffect(setActionOnImage(labelView1, labelView2, rootLabel, 180d,true,dieLeft)), dieInit, setOpacity(setRotation(0d), 0.6));
+                view2.setAlignment(Pos.CENTER);
+                break;
+
+
+            default:
+                rootLabel.getChildren().add(labelView2);
+                view1.getChildren().addAll(setOpacity(setRotation(180d),0.6),dieLeft,shadowEffect(setActionOnImage(labelView2,labelView1,rootLabel,0d,true,dieInit)));
+                view1.setAlignment(Pos.CENTER);
+
+                view2.getChildren().addAll(shadowEffect(setActionOnImage(labelView1,labelView2,rootLabel,180d,true,dieLeft)),dieInit,shadowEffect(setActionOnImage(labelView3,labelView2,rootLabel,0d,true,dieRight)));
+                view2.setAlignment(Pos.CENTER);
+
+                view3.getChildren().addAll(shadowEffect(setActionOnImage(labelView2,labelView3,rootLabel,180d,true,dieInit)),dieRight,setOpacity(setRotation(0d),0.6));
+                view3.setAlignment(Pos.CENTER);
+                break;
+        }
+
+        return rootLabel;
+    }
+
+    private VBox configureNodeBox(String title, int sizeTitle, int space, Node node){
+        VBox item = new VBox(space);
+        item.setAlignment(Pos.CENTER);
+        item.getChildren().addAll(setFontStyle(new Label(title),sizeTitle),node);
+        return item;
+    }
+
+
+    //METODI CONFIGURAZIONE PER LA CARTA UTENSILE 5
     private VBox configureActionOnRound(){
 
         ArrayList<HBox> hBoxCollection = (ArrayList<HBox>)RoundLabel.callRoundLable();
         HBox layoutRound = new HBox(5);
+        layoutRound.setAlignment(Pos.CENTER);
         VBox root = new VBox(layoutRound);
         root.setAlignment(Pos.CENTER);
         root.setSpacing(40d);
@@ -417,108 +517,11 @@ public class SelectorContent {
     }
 
 
-
-
-
-
-
-    //METODI CONFIGURAZIONE PER LA CARTA UTENSILE 1
-    private ImageView configureImageDie(String path, int increment, int prefWidth, int prefHight, boolean activateEffect, boolean mustBeIncremented){
-        Image item;
-        ImageView die = null;
-        if(activateEffect){
-            String dieInfo;
-            char lastIndex = path.charAt(path.length()-1);
-            if(mustBeIncremented){
-                dieInfo = path.replace(lastIndex, String.valueOf(Integer.parseInt(String.valueOf(lastIndex))+increment).charAt(0));
-            }
-            else {
-                char  substitute = String.valueOf(Integer.parseInt(String.valueOf(lastIndex))-increment).charAt(0);
-                dieInfo = path.replace(lastIndex, substitute);
-            }
-
-            item = new Image("diePack/die-" + dieInfo + ".bmp", prefWidth,prefHight, false, true);
-            die = new ImageView(item);
-            die.setUserData(dieInfo);
-        }
-        else {
-            item =  new Image("diePack/die-" + path + ".bmp", prefWidth,prefHight, false, true);
-            die = new ImageView(item);
-            die.setUserData(path);
-        }
-
-
-        return die;
-    }
-
-    private StackPane configureBoxSelection(String path, int prefWidth, int prefhight) {
-        char lastIndex = path.charAt(path.length()-1);
-        int increment = 1;
-        StackPane root = new StackPane();
-        ImageView dieInit = configureImageDie(path, increment, prefWidth, prefhight, false, false);
-        ImageView dieLeft = null;
-        if((path.charAt(path.length()-1)!='1')) dieLeft = configureImageDie(path, increment, prefWidth, prefhight, true, false);
-        ImageView dieRight = null;
-        if((path.charAt(path.length()-1)!='6')) dieRight = configureImageDie(path, increment, prefWidth, prefhight, true, true);
-        HBox view1 = new HBox(20);
-        HBox view2 = new HBox(20);
-        HBox view3 = new HBox(20);
-        VBox labelView1 = configureNodeBox("Scegli il tuo valore:",25,25,view1);
-        VBox labelView2 = configureNodeBox("Scegli il tuo valore:",25,25,view2);
-        VBox labelView3 = configureNodeBox("Scegli il tuo valore:",25,25,view3);
-        root.setStyle("-fx-background-color: transparent;");
-        switch (lastIndex) {
-
-            case '1':
-                root.getChildren().add(labelView1);
-                view1.getChildren().addAll(setOpacity(setRotation(180d), 0.6),dieInit, shadowEffect(setActionOnImage(labelView2, labelView1, root, 0d,true,dieRight)));
-                selection = dieInit.getUserData().toString();
-                view1.setAlignment(Pos.CENTER);
-
-                view2.getChildren().addAll(shadowEffect(setActionOnImage(labelView1, labelView2, root, 180d,true,dieInit)),dieRight, setOpacity(setRotation(0d), 0.6));
-                view2.setAlignment(Pos.CENTER);
-                break;
-
-            case '6':
-                root.getChildren().add(labelView2);
-                view1.getChildren().addAll(setOpacity(setRotation(180d), 0.6), dieLeft, shadowEffect(setActionOnImage(labelView2, labelView1, root, 0d,true,dieInit)));
-                view1.setAlignment(Pos.CENTER);
-
-                view2.getChildren().addAll(shadowEffect(setActionOnImage(labelView1, labelView2, root, 180d,true,dieLeft)), dieInit, setOpacity(setRotation(0d), 0.6));
-                selection = dieInit.getUserData().toString();
-                view2.setAlignment(Pos.CENTER);
-                break;
-
-
-            default:
-                root.getChildren().add(labelView2);
-                view1.getChildren().addAll(setOpacity(setRotation(180d),0.6),dieLeft,shadowEffect(setActionOnImage(labelView2,labelView1,root,0d,true,dieInit)));
-                view1.setAlignment(Pos.CENTER);
-
-                view2.getChildren().addAll(shadowEffect(setActionOnImage(labelView1,labelView2,root,180d,true,dieLeft)),dieInit,shadowEffect(setActionOnImage(labelView3,labelView2,root,0d,true,dieRight)));
-                selection = dieInit.getUserData().toString();
-                view2.setAlignment(Pos.CENTER);
-
-                view3.getChildren().addAll(shadowEffect(setActionOnImage(labelView2,labelView3,root,180d,true,dieInit)),dieRight,setOpacity(setRotation(0d),0.6));
-                view3.setAlignment(Pos.CENTER);
-                break;
-        }
-
-        return root;
-    }
-
-    private VBox configureNodeBox(String title, int sizeTitle, int space, Node node){
-        VBox item = new VBox(space);
-        item.setAlignment(Pos.CENTER);
-        item.getChildren().addAll(setFontStyle(new Label(title),sizeTitle),node);
-        return item;
-    }
-
-
     //METODI CONFIGURAZIONE PER LA CARTA UTENSILE 11
     public static void setDieChoose(String dieExtract) {
         SelectorContent.dieExtract = dieExtract;
     }
+
 
     //METODI CONFIGURAZIONE PER LA CARTA UTENSILE 12
     private void setListener(ArrayList<TextField> listening, ArrayList<TextField> listened, Label label){

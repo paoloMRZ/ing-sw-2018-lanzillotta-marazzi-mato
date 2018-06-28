@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -53,6 +54,7 @@ public class AlertSwitcher{
 
         //Configurazione del pannello
         window.initModality(Modality.APPLICATION_MODAL);
+        window.getIcons().add(new Image("iconPack/icon-sagrada.png", 10, 10, false, true));
         window.setTitle(title);
         window.setMaxWidth(550);
         window.setMaxHeight(480);

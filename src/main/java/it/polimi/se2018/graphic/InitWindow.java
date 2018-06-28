@@ -16,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,10 +52,15 @@ public class InitWindow extends Application {
     //Elementi grafici per l'aggiornamento della scehrmata
     private HBox nodeReserve;
     private HBox nodeSetting;
+    private VBox nodeButton;
+    private boolean isUtensilReserveUpdate = false;
+    private boolean isNotYourTurn = false;
 
 
     //Costanti di intestazione delle varie finestra
     private static final String SAGRADA = "Sagrada";
+
+
 
     public static void main(String[] args) {
         launch(args);
@@ -67,7 +73,7 @@ public class InitWindow extends Application {
         //Imposto il nome della finestra principale
         primaryStage.setTitle(SAGRADA);
         primaryStage.getIcons().add(new Image("iconPack/icon-sagrada.png", 10, 10, false, true));
-        primaryStage.setOnCloseRequest(e -> closeWindow(primaryStage));
+        primaryStage.setOnCloseRequest(e -> closeWindow(primaryStage, e));
 
         //TODO: SCHERMATA LOGIN
         ImageView continueButton = shadowEffect(configureImageView("", "button-continue", ".png", 200, 90));
@@ -187,7 +193,11 @@ public class InitWindow extends Application {
 
                             //Posiziono la griglia dei pulsanti
                             buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils);
-                            configureAnchorPane(anchorGame, buttonGameLabel.getLabelButtonGame(), 880d, 500d, 100d, 200d);
+                            buttonGameLabel.checkPermission(connectionHandler.getNickname(),ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
+                            nodeButton = buttonGameLabel.getLabelButtonGame();
+                            configureAnchorPane(anchorGame, nodeButton, 880d, 500d, 100d, 200d);
+
+                            setControllButton();
 
                             Scene sceneGame = new Scene(anchorGame, 1880, 1073);
                             startGame = false;
@@ -241,9 +251,15 @@ public class InitWindow extends Application {
                     settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(newValue).get(0));
                     anchorGame.getChildren().remove(nodeSetting);
                     settingLabel.updateTurn(ClientMessageParser.getInformationsFromMessage(newValue).get(0));
-                    buttonGameLabel.checkPermission(connectionHandler.getNickname(), ClientMessageParser.getInformationsFromMessage(newValue).get(0));
                     nodeSetting = settingLabel.getSettingLabel();
                     configureAnchorPane(anchorGame,nodeSetting,835d, 80d, 70d, 800d);
+
+                    setControllButton();
+
+                    anchorGame.getChildren().remove(nodeButton);
+                    buttonGameLabel.checkPermission(connectionHandler.getNickname(),ClientMessageParser.getInformationsFromMessage(newValue).get(0));
+                    nodeButton = buttonGameLabel.getLabelButtonGame();
+                    configureAnchorPane(anchorGame, nodeButton, 880d, 500d, 100d, 200d);
                 }
 
 
@@ -251,11 +267,17 @@ public class InitWindow extends Application {
                 if (ClientMessageParser.isUpdateRoundMessage(newValue)) {
                     List<String> roundInfo = ClientMessageParser.getInformationsFromMessage(newValue);
                     roundLabel.proceedRound(roundInfo, 120, 70);
+                    settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(newValue).get(0));
                     anchorGame.getChildren().remove(nodeSetting);
-                    settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
-                    nodeSetting = settingLabel.getSettingLabel();
+                    anchorGame.getChildren().remove(nodeButton);
+
+                    setControllButton();
+
                     buttonGameLabel.checkPermission(connectionHandler.getNickname(), ClientMessageParser.getInformationsFromMessage(newValue).get(0));
+                    nodeSetting = settingLabel.getSettingLabel();
+                    nodeButton = buttonGameLabel.getLabelButtonGame();
                     configureAnchorPane(anchorGame, nodeSetting, 835d, 80d, 70d, 800d);
+                    configureAnchorPane(anchorGame, nodeButton, 880d, 500d, 100d, 200d);
                 }
 
 
@@ -284,10 +306,19 @@ public class InitWindow extends Application {
                 //MESSAGGIO UPDATE DELLA RISERVA
                 if (ClientMessageParser.isUpdateReserveMessage(newValue)) {
                     anchorGame.getChildren().remove(nodeReserve);
-                    anchorGame.getChildren().remove(buttonGameLabel);
+                    anchorGame.getChildren().remove(nodeButton);
                     nodeReserve = reserve.getHBox();
                     buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils);
-                    configureAnchorPane(anchorGame, buttonGameLabel.getLabelButtonGame(), 880d, 500d, 100d, 200d);
+
+                    if(!isNotYourTurn){
+                        if(!isUtensilReserveUpdate) buttonGameLabel.setFirstPutDie(false);
+                        else {
+                            buttonGameLabel.setFirstPutDie(true);
+                            buttonGameLabel.setFirstUseUtensil(false);
+                        }
+                    }
+                    nodeButton = buttonGameLabel.getLabelButtonGame();
+                    configureAnchorPane(anchorGame, nodeButton, 880d, 500d, 100d, 200d);
                     configureAnchorPane(anchorGame, nodeReserve, 790d, 760d, 0d, 150d);
                 }
             }
@@ -328,6 +359,8 @@ public class InitWindow extends Application {
                 settingLabel.updateFavours(updateInfoUtensil.get(1));
                 settingLabel.updateAction();
                 nodeSetting = settingLabel.getSettingLabel();
+                buttonGameLabel.getAlertCardUtensils().closeExecutionUtensil();
+                AlertValidation.display("Successo", "La carta è stata attivata!!");
                 configureAnchorPane(anchorGame,nodeSetting,835d, 80d, 70d, 800d);
             }
 
@@ -346,23 +379,82 @@ public class InitWindow extends Application {
     }
 
 
+
+
+
+
+
+
+
+    /**
+     * Metodo utilizzato per impostare il controllo sull'elemento grafico ButtonGameLabel per evjtare che un giocatore possa effettuare due mosse
+     * dello stesso tipo nel medesimo turno
+     *
+     */
+
+    private void setControllButton(){
+        //Settaggio del booleano per l'attivazione del controllo sui pulsanti
+        if(connectionHandler.getNickname().equals(ClientMessageParser.getInformationsFromMessage(message.getText()).get(0))) isNotYourTurn = false;
+        else isNotYourTurn = true;
+    }
+
+
+
+    /**
+     * Metodo setter che imposta il riferimento al ConnectionHandler rappresentante del giocatore
+     *
+     */
+
     public void setConnectionHandler(ConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
     }
+
+
+
+    /**
+     * Metodo getter che restituisce un riferimento al ConnectionHandler rappresentante del giocatore
+     *
+     * @return Ruferimento all'oggetto ConnectionHandler
+     */
 
     public ConnectionHandler getConnectionHandler() {
         return connectionHandler;
     }
 
+
+
+    /**
+     * Metodo getter che restituisce un riferimento al TextField utilizzato come listener dei messaggi provenienti dalla Lobby
+     *
+     * @return Ruferimento all'oggetto TextField
+     */
+
     public TextField getMessage() {
         return message;
     }
 
-    private void closeWindow(Stage primaryStage) {
+
+
+    /**
+     * Metodo utilizzato per modificare l'azione relativa al bottone "Chiude finestra". Permette la visualizzazione di un checker di riconferma o annullamento
+     * dell'azione eseguita
+     *
+     * @param primaryStage Riferimento alla finestra che si intende chiudere
+     */
+
+    private void closeWindow(Stage primaryStage, WindowEvent e) {
         boolean answer = AlertCloseButton.display(SAGRADA, "Vuoi davvero uscire da Sagrada?");
         if (answer) primaryStage.close();
-        else primaryStage.show();
+        else e.consume();
     }
+
+
+
+    /**
+     * Metodo utilizzato dalla classe Lobby per comunicare con l'interfaccia grafica
+     *
+     * @param message Riferimento al messaggio inviato dalla lobby all'interfaccia grafica
+     */
 
     public void sendToView(String message) {
         //il messaggio in ingresso deve essere interpretato, quindi procedo con la classificazione

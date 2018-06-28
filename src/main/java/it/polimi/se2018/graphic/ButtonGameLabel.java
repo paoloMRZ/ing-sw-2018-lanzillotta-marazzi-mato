@@ -2,9 +2,9 @@ package it.polimi.se2018.graphic;
 
 import it.polimi.se2018.client.connection_handler.ConnectionHandler;
 import it.polimi.se2018.client.message.ClientMessageCreator;
+import it.polimi.se2018.graphic.alert_box.AlertValidation;
 import it.polimi.se2018.graphic.alert_utensils.AlertCardUtensils;
 import javafx.geometry.Pos;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -23,6 +23,8 @@ public class ButtonGameLabel {
     private ImageView buttonTurn;
     private AlertCardUtensils alertCardUtensils;
 
+    private boolean isFirstPutDie = true;
+    private boolean isFirstUseUtensil = true;
 
 
     public ButtonGameLabel(ConnectionHandler connectionHandler, ReserveLabel reserve, SideCardLabel playerSide, CardCreatorLabel cardUtensils){
@@ -33,13 +35,25 @@ public class ButtonGameLabel {
         buttonGame.setFitWidth(180);
         buttonGame.setFitHeight(60);
         buttonGame.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            connectionHandler.sendToServer(ClientMessageCreator.getPutDiceMessage(connectionHandler.getNickname(), reserve.getPos(), playerSide.getPosX(), playerSide.getPosY()));
+            if(isFirstPutDie){
+                isFirstPutDie = false;
+                connectionHandler.sendToServer(ClientMessageCreator.getPutDiceMessage(connectionHandler.getNickname(), reserve.getPos(), playerSide.getPosX(), playerSide.getPosY()));
+
+            }
+            else AlertValidation.display("Sagrada", "Hai già effettuato\nil posizionamento del dado in\nquesto turno!");
         });
 
         buttonUtensils = shadowEffect(configureImageView(SUBDIRECTORY,"button-game-utensil",EXTENSION, 352, 104));
         buttonUtensils.setFitWidth(180);
         buttonUtensils.setFitHeight(60);
-        buttonUtensils.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> alertCardUtensils.display("Sagrada", "Scegli al carta che vuoi attivare"));
+        buttonUtensils.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            if(isFirstUseUtensil) {
+                isFirstUseUtensil = false;
+                alertCardUtensils.display("Sagrada", "Scegli al carta che vuoi attivare");
+
+            }
+            else AlertValidation.display("Sagrada", "Hai già effetuato\nuna carta utensile in\nquesto turno!");
+        });
 
         buttonTurn = shadowEffect(configureImageView(SUBDIRECTORY,"button-game-turn",EXTENSION, 352, 104));
         buttonTurn.setFitWidth(180);
@@ -73,9 +87,9 @@ public class ButtonGameLabel {
                 buttonGame.setDisable(true);
                 buttonUtensils.setDisable(true);
                 buttonTurn.setDisable(true);
-                buttonGame.setOpacity(0.6);
-                buttonUtensils.setOpacity(0.6);
-                buttonTurn.setOpacity(0.6);
+                buttonGame.setOpacity(0.7);
+                buttonUtensils.setOpacity(0.7);
+                buttonTurn.setOpacity(0.7);
             } else {
                 buttonGame.setDisable(false);
                 buttonUtensils.setDisable(false);
@@ -84,5 +98,13 @@ public class ButtonGameLabel {
                 buttonUtensils.setOpacity(1.0);
                 buttonTurn.setOpacity(1.0);
             }
+    }
+
+    public void setFirstPutDie(boolean firstPutDie) {
+        isFirstPutDie = firstPutDie;
+    }
+
+    public void setFirstUseUtensil(boolean firstUseUtensil) {
+        isFirstUseUtensil = firstUseUtensil;
     }
 }
