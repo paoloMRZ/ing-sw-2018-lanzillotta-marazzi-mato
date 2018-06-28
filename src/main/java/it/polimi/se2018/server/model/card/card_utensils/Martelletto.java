@@ -24,7 +24,7 @@ public class Martelletto extends  Utensils {
     }
     public void function(Controller controller) throws InvalidActivationException {
         if(controller.getTurn().getHowManyTurns() == 0 && !controller.getTurn().getDidPlayDie()) {
-            Reserve rolled= new Reserve(new ArrayList<Dice>());
+            Reserve rolled= new Reserve(new ArrayList<>());
             Reserve tmpRes= controller.getcAction().getReserve();
             ArrayList<Dice> toRoll= tmpRes.getDices();
 

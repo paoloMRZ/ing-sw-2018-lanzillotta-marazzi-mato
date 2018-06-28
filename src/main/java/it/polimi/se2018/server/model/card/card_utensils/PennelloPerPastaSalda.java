@@ -29,7 +29,6 @@ public class PennelloPerPastaSalda extends Utensils {
     }
 
     public int function(Controller controller, ToolCard6 myMessage) throws InvalidValueException, InvalidSomethingWasNotDoneGood {
-        String name= myMessage.getPlayer();
 
         int indexDie= myMessage.getDie();
         Dice picked = controller.getcAction().pickFromReserve(indexDie);
@@ -43,14 +42,13 @@ public class PennelloPerPastaSalda extends Utensils {
 
         if(myMessage.getDecision()){
             controller.getcAction().putBackInReserve();
-            controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
+
         }
         else{
             ArrayList<Integer> cont= myMessage.getAttributes();
             int row=cont.get(0);
             int col=cont.get(1);
             controller.getcAction().workOnSide(name,controller.getHoldingADiceMoveInProgress(),row,col);
-            //controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
         }
     }
 

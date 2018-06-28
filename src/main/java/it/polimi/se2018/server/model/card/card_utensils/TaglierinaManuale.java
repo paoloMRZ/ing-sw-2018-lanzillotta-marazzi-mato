@@ -43,12 +43,22 @@ public class TaglierinaManuale extends Utensils {
         //se no lancio eccezione che mi dice che i dati scelti sono sbagliati
         if(fromGrid.getColor()==d1.getColor() && fromGrid.getColor()==d2.getColor() ){
 
-            controller.getcAction()
-                    .moveStuffOnSide(name,oldRow1,oldCol1,newRow1,newCol1);
-            controller.getcAction()
-                    .moveStuffOnSide(name,oldRow2,oldCol2,newRow2,newCol2);
+            Dice firstFromSide= controller.getPlayerByName(name).sidePick(oldRow1,oldCol1);
+            Dice copyfS= new Dice(firstFromSide.getColor());
+            copyfS.manualSet(firstFromSide.getNumber());
+            controller.setHoldingADiceMoveInProgress(firstFromSide);
 
-            //controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
+            Dice secFromSide= controller.getPlayerByName(name).sidePick(oldRow2,oldCol2);
+            Dice copysS= new Dice(secFromSide.getColor());
+            copysS.manualSet(secFromSide.getNumber());
+            controller.setHoldingResDie(secFromSide);//solo per comodità
+
+
+            controller.getcAction()
+                    .workOnSide(name,copyfS,newRow1,newCol1);
+            controller.getcAction()
+                    .workOnSide(name,copysS,newRow2,newCol2);
+
         }
         else throw new InvalidValueException();
 

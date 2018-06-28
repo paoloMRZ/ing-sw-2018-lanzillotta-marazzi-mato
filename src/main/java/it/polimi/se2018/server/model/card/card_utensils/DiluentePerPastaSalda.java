@@ -29,9 +29,12 @@ public class DiluentePerPastaSalda extends Utensils {
     }
 
     public String function(Controller controller, ToolCard11 myMessage) throws InvalidValueException, InvalidSomethingWasNotDoneGood {
-        String name= myMessage.getPlayer();
         int die= myMessage.getDie();
-        Dice picked=controller.getcAction().extractDieAgain(controller.getcAction().pickFromReserve(die));
+        Dice toReput=controller.getcAction().pickFromReserve(die);
+        controller.setHoldingResDie(toReput);
+        Dice d= new Dice(toReput.getColor());
+        d.manualSet(toReput.getNumber());
+        Dice picked=controller.getcAction().extractDieAgain(d);
         controller.setHoldingADiceMoveInProgress(picked);
         return picked.getColor().name();
     }
@@ -44,8 +47,9 @@ public class DiluentePerPastaSalda extends Utensils {
         int col=messageCont.get(2);
 
         Dice dadozzo= controller.getHoldingADiceMoveInProgress();
-        dadozzo.manualSet(value);
-        controller.getcAction().workOnSide(name,dadozzo,row,col);
+        Dice copyofDadozzo=new Dice(dadozzo.getColor());
+        copyofDadozzo.manualSet(value);
+        controller.getcAction().workOnSide(name,copyofDadozzo,row,col);
 
         //controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
     }

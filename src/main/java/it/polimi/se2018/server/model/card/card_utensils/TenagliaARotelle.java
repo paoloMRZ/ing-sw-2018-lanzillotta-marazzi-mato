@@ -9,6 +9,7 @@ import it.polimi.se2018.server.exceptions.InvalidHowManyTimes;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidSomethingWasNotDoneGood;
 import it.polimi.se2018.server.model.Color;
+import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 import java.util.ArrayList;
 
@@ -33,10 +34,14 @@ public class TenagliaARotelle extends Utensils {
             int row=messageCont.get(1);
             int col=messageCont.get(2);
 
-            controller.getcAction().workOnSide(name,controller.getcAction().pickFromReserve(die),row,col);
+                controller.setHoldingResDie(controller.getcAction().pickFromReserve(die));
+
+                Dice d= new Dice(controller.getHoldingResDie().getColor());
+                d.manualSet(controller.getHoldingResDie().getNumber());
+
+            controller.getcAction().workOnSide(name,d,row,col);
             controller.getTurn().reductor();
 
-                //controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
             }
             else throw new InvalidActivationException();
         }

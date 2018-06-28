@@ -213,28 +213,14 @@ public void setThePlayers() throws InvalidValueException {
 
 
     private void callerModifier(){
-        /*
-        if(andata) caller=caller+1;
-        else caller=caller-1;
-
-        if(caller<0){
-            caller=0;
-            andata=true;
-        }
-        if(caller>numbOfPlayers-1){
-            caller=numbOfPlayers-1;
-            andata=false;
-        }*/
         if(counterCMod!=1){
             if(andata){
                 indexAmongPs=indexAmongPs+1;
-                System.out.println(indexAmongPs+"index1");
                 counterCMod=counterCMod-1;
 
             }
             else {
                 indexAmongPs=indexAmongPs-1;
-                System.out.println(indexAmongPs+"index2");
                 counterCMod=counterCMod-1;
 
             }
@@ -243,7 +229,6 @@ public void setThePlayers() throws InvalidValueException {
             if(andata){
                 andata=false;
                 indexAmongPs=indexAmongPs+numbOfPlayers;
-                System.out.println(indexAmongPs+"index3");
                 counterCMod=numbOfPlayers;
             }
             else {
@@ -253,10 +238,7 @@ public void setThePlayers() throws InvalidValueException {
             }
 
         }
-        System.out.println(indexAmongPs+"index");
-        caller= (indexAmongPs % numbOfPlayers );
-        System.out.println(numbOfPlayers+"numb");
-        System.out.println(caller+"calle");
+        caller = (indexAmongPs % numbOfPlayers );
     }
 
 

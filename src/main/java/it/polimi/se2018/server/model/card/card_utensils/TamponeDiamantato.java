@@ -20,13 +20,14 @@ public class TamponeDiamantato extends Utensils {
     }
     public void function(Controller controller, ToolCard10 myMessage) throws InvalidValueException, InvalidSomethingWasNotDoneGood {
         int die=myMessage.getDie();
-        String name= myMessage.getPlayer();
 
-        controller.getcAction().putBackInReserve(
-                                                 flip(controller.getcAction()
-                                                         .pickFromReserve(die)));
+        controller.setHoldingResDie(controller.getcAction().pickFromReserve(die));
 
-        //controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
+        Dice d= new Dice(controller.getHoldingResDie().getColor());
+        d.manualSet(controller.getHoldingResDie().getNumber());
+
+        controller.getcAction().putBackInReserve(flip(d));
+
     }
 
     private Dice flip(Dice d){

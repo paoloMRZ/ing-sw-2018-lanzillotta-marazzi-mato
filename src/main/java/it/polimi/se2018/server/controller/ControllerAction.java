@@ -101,22 +101,6 @@ public class ControllerAction {
         Dice tmp= pickFromReserve(die);
         lobby.callPlayerByName(name).putWithoutDicesNear(row,col,tmp);
     }
-    //si poteva scrivere usando wokOnSide ma ho voluto rendere ciascun metodo indipendente
-
-    /**
-     * Metodo che sposta un dado all'interno della carta schema date le vecchie coordinate e le nuove.
-     * Si poteva costruire usando workOnside ma ho voluto scorrelarli.
-     * @param name nome del proprietario della carta.
-     * @param oldRow vecchia riga
-     * @param oldCol vecchia colonna
-     * @param newRow nuova riga
-     * @param newCol nuova colonna
-     * @throws InvalidValueException
-     * @throws InvalidCellException
-     */
-    public void moveStuffOnSide(String name,int oldRow, int oldCol,int newRow, int newCol) throws InvalidValueException, InvalidCellException {
-        lobby.callPlayerByName(name).putDice(lobby.callPlayerByName(name).sidePick(oldRow,oldCol),newRow,newCol);
-    }
 
     /**
      * Metodo che mostra una copia della riserva contenuta nel tavolo.

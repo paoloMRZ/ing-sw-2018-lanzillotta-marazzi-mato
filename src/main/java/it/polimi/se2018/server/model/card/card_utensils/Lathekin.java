@@ -6,6 +6,7 @@ import it.polimi.se2018.server.events.tool_mex.ToolCard4;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.model.Color;
+import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 import java.util.ArrayList;
 
@@ -33,12 +34,22 @@ public class Lathekin extends Utensils {
         int newRow2=messageCont.get(6);
         int newCol2=messageCont.get(7);
 
-        controller.getcAction()
-                .moveStuffOnSide(name,oldRow,oldCol,newRow,newCol);
-        controller.getcAction()
-                .moveStuffOnSide(name,oldRow2,oldCol2,newRow2,newCol2);
+        Dice firstFromSide= controller.getPlayerByName(name).sidePick(oldRow,oldCol);
+        Dice copyfS= new Dice(firstFromSide.getColor());
+        copyfS.manualSet(firstFromSide.getNumber());
+        controller.setHoldingADiceMoveInProgress(firstFromSide);
 
-        //controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
+        Dice secFromSide= controller.getPlayerByName(name).sidePick(oldRow2,oldCol2);
+        Dice copysS= new Dice(secFromSide.getColor());
+        copysS.manualSet(secFromSide.getNumber());
+        controller.setHoldingResDie(secFromSide);//solo per comodità
+
+
+        controller.getcAction()
+                .workOnSide(name,copyfS,newRow,newCol);
+        controller.getcAction()
+                .workOnSide(name,copysS,newRow2,newCol2);
+
 
     }
 }

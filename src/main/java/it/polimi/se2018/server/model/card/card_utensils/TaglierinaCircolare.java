@@ -24,21 +24,25 @@ public class TaglierinaCircolare extends Utensils{
 
     public void function(Controller controller, ToolCard5 myMessage) throws InvalidValueException, InvalidSomethingWasNotDoneGood {
         ArrayList<Integer> messageCont= new ArrayList<>(myMessage.getAttributes());
-        String name= myMessage.getPlayer();
+
         int indexDie= messageCont.get(0);
         int boxOnGrid=messageCont.get(1);
         int boxInGrid=messageCont.get(2);
 
 
         Dice fromGrid=controller.getcAction().takeFromGrid(boxOnGrid,boxInGrid);
+        controller.setHoldingRoundGDie(fromGrid);
+        Dice copyfG= new Dice(fromGrid.getColor());
+        copyfG.manualSet(fromGrid.getNumber());
+
+
         Dice fromReserve= controller.getcAction().pickFromReserve(indexDie);
+        Dice copyfR= new Dice(fromReserve.getColor());
+        copyfR.manualSet(fromReserve.getNumber());
+        controller.setHoldingResDie(fromReserve);
 
-        controller.getcAction().putOnGrid(boxOnGrid,fromReserve);
-        controller.getcAction().putBackInReserve(fromGrid);
-
-
-        //controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
-
+        controller.getcAction().putOnGrid(boxOnGrid,copyfR);
+        controller.getcAction().putBackInReserve(copyfG);
 
     }
 
