@@ -21,6 +21,8 @@ import static it.polimi.se2018.graphic.Utility.*;
 
 public class SideCardLabel{
 
+    private static final String EMPTYCELL = "white0";
+
     private String nickName;
     private String posX;
     private String posY;
@@ -29,7 +31,7 @@ public class SideCardLabel{
     private ReserveLabel reserve;
     private HashMap<StackPane, Boolean> cell = new HashMap<>();
     private Group group;
-    private ArrayList<String> dicePutHistory = new ArrayList<>();
+    private ArrayList<String> dicePutHistory;
     private String pathCard;
 
     //DIMENSIONE DADO SIDE Player: 40x40
@@ -40,6 +42,7 @@ public class SideCardLabel{
         this.reserve = reserve;
         this.nickName = nickName;
         this.pathCard = sideCard;
+        setInitDicePutHistory();
 
         //Creo la griglia
         setGridSide(sizeGrid.get(0),sizeGrid.get(1), includeShadowGrid);
@@ -90,7 +93,7 @@ public class SideCardLabel{
             int k=1;
             for(int i=0; i<4; i++) {
                 for (int j=0; j<5; j++) {
-                    if (!cellUpdate.get(k).equals("white0")) {
+                    if (!cellUpdate.get(k).equals(EMPTYCELL)) {
                         ImageView passed = configureImageView("/diePack/die-",cellUpdate.get(k),".bmp",70,70);
                         dicePutHistory.add(cellUpdate.get(k));
                         passed.setFitWidth(requestedWidth);
@@ -98,6 +101,7 @@ public class SideCardLabel{
                         gridPane.add(passed, j, i);
                         GridPane.setHalignment(passed, HPos.CENTER);
                     }
+                    else dicePutHistory.add(cellUpdate.get(k));
                     k++;
                 }
             }
@@ -108,7 +112,7 @@ public class SideCardLabel{
         int k=1;
         for(int i=0; i<4; i++) {
             for (int j=0; j<5; j++) {
-                if (!diceInfo.get(k).equals("white0")) gridPane.add(configureDieView(diceInfo.get(k),requestedWidth,requestedHeight),j,i);
+                if (!diceInfo.get(k).equals(EMPTYCELL)) gridPane.add(configureDieView(diceInfo.get(k),requestedWidth,requestedHeight),j,i);
                 k++;
             }
         }
@@ -116,19 +120,14 @@ public class SideCardLabel{
 
     public SideCardLabel callPlayerSide(String sideCard, String nickName, List<Integer> sizeGrid, List<Double> positionGrid, List<Integer> sizeSide, List<Double> sizeRect, boolean includeShadowGrid, ReserveLabel reserve){
         SideCardLabel callPlayerSide = new SideCardLabel(sideCard, nickName, sizeGrid, positionGrid, sizeSide, sizeRect, includeShadowGrid, reserve);
-
-        Stream<String> streamImageDie = dicePutHistory.stream().filter(s -> (dicePutHistory.indexOf(s) % 2 == 0));
-        Stream<String> streamCoordinate = dicePutHistory.stream().filter(s -> (dicePutHistory.indexOf(s) % 2 != 0));
-
-        ArrayList<String> coordinate = (ArrayList<String>)streamCoordinate.collect(Collectors.toList());
-        ArrayList<String> imageDie = (ArrayList<String>)streamImageDie.collect(Collectors.toList());
-
-        for (String image: imageDie) {
-            String item = coordinate.get(imageDie.indexOf(image));
-            String[] coordinates = item.split("-");
-            callPlayerSide.getGridPane().add(configureDieView(image,55,55),Integer.parseInt(coordinates[1]), Integer.parseInt(coordinates[0]));
+        callPlayerSide.setDicePutHistoryAfterCall(dicePutHistory);
+        int k=0;
+        for(int i=0; i<4; i++) {
+            for (int j = 0; j < 5; j++) {
+                if(!dicePutHistory.get(k).equals(EMPTYCELL)) callPlayerSide.getGridPane().add(configureDieView(dicePutHistory.get(k), 55, 55), j, i);
+                k++;
+            }
         }
-
         return callPlayerSide;
     }
 
@@ -154,5 +153,17 @@ public class SideCardLabel{
 
     public String getPathCard() {
         return pathCard;
+    }
+
+
+    private void setDicePutHistoryAfterCall(List<String> dicePutHistory){
+        this.dicePutHistory = (ArrayList<String>) dicePutHistory;
+    }
+
+    private void setInitDicePutHistory(){
+        dicePutHistory = new ArrayList<>();
+        for(int i=0; i<20; i++){
+            dicePutHistory.add(EMPTYCELL);
+        }
     }
 }

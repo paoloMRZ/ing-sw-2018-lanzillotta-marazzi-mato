@@ -128,7 +128,7 @@ public class AlertCardUtensils {
             cardHash.put(node, false);
             item.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
                 setFocusStyle(cardHash,node,groupCard);
-                selection = String.valueOf(cardUtensils.getCardName().indexOf(card));
+                selection = String.valueOf(cardUtensils.getKeyName().indexOf(card));
             });
 
             //TODO: modificare aggiornamento con listener
@@ -174,6 +174,16 @@ public class AlertCardUtensils {
 
         Platform.runLater(() -> window.setScene(scene));
 
+    }
+
+
+    /**
+     * Metodo utilizzato per chiudere la finestra di interazione con le carte Utensili
+     *
+     */
+
+    public void closeExecutionUtensil(){
+        window.close();
     }
 
 }
