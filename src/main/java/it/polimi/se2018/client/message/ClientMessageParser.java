@@ -86,6 +86,17 @@ public class ClientMessageParser {
     }
 
     /**
+     * Il metodo controlla se il messaggio è un messaggio che notifica un piazzamento non autorizzato. Questo avviene quando
+     * un giocatore tenta di piazzare più di un dado per turno.
+     *
+     * @param message messaggio da conrtollare.
+     * @return true se il metodo notifica un piazzamento non autorizzato.
+     */
+    public boolean isUnauthorizedPutMessage(String message){
+        return message.split("/")[3].equals(ERROR) && message.split("/")[4].equals("unauthorized") ;
+    }
+
+    /**
      * Il metodo controlla se il messaggio è un messaggio di conferma dell'attivazione di un utensile.
      *
      * @param message messaggio da controllare.
