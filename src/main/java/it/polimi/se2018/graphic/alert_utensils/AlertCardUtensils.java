@@ -6,6 +6,7 @@ import it.polimi.se2018.graphic.CardCreatorLabel;
 import it.polimi.se2018.graphic.ReserveLabel;
 import it.polimi.se2018.graphic.SideCardLabel;
 import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -81,6 +82,7 @@ public class AlertCardUtensils {
 
         window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
+        window.setOnCloseRequest(Event::consume);
         window.setTitle(title);
         window.setWidth(1100);
         window.setHeight(800);

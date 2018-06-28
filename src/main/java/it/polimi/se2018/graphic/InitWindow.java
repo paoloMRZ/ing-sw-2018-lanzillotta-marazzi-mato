@@ -197,7 +197,6 @@ public class InitWindow extends Application {
                             nodeButton = buttonGameLabel.getLabelButtonGame();
                             configureAnchorPane(anchorGame, nodeButton, 880d, 500d, 100d, 200d);
 
-                            setControllButton();
 
                             Scene sceneGame = new Scene(anchorGame, 1880, 1073);
                             startGame = false;
@@ -254,7 +253,6 @@ public class InitWindow extends Application {
                     nodeSetting = settingLabel.getSettingLabel();
                     configureAnchorPane(anchorGame,nodeSetting,835d, 80d, 70d, 800d);
 
-                    setControllButton();
 
                     anchorGame.getChildren().remove(nodeButton);
                     buttonGameLabel.checkPermission(connectionHandler.getNickname(),ClientMessageParser.getInformationsFromMessage(newValue).get(0));
@@ -271,7 +269,6 @@ public class InitWindow extends Application {
                     anchorGame.getChildren().remove(nodeSetting);
                     anchorGame.getChildren().remove(nodeButton);
 
-                    setControllButton();
 
                     buttonGameLabel.checkPermission(connectionHandler.getNickname(), ClientMessageParser.getInformationsFromMessage(newValue).get(0));
                     nodeSetting = settingLabel.getSettingLabel();
@@ -310,13 +307,6 @@ public class InitWindow extends Application {
                     nodeReserve = reserve.getHBox();
                     buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils);
 
-                    if(!isNotYourTurn){
-                        if(!isUtensilReserveUpdate) buttonGameLabel.setFirstPutDie(false);
-                        else {
-                            buttonGameLabel.setFirstPutDie(true);
-                            buttonGameLabel.setFirstUseUtensil(false);
-                        }
-                    }
                     nodeButton = buttonGameLabel.getLabelButtonGame();
                     configureAnchorPane(anchorGame, nodeButton, 880d, 500d, 100d, 200d);
                     configureAnchorPane(anchorGame, nodeReserve, 790d, 760d, 0d, 150d);
@@ -373,6 +363,8 @@ public class InitWindow extends Application {
                     AlertValidation.display("Errore", "Non puoi utilizzare la carta selezionata!");
                 if (ClientMessageParser.isClientDisconnectedMessage(newValue))
                     AlertValidation.display("Disconnessione", ClientMessageParser.getInformationsFromMessage(newValue) + "si è disconnesso");
+                if (ClientMessageParser.isUnauthorizedPutMessage(newValue))
+                    AlertValidation.display("Errore", "Hai già effettutato\nquesta azione!");
             }
 
         });
@@ -381,22 +373,6 @@ public class InitWindow extends Application {
 
 
 
-
-
-
-
-
-    /**
-     * Metodo utilizzato per impostare il controllo sull'elemento grafico ButtonGameLabel per evjtare che un giocatore possa effettuare due mosse
-     * dello stesso tipo nel medesimo turno
-     *
-     */
-
-    private void setControllButton(){
-        //Settaggio del booleano per l'attivazione del controllo sui pulsanti
-        if(connectionHandler.getNickname().equals(ClientMessageParser.getInformationsFromMessage(message.getText()).get(0))) isNotYourTurn = false;
-        else isNotYourTurn = true;
-    }
 
 
 

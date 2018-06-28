@@ -92,7 +92,7 @@ public class ClientMessageParser {
      * @param message messaggio da conrtollare.
      * @return true se il metodo notifica un piazzamento non autorizzato.
      */
-    public boolean isUnauthorizedPutMessage(String message){
+    public static boolean isUnauthorizedPutMessage(String message){
         return message.split("/")[3].equals(ERROR) && message.split("/")[4].equals("unauthorized") ;
     }
 

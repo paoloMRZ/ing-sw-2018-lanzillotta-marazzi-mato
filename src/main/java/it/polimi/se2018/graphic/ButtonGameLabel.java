@@ -23,9 +23,6 @@ public class ButtonGameLabel {
     private ImageView buttonTurn;
     private AlertCardUtensils alertCardUtensils;
 
-    private boolean isFirstPutDie = true;
-    private boolean isFirstUseUtensil = true;
-
 
     public ButtonGameLabel(ConnectionHandler connectionHandler, ReserveLabel reserve, SideCardLabel playerSide, CardCreatorLabel cardUtensils){
 
@@ -35,25 +32,14 @@ public class ButtonGameLabel {
         buttonGame.setFitWidth(180);
         buttonGame.setFitHeight(60);
         buttonGame.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            if(isFirstPutDie){
-                isFirstPutDie = false;
-                connectionHandler.sendToServer(ClientMessageCreator.getPutDiceMessage(connectionHandler.getNickname(), reserve.getPos(), playerSide.getPosX(), playerSide.getPosY()));
-
-            }
-            else AlertValidation.display("Sagrada", "Hai già effettuato\nil posizionamento del dado in\nquesto turno!");
+            if(reserve.getPos() != null) connectionHandler.sendToServer(ClientMessageCreator.getPutDiceMessage(connectionHandler.getNickname(), reserve.getPos(), playerSide.getPosX(), playerSide.getPosY()));
+            else AlertValidation.display("Errore", "Non hai selezionato nella riserva\nil dado da inserire!");
         });
 
         buttonUtensils = shadowEffect(configureImageView(SUBDIRECTORY,"button-game-utensil",EXTENSION, 352, 104));
         buttonUtensils.setFitWidth(180);
         buttonUtensils.setFitHeight(60);
-        buttonUtensils.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            if(isFirstUseUtensil) {
-                isFirstUseUtensil = false;
-                alertCardUtensils.display("Sagrada", "Scegli al carta che vuoi attivare");
-
-            }
-            else AlertValidation.display("Sagrada", "Hai già effetuato\nuna carta utensile in\nquesto turno!");
-        });
+        buttonUtensils.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> alertCardUtensils.display("Sagrada", "Scegli al carta che vuoi attivare"));
 
         buttonTurn = shadowEffect(configureImageView(SUBDIRECTORY,"button-game-turn",EXTENSION, 352, 104));
         buttonTurn.setFitWidth(180);
@@ -98,13 +84,5 @@ public class ButtonGameLabel {
                 buttonUtensils.setOpacity(1.0);
                 buttonTurn.setOpacity(1.0);
             }
-    }
-
-    public void setFirstPutDie(boolean firstPutDie) {
-        isFirstPutDie = firstPutDie;
-    }
-
-    public void setFirstUseUtensil(boolean firstUseUtensil) {
-        isFirstUseUtensil = firstUseUtensil;
     }
 }
