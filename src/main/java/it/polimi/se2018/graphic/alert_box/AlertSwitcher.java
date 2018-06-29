@@ -101,7 +101,7 @@ public class AlertSwitcher{
 
 
         //Label "CONTINUE BUTTON"
-        ImageView continueButton = shadowEffect(configureImageView("","button-continue",".png",152,65));
+        ImageView continueButton = shadowEffect(configureImageView("","button-continue",".png",145,65));
         continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             Platform.runLater(() -> {
                 if(isValidInput(connectionType,interfaceType, textPort.getText(), textIP.getText())) {

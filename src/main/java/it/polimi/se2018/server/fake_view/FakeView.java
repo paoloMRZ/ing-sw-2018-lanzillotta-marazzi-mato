@@ -9,8 +9,8 @@ import it.polimi.se2018.server.events.SimpleMove;
 import it.polimi.se2018.server.events.Unfreeze;
 import it.polimi.se2018.server.events.responses.*;
 import it.polimi.se2018.server.events.tool_mex.*;
-import it.polimi.se2018.server.message.server.ServerMessageCreator;
-import it.polimi.se2018.server.message.server.ServerMessageParser;
+import it.polimi.se2018.server.message.server_message.ServerMessageCreator;
+import it.polimi.se2018.server.message.server_message.ServerMessageParser;
 import it.polimi.se2018.server.network.Lobby;
 
 import javax.jnlp.IntegrationService;

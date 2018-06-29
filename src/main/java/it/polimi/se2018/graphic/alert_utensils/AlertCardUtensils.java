@@ -5,6 +5,7 @@ import it.polimi.se2018.client.message.ClientMessageCreator;
 import it.polimi.se2018.graphic.CardCreatorLabel;
 import it.polimi.se2018.graphic.ReserveLabel;
 import it.polimi.se2018.graphic.SideCardLabel;
+import it.polimi.se2018.graphic.adapterGUI.AdapterResolution;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.geometry.Pos;
@@ -51,6 +52,7 @@ public class AlertCardUtensils {
     private ReserveLabel reserve;
     private SideCardLabel playerSide;
     private Stage window;
+    private AdapterResolution adapter;
 
 
     /**
@@ -62,11 +64,12 @@ public class AlertCardUtensils {
      * @param playerSide Riferimento alla carta Side del giocatore
      */
 
-    public AlertCardUtensils(CardCreatorLabel cardUtensils, ConnectionHandler connectionHandler, ReserveLabel reserve, SideCardLabel playerSide){
+    public AlertCardUtensils(CardCreatorLabel cardUtensils, ConnectionHandler connectionHandler, ReserveLabel reserve, SideCardLabel playerSide, AdapterResolution adapterResolution){
         this.cardUtensils = cardUtensils;
         this.connectionHandler = connectionHandler;
         this.reserve = reserve;
         this.playerSide = playerSide;
+        this.adapter = adapterResolution;
     }
 
 
@@ -165,7 +168,7 @@ public class AlertCardUtensils {
     public void launchExecutionUtensil(){
         ActionUtensils actionUtensils = null;
         try {
-            actionUtensils = new ActionUtensils(cardUtensils.getDictionaryUtensils(),String.valueOf(cardUtensils.getKeyName().get(Integer.parseInt(selection))), reserve, connectionHandler,selection, playerSide, window);
+            actionUtensils = new ActionUtensils(cardUtensils.getDictionaryUtensils(),String.valueOf(cardUtensils.getKeyName().get(Integer.parseInt(selection))), reserve, connectionHandler,selection, playerSide, window,adapter);
         } catch (IOException e1) {
             e1.printStackTrace();
         }

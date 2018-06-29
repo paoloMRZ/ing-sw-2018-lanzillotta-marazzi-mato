@@ -5,6 +5,8 @@ import it.polimi.se2018.client.message.ClientMessageCreator;
 import it.polimi.se2018.graphic.ReserveLabel;
 import it.polimi.se2018.graphic.RoundLabel;
 import it.polimi.se2018.graphic.SideCardLabel;
+import it.polimi.se2018.graphic.adapterGUI.AdapterResolution;
+import it.polimi.se2018.graphic.alert_box.AlertValidation;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -42,22 +44,13 @@ public class SelectorContent {
     private static final String DILUENTEPERPASTASALDABIS = "Diluente Per Pasta Salda Bis";
     private static final String TITLERESERVE = "Riserva: ";
 
-    private static final int WIDTH_GRID = 65;
-    private static final int HEIGHT_GRID = 66;
-    private static final int WIDTH_SIDE = 330;
-    private static final int HEIGHT_SIDE = 293;
-
-    private static final double RIGHT_GRID = 0;
-    private static final double  TOP_GRID = 0;
-    private static final double  LEFT_GRID = 0;
-    private static final double  BOTTOM_GRID = 21;
-
 
     private VBox node;
     private ReserveLabel reserveLabel;
     private ConnectionHandler connectionHandler;
     private String cardSelection;
     private SideCardLabel playerSide;
+    private AdapterResolution adapter;
 
 
     //UTENSILE 1
@@ -91,11 +84,12 @@ public class SelectorContent {
     private Group group;
 
 
-    public SelectorContent(ReserveLabel reserveLabel, ConnectionHandler connectionHandler, String cardselection, SideCardLabel playerSide){
+    public SelectorContent(ReserveLabel reserveLabel, ConnectionHandler connectionHandler, String cardselection, SideCardLabel playerSide, AdapterResolution adapterResolution){
         this.reserveLabel = reserveLabel;
         this.connectionHandler = connectionHandler;
         this.cardSelection = cardselection;
         this.playerSide = playerSide;
+        this.adapter = adapterResolution;
         Rectangle rect = new Rectangle(20, 20, 70, 70);
         rect.setFill(Color.TRANSPARENT);
         rect.setStroke(Color.RED);
@@ -109,8 +103,8 @@ public class SelectorContent {
 
         switch (cardName){
             case PINZASGROSSATRICE:
-
-                connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(getInfoData(),reserveLabel.getPos()))));
+                if(!oldX.getText().trim().isEmpty() && !oldY.getText().trim().isEmpty() && !newX.getText().trim().isEmpty() && !newY.getText().trim().isEmpty()) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(getInfoData(),reserveLabel.getPos()))));
+                else AlertValidation.display("Errore", "Inserisci correttamente le coordinate\ndel dado da spostare!");
                 break;
 
             case PENNELLOPEREGLOMISE: case ALESATOREPERLALAMINDADIRAME:
@@ -155,16 +149,12 @@ public class SelectorContent {
 
     public VBox configureNode(String cardName){
 
-        ArrayList<Integer> sizeGridPlayer = new ArrayList<>(Arrays.asList(WIDTH_GRID, HEIGHT_GRID));
-        ArrayList<Integer> sizeSidePlayer = new ArrayList<>(Arrays.asList(WIDTH_SIDE, HEIGHT_SIDE));
-        ArrayList<Double> positionGridPlayer = new ArrayList<>(Arrays.asList(RIGHT_GRID, TOP_GRID, LEFT_GRID, BOTTOM_GRID));
-        ArrayList<Double> sizeRectPlayer = new ArrayList<>(Arrays.asList(60d, 60d));
 
         switch (cardName){
             case PINZASGROSSATRICE:
                 node = new VBox(15);
                 node.setAlignment(Pos.CENTER);
-                node.getChildren().addAll(setFontStyle(new Label(TITLERESERVE),30),reserveLabel.callReserve(60,60));
+                node.getChildren().addAll(setFontStyle(new Label(TITLERESERVE),30),reserveLabel.callReserve());
 
                 reserveLabel.getTextField().textProperty().addListener((obs, oldText, newText) -> {
                     if(firstUse){
@@ -188,7 +178,7 @@ public class SelectorContent {
 
                 node = new VBox(30);
                 node.setAlignment(Pos.TOP_CENTER);
-                node.getChildren().addAll(setFontStyle(new Label(TITLERESERVE),30),reserveLabel.callReserve(60,60), setFontStyle(new Label("Dadi disponibili nel tracciato: "), 20));
+                node.getChildren().addAll(setFontStyle(new Label(TITLERESERVE),30),reserveLabel.callReserve(), setFontStyle(new Label("Dadi disponibili nel tracciato: "), 20));
                 node.getChildren().add(configureActionOnRound());
                 break;
 
@@ -196,13 +186,13 @@ public class SelectorContent {
 
                 node = new VBox(15);
                 node.setAlignment(Pos.TOP_CENTER);
-                node.getChildren().addAll(setFontStyle(new Label(TITLERESERVE), 30),reserveLabel.callReserve(60,60));
+                node.getChildren().addAll(setFontStyle(new Label(TITLERESERVE), 30),reserveLabel.callReserve());
                 break;
 
             case RIGAINSUGHERO: case TENAGLIAAROTELLE: node = new VBox(20);
                 node.setAlignment(Pos.CENTER);
-                node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(), connectionHandler.getNickname(),sizeGridPlayer,positionGridPlayer,sizeSidePlayer,sizeRectPlayer,true,reserveLabel).getAnchorPane(),
-                        setFontStyle(new Label(TITLERESERVE), 20), reserveLabel.callReserve(60,60));
+                node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(), connectionHandler.getNickname(),true,adapter).getAnchorPane(),
+                        setFontStyle(new Label(TITLERESERVE), 20), reserveLabel.callReserve());
                 break;
 
             case TAMPONEDIAMANTATO: case DILUENTEPERPASTASALDA: configureActionOnReserve(); break;
@@ -273,8 +263,8 @@ public class SelectorContent {
                 HBox labelCoordinate = new HBox(firstDie, secondDie);
                 labelCoordinate.setSpacing(20d);
                 labelCoordinate.setAlignment(Pos.CENTER);
-                node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(), connectionHandler.getNickname(),sizeGridPlayer,positionGridPlayer,sizeSidePlayer, sizeRectPlayer,true,reserveLabel).getAnchorPane(),
-                        setFontStyle(new Label(TITLERESERVE), 20), reserveLabel.callReserve(60,60),labelCoordinate);
+                node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(), connectionHandler.getNickname(),true,adapter).getAnchorPane(),
+                        setFontStyle(new Label(TITLERESERVE), 20), reserveLabel.callReserve(),labelCoordinate);
                 break;
 
         }
@@ -287,7 +277,7 @@ public class SelectorContent {
 
 
 
-
+    //METODI CONFIGURAZIONE PER LE CARTE UTENSILI 2
     private void configureMovingWithoutRestrict(){
 
         node = new VBox(10);
@@ -300,12 +290,7 @@ public class SelectorContent {
         labelCoordinate.setSpacing(40d);
         labelCoordinate.setAlignment(Pos.CENTER);
 
-        ArrayList<Integer> sizeGridPlayer = new ArrayList<>(Arrays.asList(65, 65));
-        ArrayList<Integer> sizeSidePlayer = new ArrayList<>(Arrays.asList(330, 293));
-        ArrayList<Double> positionGridPlayer = new ArrayList<>(Arrays.asList(0d, 5d, 5d, 15d));
-        ArrayList<Double> sizeRectPlayer = new ArrayList<>(Arrays.asList(60d, 60d));
-
-        node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(), connectionHandler.getNickname(),sizeGridPlayer,positionGridPlayer,sizeSidePlayer,sizeRectPlayer,false,reserveLabel).getAnchorPane(),labelCoordinate);
+        node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(), connectionHandler.getNickname(),false,adapter).getAnchorPane(),labelCoordinate);
     }
 
     private void configureMovingWithRestrict(){
@@ -344,18 +329,14 @@ public class SelectorContent {
         labelCoordinate.setSpacing(40d);
         labelCoordinate.setAlignment(Pos.CENTER);
 
-        ArrayList<Integer> sizeGridPlayer = new ArrayList<>(Arrays.asList(60, 60));
-        ArrayList<Integer> sizeSidePlayer = new ArrayList<>(Arrays.asList(300, 263));
-        ArrayList<Double> positionGridPlayer = new ArrayList<>(Arrays.asList(0d, 0d, 0d, 18d));
-        ArrayList<Double> sizeRectPlayer = new ArrayList<>(Arrays.asList(60d, 60d));
 
-        node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(),/*connectionHandler.getNickname()*/"Simone",sizeGridPlayer,positionGridPlayer,sizeSidePlayer, sizeRectPlayer,true,reserveLabel).getAnchorPane(),labelCoordinate);
+        node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(),connectionHandler.getNickname(),true,adapter).getAnchorPane(),labelCoordinate);
     }
 
     private void configureActionOnReserve(){
         node = new VBox(20);
         node.setAlignment(Pos.CENTER);
-        node.getChildren().addAll(setFontStyle(new Label(TITLERESERVE),25),reserveLabel.callReserve(60,60));
+        node.getChildren().addAll(setFontStyle(new Label(TITLERESERVE),25),reserveLabel.callReserve());
     }
 
     private HBox configureCoordinateInput(Double spacingVBox, Double spacingHBox, ArrayList<TextField> coordonateBox, Boolean isDisabled){

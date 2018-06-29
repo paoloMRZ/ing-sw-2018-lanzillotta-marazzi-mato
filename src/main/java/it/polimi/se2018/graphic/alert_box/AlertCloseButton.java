@@ -23,8 +23,8 @@ public class AlertCloseButton{
         window.initModality(Modality.APPLICATION_MODAL);
         window.setOnCloseRequest(Event::consume);
         window.setTitle(title);
-        window.setWidth(450);
-        window.setHeight(350);
+        window.setWidth(500);
+        window.setHeight(400);
         Label label = Utility.setFontStyle(new Label(),25);
         label.setText(messagge);
 
@@ -41,7 +41,7 @@ public class AlertCloseButton{
             window.close();
         });
 
-        VBox layout = new VBox(10);
+        VBox layout = new VBox(20);
         HBox layoutButton = new HBox(continueButton,backButton);
         layoutButton.setSpacing(15d);
         layoutButton.setAlignment(Pos.CENTER);

@@ -1,5 +1,6 @@
 package it.polimi.se2018.graphic;
 
+import it.polimi.se2018.graphic.adapterGUI.AdapterResolution;
 import it.polimi.se2018.graphic.alert_box.AlertInfoCard;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -12,6 +13,15 @@ import java.util.stream.Collectors;
 
 import static it.polimi.se2018.graphic.Utility.*;
 
+
+/**
+ * Classe CardCreatorLabel utilizzata per la creazione degli elementi grafici rappresentanti le carte da gioco. In particolare per la carta Obbiettivo Privata,
+ * le carte Utensili e le carte Obbiettivo Pubbliche disponibili nel turno corrente.
+ *
+ *@author Simone Lanzillotta
+ */
+
+
 public class CardCreatorLabel{
 
     private static final String EXTENSION = ".png";
@@ -22,59 +32,81 @@ public class CardCreatorLabel{
     private HashMap<String, String> dictionaryUtensils;
     private List <String> valueNumber;
     private List <String> keyName;
+    private AdapterResolution adapter;
 
-    public CardCreatorLabel(List<String> nameOfCard, Map<String, String> dictionaryUtensils, boolean isPrivate, String path) {
 
-        this.dictionaryUtensils = (HashMap<String, String>)dictionaryUtensils;
-        cardObjectiveLabel = new VBox(0);
-        cardObjectiveLabel.setAlignment(Pos.CENTER);
+    /**
+     * Costruttore della Classe
+     *
+     * @param nameOfCard Collezione dei nomi delle carte (Utensili o Obbiettivo Pubblico)
+     * @param dictionaryUtensils Riferimento alla struttura dati che associa d ogni eventuale carta Utensile il proprio numero
+     * @param isPrivate Booleano che specifica se si intende creare l'elemento grafico rappresentante Obbiettivo Privato (TRUE) o le carte Pubbliche (FALSE)
+     * @param path Stringa contenente il percorso utilizzato per accedere alle risorse
+     * @param adapterResolution Riferimento all'adapter per il dimensionamento
+     */
+
+    public CardCreatorLabel(List<String> nameOfCard, Map<String, String> dictionaryUtensils, boolean isPrivate, String path, AdapterResolution adapterResolution) {
+
+        //Configurazione attributi della Classe
+        this.adapter = adapterResolution;
         cardObjective = new AnchorPane();
-        Label labelName = setFontStyle(new Label(), 15);
-        labelName.setPrefSize(270,50);
 
+        //Configurazione dell'hashMap utilizzato per la ricerca del numero della carta associato alla carta Utensile eventualmente creata
+        this.dictionaryUtensils = (HashMap<String, String>)dictionaryUtensils;
+
+        //Configurazione Adapter carta Obbiettivo Privato e carte Pubbliche
+        ArrayList<Integer> sizeObjectivePrivate = (ArrayList<Integer>) adapter.getObjectivePrivateSize();
+        ArrayList<Integer> sizePublicCard = (ArrayList<Integer>) adapter.getPublicCardSize();
+
+        cardObjectiveLabel = new VBox(sizeObjectivePrivate.get(0));
+        cardObjectiveLabel.setAlignment(Pos.CENTER);
 
         if(isPrivate){
-            cardObjectiveLabel.setPrefSize(200,330);
+            cardObjectiveLabel.setPrefSize(sizeObjectivePrivate.get(2),sizeObjectivePrivate.get(3));
+
+            //Intestazione Obbiettivo Privato
+            Label labelName = setFontStyle(new Label(), sizeObjectivePrivate.get(1));
+            labelName.setPrefSize(sizeObjectivePrivate.get(2),sizeObjectivePrivate.get(3));
             labelName.setText("Obbiettivo Privato");
             labelName.setAlignment(Pos.CENTER);
 
-            ImageView objectivePrivate = configureImageView("/cardObjective/", nameOfCard.get(0), EXTENSION, 200, 300);
-            objectivePrivate.setFitHeight(280);
-            objectivePrivate.setFitWidth(200);
+            //Configurazione carta Obbiettivo Privato
+            ImageView objectivePrivate = configureImageView("/cardObjective/", nameOfCard.get(0), EXTENSION, 680, 950);
+            objectivePrivate.setFitHeight(sizeObjectivePrivate.get(5));
+            objectivePrivate.setFitWidth(sizeObjectivePrivate.get(4));
             cardObjectiveLabel.getChildren().addAll(labelName,objectivePrivate);
             cardObjective.getChildren().add(cardObjectiveLabel);
-
         }
 
         else{
 
-            cardObjectiveLabel.setPrefSize(200*3,350);
-            HBox cardSequence = configureCardSequence(path,nameOfCard,200,300);
-            cardSequence.setPrefSize(200*3,300);
+            HBox cardSequence = configureCardSequence(path,nameOfCard, sizePublicCard);
+            cardSequence.setPrefSize(sizePublicCard.get(0),sizePublicCard.get(1));
             cardSequence.setAlignment(Pos.CENTER);
-
             cardObjectiveLabel.getChildren().addAll(cardSequence);
+            cardObjectiveLabel.setPrefSize(sizePublicCard.get(0),sizePublicCard.get(1));
             configureAnchorPane(cardObjective,cardObjectiveLabel,0d,0d,0d,0d);
         }
     }
 
 
-    public AnchorPane getCardObjective() {
-        return cardObjective;
-    }
 
-    public List<String> getCardName() {
-        return cardName;
-    }
 
-    public Map<String, String> getDictionaryUtensils() {
-        return dictionaryUtensils;
-    }
+    /**
+     * Metodo utilizzato per configurare la sequenza di carte Pubbliche
+     *
+     * @param path Stringa contenente il percorso utilizzato per accedere alle risorse
+     * @param nameOfCard Collezione dei nomi delle carte (Utensili o Obbiettivo Pubblico)
+     * @param sizePublicCard Lista di dimensionamento
+     * @return Riferimento all'elemento grafico contenente le carte Pubbliche
+     */
 
-    private HBox configureCardSequence(String path, List<String> nameOfCard, int requestedWidth, int requestedHeight){
+    private HBox configureCardSequence(String path, List<String> nameOfCard, List<Integer> sizePublicCard){
+
+        cardObjectiveLabel.setMaxSize(sizePublicCard.get(0),sizePublicCard.get(1));
+        cardObjectiveLabel.setMinSize(sizePublicCard.get(0),sizePublicCard.get(1));
 
         ArrayList<String> tempCollection = new ArrayList<>(nameOfCard);
-
         if(nameOfCard.size()>3){
             keyName = nameOfCard.stream().filter(s -> (nameOfCard.indexOf(s) % 2 == 0)).collect(Collectors.toList());
             valueNumber = nameOfCard.stream().filter(s -> (nameOfCard.indexOf(s) % 2 != 0)).collect(Collectors.toList());
@@ -82,11 +114,12 @@ public class CardCreatorLabel{
             tempCollection.addAll(keyName);
         }
 
-        HBox cardSequence = new HBox(5);
+
+        HBox cardSequence = new HBox(sizePublicCard.get(2));
         for (String nameCard: tempCollection) {
-            ImageView item = shadowEffect(configureImageView(path, nameCard, EXTENSION, requestedWidth, requestedHeight));
-            item.setFitWidth(150);
-            item.setFitHeight(225);
+            ImageView item = shadowEffect(configureImageView(path, nameCard, EXTENSION, 680, 950));
+            item.setFitWidth(sizePublicCard.get(3));
+            item.setFitHeight(sizePublicCard.get(4));
             item.addEventHandler(MouseEvent.MOUSE_CLICKED, e-> {
                 if(nameOfCard.size()>3) AlertInfoCard.display(keyName,path);
                 else AlertInfoCard.display(cardName,path);
@@ -98,6 +131,36 @@ public class CardCreatorLabel{
 
         return cardSequence;
     }
+
+
+    /**
+     * Metodo Getter utilizzato per restituire il Parent dell'elemento grafico
+     *
+     * @return Riferimento al Parent cardObjective
+     */
+
+    public AnchorPane getCardObjective() {
+        return cardObjective;
+    }
+
+
+    /**
+     * Metodo utilizzato per restituire il riferimento alla struttura dati contenente i numeri delle carti Utensili
+     * associate al proprio nome
+     *
+     * @return Ruferimento alal struttura dati dictionaryUtenssils
+     */
+
+    public Map<String, String> getDictionaryUtensils() {
+        return dictionaryUtensils;
+    }
+
+
+    /**
+     * Metodo getter che restituisce la lista di chiavi per accedere ai valori contenuti nella struttura dati
+     *
+     * @return Riferimento alla lista keyName
+     */
 
 
     public List<String> getKeyName() {

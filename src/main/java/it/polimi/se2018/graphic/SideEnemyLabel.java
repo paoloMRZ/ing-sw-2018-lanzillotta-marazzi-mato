@@ -1,5 +1,6 @@
 package it.polimi.se2018.graphic;
 
+import it.polimi.se2018.graphic.adapterGUI.AdapterResolution;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -16,15 +17,11 @@ public class SideEnemyLabel{
 
     private HBox labelSideEnemy;
     private ArrayList<SideCardLabel> sideEnemy;
-    private ArrayList<Integer> sizeGridEnemy;
-    private ArrayList<Integer> sizeSideEnemy;
-    private ArrayList<Double> positionGridEnemy;
+    private AdapterResolution adapter;
 
-    SideEnemyLabel(List<String> nameOfPlayers, List<String> sideName) {
+    SideEnemyLabel(List<String> nameOfPlayers, List<String> sideName, AdapterResolution adapterResolution) {
+        this.adapter = adapterResolution;
         sideEnemy = new ArrayList<>();
-        sizeGridEnemy = new ArrayList<>(Arrays.asList(39,39));
-        sizeSideEnemy = new ArrayList<>(Arrays.asList(200,170));
-        positionGridEnemy = new ArrayList<>(Arrays.asList(0d,0d,4d,12d));
         setSideEnemy(nameOfPlayers,sideName);
     }
 
@@ -37,7 +34,7 @@ public class SideEnemyLabel{
             cardEnemy.setPrefSize(391,395);
             Label labelName = setFontStyle(new Label("Player: " + nameOfPlayers.get(i)), 18);
             labelName.setAlignment(Pos.CENTER);
-            sideEnemy.add(new SideCardLabel(sideName.get(i), nameOfPlayers.get(i),sizeGridEnemy,positionGridEnemy,sizeSideEnemy, null,false,null));
+            sideEnemy.add(new SideCardLabel(sideName.get(i), nameOfPlayers.get(i),false,adapter));
             cardEnemy.getChildren().addAll(labelName, sideEnemy.get(i).getAnchorPane());
             cardEnemy.setAlignment(Pos.CENTER);
             labelSideEnemy.getChildren().add(cardEnemy);
@@ -63,7 +60,7 @@ public class SideEnemyLabel{
     public void updateSideEnemies(List<String> infoSide){
         String nameOfEnemy = infoSide.get(0);
         for (SideCardLabel side: sideEnemy) {
-            if(side.getNickName().equals(nameOfEnemy)) side.updateSide(infoSide,33,33);
+            if(side.getNickName().equals(nameOfEnemy)) side.updateSide(infoSide);
         }
     }
 }

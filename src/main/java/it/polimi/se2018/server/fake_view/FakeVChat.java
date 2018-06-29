@@ -4,7 +4,7 @@ package it.polimi.se2018.server.fake_view;
 import it.polimi.se2018.server.events.*;
 import it.polimi.se2018.server.events.responses.*;
 import it.polimi.se2018.server.events.tool_mex.*;
-import it.polimi.se2018.server.message.server.ServerMessageCreator;
+import it.polimi.se2018.server.message.server_message.ServerMessageCreator;
 
 
 public class FakeVChat implements ViewAsObserver,ViewAsObservable {

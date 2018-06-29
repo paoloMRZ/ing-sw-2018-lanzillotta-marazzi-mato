@@ -2,6 +2,7 @@ package it.polimi.se2018.graphic;
 
 import it.polimi.se2018.client.connection_handler.ConnectionHandler;
 import it.polimi.se2018.client.message.ClientMessageCreator;
+import it.polimi.se2018.graphic.adapterGUI.AdapterResolution;
 import it.polimi.se2018.graphic.alert_box.AlertLoadingGame;
 import it.polimi.se2018.graphic.alert_box.AlertValidation;
 import javafx.geometry.Pos;
@@ -15,6 +16,7 @@ import javafx.scene.shape.Rectangle;
 
 import static it.polimi.se2018.graphic.Utility.*;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,21 +42,42 @@ public class SideChoiceLabel{
     private String favours;
     private HashMap<StackPane, Boolean> cell = new HashMap<>();
     private Group group = new Group();
+    private AdapterResolution adapter;
 
-    public SideChoiceLabel(List<String> sideSelection, ConnectionHandler connectionHandler){
 
-        //Settaggio Focus Style
-        Rectangle rect = new Rectangle(20, 20, 360, 303);
+    /**
+     * Costruttore della classe
+     *
+     * @param sideSelection Riferimento alla collezione di carte Side estratte per la scelta del giocatore
+     * @param connectionHandler Riferimento all'oggetto ConnectionHandler rappresentante del giocatore
+     * @param adapterResolution Riferimento all'adapter per il dimensionamento
+     */
+
+    public SideChoiceLabel(List<String> sideSelection, ConnectionHandler connectionHandler, AdapterResolution adapterResolution){
+
+        //Configurazione adapter per il ridimensionamento
+        this.adapter = adapterResolution;
+
+        //Lista per il dimensionamento
+        ArrayList<Integer> sizeRect = (ArrayList<Integer>) adapter.getSideChoiceLabelSize().get(0);
+        ArrayList<Integer> sizeNode = (ArrayList<Integer>) adapter.getSideChoiceLabelSize().get(1);
+        ArrayList<Integer> sizeWindow = (ArrayList<Integer>) adapter.getSideChoiceLabelSize().get(2);
+
+
+        //Configurazione Focus Style
+        Rectangle rect = new Rectangle(20, 20, sizeRect.get(0),sizeRect.get(1));
         rect.setFill(Color.TRANSPARENT);
         rect.setStroke(Color.RED);
         rect.setStrokeWidth(3d);
         group.getChildren().add(rect);
 
         //Settaggio della finestra
-        Label labelRequest = setFontStyle(new Label("Scegli la tua carta Window:"),35);
+        Label labelRequest = setFontStyle(new Label("Scegli la tua carta Window:"),sizeNode.get(0));
         labelRequest.setAlignment(Pos.CENTER);
 
-        ImageView continueButton = shadowEffect(configureImageView("","button-continue", ".png",220,90));
+        ImageView continueButton = shadowEffect(configureImageView("","button-continue", ".png",416,202));
+        continueButton.setFitWidth(sizeNode.get(1));
+        continueButton.setFitHeight(sizeNode.get(2));
         continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if(numberChoice==null) AlertValidation.display("Sagrada", "Selezionare una carta!");
             else {
@@ -72,11 +95,11 @@ public class SideChoiceLabel{
         HBox firstLevel = configureLevelSide(sides.get(0), "0", numberFavours.get(0), sides.get(1), "1", numberFavours.get(1));
         HBox secondLevel = configureLevelSide(sides.get(2), "2",numberFavours.get(2), sides.get(3),"3", numberFavours.get(3));
 
-        VBox label = new VBox(30);
+        VBox label = new VBox(sizeNode.get(3));
 
         sideChoise = new AnchorPane();
-        sideChoise.setPrefSize(1000, 820);
-        sideChoise.setBackground(configureBackground("back-choice-side",1300,1020));
+        sideChoise.setPrefSize(sizeWindow.get(0), sizeWindow.get(1));
+        sideChoise.setStyle("-fx-background-image: url(back-choice-side.png); -fx-background-size: contain; -fx-background-position: center; -fx-background-repeat: no-repeat;");
 
         label.getChildren().addAll(labelRequest,firstLevel,secondLevel,continueButton);
         label.setAlignment(Pos.CENTER);
@@ -84,23 +107,40 @@ public class SideChoiceLabel{
         configureAnchorPane(sideChoise,label,200d,200d,200d, 200d);
     }
 
-    public AnchorPane getSideChoise() {
-        return sideChoise;
-    }
+
+
+
+    /**
+     * Metodo utilizzato per configurare l'elemento grafico che mostra le carte Side estratte. Si tratta di un metodo che crea un livello con una coppia di Side
+     * (a cui assegna rispettivamente il numero corrispondente al suo posizionamento nel deck di carte estratte): richiamato due volte quindi, i due livelli vengono
+     * uniti tra di loro e viene composto in seguito l'elemento completo con le quattro Side disponibili.
+     *
+     * @param firstSide Riferimento alla risorsa corrispondente alla prima Side del livello
+     * @param firstUserData Dato associato alla prima Side del livello (posizione nel deck delle carte Side estratte)
+     * @param firstFavours Dato relativo ai segnalini Favore della prima Side del livello
+     * @param secondSide Riferimento alla risorsa corrispondente alla seconda Side del livello
+     * @param secondUserData Dato associato alla seconda Side del livello (posizione nel deck delle carte Side estratte)
+     * @param secondFavours Dato relativo ai segnalini Favore della seconda Side del livello
+     * @return
+     */
 
     private HBox configureLevelSide(String firstSide, String firstUserData, String firstFavours, String secondSide, String secondUserData, String secondFavours){
+
+        //Lista per il dimensionamento
+        ArrayList<Integer> sizeSide = (ArrayList<Integer>) adapter.getSideChoiceLabelSize().get(3);
+
         StackPane buttonSideFirst = new StackPane();
         StackPane buttonSideSecond = new StackPane();
-        HBox hBox = new HBox(70);
+        HBox hBox = new HBox(sizeSide.get(0));
 
-        ImageView choiceOne = shadowEffect(configureImageView(SUBDIRECTORY, firstSide, EXTENSION, 360,303));
-        choiceOne.setFitWidth(360);
-        choiceOne.setFitHeight(303);
+        ImageView choiceOne = shadowEffect(configureImageView(SUBDIRECTORY, firstSide, EXTENSION, 630,540));
+        choiceOne.setFitWidth(sizeSide.get(1));
+        choiceOne.setFitHeight(sizeSide.get(2));
         buttonSideFirst.getChildren().add(choiceOne);
 
-        ImageView choiceTwo = shadowEffect(configureImageView(SUBDIRECTORY, secondSide, EXTENSION, 360,303));
-        choiceTwo.setFitWidth(360);
-        choiceTwo.setFitHeight(303);
+        ImageView choiceTwo = shadowEffect(configureImageView(SUBDIRECTORY, secondSide, EXTENSION, 630,540));
+        choiceTwo.setFitWidth(sizeSide.get(1));
+        choiceTwo.setFitHeight(sizeSide.get(2));
         buttonSideSecond.getChildren().add(choiceTwo);
 
         choiceOne.setUserData(firstUserData);
@@ -127,11 +167,43 @@ public class SideChoiceLabel{
         return hBox;
     }
 
+
+
+
+    /**
+     * Metodo Getter che restituisce il nome della carta Side scelta dal giocatore
+     *
+     * @return Riferimento alla Stringa nameChoice
+     */
+
     public String getNameChoice() {
         return nameChoice;
     }
 
+
+
+
+    /**
+     * Metodo Getter che restituisce i segnalini Favore della carta Side scelta dal giocatore
+     *
+     * @return Riferimento alla Stringa favours
+     */
+
     public String getFavours() {
         return favours;
     }
+
+
+
+
+    /**
+     * Metodo Getter che restituisce il nome della carta Side scelta dal giocatore
+     *
+     * @return Riferimento alla Stringa nameChoice
+     */
+
+    public AnchorPane getSideChoise() {
+        return sideChoise;
+    }
+
 }

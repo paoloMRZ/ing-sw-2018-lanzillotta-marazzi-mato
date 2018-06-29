@@ -2,14 +2,23 @@ package it.polimi.se2018.graphic;
 
 import it.polimi.se2018.client.connection_handler.ConnectionHandler;
 import it.polimi.se2018.client.message.ClientMessageParser;
+import it.polimi.se2018.graphic.adapterGUI.AdapterResolution;
+import it.polimi.se2018.graphic.adapterGUI.FullAdapter;
+import it.polimi.se2018.graphic.adapterGUI.MediumAdapter;
+import it.polimi.se2018.graphic.adapterGUI.SmallAdapter;
 import it.polimi.se2018.graphic.alert_box.AlertCloseButton;
 import it.polimi.se2018.graphic.alert_box.AlertLoadingGame;
 import it.polimi.se2018.graphic.alert_box.AlertSwitcher;
 import it.polimi.se2018.graphic.alert_box.AlertValidation;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -37,10 +46,11 @@ public class InitWindow extends Application {
     private AnchorPane anchorGame;
 
     //Elementi grafici della schermata game
+    private AdapterResolution adapterResolution;
     private SideCardLabel playerSide;
     private ReserveLabel reserve;
     private CardCreatorLabel privateObjective;
-    private TabCardLabel tabCardLabel = new TabCardLabel();
+    private TabCardLabel tabCardLabel;
     private CardCreatorLabel publicObjective;
     private CardCreatorLabel cardUtensils;
     private SideChoiceLabel sideChoiceLabel;
@@ -53,12 +63,14 @@ public class InitWindow extends Application {
     private HBox nodeReserve;
     private HBox nodeSetting;
     private VBox nodeButton;
-    private boolean isUtensilReserveUpdate = false;
-    private boolean isNotYourTurn = false;
+    private String resolution;
 
 
     //Costanti di intestazione delle varie finestra
     private static final String SAGRADA = "Sagrada";
+    private static final String FULLSIZE = "1920x1080 (Full HD)";
+    private static final String MEDIUMSIZE = "1400x900 (Scelta consigliata)";
+    private static final String SMALLSIZE = "1366x768";
 
 
 
@@ -76,17 +88,20 @@ public class InitWindow extends Application {
         primaryStage.setOnCloseRequest(e -> closeWindow(primaryStage, e));
 
         //TODO: SCHERMATA LOGIN
-        ImageView continueButton = shadowEffect(configureImageView("", "button-continue", ".png", 200, 90));
         ImageView startButton = shadowEffect(configureImageView("", "button-start-game", ".png", 200, 90));
         AlertSwitcher alertSwitcher = new AlertSwitcher();
-        startButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> alertSwitcher.display(SAGRADA, "Scegli la modalità di connessione:", this));
+        startButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            selectorAdapter();
+            tabCardLabel = new TabCardLabel(adapterResolution);
+            alertSwitcher.display(SAGRADA, "Scegli la modalità di connessione:", this);
+        });
 
         borderPane = new BorderPane();
         borderPane.setStyle("-fx-background-image: url(back-init.jpg); -fx-background-size: contain; -fx-background-position: center; -fx-background-repeat: no-repeat;");
 
 
-        HBox layout = new HBox(50);
-        layout.getChildren().addAll(continueButton, startButton);
+        VBox layout = new VBox(50);
+        layout.getChildren().addAll(startButton,setChoiceResolution());
         layout.setAlignment(Pos.CENTER);
         borderPane.setCenter(layout);
 
@@ -116,13 +131,13 @@ public class InitWindow extends Application {
 
                         //TODO: SCHERMATA SCELTA SIDE
                         List<String> sideSelection = ClientMessageParser.getInformationsFromMessage(message.getText());
-                        sideChoiceLabel = new SideChoiceLabel(sideSelection, connectionHandler);
+                        sideChoiceLabel = new SideChoiceLabel(sideSelection, connectionHandler,adapterResolution);
 
                         Scene sceneChoice = new Scene(sideChoiceLabel.getSideChoise(), 1150, 900);
                         Platform.runLater(() -> {
                             alertSwitcher.closeAlert();
-                            primaryStage.setMaxHeight(900);
-                            primaryStage.setMaxWidth(1400);
+                            primaryStage.setMaxHeight(adapterResolution.getPrimaryStageSize().get(1));
+                            primaryStage.setMaxWidth(adapterResolution.getPrimaryStageSize().get(0));
                             primaryStage.centerOnScreen();
                             primaryStage.setScene(sceneChoice);
                         });
@@ -135,16 +150,15 @@ public class InitWindow extends Application {
                         List<String> sideName = sideInfo.stream().filter(s -> (sideInfo.indexOf(s) % 2 != 0)).collect(Collectors.toList());
                         sideName.remove(nameOfPlayers.indexOf(connectionHandler.getNickname()));
                         nameOfPlayers.remove(connectionHandler.getNickname());
-                        enemiesSide = new SideEnemyLabel(nameOfPlayers, sideName);
-                        configureAnchorPane(anchorGame, enemiesSide.getLabelSideEnemy(), 20d, 60d, 610d, 585d);
-
+                        enemiesSide = new SideEnemyLabel(nameOfPlayers, sideName,adapterResolution);
+                        adapterResolution.putSideEnemyLabel(anchorGame,enemiesSide.getLabelSideEnemy());
                     }
 
 
                     //MESSAGGIO START PER L'ASSEGNAMENTO DELLA CARTA OBBIETTIVO PRIVATA
                     if (ClientMessageParser.isStartPrivateObjectiveMessage(message.getText())) {
-                        privateObjective = new CardCreatorLabel(ClientMessageParser.getInformationsFromMessage(message.getText()), null, true, null);
-                        configureAnchorPane(anchorGame, privateObjective.getCardObjective(), 0d, 310d, 635d, 300d);
+                        privateObjective = new CardCreatorLabel(ClientMessageParser.getInformationsFromMessage(message.getText()), null, true, null,adapterResolution);
+                        adapterResolution.putPrivateObjectiveLabel(anchorGame, privateObjective.getCardObjective());
 
                     }
 
@@ -152,14 +166,14 @@ public class InitWindow extends Application {
                     //MESSAGGIO START PER L'ASSEGNAMENTO DELLE CARTE OBBIETTIVO PUBBLICHE
                     if (ClientMessageParser.isStartPublicObjectiveMessage(message.getText())) {
                         List<String> objectivePublicInfo = ClientMessageParser.getInformationsFromMessage(message.getText());
-                        publicObjective = new CardCreatorLabel(objectivePublicInfo, null, false, "/cardObjective/");
+                        publicObjective = new CardCreatorLabel(objectivePublicInfo, null, false, "/cardObjective/",adapterResolution);
                         tabCardLabel.configureTabObjective(publicObjective.getCardObjective());
                     }
 
                     //MESSSAGGIO START PER L'ASSEGNAMENTO DELLE CARTE UTENSILI
                     if (ClientMessageParser.isStartUtensilMessage(message.getText())) {
                         List<String> cardUtensilsInfo = ClientMessageParser.getInformationsFromMessage(message.getText());
-                        cardUtensils = new CardCreatorLabel(cardUtensilsInfo, createDictionary(cardUtensilsInfo), false, "/cardUtensils/");
+                        cardUtensils = new CardCreatorLabel(cardUtensilsInfo, createDictionary(cardUtensilsInfo), false, "/cardUtensils/",adapterResolution);
                         tabCardLabel.configureTabUtensils(cardUtensils.getCardObjective());
                     }
                 }
@@ -171,31 +185,26 @@ public class InitWindow extends Application {
 
                             //TODO: SCHERMATA DI GIOCO
                             //Posiziono le carte Utensili e Pubbliche
-                            configureAnchorPane(anchorGame, tabCardLabel.getGroupPane(), 40d, 330d, 880d, 210d);
+                            adapterResolution.putTabPaneLabel(anchorGame, tabCardLabel.getGroupPane());
 
                             //Posiziono la roundGrid
-                            ArrayList<Double> positionGridRound = new ArrayList<>(Arrays.asList(20d, 0d, 0d, 0d));
-                            roundLabel = new RoundLabel(70, 70, 930, 90, positionGridRound);
-                            configureAnchorPane(anchorGame, roundLabel.getAnchorRound(), 20d, 670d, 610d, 60d);
+                            roundLabel = new RoundLabel(adapterResolution);
+                            adapterResolution.putRoundGridLabel(anchorGame, roundLabel.getAnchorRound());
 
                             //Posiziono la griglia con le informazioni sul giocatore
-                            settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
+                            settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(message.getText()).get(0), adapterResolution);
                             nodeSetting = settingLabel.getSettingLabel();
-                            configureAnchorPane(anchorGame, nodeSetting, 835d, 80d, 70d, 800d);
+                            adapterResolution.putSettingLabel(anchorGame, nodeSetting);
 
-                            //Posiziono la carta scelta dal giocatore
-                            ArrayList<Integer> sizeGridPlayer = new ArrayList<>(Arrays.asList(67, 66));
-                            ArrayList<Integer> sizeSidePlayer = new ArrayList<>(Arrays.asList(340, 290));
-                            ArrayList<Double> positionGridPlayer = new ArrayList<>(Arrays.asList(4d, 0d, 3d, 21d));
-                            ArrayList<Double> sizeRectPlayer = new ArrayList<>(Arrays.asList(65d, 65d));
-                            playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), sizeGridPlayer, positionGridPlayer, sizeSidePlayer, sizeRectPlayer, true, reserve);
-                            configureAnchorPane(anchorGame, playerSide.getAnchorPane(), 835d, 190d, 50d, 370d);
+                            //Posiziono la carta Side del giocatore
+                            playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), true, adapterResolution);
+                            adapterResolution.putSideLabel(anchorGame, playerSide.getAnchorPane());
 
                             //Posiziono la griglia dei pulsanti
-                            buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils);
+                            buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils, adapterResolution);
                             buttonGameLabel.checkPermission(connectionHandler.getNickname(),ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
                             nodeButton = buttonGameLabel.getLabelButtonGame();
-                            configureAnchorPane(anchorGame, nodeButton, 880d, 500d, 100d, 200d);
+                            adapterResolution.putButtonLabel(anchorGame, nodeButton);
 
 
                             Scene sceneGame = new Scene(anchorGame, 1880, 1073);
@@ -218,10 +227,10 @@ public class InitWindow extends Application {
 
                     //MESSAGGIO UPDATE DELLA RISERVA
                 else if (ClientMessageParser.isUpdateReserveMessage(message.getText())) {
-                        reserve = new ReserveLabel(ClientMessageParser.getInformationsFromMessage(message.getText()), 48, 48, 48, 48);
+                        reserve = new ReserveLabel(ClientMessageParser.getInformationsFromMessage(message.getText()), adapterResolution);
                         if (isInitReserve) {
                             nodeReserve = reserve.getHBox();
-                            configureAnchorPane(anchorGame, nodeReserve, 790d, 760d, 0d, 150d);
+                            adapterResolution.putReserveLabel(anchorGame, nodeReserve);
                             isInitReserve = false;
                         } else {
                             updateGUI(newText);
@@ -238,7 +247,7 @@ public class InitWindow extends Application {
 
 
 
-    public void updateGUI(String newValue) {
+    private void updateGUI(String newValue) {
 
         Platform.runLater(() -> {
             //TODO: MESSAGGI DI TIPO UPDATE
@@ -247,25 +256,25 @@ public class InitWindow extends Application {
 
                 //MESSAGGIO UPDATE PER IL CAMBIO DEL TURNO
                 if (ClientMessageParser.isUpdateTurnMessage(newValue)) {
-                    settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(newValue).get(0));
+                    settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(newValue).get(0),adapterResolution);
                     anchorGame.getChildren().remove(nodeSetting);
                     settingLabel.updateTurn(ClientMessageParser.getInformationsFromMessage(newValue).get(0));
                     nodeSetting = settingLabel.getSettingLabel();
-                    configureAnchorPane(anchorGame,nodeSetting,835d, 80d, 70d, 800d);
+                    adapterResolution.putSettingLabel(anchorGame, nodeSetting);
 
 
                     anchorGame.getChildren().remove(nodeButton);
                     buttonGameLabel.checkPermission(connectionHandler.getNickname(),ClientMessageParser.getInformationsFromMessage(newValue).get(0));
                     nodeButton = buttonGameLabel.getLabelButtonGame();
-                    configureAnchorPane(anchorGame, nodeButton, 880d, 500d, 100d, 200d);
+                    adapterResolution.putButtonLabel(anchorGame, nodeButton);
                 }
 
 
                 //MESSAGGIO UPDATE PER IL CAMBIO DEL ROUND
                 if (ClientMessageParser.isUpdateRoundMessage(newValue)) {
                     List<String> roundInfo = ClientMessageParser.getInformationsFromMessage(newValue);
-                    roundLabel.proceedRound(roundInfo, 120, 70);
-                    settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(newValue).get(0));
+                    roundLabel.proceedRound(roundInfo);
+                    settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(newValue).get(0),adapterResolution);
                     anchorGame.getChildren().remove(nodeSetting);
                     anchorGame.getChildren().remove(nodeButton);
 
@@ -273,8 +282,8 @@ public class InitWindow extends Application {
                     buttonGameLabel.checkPermission(connectionHandler.getNickname(), ClientMessageParser.getInformationsFromMessage(newValue).get(0));
                     nodeSetting = settingLabel.getSettingLabel();
                     nodeButton = buttonGameLabel.getLabelButtonGame();
-                    configureAnchorPane(anchorGame, nodeSetting, 835d, 80d, 70d, 800d);
-                    configureAnchorPane(anchorGame, nodeButton, 880d, 500d, 100d, 200d);
+                    adapterResolution.putSettingLabel(anchorGame, nodeSetting);
+                    adapterResolution.putButtonLabel(anchorGame, nodeButton);
                 }
 
 
@@ -282,12 +291,11 @@ public class InitWindow extends Application {
                 if (ClientMessageParser.isUpdateRoundgridMessage(newValue)) {
                     List<List<String>> roundGridInfo = ClientMessageParser.getInformationsFromUpdateRoundgridMessage(newValue);
                     anchorGame.getChildren().remove(roundLabel);
-                    ArrayList<Double> positionGridRound = new ArrayList<>(Arrays.asList(70d, 0d, 15d, 0d));
-                    roundLabel = new RoundLabel(70, 70, 910, 90, positionGridRound);
-                    configureAnchorPane(anchorGame, roundLabel.getAnchorRound(), 0d, 930d, 800d, 100d);
+                    roundLabel = new RoundLabel(adapterResolution);
+                    adapterResolution.putRoundGridLabel(anchorGame, roundLabel.getAnchorRound());
 
                     for (List<String> dieInfo : roundGridInfo) {
-                        roundLabel.proceedRound(dieInfo, 120, 70);
+                        roundLabel.proceedRound(dieInfo);
                     }
                 }
 
@@ -295,7 +303,7 @@ public class InitWindow extends Application {
                 //MESSAGGIO UPDATE DELLE CARTE SIDE
                 if (ClientMessageParser.isUpdateSideMessage(newValue)) {
                     List<String> infoSide = ClientMessageParser.getInformationsFromMessage(newValue);
-                    if(infoSide.get(0).equals(connectionHandler.getNickname())) playerSide.updateSideAfterPut(ClientMessageParser.getInformationsFromMessage(newValue), 55, 55);
+                    if(infoSide.get(0).equals(connectionHandler.getNickname())) playerSide.updateSideAfterPut(ClientMessageParser.getInformationsFromMessage(newValue));
                     else enemiesSide.updateSideEnemies(infoSide);
                 }
 
@@ -305,11 +313,11 @@ public class InitWindow extends Application {
                     anchorGame.getChildren().remove(nodeReserve);
                     anchorGame.getChildren().remove(nodeButton);
                     nodeReserve = reserve.getHBox();
-                    buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils);
+                    buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils,adapterResolution);
 
                     nodeButton = buttonGameLabel.getLabelButtonGame();
-                    configureAnchorPane(anchorGame, nodeButton, 880d, 500d, 100d, 200d);
-                    configureAnchorPane(anchorGame, nodeReserve, 790d, 760d, 0d, 150d);
+                    adapterResolution.putButtonLabel(anchorGame, nodeButton);
+                    adapterResolution.putReserveLabel(anchorGame, nodeReserve);
                 }
             }
 
@@ -323,7 +331,7 @@ public class InitWindow extends Application {
                     anchorGame.getChildren().remove(nodeSetting);
                     settingLabel.updateAction();
                     nodeSetting = settingLabel.getSettingLabel();
-                    configureAnchorPane(anchorGame,nodeSetting,835d, 80d, 70d, 800d);
+                    adapterResolution.putSettingLabel(anchorGame, nodeSetting);
                 }
 
 
@@ -335,7 +343,7 @@ public class InitWindow extends Application {
 
                 //MESSAGGIO SUCCESSO ATTIVAZIONE DI UNA CARTA UTENSILE MULTIPARAMETRO
                 if (ClientMessageParser.isSuccessUseUtensilMessage(newValue)) {
-                    //AlertValidation.display("Successo", "La carta è stata attivata!!");
+
                 }
             }
 
@@ -344,6 +352,7 @@ public class InitWindow extends Application {
 
             //MESSAGGIO SUCCESSO UTILIZZO CARTA UTENSILE
             if (ClientMessageParser.isUseUtensilEndMessage(newValue)) {
+
                 List<String> updateInfoUtensil = ClientMessageParser.getInformationsFromMessage(newValue);
                 anchorGame.getChildren().remove(nodeSetting);
                 settingLabel.updateFavours(updateInfoUtensil.get(1));
@@ -351,7 +360,8 @@ public class InitWindow extends Application {
                 nodeSetting = settingLabel.getSettingLabel();
                 buttonGameLabel.getAlertCardUtensils().closeExecutionUtensil();
                 AlertValidation.display("Successo", "La carta è stata attivata!!");
-                configureAnchorPane(anchorGame,nodeSetting,835d, 80d, 70d, 800d);
+                adapterResolution.putSettingLabel(anchorGame, nodeSetting);
+
             }
 
 
@@ -377,7 +387,7 @@ public class InitWindow extends Application {
 
 
     /**
-     * Metodo setter che imposta il riferimento al ConnectionHandler rappresentante del giocatore
+     * Metodo Setter che imposta il riferimento al ConnectionHandler rappresentante del giocatore
      *
      */
 
@@ -435,5 +445,33 @@ public class InitWindow extends Application {
     public void sendToView(String message) {
         //il messaggio in ingresso deve essere interpretato, quindi procedo con la classificazione
         this.message.setText(message);
+    }
+
+
+
+    private ComboBox setChoiceResolution(){
+        ObservableList<String> comboItems = FXCollections.observableArrayList("1920x1080 (Full HD)", "1400x900 (Scelta consigliata)", "1366x768");
+        ComboBox comboBox = new ComboBox(comboItems);
+        comboBox.setPromptText("Imposta Risoluzione");
+        comboBox.setStyle("-fx-focus-color: black; -fx-font: 10px Verdana; -fx-font-size : 15pt; -fx-border-color: #C0C0C0; -fx-border-width: 3 3 3 3; -fx-background-color: #EFEFEF; -fx-background-insets: 0 0 -1 0, 0, 1, 2; -fx-background-radius: 3px, 3px, 2px, 1px; -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em; /* 4 8 4 8 */ -fx-text-fill: -fx-text-base-color; -fx-content-display: CENTER;");
+        comboBox.setEditable(false);
+        comboBox.setMaxWidth(420);
+        comboBox.setMinWidth(420);
+        comboBox.valueProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue ov, String t, String t1) {
+                resolution = t1;
+            }
+        });
+
+        return comboBox;
+    }
+
+    private void selectorAdapter(){
+        switch (resolution){
+            case FULLSIZE: adapterResolution = new FullAdapter(); break;
+            case MEDIUMSIZE: adapterResolution = new MediumAdapter(); break;
+            case SMALLSIZE: adapterResolution = new SmallAdapter(); break;
+        }
     }
 }

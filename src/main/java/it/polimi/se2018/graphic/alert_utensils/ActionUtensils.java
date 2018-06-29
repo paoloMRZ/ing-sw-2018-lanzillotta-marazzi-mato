@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.se2018.client.connection_handler.ConnectionHandler;
 import it.polimi.se2018.graphic.ReserveLabel;
 import it.polimi.se2018.graphic.SideCardLabel;
+import it.polimi.se2018.graphic.adapterGUI.AdapterResolution;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -35,7 +36,7 @@ public class ActionUtensils {
     private static boolean isDisable = false;
     private static boolean isBisEffect = false;
 
-    public ActionUtensils(Map<String, String> dictionaryCardUtensils, String keyNameOfCard, ReserveLabel reserve, ConnectionHandler connectionHandler, String selection, SideCardLabel playerSide, Stage primaryWindow) throws IOException {
+    public ActionUtensils(Map<String, String> dictionaryCardUtensils, String keyNameOfCard, ReserveLabel reserve, ConnectionHandler connectionHandler, String selection, SideCardLabel playerSide, Stage primaryWindow, AdapterResolution adapterResolution) throws IOException {
 
         this.reserveLabel = reserve;
 
@@ -64,7 +65,7 @@ public class ActionUtensils {
         //Body content
         HBox bodyContent = new HBox(100);
         ImageView cardImage = configureImageView(SUBDIRECTORY,keyNameOfCard,EXTENSION, 300,450);
-        SelectorContent selectorContent = new SelectorContent(this.reserveLabel, connectionHandler,selection, playerSide);
+        SelectorContent selectorContent = new SelectorContent(this.reserveLabel, connectionHandler,selection, playerSide,adapterResolution);
         bodyContent.getChildren().addAll(cardImage, selectorContent.configureNode(name));
         bodyContent.setAlignment(Pos.CENTER);
 
@@ -78,7 +79,7 @@ public class ActionUtensils {
                 switch (finalName){
                     case "Diluente Per Pasta Salda": ActionUtensils actionUtensils = null;
                         try {
-                            actionUtensils = new ActionUtensils(dictionaryCardUtensils,"cardutensils/diluente-per-pasta-salda-bis", reserve, connectionHandler,selection, playerSide, primaryWindow);
+                            actionUtensils = new ActionUtensils(dictionaryCardUtensils,"cardutensils/diluente-per-pasta-salda-bis", reserve, connectionHandler,selection, playerSide, primaryWindow,adapterResolution);
                         } catch (IOException e1) {
                             e1.printStackTrace();
                         }

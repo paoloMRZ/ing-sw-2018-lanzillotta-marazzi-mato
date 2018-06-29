@@ -1,5 +1,6 @@
 package it.polimi.se2018.graphic;
 
+import it.polimi.se2018.graphic.adapterGUI.AdapterResolution;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -28,19 +29,28 @@ public class SettingLabel implements ChangeListener<String> {
     private TextField turnOf = new TextField();
     private TextField favours = new TextField();
     private TextField action = new TextField();
+    private AdapterResolution adaptee;
+    private int imageSize;
+    private int textSize;
+    private int spacing;
 
-    public SettingLabel(String nickName, String action, String favours, String turnOf){
+    public SettingLabel(String nickName, String action, String favours, String turnOf, AdapterResolution adaptee){
 
         this.action.setText(action);
         this.favours.setText(favours);
         this.turnOf.setText(turnOf);
+        this.adaptee = adaptee;
 
-        nickNameLabel = configureNode(SPACE,"icon-sagrada",35,35,nickName,24);
-        favoursLabel = configureNode(SPACE,"icon-favours",35,35, favours,24);
-        actionLabel = configureNode(SPACE,"icon-mosse",35,35, action,24);
-        turnOfLabel = configureNode(SPACE,"icon-player",35,35,"Turn of: " + turnOf,20);
+        imageSize = adaptee.getSettingLabelSize().get(0);
+        textSize = adaptee.getSettingLabelSize().get(1);
+        spacing = adaptee.getSettingLabelSize().get(2);
 
-        settingHBox = new HBox(20);
+        nickNameLabel = configureNode(SPACE,"icon-sagrada",imageSize,imageSize,nickName,textSize);
+        favoursLabel = configureNode(SPACE,"icon-favours",imageSize,imageSize, favours,textSize);
+        actionLabel = configureNode(SPACE,"icon-mosse",imageSize,imageSize, action,textSize);
+        turnOfLabel = configureNode(SPACE,"icon-player",imageSize,imageSize,"Turn of: " + turnOf,textSize);
+
+        settingHBox = new HBox(spacing);
         settingHBox.setStyle(STYLELABEL);
         settingHBox.getChildren().addAll(nickNameLabel,favoursLabel,actionLabel,turnOfLabel);
 
@@ -53,23 +63,23 @@ public class SettingLabel implements ChangeListener<String> {
             TextField textField = (TextField) textProperty.getBean();
 
             if(textField == turnOf){
-                turnOfLabel = configureNode(SPACE,"icon-player",35,35,"Turn of: " + newValue,20);
+                turnOfLabel = configureNode(SPACE,"icon-player",imageSize,imageSize,"Turn of: " + newValue,textSize);
                 settingHBox = new HBox(nickNameLabel,favoursLabel,actionLabel,turnOfLabel);
-                settingHBox.setSpacing(20d);
+                settingHBox.setSpacing(spacing);
                 settingHBox.setStyle(STYLELABEL);
             }
 
             else if(textField == favours){
-                favoursLabel = configureNode(SPACE,"icon-favours",35,35,newValue,24);
+                favoursLabel = configureNode(SPACE,"icon-favours",imageSize,imageSize,newValue,textSize);
                 settingHBox = new HBox(nickNameLabel,favoursLabel,actionLabel,turnOfLabel);
-                settingHBox.setSpacing(20d);
+                settingHBox.setSpacing(spacing);
                 settingHBox.setStyle(STYLELABEL);
             }
 
             else if(textField == action){
-                actionLabel = configureNode(SPACE,"icon-mosse",35,35,newValue,24);
+                actionLabel = configureNode(SPACE,"icon-mosse",imageSize,imageSize,newValue,textSize);
                 settingHBox = new HBox(nickNameLabel,favoursLabel,actionLabel,turnOfLabel);
-                settingHBox.setSpacing(20d);
+                settingHBox.setSpacing(spacing);
                 settingHBox.setStyle(STYLELABEL);
             }
         }catch (Exception e){
@@ -104,7 +114,4 @@ public class SettingLabel implements ChangeListener<String> {
         changed(favours.textProperty(),this.favours.getText(),String.valueOf(parseInt(updateFavours)));
     }
 
-    public TextField getTurnOf() {
-        return turnOf;
-    }
 }

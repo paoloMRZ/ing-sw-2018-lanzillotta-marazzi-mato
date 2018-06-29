@@ -1,5 +1,6 @@
 package it.polimi.se2018.graphic;
 
+import it.polimi.se2018.graphic.adapterGUI.AdapterResolution;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Group;
@@ -18,50 +19,108 @@ import java.util.Locale;
 
 import static it.polimi.se2018.graphic.Utility.*;
 
+
+/**
+ * Classe RoundLabel utilizzata per la creazione dell'elemento grafico contenente la Griglia di conteggio dei round e i dadi
+ * residue da ogni turni della partita.
+ *
+ * @author Simone Lanzillotta
+ */
+
+
 public class RoundLabel{
 
+    private int column = 0;
     private AnchorPane anchorRound;
     private GridPane labelRoundGrid;
-    private int column = 0;
+
     private static ArrayList<HBox> roundHistory= new ArrayList<>();
     private HashMap<StackPane, Boolean> cell = new HashMap<>();
     private Group group;
     private static String dieFromRoundSelected;
     private static int roundNumber = 0;
+    private AdapterResolution adapter;
 
 
-    RoundLabel(int widthGrid, int heightGrid, int widthImageGrid, int heightImageGrid, List<Double> positiongrid){
-        configureRoundGrid(widthGrid,heightGrid, widthImageGrid, heightImageGrid, positiongrid);
-        Rectangle rect = new Rectangle(20, 20, 55, 55);
+    /**
+     * Costruttore della Classe
+     *
+     * @param adapterResolution Riferimento all'adapter per il dimensionamento
+     */
+
+    @SuppressWarnings("unchecked")
+    RoundLabel(AdapterResolution adapterResolution){
+
+        //Configurazione adapter per il dimensionamento
+        this.adapter = adapterResolution;
+        ArrayList<Integer> sizeRect = (ArrayList<Integer>) adapter.getRoundLabelSize().get(0);
+
+        //Configurazione dell'elemento grafico
+        configureRoundGrid();
+
+        //Configurazione effetto Focus
+        Rectangle rect = new Rectangle(20, 20, sizeRect.get(0), sizeRect.get(0));
         group = new Group(rect);
         rect.setFill(Color.TRANSPARENT);
         rect.setStroke(Color.RED);
         rect.setStrokeWidth(2d);
+
+
     }
 
-    private void configureRoundGrid(int widthGrid, int heightGrid, int widthImageGrid, int heightImageGrid,List<Double> positiongrid) {
+
+
+    /**
+     * Metodo utilizzato per la configurazione dell'elemento grafico contenente la RoundGrid
+     *
+     */
+
+    @SuppressWarnings("unchecked")
+    private void configureRoundGrid() {
+
+        //Lista di dimensionamento
+        ArrayList<Integer> roundSize = (ArrayList<Integer>)adapter.getRoundLabelSize().get(0);
+        ArrayList<Double> positionGrid = (ArrayList<Double>)adapter.getRoundLabelSize().get(1);
+
 
         //Creo l'anchorPane che accoglierà background (l'immagine del pannello del round) e la griglia posta su di esso
         anchorRound = new AnchorPane();
-        anchorRound.setStyle("-fx-background-size: 700; -fx-background-image: url(roundgrid.png); -fx-background-position: center; -fx-background-repeat: no-repeat;");
+        anchorRound.setStyle("-fx-background-size: " + String.valueOf(roundSize.get(1)) + "; -fx-background-image: url(roundgrid.png); -fx-background-position: center; -fx-background-repeat: no-repeat;");
 
-        //Creo la griglia
+        //Configurazione della Griglia per la segnatira dei Round passati
         labelRoundGrid = new GridPane();
         labelRoundGrid.setAlignment(Pos.CENTER_RIGHT);
         labelRoundGrid.setHgap(0d);
         labelRoundGrid.setVgap(0d);
+
         for (int i = 0; i < 10; i++) {
             StackPane button = new StackPane();
-            button.setPrefSize(widthGrid, heightGrid);
+            button.setPrefSize(roundSize.get(2), roundSize.get(2));
             button.setStyle("-fx-border-color: transparent; -fx-border-width: 2; -fx-background-radius: 0; -fx-background-color: transparent;");
             labelRoundGrid.add(button, i, 0);
         }
-        configureAnchorPane(anchorRound,labelRoundGrid,positiongrid.get(0),positiongrid.get(1),positiongrid.get(2),positiongrid.get(3));
+
+        configureAnchorPane(anchorRound,labelRoundGrid,positionGrid.get(0),positionGrid.get(1),positionGrid.get(2),positionGrid.get(3));
     }
 
 
-    public void proceedRound(List<String> dieInfo, int widthImage, int heightImage){
-        ImageView passed = shadowEffect(configureImageView("/iconPack/", "icon-divieto",".png",widthImage,heightImage));
+
+    /**
+     * Metodo richiamato per aggiungere un segnaposto sul round appena concluso.
+     *
+     * @param dieInfo Ruferimento alla lista di dadi residui da aggiungere alla RoundGrid
+     */
+
+    @SuppressWarnings("unchecked")
+    public void proceedRound(List<String> dieInfo){
+
+        //Lista dimensionamento
+        ArrayList<Integer> sizeProceed = (ArrayList<Integer>) adapter.getRoundLabelSize().get(2);
+
+        //Configurazione immagine da inserire nella Round
+        ImageView passed = shadowEffect(configureImageView("/iconPack/", "icon-divieto",".png",256,256));
+        passed.setFitWidth(sizeProceed.get(0));
+        passed.setFitHeight(sizeProceed.get(1));
 
         // Create ContextMenu
         ContextMenu contextMenu = new ContextMenu();
@@ -73,9 +132,14 @@ public class RoundLabel{
         hBoxHistory.setAlignment(Pos.CENTER);
         for (String aDieInfo : dieInfo) {
             String lowerDieInfo = aDieInfo.toLowerCase(Locale.ENGLISH);
-            hBox.getChildren().addAll(new ImageView(new Image("/diePack/die-" + lowerDieInfo + ".bmp", 40, 40, false, true)));
+            ImageView imageDie = configureImageView("/diePack/die-", lowerDieInfo, ".bmp", sizeProceed.get(2), sizeProceed.get(2));
+            imageDie.setFitWidth(sizeProceed.get(2));
+            imageDie.setFitHeight(sizeProceed.get(2));
+            hBox.getChildren().add(imageDie);
 
-            ImageView elementHistory = shadowEffect(new ImageView(new Image("/diePack/die-" + lowerDieInfo + ".bmp", 55, 55, false, true)));
+            ImageView elementHistory = shadowEffect(configureImageView("/diePack/die-", lowerDieInfo, ".bmp", 177, 177));
+            elementHistory.setFitWidth(sizeProceed.get(3));
+            elementHistory.setFitHeight(sizeProceed.get(3));
             StackPane button = new StackPane(elementHistory);
             cell.put(button, false);
             elementHistory.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
@@ -104,21 +168,53 @@ public class RoundLabel{
         column++;
     }
 
-    public GridPane getLabelRoundGrid() {
-        return labelRoundGrid;
-    }
+
+
+
+    /**
+     * Metodo Getter che restituisce un riferimento al Parent dell'elemento grafico
+     *
+     * @return Riferimento al Parent anchorRound
+     */
 
     public AnchorPane getAnchorRound() {
         return anchorRound;
     }
 
+
+
+
+    /**
+     *Metodo utilizzato per restituire una collezione di elementi grafici contenenti le informazioni sui dadi collocati sulla RoundGrid
+     *
+     * @return Riferimento alla collezione roundHistory
+     */
+
     public static List<HBox> callRoundLable(){
         return roundHistory;
     }
 
+
+
+
+    /**
+     * Metodo utilizzato per prelevare l'informazione sul dado selezionato tra quelli posizionati sulla roundGrid
+     *
+     * @return String contenente la posizione del dado scelto
+     */
+
     public static String getDieFromRoundSelected() {
         return dieFromRoundSelected;
     }
+
+
+
+
+    /**
+     * Metodo utilizzato per prelevare l'informazione del Round da cui si è prelevato un eventuale dado
+     *
+     * @return String contenente il numero del Round selezionato
+     */
 
     public static int getRoundNumber() {
         return roundNumber;
