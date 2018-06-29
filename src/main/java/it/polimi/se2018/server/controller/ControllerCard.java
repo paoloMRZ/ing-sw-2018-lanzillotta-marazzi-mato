@@ -18,25 +18,16 @@ import it.polimi.se2018.server.model.card.card_utensils.*;
 public class ControllerCard implements Visitor {
 
     private final Controller controller;
-    private final Table lobby;
 
-
-    public ControllerCard(Table table,Controller controller){
-        this.lobby=table;
+    public ControllerCard(Controller controller){
         this.controller=controller;
     }
 
 /////////////////////////////////////////////////////////////////////////
 
 
-
-    @Override
-    public void visit(Utensils itemUtensil, Activate m){
-        itemUtensil.firstActivation(controller,m);
-    }
-
-
-    public void visit(PinzaSgrossatrice itemPinza,MoreThanSimple m){
+    public void visit(PinzaSgrossatrice itemPinza,Activate mex){
+        MoreThanSimple m=(MoreThanSimple) mex;
         try{
             if(itemPinza.getIsBusy()){
                 itemPinza.function(controller,m);
@@ -64,7 +55,8 @@ public class ControllerCard implements Visitor {
 
     }
 
-    public void visit(PennelloPerEglomise itemPennelloEglo, ToolCard2 m){
+    public void visit(PennelloPerEglomise itemPennelloEglo, Activate mex){
+        ToolCard2 m=(ToolCard2)mex;
         try{
             if(itemPennelloEglo.getIsBusy()){
                 itemPennelloEglo.function(controller,m);
@@ -88,7 +80,8 @@ public class ControllerCard implements Visitor {
         }
     }
 
-    public void visit(Lathekin itemLathekin, ToolCard4 m){
+    public void visit(Lathekin itemLathekin, Activate mex){
+        ToolCard4 m=(ToolCard4) mex;
         try{
             if(itemLathekin.getIsBusy()){
                 itemLathekin.function(controller,m);
@@ -126,55 +119,55 @@ public class ControllerCard implements Visitor {
     }
 
 
-    public void visit(PennelloPerPastaSalda itemPennelloPasta,ToolCard6 m){
-        try{
-            if(itemPennelloPasta.getIsBusy()){
-                int value= itemPennelloPasta.function(controller,m);
-                controller.getcChat().notifyObserver(new SuccessValue(m.getPlayer(),m.getCard(),value));
+    public void visit(PennelloPerPastaSalda itemPennelloPasta,Activate mex){
+        ToolCard6 m=(ToolCard6) mex;
+        if(!m.getisBis()) {
+            try {
+                if (itemPennelloPasta.getIsBusy()) {
+                    int value = itemPennelloPasta.function(controller, m);
+                    controller.getcChat().notifyObserver(new SuccessValue(m.getPlayer(), m.getCard(), value));
+                } else
+                    controller.getcChat().notifyObserver(new ErrorActivation(itemPennelloPasta.getNumber(), m.getCard(),
+                            controller.getTurn().getFavours(),
+                            itemPennelloPasta.getCost(), m.getPlayer()));
+            } catch (InvalidValueException e) {
+                controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(), m.getCard()));
+            } catch (Exception e) {
+                controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemPennelloPasta.getNumber(),m.getCard(),
-                                                                            controller.getTurn().getFavours(),
-                                                                                 itemPennelloPasta.getCost(),m.getPlayer()));
         }
-        catch(InvalidValueException e){
-            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
-        }
-        catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
-        }
-    }
+        else {
+            try {
+                ToolCard6Bis mess=(ToolCard6Bis) mex;
+                if (itemPennelloPasta.getIsBusy()) {
+                    itemPennelloPasta.function(controller, mess);
 
-    public void visit(PennelloPerPastaSalda itemPennelloPasta,ToolCard6Bis m){
-        try{
-            if(itemPennelloPasta.getIsBusy()){
-                itemPennelloPasta.function(controller,m);
+                    controller.getcAction().playerActivatedCard(controller.getTurn().getName(), itemPennelloPasta.getPreviousCost());
 
-                controller.getcAction().playerActivatedCard(controller.getTurn().getName(),itemPennelloPasta.getPreviousCost());
+                    controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemPennelloPasta.getNumber(), mess.getCard(),
+                            controller.getTurn().getFavours(),
+                            itemPennelloPasta.getCost(), mess.getPlayer()));
 
-                controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemPennelloPasta.getNumber(),m.getCard(),
-                                                                                controller.getTurn().getFavours(),
-                                                                                itemPennelloPasta.getCost(),m.getPlayer()));
+                    itemPennelloPasta.setTheUse();
+                    controller.cleanAll();
+                } else
+                    controller.getcChat().notifyObserver(new ErrorActivation(itemPennelloPasta.getNumber(), mess.getCard(),
+                            controller.getTurn().getFavours(),
+                            itemPennelloPasta.getCost(), mess.getPlayer()));
+            } catch (InvalidValueException e) {
 
-                itemPennelloPasta.setTheUse();
+                controller.getcAction().putBackInReserve();
                 controller.cleanAll();
+                controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(), m.getCard()));
+            } catch (Exception e) {
+                controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemPennelloPasta.getNumber(),m.getCard(),
-                                                                    controller.getTurn().getFavours(),
-                                                                    itemPennelloPasta.getCost(),m.getPlayer()));
-        }
-        catch(InvalidValueException e){
-
-            controller.getcAction().putBackInReserve();
-            controller.cleanAll();
-            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
-        }
-        catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
 
     }
 
-    public void visit(AlesatorePerLaminaDiRame itemAlesatore,ToolCard3 m){
+    public void visit(AlesatorePerLaminaDiRame itemAlesatore,Activate mex){
+        ToolCard3 m=(ToolCard3)mex;
         try{
             if(itemAlesatore.getIsBusy()){
                 itemAlesatore.function(controller,m);
@@ -198,7 +191,8 @@ public class ControllerCard implements Visitor {
         }
     }
 
-    public void visit(Martelletto itemMartelletto, ToolCard7 m){
+    public void visit(Martelletto itemMartelletto, Activate mex){
+        ToolCard7 m=(ToolCard7)mex;
         try{
             if(itemMartelletto.getIsBusy()){
                 itemMartelletto.function(controller);
@@ -228,55 +222,57 @@ public class ControllerCard implements Visitor {
     }
 
 
-    public void visit(DiluentePerPastaSalda itemDiluente,ToolCard11 m){
-        try{
-            if(itemDiluente.getIsBusy()){
-                String color= itemDiluente.function(controller,m);
-                controller.getcChat().notifyObserver(
-                        new  SuccessColor(m.getPlayer(),m.getCard(),color));
-            }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemDiluente.getNumber(),m.getCard(),
-                                                                         controller.getTurn().getFavours(),
-                                                                itemDiluente.getCost(),m.getPlayer()));
-        }
-        catch(InvalidValueException e){
-            controller.getcAction().putBackInReserve(controller.getHoldingResDie());
-            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
-            controller.cleanHoldingResDie();
-        }
-        catch (Exception e){
-            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
-        }
-    }
+    public void visit(DiluentePerPastaSalda itemDiluente,Activate mex){
 
-    public void visit(DiluentePerPastaSalda itemDiluente,ToolCard11Bis m){
+        ToolCard11 m=(ToolCard11) mex;
+        if(!m.getisBis()){
+            try {
+                if (itemDiluente.getIsBusy()) {
+                    String color = itemDiluente.function(controller, m);
+                    controller.getcChat().notifyObserver(
+                            new SuccessColor(m.getPlayer(), m.getCard(), color));
+                } else controller.getcChat().notifyObserver(new ErrorActivation(itemDiluente.getNumber(), m.getCard(),
+                        controller.getTurn().getFavours(),
+                        itemDiluente.getCost(), m.getPlayer()));
+            } catch (InvalidValueException e) {
+                controller.getcAction().putBackInReserve(controller.getHoldingResDie());
+                controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(), m.getCard()));
+                controller.cleanHoldingResDie();
+            } catch (Exception e) {
+                controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
+            }
+        }
+    else{
+            ToolCard11Bis mess=(ToolCard11Bis) mex;
         try{
             if(itemDiluente.getIsBusy()){
-                itemDiluente.function(controller,m);
+                itemDiluente.function(controller,mess);
 
                 //riga che veniva fatta dentro
                 controller.getcAction().playerActivatedCard(controller.getTurn().getName(),itemDiluente.getPreviousCost());
 
-                controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemDiluente.getNumber(),m.getCard(),
+                controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemDiluente.getNumber(),mess.getCard(),
                                                                                 controller.getTurn().getFavours(),
                                                                                  itemDiluente.getCost(),m.getPlayer()));
                 itemDiluente.setTheUse();
                 controller.cleanAll();
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemDiluente.getNumber(),m.getCard(),
+            else controller.getcChat().notifyObserver(new ErrorActivation(itemDiluente.getNumber(),mess.getCard(),
                                                                         controller.getTurn().getFavours(),
                                                                          itemDiluente.getCost(),m.getPlayer()));
         }
         catch(InvalidValueException | InvalidCellException e){
-            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
+            controller.getcChat().notifyObserver(new ErrorSelectionUtensil(mess.getPlayer(),mess.getCard()));
         }
         catch (Exception e){
             controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
         }
+        }
     }
 
 
-    public void visit(RigaInSughero itemRiga, ToolCard9 m){
+    public void visit(RigaInSughero itemRiga, Activate mex){
+        ToolCard9 m=(ToolCard9)mex;
         try{
             if(itemRiga.getIsBusy()){
                 itemRiga.function(controller,m);
@@ -299,7 +295,8 @@ public class ControllerCard implements Visitor {
         }
     }
 
-    public void visit(TaglierinaCircolare itemT, ToolCard5 m){
+    public void visit(TaglierinaCircolare itemT, Activate mex){
+        ToolCard5 m=(ToolCard5)mex;
         try{
             if(itemT.getIsBusy()){
                 itemT.function(controller,m);
@@ -332,7 +329,8 @@ public class ControllerCard implements Visitor {
     }
 
 
-    public void visit(TaglierinaManuale itemTM, ToolCard12 m){
+    public void visit(TaglierinaManuale itemTM, Activate mex){
+        ToolCard12 m= (ToolCard12) mex;
         try{
             if(itemTM.getIsBusy()){
                 itemTM.function(controller,m);
@@ -372,7 +370,8 @@ public class ControllerCard implements Visitor {
         }
     }
 
-    public void visit(TamponeDiamantato itemTD, ToolCard10 m){
+    public void visit(TamponeDiamantato itemTD, Activate mex){
+        ToolCard10 m=(ToolCard10)mex;
         try{
             if(itemTD.getIsBusy()){
                 itemTD.function(controller,m);
@@ -399,7 +398,8 @@ public class ControllerCard implements Visitor {
         }
     }
 
-    public void visit(TenagliaARotelle itemTe, ToolCard8 m){
+    public void visit(TenagliaARotelle itemTe, Activate mex){
+        ToolCard8 m=(ToolCard8)mex;
         try{
             if(itemTe.getIsBusy()){
                 itemTe.function(controller,m);

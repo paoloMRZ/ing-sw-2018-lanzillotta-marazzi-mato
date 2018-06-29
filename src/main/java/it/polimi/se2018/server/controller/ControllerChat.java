@@ -27,16 +27,6 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
         controller.unfreeze(mex);
     }
 
-
-    public void update(Activate mex){
-        if(checker(mex)) {
-            try {
-                controller.callThrough(mex);
-            } catch (InvalidValueException e) {
-                e.printStackTrace();
-            }
-        }
-    }
     public void update(SimpleMove mex){
         if(checker(mex)) {
             try {
@@ -46,7 +36,6 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
             }
         }
     }
-
 
     //in questo momento solo il turnante può richiedere update, se tolto checker può chiunque
     public void update(UpdateReq mex){
@@ -123,8 +112,23 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
         view.update(mex);
     }
     public void notifyObserver(IgnoreMex mex){view.update(mex);}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
+    public void update(Activate mex){
+        try{
+            if(checker(mex)) {
+                if(controller.getPlayerByName(mex.getPlayer()).getDidPlayCard()) notifyObserver(new IgnoreMex(mex.getPlayer()));
+                else if (!controller.getUtensils(mex.getCard()).getPriceHasBeenChecked()) {
+                    controller.getUtensils(mex.getCard()).firstActivation(controller, mex);
+                }
+                else{
+                    controller.getUtensils(mex.getCard()).accept(controller.getcCard(), mex);
+                    controller.messageComingChecking(mex);
+                }
+            }
+        }
+        catch(Exception e){
+                notifyObserver(new ErrorSomethingNotGood(e));
+        }
+    }
 }

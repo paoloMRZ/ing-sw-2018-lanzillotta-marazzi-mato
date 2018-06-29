@@ -50,7 +50,7 @@ public class Controller{
         if (!nameOfPlayers.isEmpty()) {
             NotifyModel notifier= new NotifyModel();
             this.lobby = new Table(setListOfUtensils(), setListOfObjectivePublic(), setListOfPlayers(nameOfPlayers,notifier),notifier);
-            this.cCard = new ControllerCard(lobby,this);
+            this.cCard = new ControllerCard(this);
             this.cAction = new ControllerAction(lobby,this);
             this.cPoints = new ControllerPoints(lobby, this);
             this.cTurn = new ControllerTurn(lobby,this);
@@ -315,19 +315,20 @@ public class Controller{
         cPoints.nameOfWinner();
         lobby.setUpdateScoreGrid();
     }
+/*
 
-    /**
-     * Metodo tunnel per l'attivazione delle carte utensile.
-     * Controlla inoltre che le mosse a disposizione nel turno siano state fatte tutte.
-     * @param mex messagio di attivazione
-     */
     public void callThrough(Activate mex) throws InvalidValueException {
         if(lobby.callPlayerByName(mex.getPlayer()).getDidPlayCard()) cChat.notifyObserver(new IgnoreMex(mex.getPlayer()));
-        else{
-            lobby.getUtensils(mex.getCard()).accept(cCard,mex);
-            messageComingChecking(mex);
+        else {
+            if (lobby.getUtensils(mex.getCard()).getPriceHasBeenChecked()){
+                 lobby.getUtensils(mex.getCard()).accept(controller.getc, mex);
+                 messageComingChecking(mex);
+            }
+            else{
+                lobby.getUtensils(mex.getCard()).firstActivation(this,mex);
+            }
         }
-    }
+    }*/
 
     /**
      *Metodo tunnel per l'attuazione di un piazzamento.
@@ -349,7 +350,15 @@ public class Controller{
     public ControllerChat getcChat() {
         return cChat;
     }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Metodo che ritorna il controller adibito agli algoritmi delle carte
+     * @return
+     */
+    public ControllerCard getcCard() {
+        return cCard;
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Metodo che setta la scelta del giocatore della side.
@@ -456,5 +465,7 @@ public class Controller{
         cTurn.setThePlayers();
     }
 
-
+    public Utensils getUtensils(int card) {
+        return lobby.getUtensils(card);
+    }
 }

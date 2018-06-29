@@ -6,38 +6,28 @@ import it.polimi.se2018.server.model.card.card_utensils.*;
 
 public interface Visitor {
 
-    public void visit(Utensils itemUtensil, Activate m);
+public void visit(PinzaSgrossatrice itemPinza,Activate m);
 
-    public void visit(PinzaSgrossatrice itemPinza,MoreThanSimple m);
+    public void visit(PennelloPerEglomise itemPennelloEglo, Activate m);
 
-    public void visit(PennelloPerEglomise itemPennelloEglo, ToolCard2 m);
+    public void visit(Lathekin itemLathekin, Activate m);
 
-    public void visit(Lathekin itemLathekin, ToolCard4 m);
+    public void visit(AlesatorePerLaminaDiRame itemAlesatore,Activate m);
 
+    public void visit(Martelletto itemMartelletto, Activate m);
 
-    public void visit(PennelloPerPastaSalda itemPennelloPasta,ToolCard6 m);
+    public void visit(RigaInSughero itemRiga, Activate m);
 
-    public void visit(PennelloPerPastaSalda itemPennelloPasta,ToolCard6Bis m);
-
-    public void visit(AlesatorePerLaminaDiRame itemAlesatore,ToolCard3 m);
-
-    public void visit(Martelletto itemMartelletto, ToolCard7 m);
+    public void visit(TaglierinaCircolare itemT, Activate m);
 
 
-    public void visit(DiluentePerPastaSalda itemDiluente,ToolCard11 m);
+    public void visit(TaglierinaManuale itemTM, Activate m);
 
-    public void visit(DiluentePerPastaSalda itemDiluente,ToolCard11Bis m);
+    public void visit(TamponeDiamantato itemTD, Activate m);
 
+    public void visit(TenagliaARotelle itemTe, Activate m);
 
-    public void visit(RigaInSughero itemRiga, ToolCard9 m);
+    void visit(PennelloPerPastaSalda pennelloPerPastaSalda, Activate m);
 
-    public void visit(TaglierinaCircolare itemT, ToolCard5 m);
-
-
-    public void visit(TaglierinaManuale itemTM, ToolCard12 m);
-
-    public void visit(TamponeDiamantato itemTD, ToolCard10 m);
-
-    public void visit(TenagliaARotelle itemTe, ToolCard8 m);
-
+    void visit(DiluentePerPastaSalda diluentePerPastaSalda, Activate m);
 }
