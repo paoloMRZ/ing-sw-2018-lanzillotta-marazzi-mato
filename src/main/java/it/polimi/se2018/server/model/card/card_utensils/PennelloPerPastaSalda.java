@@ -3,17 +3,19 @@ package it.polimi.se2018.server.model.card.card_utensils;
 import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.controller.Visitor;
 import it.polimi.se2018.server.events.responses.SuccessValue;
+import it.polimi.se2018.server.events.tool_mex.Activate;
 import it.polimi.se2018.server.events.tool_mex.ToolCard6;
 import it.polimi.se2018.server.events.tool_mex.ToolCard6Bis;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidSomethingWasNotDoneGood;
 import it.polimi.se2018.server.model.Color;
+import it.polimi.se2018.server.model.card.Visitable;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 import java.util.ArrayList;
 
-public class PennelloPerPastaSalda extends Utensils {
+public class PennelloPerPastaSalda extends Utensils  {
 
    public PennelloPerPastaSalda(){
        super(6,"pennello-per-pasta-salda", Color.PURPLE,"Dopo aver scelto un dado, " +
@@ -21,10 +23,7 @@ public class PennelloPerPastaSalda extends Utensils {
                "riponilo nella Riserva");
    }
 
-    public void accept(Visitor c, ToolCard6 m){
-        c.visit(this,m);
-    }
-    public void accept(Visitor c, ToolCard6Bis m){
+    public void accept(Visitor c, Activate m){
         c.visit(this,m);
     }
 

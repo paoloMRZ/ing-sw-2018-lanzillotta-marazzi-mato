@@ -2,24 +2,26 @@ package it.polimi.se2018.server.model.card.card_utensils;
 
 import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.controller.Visitor;
+import it.polimi.se2018.server.events.tool_mex.Activate;
 import it.polimi.se2018.server.events.tool_mex.ToolCard7;
 import it.polimi.se2018.server.exceptions.InvalidActivationException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidSomethingWasNotDoneGood;
 import it.polimi.se2018.server.model.Color;
+import it.polimi.se2018.server.model.card.Visitable;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 import it.polimi.se2018.server.model.reserve.Reserve;
 
 import java.util.ArrayList;
 
-public class Martelletto extends  Utensils {
+public class Martelletto extends  Utensils implements Visitable {
 
     public Martelletto(){
         super(7,"martelletto", Color.BLUE,"Tira nuovamente tutti i dadi della" +
                 " Riserva Questa carta può essera usata solo durante il tuo secondo turno, prima di " +
                 "scegliere il secondo dad");
     }
-    public void accept(Visitor c, ToolCard7 m){
+    public void accept(Visitor c, Activate m){
         c.visit(this,m);
     }
     public void function(Controller controller) throws InvalidActivationException {

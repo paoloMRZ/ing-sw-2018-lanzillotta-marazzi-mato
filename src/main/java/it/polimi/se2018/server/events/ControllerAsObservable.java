@@ -13,7 +13,7 @@ public interface ControllerAsObservable {
     public void notifyObserver(SuccessActivationFinalized mex);
     public void notifyObserver(ErrorSelection mex);
     public void notifyObserver(ErrorActivation mex);
-
+    public void notifyObserver(ErrorSelectionUtensil mex);
     public void notifyObserver(DisconnectPlayer mex);
 
     public void notifyObserver(Freeze mex);

@@ -3,22 +3,24 @@ package it.polimi.se2018.server.model.card.card_utensils;
 
 import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.controller.Visitor;
+import it.polimi.se2018.server.events.tool_mex.Activate;
 import it.polimi.se2018.server.events.tool_mex.ToolCard5;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidSomethingWasNotDoneGood;
 import it.polimi.se2018.server.model.Color;
+import it.polimi.se2018.server.model.card.Visitable;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 import java.util.ArrayList;
 
-public class TaglierinaCircolare extends Utensils{
+public class TaglierinaCircolare extends Utensils implements Visitable {
 
     public TaglierinaCircolare() {
         super(5, "taglierina-circolare", Color.GREEN, "Dopo aver scelto un dado, scambia quel dado con un dado sul Tracciato dei Round");
     }
 
-    public void accept(Visitor c, ToolCard5 m){
+    public void accept(Visitor c, Activate m){
         c.visit(this,m);
     }
 

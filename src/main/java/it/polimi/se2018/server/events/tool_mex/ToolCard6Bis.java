@@ -8,6 +8,7 @@ public class ToolCard6Bis extends ToolMultiParam{
 
     private ArrayList<Integer> data;
     private boolean decision;
+    private boolean isBis=true;
 
     public ToolCard6Bis(String player, int card, boolean letItDown, ArrayList<Integer> inputs){
         super(player,card);
@@ -19,5 +20,8 @@ public class ToolCard6Bis extends ToolMultiParam{
     }
     public boolean getDecision(){
         return decision;
+    }
+    public boolean getisBis(){
+        return isBis;
     }
 }

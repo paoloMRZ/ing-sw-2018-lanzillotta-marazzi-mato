@@ -27,52 +27,11 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
     public void notifyObserver(Activate mex){
         controller.update(mex);
     }
+
     public void notifyObserver(SimpleMove mex){
         controller.update(mex);
     }
 
-    public void notifyObserver(MoreThanSimple mex){
-        controller.update(mex);
-    }
-    public void notifyObserver(ToolCard2 mex){
-        controller.update(mex);
-    }
-    public void notifyObserver(ToolCard3 mex){
-        controller.update(mex);
-    }
-    public void notifyObserver(ToolCard4 mex){
-        controller.update(mex);
-    }
-    public void notifyObserver(ToolCard5 mex){
-        controller.update(mex);
-    }
-    public void notifyObserver(ToolCard6 mex){
-        controller.update(mex);
-    }
-    public void notifyObserver(ToolCard6Bis mex){
-        controller.update(mex);
-    }
-    public void notifyObserver(ToolCard7 mex){
-        controller.update(mex);
-    }
-    public void notifyObserver(ToolCard8 mex){
-        controller.update(mex);
-    }
-    public void notifyObserver(ToolCard9 mex){
-        controller.update(mex);
-    }
-    public void notifyObserver(ToolCard10 mex){
-        controller.update(mex);
-    }
-    public void notifyObserver(ToolCard11 mex){
-        controller.update(mex);
-    }
-    public void notifyObserver(ToolCard11Bis mex){
-        controller.update(mex);
-    }
-    public void notifyObserver(ToolCard12 mex){
-        controller.update(mex);
-    }
     public void notifyObserver(HookMessage mex){
         controller.update(mex);
     }

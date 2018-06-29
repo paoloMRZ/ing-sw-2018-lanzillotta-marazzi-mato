@@ -3,18 +3,20 @@ package it.polimi.se2018.server.model.card.card_utensils;
 import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.controller.ControllerCard;
 import it.polimi.se2018.server.controller.Visitor;
+import it.polimi.se2018.server.events.tool_mex.Activate;
 import it.polimi.se2018.server.events.tool_mex.MoreThanSimple;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidSomethingWasNotDoneGood;
 import it.polimi.se2018.server.model.Color;
+import it.polimi.se2018.server.model.card.Visitable;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 import it.polimi.se2018.server.model.reserve.Reserve;
 
 import java.util.ArrayList;
 
-public class PinzaSgrossatrice extends Utensils {
+public class PinzaSgrossatrice extends Utensils implements Visitable{
 //OVERVIEW classe di ...
     public PinzaSgrossatrice(){
         super(1,"pinza-sgrossatrice", Color.PURPLE,"Dopo aver scelto un dado, " +
@@ -24,7 +26,7 @@ public class PinzaSgrossatrice extends Utensils {
     }
     //TODO fare metodi di sostegno
 
-    public void accept(Visitor c, MoreThanSimple m){
+    public void accept(Visitor c, Activate m){
         c.visit(this,m);
     }
 

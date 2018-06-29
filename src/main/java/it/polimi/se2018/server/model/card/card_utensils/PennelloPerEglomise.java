@@ -2,14 +2,16 @@ package it.polimi.se2018.server.model.card.card_utensils;
 
 import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.controller.Visitor;
+import it.polimi.se2018.server.events.tool_mex.Activate;
 import it.polimi.se2018.server.events.tool_mex.ToolCard2;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.model.Color;
+import it.polimi.se2018.server.model.card.Visitable;
 
 import java.util.ArrayList;
 
-public class PennelloPerEglomise extends Utensils {
+public class PennelloPerEglomise extends Utensils implements Visitable {
 
     public PennelloPerEglomise(){
         super(2,"pennello-per-eglomise", Color.BLUE,"Muovi un qualsiasi dado nella tua vetrata" +
@@ -17,7 +19,7 @@ public class PennelloPerEglomise extends Utensils {
                 "Devi rispettare tutte le altre restrizioni di piazzamento");
     }
 
-    public void accept(Visitor c, ToolCard2 m){
+    public void accept(Visitor c, Activate m){
         c.visit(this,m);
     }
     public void function(Controller controller,ToolCard2 myMessage)throws InvalidValueException, InvalidCellException {

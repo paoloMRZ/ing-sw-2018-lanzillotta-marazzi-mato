@@ -2,6 +2,7 @@ package it.polimi.se2018.server.model.card.card_utensils;
 
 import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.controller.Visitor;
+import it.polimi.se2018.server.events.tool_mex.Activate;
 import it.polimi.se2018.server.events.tool_mex.ToolCard9;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.InvalidColorException;
@@ -9,17 +10,18 @@ import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.InvalidShadeExc
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.NotEmptyCellException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidSomethingWasNotDoneGood;
 import it.polimi.se2018.server.model.Color;
+import it.polimi.se2018.server.model.card.Visitable;
 
 import java.util.ArrayList;
 
-public class RigaInSughero extends Utensils {
+public class RigaInSughero extends Utensils implements Visitable {
 
     public RigaInSughero(){
         super(9,"riga-in-sughero", Color.YELLOW,"Dopo aver scelto un dado, piazzalo in una casella " +
                 "che non sia adiacente a un altro dado Devi rispettare tutte le restrizioni di piazzamento");
 
     }
-    public void accept(Visitor c, ToolCard9 m){
+    public void accept(Visitor c, Activate m){
         c.visit(this,m);
     }
     public void function(Controller controller, ToolCard9 myMessage) throws InvalidValueException, InvalidShadeException, NotEmptyCellException, InvalidColorException, InvalidSomethingWasNotDoneGood {

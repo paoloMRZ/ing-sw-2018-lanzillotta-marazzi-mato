@@ -10,7 +10,7 @@ import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.card.Visitable;
 
-public abstract class Utensils implements Visitable{
+public class Utensils implements Visitable{
 
     //OVERVIEW la classe è a sostegno delle classi delle carte utensili
     //i metodi comuni a tutte vengono dichiarati qui
@@ -23,6 +23,7 @@ public abstract class Utensils implements Visitable{
     private int cost;
     private boolean isFirstTime;
     private boolean isBusy=false;
+    private boolean priceHasBeenChecked=false;
 
     private int previousCost;
 
@@ -35,12 +36,11 @@ public abstract class Utensils implements Visitable{
         this.previousCost=cost;
         this.isFirstTime=true;
     }
-    public void accept(Visitor visitor,Activate m){
-        visitor.visit(this,m);
-    }
+
 
     public void setTheUse(){
         isBusy= !isBusy;
+        togglePriceHasBeenChecked();
     }
     public boolean getIsBusy(){
         return isBusy;
@@ -69,6 +69,13 @@ public abstract class Utensils implements Visitable{
         return description;
     }
 
+    public boolean getPriceHasBeenChecked(){
+        return  priceHasBeenChecked;
+    }
+    private void togglePriceHasBeenChecked(){
+        priceHasBeenChecked=!priceHasBeenChecked;
+    }
+
     //funzione di sostegno: quando viene richiamato function aggiorna il costo in base a che uso è stato
     //fatto-> da richiamare dentro function
     private void addToCost(){
@@ -80,7 +87,6 @@ public abstract class Utensils implements Visitable{
     }
     private boolean checkerPrice(Controller controller,Activate m) throws InvalidValueException {
         if(cost<=controller.getPlayerByName(m.getPlayer()).getFavours()){
-            controller.getPlayerByName(m.getPlayer()).resetFavours(cost);
             addToCost();
             setTheUse();
             return true;
@@ -109,4 +115,8 @@ public abstract class Utensils implements Visitable{
 
     }
 
+    @Override
+    public void accept(Visitor visitor, Activate m) {
+        //ciaooooooooooooooooo
+    }
 }

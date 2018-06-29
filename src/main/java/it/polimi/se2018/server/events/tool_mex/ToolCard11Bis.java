@@ -8,6 +8,7 @@ public class ToolCard11Bis extends ToolMultiParam {
     private int value;
     private int row;
     private int col;
+    private boolean isBis=true;
 
     public ToolCard11Bis(String player, int cardIndex, ArrayList<Integer> inputs){
 
@@ -19,5 +20,8 @@ public class ToolCard11Bis extends ToolMultiParam {
 
     public ArrayList<Integer> getAttributes() {
         return new ArrayList<>(Arrays.asList(value,row,col));
+    }
+    public boolean getisBis(){
+        return isBis;
     }
 }

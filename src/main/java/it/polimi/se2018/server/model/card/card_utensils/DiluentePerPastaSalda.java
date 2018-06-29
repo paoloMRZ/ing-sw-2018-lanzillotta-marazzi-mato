@@ -3,17 +3,19 @@ package it.polimi.se2018.server.model.card.card_utensils;
 import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.controller.Visitor;
 import it.polimi.se2018.server.events.responses.SuccessColor;
+import it.polimi.se2018.server.events.tool_mex.Activate;
 import it.polimi.se2018.server.events.tool_mex.ToolCard11;
 import it.polimi.se2018.server.events.tool_mex.ToolCard11Bis;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidSomethingWasNotDoneGood;
 import it.polimi.se2018.server.model.Color;
+import it.polimi.se2018.server.model.card.Visitable;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 import java.util.ArrayList;
 
-public class DiluentePerPastaSalda extends Utensils {
+public class DiluentePerPastaSalda extends Utensils  implements Visitable {
 
     public DiluentePerPastaSalda(){
         super(11,"diluente-per-pasta-salda", Color.PURPLE,"Dopo aver scelto un dado, riponilo nel Sacchetto, poi pescane uno dal" +
@@ -21,12 +23,10 @@ public class DiluentePerPastaSalda extends Utensils {
                 "rispettando tutte le restrizioni di piazzamento");
     }
 
-    public void accept(Visitor c, ToolCard11 m){
+    public void accept(Visitor c, Activate m){
         c.visit(this,m);
     }
-    public void accept(Visitor c, ToolCard11Bis m){
-        c.visit(this,m);
-    }
+
 
     public String function(Controller controller, ToolCard11 myMessage) throws InvalidValueException, InvalidSomethingWasNotDoneGood {
         int die= myMessage.getDie();
@@ -51,7 +51,6 @@ public class DiluentePerPastaSalda extends Utensils {
         copyofDadozzo.manualSet(value);
         controller.getcAction().workOnSide(name,copyofDadozzo,row,col);
 
-        //controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
     }
 
 

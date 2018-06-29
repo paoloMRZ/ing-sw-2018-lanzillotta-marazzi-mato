@@ -2,20 +2,22 @@ package it.polimi.se2018.server.model.card.card_utensils;
 
 import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.controller.Visitor;
+import it.polimi.se2018.server.events.tool_mex.Activate;
 import it.polimi.se2018.server.events.tool_mex.ToolCard4;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.model.Color;
+import it.polimi.se2018.server.model.card.Visitable;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 import java.util.ArrayList;
 
-public class Lathekin extends Utensils {
+public class Lathekin extends Utensils implements Visitable{
 
     public Lathekin(){
         super(4,"lathekin", Color.YELLOW,"Muovi esattamente due dadi, rispettando tutte le restrizioni di piazzamento");
     }
-    public void accept(Visitor c, ToolCard4 m){
+    public void accept(Visitor c, Activate m){
         c.visit(this,m);
     }
     public void function(Controller controller, ToolCard4 myMessage) throws InvalidValueException, InvalidCellException {
