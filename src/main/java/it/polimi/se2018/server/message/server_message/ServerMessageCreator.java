@@ -278,7 +278,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getTimeoutMessage(String addressee) {
-        return "/###/" + addressee + "/network/timeout/?\n";
+        return "/###/" + addressee + "/network_message/timeout/?\n";
     }
 
     /**
@@ -287,7 +287,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getFreezeMessage(String nickname){
-        return "/###/###/network/freeze/"+ nickname  +"\n";
+        return "/###/###/network_message/freeze/"+ nickname  +"\n";
     }
 
     /**
@@ -297,7 +297,7 @@ public class ServerMessageCreator {
      * @param nickname nickname del giocatore da disconnettere.
      * @return message.
      */
-    public static String getDisconnectedMessage(String nickname){return "/###/###/network/disconnected/"+ nickname  +"\n";}
+    public static String getDisconnectedMessage(String nickname){return "/###/###/network_message/disconnected/"+ nickname  +"\n";}
 
     /**
      * Il metodo restituisce un messaggio che indica la fine della partita e contiene il punteggio associato ad ogni

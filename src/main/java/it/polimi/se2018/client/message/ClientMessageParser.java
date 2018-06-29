@@ -10,7 +10,7 @@ public class ClientMessageParser {
     private static final String ERROR = "error";
     private static final String START = "start";
     private static final String UPDATE = "update";
-    private static final String NETWORK = "network";
+    private static final String NETWORK = "network_message";
 
 
     private ClientMessageParser(){}
@@ -58,7 +58,7 @@ public class ClientMessageParser {
      * Il metodo controlla se il messaggio passato è un messaggio di tipo NETWORK.
      *
      * @param message messaggio da controllare.
-     * @return true se è un messaggio di network, false in caso contrario.
+     * @return true se è un messaggio di network_message, false in caso contrario.
      */
     public static boolean isNetworkMessage(String message){
         return message.split("/")[3].equals(NETWORK);

@@ -2,7 +2,7 @@ package it.polimi.se2018.server.network.implementation;
 
 import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
-import it.polimi.se2018.server.message.network.NetworkMessageCreator;
+import it.polimi.se2018.server.message.network_message.NetworkMessageCreator;
 import it.polimi.se2018.server.network.Lobby;
 import it.polimi.se2018.server.network.fake_client.FakeClient;
 import it.polimi.se2018.server.network.fake_client.FakeClientSocket;
