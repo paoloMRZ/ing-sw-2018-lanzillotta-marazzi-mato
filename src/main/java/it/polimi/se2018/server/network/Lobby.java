@@ -3,6 +3,8 @@ package it.polimi.se2018.server.network;
 
 import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.exceptions.ConnectionCloseException;
+import it.polimi.se2018.server.exceptions.GameStartedException;
+import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.message.network_message.NetworkMessageCreator;
 import it.polimi.se2018.server.message.network_message.NetworkMessageParser;
@@ -84,7 +86,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
      *
      * @return lista dei nickname.
      */
-    public synchronized List<String> getNicknames(){
+    private synchronized List<String> getNicknames(){
         ArrayList<String> nicknames = new ArrayList<>();
 
         for(FakeClient client: connections)
@@ -159,7 +161,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
      * @param nickname nickanme del fake client su cui si vuole conoscere lo stato.
      * @return true se il fake client è congelato, false in caso contrario.
      */
-    public boolean isFreezedFakeClient(String nickname){
+    private boolean isFreezedFakeClient(String nickname){
         FakeClient fakeClient =  serachByNickname(nickname);
         return  fakeClient == null || fakeClient.isFreezed();
     }
@@ -269,14 +271,19 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
      *
      * @param connection fake client da inserire.
      */
-    public synchronized void add (FakeClient connection) {
+    public synchronized void add (FakeClient connection) throws InvalidNicknameException, GameStartedException {
 
-        if (getNicknames().contains(connection.getNickname()) && isFreezedFakeClient(connection.getNickname())) { //Controlle se esiste un client congelato con lo stesso nick.
-            this.unfreezeFakeClient(connection); //Richiamo il metodo privato per scongelare il client.
+        if (getNicknames().contains(connection.getNickname())) { //Controlle se esiste un client congelato con lo stesso nick.
 
-        } else { //Se il nick non è già utilizzato aggiungo il client.
+            if(isFreezedFakeClient(connection.getNickname())) //Controllo se il fake client che usa questo nick è congelato, se si lo scongelo.
+                this.unfreezeFakeClient(connection); //Richiamo il metodo privato per scongelare il client.
+            else
+                throw new InvalidNicknameException(); //Se il nickname è utilizzato da un utente attivo sollevo un'eccezinoe.
 
-            if (!getNicknames().contains(connection.getNickname()) && isOpen) {
+        } else { //Se il nick non è utilizzato aggiungo il client.
+
+            //Il nuovo client viene aggiunto solo se la lobby è aperta, cioè se la partita non è ancora iniziata.
+            if (isOpen) {
                 connections.add(connection); //Aggiungo il fake client all'ArrayList.
 
                 numberOfClient++; //Incremento il contatore dei client.
@@ -290,7 +297,8 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
                 if (numberOfClient == 1 && !timer.isStarted()) { //Quando si connette il primo client avvio il timer.
                     timer.start();
                 }
-            }
+            }else
+                throw new GameStartedException(); //Se la partita è già iniziata sollevo un'eccezione.
         }
     }
 

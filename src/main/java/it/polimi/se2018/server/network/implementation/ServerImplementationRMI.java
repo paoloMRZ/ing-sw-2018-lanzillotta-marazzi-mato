@@ -33,9 +33,7 @@ public class ServerImplementationRMI extends UnicastRemoteObject implements Serv
         LocateRegistry.createRegistry(PORT);
         Naming.rebind("//localhost/MyServer", this);
 
-        if (lobby != null) {
-            this.lobby = Lobby.factoryLobby();
-        }
+        this.lobby = Lobby.factoryLobby();
     }
 
     /**
@@ -50,28 +48,8 @@ public class ServerImplementationRMI extends UnicastRemoteObject implements Serv
     @Override
     public void add(ClientInterface clientInterface, String nickname) throws RemoteException, InvalidNicknameException, GameStartedException {
 
-        if (lobby.getNicknames().contains(nickname)) { //Controllo se esiste qualcuno connesso con lo steso nickname.
-
-            if(lobby.isFreezedFakeClient(nickname)) { //Se il giocatore con lo stesso nicname è congelato aggiorno la connessione.
-
-                FakeClientRMI fakeClient = new FakeClientRMI(clientInterface, nickname);
-                lobby.add(fakeClient);
-            }
-            else
-                throw new InvalidNicknameException(); //Se il giocatore con lo stesso nicname non è congelato notifico che il nickname è già utilizzato.
-
-        } else { //Se il nickname ricevuto non è utilizzato da nessuno....
-
-            if (!lobby.isOpen()) { //Controllo se la lobby è chiusa ( = partita iniziata).
-                throw new GameStartedException(); //Notifico che la partita è già iniziata.
-
-            } else { //Se la lobby è aperta ( = partita non iniziata) aggiungo il nuovo giocatore.
-
-                FakeClientRMI fakeClient = new FakeClientRMI(clientInterface, nickname);
-                lobby.add(fakeClient);
-            }
-        }
-
+        FakeClientRMI fakeClient = new FakeClientRMI(clientInterface, nickname);
+        lobby.add(fakeClient);
     }
 
     public void close() throws RemoteException, NotBoundException, MalformedURLException {

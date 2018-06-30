@@ -24,7 +24,7 @@ public class FakeClientRMI extends FakeClient implements FakeClientRMIInterface 
      *
      * @param clientInterface interfaccia remota del client di cui si deve gestire la comunicazione.
      * @param nickname nickname scelto dal giocatore
-     * @throws RemoteException
+     * @throws RemoteException viene sollevata se l'interfaccia remota del client non è raggiungibile.
      */
     public FakeClientRMI(ClientInterface clientInterface, String nickname) throws RemoteException {
         super(nickname); //Richiamo il costruttore padre.
