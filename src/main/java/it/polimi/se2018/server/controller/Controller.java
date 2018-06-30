@@ -315,20 +315,6 @@ public class Controller{
         cPoints.nameOfWinner();
         lobby.setUpdateScoreGrid();
     }
-/*
-
-    public void callThrough(Activate mex) throws InvalidValueException {
-        if(lobby.callPlayerByName(mex.getPlayer()).getDidPlayCard()) cChat.notifyObserver(new IgnoreMex(mex.getPlayer()));
-        else {
-            if (lobby.getUtensils(mex.getCard()).getPriceHasBeenChecked()){
-                 lobby.getUtensils(mex.getCard()).accept(controller.getc, mex);
-                 messageComingChecking(mex);
-            }
-            else{
-                lobby.getUtensils(mex.getCard()).firstActivation(this,mex);
-            }
-        }
-    }*/
 
     /**
      *Metodo tunnel per l'attuazione di un piazzamento.

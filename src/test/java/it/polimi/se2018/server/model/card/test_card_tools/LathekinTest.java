@@ -5,6 +5,7 @@ import it.polimi.se2018.server.events.tool_mex.ToolCard4;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.*;
+import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_schema.Cell;
@@ -31,6 +32,8 @@ public class LathekinTest{
     private Side chosenOne = null;
     private Reserve supportReserve = null;
     private ArrayList<Side> sides = new ArrayList<>();
+    private Player player1;
+    private Player player2;
 
     @Before
     public void settings() throws InvalidValueException, IOException {
@@ -65,11 +68,12 @@ public class LathekinTest{
 
         this.chosenOne = new Side("toTEST", 5, this.sideContent);
         sides.add(chosenOne);
+        FakeView fake = new FakeView();
         controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
+        fake.register(controller);
 
-
-        Player player1 = controller.getPlayerByName("primo");
-        Player player2 = controller.getPlayerByName("secondo");
+        player1 = controller.getPlayerByName("primo");
+        player2 = controller.getPlayerByName("secondo");
         player1.setSideSelection(sides);
         player1.setMySide(0);
         player1.setFavours();
@@ -152,7 +156,7 @@ public class LathekinTest{
 
 
     @Test
-    public void puttingIsGood() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void puttingIsGood(){
         try {
             //i dati dell'input nel messaggio seguono la convenzione stabilita in MultiParam
             this.message = new ToolCard4("primo", 1, new ArrayList<>(Arrays.asList(0, 1, 1, 1,  0, 2, 1, 2)));
@@ -180,14 +184,10 @@ public class LathekinTest{
             Dice itsHim = controller.getcAction().takeALookToDie(message.getPlayer(), 1, 1);
             Dice itsHim2 = controller.getcAction().takeALookToDie(message.getPlayer(), 1, 2);
 
-            try {
                 assertEquals(4, itsHim.getNumber());
                 assertEquals(Color.GREEN, itsHim.getColor());
                 assertEquals(1, itsHim2.getNumber());
                 assertEquals(Color.BLUE, itsHim2.getColor());
-            } catch (Exception e) {
-                fail("errore su uguaglinza");
-            }
 
         } catch (Exception e) {
             fail("Fail: ha lanciato eccezione!");

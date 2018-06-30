@@ -41,7 +41,7 @@ public class RoundGrid {
 
     public void put(int posOnGrid,Dice d) throws InvalidValueException{
         //ricopro il dado in ArrayList nel caso nella posizoine non ci siano già dati
-        if(posOnGrid>10 || posOnGrid <0) throw new InvalidValueException();
+        if(posOnGrid>9 || posOnGrid <0) throw new InvalidValueException();
         else{
             Dice tmp = new Dice(d.getColor(), d.getNumber());
 
@@ -59,7 +59,7 @@ public class RoundGrid {
 
     public Dice pick(int posOnGrid,int posOnLilGroup)throws InvalidValueException{
 
-        if(posOnGrid>10 || posOnGrid <0) throw new InvalidValueException();
+        if(posOnGrid>9 || posOnGrid <0) throw new InvalidValueException();
         else{
            Dice tmp = roundDices.get(posOnGrid).get(posOnLilGroup);
            Dice ret = new Dice(tmp.getColor(),tmp.getNumber());
@@ -73,7 +73,7 @@ public class RoundGrid {
     }
     public Dice show(int posOnGrid,int posOnLilGroup)throws InvalidValueException{
 
-        if(posOnGrid>10 || posOnGrid <0) throw new InvalidValueException();
+        if(posOnGrid>9 || posOnGrid <0) throw new InvalidValueException();
         else{
             Dice tmp = roundDices.get(posOnGrid).get(posOnLilGroup);
             Dice ret = new Dice(tmp.getColor(),tmp.getNumber());
@@ -115,15 +115,23 @@ public class RoundGrid {
 
             for (List<Dice> diceList : roundDices) {
 
-                if (roundDices.indexOf(diceList) != 0)
-                    message = message.concat("&");
-
-                for (Dice die : diceList) {
-                    if (diceList.indexOf(die) == 0)
-                        message = message.concat(die.getColor().toString().toLowerCase() + die.getNumber());
-                    else
-                        message = message.concat(":" + die.getColor().toString().toLowerCase() + die.getNumber());
+                if(diceList==null){
+                    if (roundDices.indexOf(diceList) != 0){
+                        message = message.concat("&white0");
+                    }
                 }
+                else{
+                    if (roundDices.indexOf(diceList) != 0){
+                        message = message.concat("&");
+                    }
+                    for (Dice die : diceList) {
+                        if (diceList.indexOf(die) == 0)
+                            message = message.concat(die.getColor().toString().toLowerCase() + die.getNumber());
+                        else
+                            message = message.concat(":" + die.getColor().toString().toLowerCase() + die.getNumber());
+                    }
+                }
+
             }
 
             message = message.concat("\n");

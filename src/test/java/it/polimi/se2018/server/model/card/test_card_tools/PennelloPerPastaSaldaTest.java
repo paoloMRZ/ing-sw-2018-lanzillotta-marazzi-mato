@@ -6,6 +6,7 @@ import it.polimi.se2018.server.events.tool_mex.ToolCard6Bis;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidSomethingWasNotDoneGood;
+import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_schema.Cell;
@@ -31,6 +32,8 @@ public class PennelloPerPastaSaldaTest {
     private Side chosenOne = null;
     private Reserve supportReserve = null;
     private ArrayList<Side> sides = new ArrayList<>();
+    private Player player1;
+    private Player player2;
 
 
     @Before
@@ -67,11 +70,12 @@ public class PennelloPerPastaSaldaTest {
 
         chosenOne = new Side("toTEST", 5, sideContent);
         sides.add(chosenOne);
+        FakeView fake = new FakeView();
         controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
+        fake.register(controller);
 
-
-        Player player1 = controller.getPlayerByName("primo");
-        Player player2 = controller.getPlayerByName("secondo");
+        player1 = controller.getPlayerByName("primo");
+        player2 = controller.getPlayerByName("secondo");
         player1.setSideSelection(sides);
         player1.setMySide(0);
         player1.setFavours();

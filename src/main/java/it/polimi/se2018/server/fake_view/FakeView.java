@@ -25,6 +25,10 @@ public class FakeView{
         this.chat=new FakeVChat(this);
         this.toOut= blob;
     }
+    public FakeView(){
+        this.chat=new FakeVChat(this);
+        this.toOut= null;
+    }
     //directed to out
     public void register(Controller controller){
         chat.register( controller.getcChat());
@@ -123,7 +127,7 @@ public class FakeView{
 
 
     public void messageOutBox(String mex){
-       toOut.notifyFromFakeView(mex);
+        if(toOut!=null) toOut.notifyFromFakeView(mex);
     }
 
     private ArrayList<Integer> transformer(List<String> ins,int dadove){

@@ -36,22 +36,21 @@ public class Lathekin extends Utensils implements Visitable{
         int newRow2=messageCont.get(6);
         int newCol2=messageCont.get(7);
 
+        Dice d1=controller.getcAction().takeALookToDie(name,oldRow,oldCol);
+        Dice d2=controller.getcAction().takeALookToDie(name,oldRow2,oldCol2);
+
         Dice firstFromSide= controller.getPlayerByName(name).sidePick(oldRow,oldCol);
-        Dice copyfS= new Dice(firstFromSide.getColor());
-        copyfS.manualSet(firstFromSide.getNumber());
         controller.setHoldingADiceMoveInProgress(firstFromSide);
 
+        controller.getcAction()
+                .workOnSide(name,d1,newRow,newCol);
+
+
         Dice secFromSide= controller.getPlayerByName(name).sidePick(oldRow2,oldCol2);
-        Dice copysS= new Dice(secFromSide.getColor());
-        copysS.manualSet(secFromSide.getNumber());
         controller.setHoldingResDie(secFromSide);//solo per comodità
 
-
         controller.getcAction()
-                .workOnSide(name,copyfS,newRow,newCol);
-        controller.getcAction()
-                .workOnSide(name,copysS,newRow2,newCol2);
-
+                .workOnSide(name,d2,newRow2,newCol2);
 
     }
 }

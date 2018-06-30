@@ -5,6 +5,7 @@ import it.polimi.se2018.server.events.tool_mex.MoreThanSimple;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.*;
+import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_schema.Cell;
@@ -32,7 +33,10 @@ public class PinzaSgrossatriceTest {
     @Before
     public void settings(){
         this.pinza=new PinzaSgrossatrice();
+        FakeView fake = new FakeView();
         controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
+        fake.register(controller);
+
     }
 
     //ricreo una riserva con un consono numero di dadi in base a quanti giovatori ho inserito
@@ -121,6 +125,7 @@ public class PinzaSgrossatriceTest {
             fail("Fail: ha lanciato eccezione!");
         }
     }
+    /*
     @Test(expected = InvalidValueException.class)
     public void playerNameCorrupted() throws InvalidValueException, InvalidSomethingWasNotDoneGood {
 
@@ -137,7 +142,7 @@ public class PinzaSgrossatriceTest {
 
 
         fail("Fail: Non ha lanciato eccezione!");
-    }
+    }*/
 
     @Test(expected = InvalidValueException.class)
     public void dieNotExisting() throws InvalidValueException, InvalidSomethingWasNotDoneGood {

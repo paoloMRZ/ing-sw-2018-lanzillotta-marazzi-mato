@@ -3,10 +3,10 @@ package it.polimi.se2018.server.model.card.test_card_tools;
 import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.events.tool_mex.ToolCard5;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
-import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidSomethingWasNotDoneGood;
+import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_schema.Cell;
@@ -34,7 +34,7 @@ public class TaglierinaCircolareTest {
     private static ArrayList<Side> sides = new ArrayList<>();
 
     @Before
-    public void settings() throws InvalidShadeValueException, InvalidFavoursValueException {
+    public void settings() throws InvalidValueException {
         this.taglierina=new TaglierinaCircolare();
 
         this.sideContent= new ArrayList<>(20);
@@ -66,16 +66,18 @@ public class TaglierinaCircolareTest {
 
         this.chosenOne=new Side("toTEST",5,this.sideContent);
         sides.add(chosenOne);
-        Player player1= new Player(null,"primo",null);
-        Player player2= new Player(null,"secondo",null);
+        FakeView fake = new FakeView();
+        controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
+        fake.register(controller);
+
+        Player player1 = controller.getPlayerByName("primo");
+        Player player2 = controller.getPlayerByName("secondo");
         player1.setSideSelection(sides);
         player1.setMySide(0);
         player1.setFavours();
         player2.setSideSelection(sides);
         player2.setMySide(0);
         player2.setFavours();
-
-        this.controller = new Controller(new ArrayList<>(Arrays.asList(player1.getName(), player2.getName())));
 
     }
 
