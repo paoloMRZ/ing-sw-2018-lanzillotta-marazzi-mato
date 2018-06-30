@@ -33,7 +33,7 @@ public class PlayerTest {
     private static ArrayList<Side> sides = new ArrayList<>();
 
     @Before
-    public void setup() throws InvalidShadeValueException, InvalidFavoursValueException, InvalidColorValueException {
+    public void setup() throws InvalidShadeValueException, InvalidFavoursValueException{
         casualList.add(new Cell(YELLOW, 0));
         casualList.add(new Cell(Color.BLUE, 0));
         casualList.add(new Cell(Color.WHITE, 0));

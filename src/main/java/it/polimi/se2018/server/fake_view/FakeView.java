@@ -13,7 +13,6 @@ import it.polimi.se2018.server.message.server_message.ServerMessageCreator;
 import it.polimi.se2018.server.message.server_message.ServerMessageParser;
 import it.polimi.se2018.server.network.Lobby;
 
-import javax.jnlp.IntegrationService;
 import java.util.ArrayList;
 import java.util.List;
 

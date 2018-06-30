@@ -57,11 +57,15 @@ public class InitWindow extends Application {
     private ButtonGameLabel buttonGameLabel;
     private SettingLabel settingLabel;
 
-    //Elementi grafici per l'aggiornamento della scehrmata
+    //Elementi grafici per l'aggiornamento della schermata
     private HBox nodeReserve;
     private HBox nodeSetting;
     private VBox nodeButton;
     private String resolution;
+    private AnchorPane sidePlayer;
+    private List<String> nameOfEnemies;
+    private List<String> sideOfEnemies;
+    private HBox cardOfenemies;
 
 
     //Costanti di intestazione delle varie finestra
@@ -149,12 +153,13 @@ public class InitWindow extends Application {
                     //MESSAGGIO START PER L'ASSEGNAMENTO DELLE CARTE SIDE AVVERSARIE
                     if (ClientMessageParser.isStartSideListMessage(message.getText())) {
                         List<String> sideInfo = ClientMessageParser.getInformationsFromMessage(message.getText());
-                        List<String> nameOfPlayers = sideInfo.stream().filter(s -> (sideInfo.indexOf(s) % 2 == 0)).collect(Collectors.toList());
-                        List<String> sideName = sideInfo.stream().filter(s -> (sideInfo.indexOf(s) % 2 != 0)).collect(Collectors.toList());
-                        sideName.remove(nameOfPlayers.indexOf(connectionHandler.getNickname()));
-                        nameOfPlayers.remove(connectionHandler.getNickname());
-                        enemiesSide = new SideEnemyLabel(nameOfPlayers, sideName,adapterResolution);
-                        adapterResolution.putSideEnemyLabel(anchorGame,enemiesSide.getLabelSideEnemy());
+                        nameOfEnemies = sideInfo.stream().filter(s -> (sideInfo.indexOf(s) % 2 == 0)).collect(Collectors.toList());
+                        sideOfEnemies = sideInfo.stream().filter(s -> (sideInfo.indexOf(s) % 2 != 0)).collect(Collectors.toList());
+                        sideOfEnemies.remove(nameOfEnemies.indexOf(connectionHandler.getNickname()));
+                        nameOfEnemies.remove(connectionHandler.getNickname());
+                        enemiesSide = new SideEnemyLabel(nameOfEnemies, sideOfEnemies, adapterResolution);
+                        cardOfenemies = enemiesSide.getLabelSideEnemy();
+                        adapterResolution.putSideEnemyLabel(anchorGame,cardOfenemies);
                     }
 
 
@@ -201,7 +206,8 @@ public class InitWindow extends Application {
 
                             //Posiziono la carta Side del giocatore
                             playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), true, adapterResolution);
-                            adapterResolution.putSideLabel(anchorGame, playerSide.getAnchorPane());
+                            sidePlayer = playerSide.getAnchorPane();
+                            adapterResolution.putSideLabel(anchorGame, sidePlayer);
 
                             //Posiziono la griglia dei pulsanti
                             buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils, adapterResolution);
@@ -306,8 +312,20 @@ public class InitWindow extends Application {
                 //MESSAGGIO UPDATE DELLE CARTE SIDE
                 if (ClientMessageParser.isUpdateSideMessage(newValue)) {
                     List<String> infoSide = ClientMessageParser.getInformationsFromMessage(newValue);
-                    if(infoSide.get(0).equals(connectionHandler.getNickname())) playerSide.updateSideAfterPut(ClientMessageParser.getInformationsFromMessage(newValue));
-                    else enemiesSide.updateSideEnemies(infoSide);
+                    if(infoSide.get(0).equals(connectionHandler.getNickname())) {
+                        anchorGame.getChildren().remove(sidePlayer);
+                        playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), true, adapterResolution);
+                        playerSide.updateSideAfterPut(ClientMessageParser.getInformationsFromMessage(newValue));
+                        sidePlayer = playerSide.getAnchorPane();
+                        adapterResolution.putSideLabel(anchorGame,sidePlayer);
+                    }
+                    else {
+                        anchorGame.getChildren().remove(cardOfenemies);
+                        enemiesSide.updateSideEnemies(infoSide);
+                        cardOfenemies = enemiesSide.getLabelSideEnemy();
+                        adapterResolution.putSideEnemyLabel(anchorGame,cardOfenemies);
+
+                    }
                 }
 
 
