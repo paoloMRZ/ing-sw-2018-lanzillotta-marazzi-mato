@@ -13,7 +13,7 @@ import java.rmi.RemoteException;
 public interface ClientInterface extends Remote {
     /**
      * Metodo richiamato dal server per mandare un messaggio al client tramite l'interfaccia remota di quest'ultimo.
-     * Quando il client riceve un messaggio lo receiveNotify alla view.
+     * Quando il client riceve un messaggio lo notifyFromFakeView alla view.
      * @param message messaggio da inviare.
      */
     void sendToClient(String message) throws RemoteException;

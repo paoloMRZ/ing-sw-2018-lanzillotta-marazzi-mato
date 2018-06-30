@@ -1,6 +1,7 @@
 package it.polimi.se2018.client.connection_handler;
 
 
+import it.polimi.se2018.client.message.ClientMessageCreator;
 import it.polimi.se2018.client.message.ClientMessageParser;
 import it.polimi.se2018.client.graphic.InitWindow;
 import it.polimi.se2018.server.exceptions.GameStartedException;
@@ -39,8 +40,6 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
 
         String tmp;
 
-        //TODO controllo su host port??
-
         //Mi collego al server.
         socket = new Socket(host, port);
         out = new OutputStreamWriter(socket.getOutputStream());
@@ -75,7 +74,7 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
             out.write(message);
             out.flush();
         } catch (IOException e) {
-            super.notifica("/###/!/network_message/disconnected/" + super.getNickname() + "\n"); //TODO da sistemare
+            super.notifica(ClientMessageCreator.getServerDisconnectMessage(getNickname()));
         }
     }
 
@@ -96,11 +95,14 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
 
                 if (tmp != null)
                     super.notifica(tmp);
+                else
+                    isOpen = false;
 
             } catch (IOException e) {
                 isOpen = false;
             }
         }
-        super.notifica("/###/!/network_message/disconnected/" + super.getNickname() + "\n"); //TODO da sistemare
+
+        super.notifica(ClientMessageCreator.getServerDisconnectMessage(getNickname()));
     }
 }

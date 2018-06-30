@@ -51,22 +51,25 @@ public class FakeClientSocket extends FakeClient implements Runnable {
     @Override
     public void run() {
 
-        try {
+        while (isOpen) {
+            try {
 
-            String message;
+                String message;
 
-            while(isOpen) {
                 message = reader.readLine();
 
                 if (message != null)
                     lobby.notifyFromFakeClient(message); //Notifico la lobby del messaggio ricevuto.
                 else
-                    lobby.notifyFromFakeClient(NetworkMessageCreator.getClientDisconnectMessage(super.getNickname()));
-            }
+                    isOpen = false;
 
-        } catch (IOException e) {
-            lobby.notifyFromFakeClient(NetworkMessageCreator.getClientDisconnectMessage(super.getNickname()));
+
+            } catch (IOException e) {
+                isOpen = false;
+            }
         }
+
+        lobby.notifyFromFakeClient(NetworkMessageCreator.getClientDisconnectMessage(super.getNickname()));
     }
 
     /**

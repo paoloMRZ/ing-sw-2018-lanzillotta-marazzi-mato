@@ -2,6 +2,7 @@ package it.polimi.se2018.client.connection_handler;
 
 
 import it.polimi.se2018.client.graphic.InitWindow;
+import it.polimi.se2018.client.message.ClientMessageCreator;
 import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 import it.polimi.se2018.server.network.fake_client.FakeClientRMIInterface;
@@ -52,13 +53,13 @@ public class ConnectionHandlerRMI extends ConnectionHandler implements ClientInt
         try {
             fakeClientInterface.sendToserver(message);
         } catch (RemoteException e) {
-            super.notifica("/###/!/network_message/disconnected/" + super.getNickname() + "\n");
+            super.notifica(ClientMessageCreator.getServerDisconnectMessage(getNickname()));
         }
     }
 
     /**
      * Metodo richiamato dal server per mandare un messaggio al client tramite l'interfaccia remota di quest'ultimo.
-     * Quando il client riceve un messaggio lo receiveNotify alla view.
+     * Quando il client riceve un messaggio lo notifyFromFakeView alla view.
      * @param message messaggio da inviare.
      */
     @Override
@@ -74,8 +75,9 @@ public class ConnectionHandlerRMI extends ConnectionHandler implements ClientInt
     @Override
     public void accept(FakeClientRMIInterface fakeClientInterface) {
         this.fakeClientInterface = fakeClientInterface;
+
         if(this.fakeClientInterface == null)
-            super.notifica("/###/!/network_message/disconnected/" + super.getNickname() + "\n");
+            super.notifica(ClientMessageCreator.getServerDisconnectMessage(getNickname()));
 
     }
 

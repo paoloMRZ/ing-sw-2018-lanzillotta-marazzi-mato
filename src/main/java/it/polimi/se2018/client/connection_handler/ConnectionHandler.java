@@ -17,7 +17,7 @@ public abstract class ConnectionHandler  {
     }
 
     /**
-     *  Il metodo receiveNotify la view di un evento tramite un messaggio.
+     *  Il metodo notifyFromFakeView la view di un evento tramite un messaggio.
      * @param message messaggio da inviare alla view.
      */
     void notifica(String message){
@@ -25,7 +25,7 @@ public abstract class ConnectionHandler  {
     }
 
     /**
-     * La view receiveNotify il server di un evento tramite un messaggio.
+     * La view notifyFromFakeView il server di un evento tramite un messaggio.
      * @param message messaggio da inviare al server.
      */
     public abstract void sendToServer(String message);
