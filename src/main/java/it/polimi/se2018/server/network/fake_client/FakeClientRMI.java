@@ -3,7 +3,6 @@ package it.polimi.se2018.server.network.fake_client;
 
 import it.polimi.se2018.client.connection_handler.ClientInterface;
 import it.polimi.se2018.server.exceptions.ConnectionCloseException;
-import it.polimi.se2018.server.network.Lobby;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -23,12 +22,11 @@ public class FakeClientRMI extends FakeClient implements FakeClientRMIInterface 
      * Costruttore della classe.
      *
      * @param clientInterface interfaccia remota del client di cui si deve gestire la comunicazione.
-     * @param lobby stanza di gioco.
      * @param nickname nickname scelto dal giocatore
      * @throws RemoteException
      */
-    public FakeClientRMI(ClientInterface clientInterface, Lobby lobby, String nickname) throws RemoteException {
-        super(lobby, nickname); //Richiamo il costruttore padre.
+    public FakeClientRMI(ClientInterface clientInterface, String nickname) throws RemoteException {
+        super(nickname); //Richiamo il costruttore padre.
 
         if(clientInterface != null && lobby != null){
             this.clientInterface = clientInterface;
@@ -68,7 +66,8 @@ public class FakeClientRMI extends FakeClient implements FakeClientRMIInterface 
             this.isOpen = false;
 
         } catch (RemoteException e) {
-            this.isOpen = false;
+            //Non si è interessati al fatto che la chiusura può non essere andata a buon fine perché se si sta chiudendo
+            //questa connessione significa che non si è più intenzionati ad usarla.
         }
 
         this.clientInterface = null;

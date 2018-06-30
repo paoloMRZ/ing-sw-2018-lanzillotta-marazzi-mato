@@ -3,8 +3,6 @@ package it.polimi.se2018.server.network;
 
 import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.exceptions.ConnectionCloseException;
-import it.polimi.se2018.server.exceptions.GameStartedException;
-import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.message.network_message.NetworkMessageCreator;
 import it.polimi.se2018.server.message.network_message.NetworkMessageParser;
@@ -30,10 +28,28 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
     private SagradaTimer timer;
     private boolean isOpen; //Indica lo stato della lobby, cioè se un client può connettersi o no.
 
+    private static Lobby instance = null;
+
+
+
+    public static Lobby factoryLobby(int lifeTime){
+        if(instance == null)
+            instance = new Lobby(lifeTime);
+
+        return instance;
+    }
+
+    public static Lobby factoryLobby(){
+        if(instance == null)
+            instance = new Lobby(60); //Default = 60 sec.
+
+        return instance;
+    }
+
     /**
      * Costruttore della classe.
      */
-    public Lobby(int lifeTime) {
+    private Lobby(int lifeTime) {
         if (lifeTime > 0)
             timer = new SagradaTimer(lifeTime);
         else
@@ -58,7 +74,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
         try {
             controller.START();
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); //TODO Da sistemare!!!!!
         }
 
     }
@@ -68,7 +84,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
      *
      * @return lista dei nickname.
      */
-    private synchronized List<String> getNicknames(){
+    public synchronized List<String> getNicknames(){
         ArrayList<String> nicknames = new ArrayList<>();
 
         for(FakeClient client: connections)
@@ -77,6 +93,10 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
         return nicknames;
     }
 
+
+    public boolean isOpen(){
+        return isOpen;
+    }
 
     /**
      * Il metodo effettua una ricerca per nickname.
@@ -105,9 +125,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
             fakeClient.closeConnection();
             numberOfClient--;
 
-            //Non notifico il fake client in questo metodo perchè la richiesta di congelamento potrebbe venire da lui stesso.
-
-            notifyFromFakeView(NetworkMessageCreator.getDisconnectMessage(nickname)); //Notifico tutti gli altri giocatori della disconnessione del client.
+            sendBroadcast(NetworkMessageCreator.getDisconnectMessage(nickname)); //Notifico tutti gli altri giocatori della disconnessione del client.
         }
 
     }
@@ -128,7 +146,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
             if(fakeView != null) //Notifico la fake view  dello scongelamento di un giocatore.
                 fakeView.messageIncoming(NetworkMessageCreator.getUnfreezeMessage(newConnection.getNickname()));
 
-            notifyFromFakeView(NetworkMessageCreator.getConnectMessage(newConnection.getNickname())); //Notifico tutti i giocatori della connessione appena avvenuta.
+            sendBroadcast(NetworkMessageCreator.getConnectMessage(newConnection.getNickname())); //Notifico tutti i giocatori della connessione appena avvenuta.
         }
 
     }
@@ -141,7 +159,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
      * @param nickname nickanme del fake client su cui si vuole conoscere lo stato.
      * @return true se il fake client è congelato, false in caso contrario.
      */
-    private boolean isFreezedFakeClient(String nickname){
+    public boolean isFreezedFakeClient(String nickname){
         FakeClient fakeClient =  serachByNickname(nickname);
         return  fakeClient == null || fakeClient.isFreezed();
     }
@@ -179,7 +197,9 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
 
         try {
 
-            fakeClient.update(message);
+            if(fakeClient != null)
+                fakeClient.update(message);
+
         } catch (ConnectionCloseException e) {
             if(isOpen)
                 remove(fakeClient.getNickname());
@@ -205,7 +225,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
             connections.remove(fakeClient); //Lo rimuovo dalla lobby.
             numberOfClient--; //Decremento il numero di giocatori.
 
-            notifyFromFakeClient(NetworkMessageCreator.getDisconnectMessage(nickname)); //Notifico i giocatori presenti nella lobby della disconnessione.
+            sendBroadcast(NetworkMessageCreator.getDisconnectMessage(nickname)); //Notifico i giocatori presenti nella lobby della disconnessione.
 
             if (numberOfClient + 1 == 2 && isOpen) { //Se la partita non è ancora stata avviata (lobby aperta) ed il numero di giocatori scende sotto i due resetto il timer.
                 timer.reset();
@@ -216,6 +236,29 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
 
 
     /**
+     * Il metodo svuota la stanza.
+     * Per eseguire questa procedura invia un messaggio di disconnessione per ogni giocatore e chiude le connessioni
+     * di tutti i giocatori.
+     */
+    private void emptyLobby(){
+
+        for(FakeClient client: connections) { //Per ogni client presente invio un messaggio di disconnessione e chiudo la relativa connessione.
+
+            try {
+                client.update(NetworkMessageCreator.getDisconnectMessage(client.getNickname()));
+                client.closeConnection();
+            } catch (ConnectionCloseException e) {
+                client.closeConnection();
+            }
+
+        }
+
+        connections = new ArrayList<>(); //Ricreo l'array list delle connessioni.
+        this.numberOfClient = 0; //Metto a zero il numero di giocatori presenti nella stanza.
+    }
+
+    //TODO Aggiornare il commento.
+    /**
      * Il metodo aggiunge un fake client alla lobby solo se:
      *  - il suo nickname non è già utilizzato da un'altro fake client già inserito.
      *  - la partita non è ancora iniziata ( cioè la lobby è aperta ).
@@ -225,35 +268,29 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
      * In caso negativo il client che ha fatto richiesta non viene inserito nella lobby.
      *
      * @param connection fake client da inserire.
-     * @throws InvalidNicknameException viene sollevata se il nickname del fake client da inserire è già utilizzato da un altro fake client contenuto nella lobby.
-     * @throws GameStartedException viene sollevata se si tenta di aggiungere un nuovo fake client alla lobby quando la partita è già inizita.
      */
-    public synchronized void add (FakeClient connection) throws InvalidNicknameException, GameStartedException {
+    public synchronized void add (FakeClient connection) {
 
-        if (getNicknames().contains(connection.getNickname())) { //Controlle se esiste un client con lo stesso nick.
+        if (getNicknames().contains(connection.getNickname()) && isFreezedFakeClient(connection.getNickname())) { //Controlle se esiste un client congelato con lo stesso nick.
+            this.unfreezeFakeClient(connection); //Richiamo il metodo privato per scongelare il client.
 
-            if (this.isFreezedFakeClient(connection.getNickname())) { //Se il client con lo stesso nick è congelato allora lo scongelo.
-                this.unfreezeFakeClient(connection); //Richiamo il metodo privato per scongelare il client.
-            } else
-                throw new InvalidNicknameException(); //Se il client con lo stesso nick non è congelato allora sollevao un'eccezione.
+        } else { //Se il nick non è già utilizzato aggiungo il client.
 
-        } else if (isOpen) { //Se il nick non è già utilizzato aggiungo il client alla lobby solo se la partita non è ancora iniziata.
+            if (!getNicknames().contains(connection.getNickname()) && isOpen) {
+                connections.add(connection); //Aggiungo il fake client all'ArrayList.
 
-            connections.add(connection); //Aggiungo il fake client all'ArrayList.
-            numberOfClient++; //Incremento il contatore dei client.
+                numberOfClient++; //Incremento il contatore dei client.
 
-            notifyFromFakeView(NetworkMessageCreator.getConnectMessage(connection.getNickname())); //Notifico tutti i client già presenti della connessione di un nuovo giocatore.
+                notifyFromFakeView(NetworkMessageCreator.getConnectMessage(connection.getNickname())); //Notifico tutti i client già presenti della connessione di un nuovo giocatore.
 
-            if (numberOfClient == 4) { //Se è stato raggiunto il numero massimo di giocatori viene fermato il timer, chiusa la lobby e avviata la partita.
-                createGame(); //Creazione della partita.
+                if (numberOfClient == 4) { //Se è stato raggiunto il numero massimo di giocatori viene fermato il timer, chiusa la lobby e avviata la partita.
+                    createGame(); //Creazione della partita.
+                }
+
+                if (numberOfClient == 1 && !timer.isStarted()) { //Quando si connette il primo client avvio il timer.
+                    timer.start();
+                }
             }
-
-            if (numberOfClient == 1 && !timer.isStarted()) { //Quando si connette il primo client avvio il timer.
-                timer.start();
-            }
-
-        } else {
-            throw new GameStartedException(); //Se la partita è già iniziata sollevo un'eccezione.
         }
     }
 
@@ -269,10 +306,10 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
             if(isOpen)// Se la lobby è ancora aperta (quindi la partita non è stata avviata) rimuovo il giocatore
                 remove(NetworkMessageParser.getMessageSender(message));
             else { //In caso contrario lo congelo e lo notifio alla fake view.
-                freezeFakeClient(NetworkMessageParser.getMessageAddressee(message));
+                freezeFakeClient(NetworkMessageParser.getMessageSender(message));
 
                 if(fakeView != null) //Notifico la fake view del congelamento.
-                    fakeView.messageIncoming(NetworkMessageCreator.getFreezeMessage(NetworkMessageParser.getMessageAddressee(message)));
+                    fakeView.messageIncoming(NetworkMessageCreator.getFreezeMessage(NetworkMessageParser.getMessageSender(message)));
             }
         }  else { //Se non è un messaggio di disconnessione lo giro direttamente alla fake view.
             if(fakeView != null)
@@ -314,20 +351,10 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
         if(numberOfClient >= 2){ //Se ho due o più giocatori creo la partita.
             createGame();
         }
-        else
+        else //Se non ci sono abbastanza giocatori fermo il timer e svuoto la lobby. In pratica mi rimetto nelle "condizioni iniziali".
         {
             timer.stop();
-            for(FakeClient client: connections) { //In caso contrario disconnetto tutti e svuoto la lobby.
-
-                try {
-                    client.update(NetworkMessageCreator.getDisconnectMessage(client.getNickname()));
-                    client.closeConnection();
-                } catch (ConnectionCloseException e) {
-                    client.closeConnection();
-                }
-
-            }
-            connections = new ArrayList<>(); //Ricreo l'array list delle connessioni.
+            emptyLobby();
         }
     }
 }

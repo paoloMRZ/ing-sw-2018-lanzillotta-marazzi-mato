@@ -1,7 +1,7 @@
 package it.polimi.se2018.server.network.fake_client;
 
 import it.polimi.se2018.server.exceptions.ConnectionCloseException;
-import it.polimi.se2018.server.network.Lobby;
+import it.polimi.se2018.server.message.network_message.NetworkMessageCreator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,11 +28,10 @@ public class FakeClientSocket extends FakeClient implements Runnable {
      * Costruttore della classe.
      *
      * @param socket socket del client di cui la classe deve gestire la comunicazione.
-     * @param lobby stanza di gioco.
      * @param nickname nickname scelto dal giocatore.
      */
-    public FakeClientSocket(Socket socket, Lobby lobby, String nickname) throws IOException {
-        super(lobby, nickname); //Richiamo il costruttore padre.
+    public FakeClientSocket(Socket socket, String nickname) throws IOException {
+        super(nickname); //Richiamo il costruttore padre.
 
         if(socket != null){
             this.isOpen = true;
@@ -61,11 +60,12 @@ public class FakeClientSocket extends FakeClient implements Runnable {
 
                 if (message != null)
                     lobby.notifyFromFakeClient(message); //Notifico la lobby del messaggio ricevuto.
-
+                else
+                    lobby.notifyFromFakeClient(NetworkMessageCreator.getClientDisconnectMessage(super.getNickname()));
             }
 
         } catch (IOException e) {
-            lobby.notifyFromFakeClient(("/" + getNickname() + "/###/rete/?/disconnect\n")); //TODO
+            lobby.notifyFromFakeClient(NetworkMessageCreator.getClientDisconnectMessage(super.getNickname()));
         }
     }
 
@@ -97,7 +97,8 @@ public class FakeClientSocket extends FakeClient implements Runnable {
             socket.close(); //Chiudo la socket.
             isOpen = false; //Interrompo il loop di lettura.
         } catch (IOException e) {
-            isOpen = false;
+            // Il server si disinteressa se la chiusura della connessione non è andata a buon fine perchè da questo momento
+            // in poi non comunicherà più tramite questa socket.
         }
     }
 

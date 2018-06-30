@@ -28,4 +28,17 @@ public class NetworkMessageCreator {
         return "/###/###/network_message/unfreeze/"+ nickname  +"\n";
     }
 
+
+    /**
+     * Il metodo costruisce il messaggio utilizzato dal client per notificare al server la propria disconnessione.
+     * Questo messaggio viene usato dal fake client per richiedere la disconnessione quando si solleva un'eccezone di rete.
+     *
+     * @param sender nickname del client che ha sollevato l'eccezione.
+     * @return messaggio di disconnessione.
+     */
+
+    public static String getClientDisconnectMessage(String sender){
+        return "/" + sender + "/###/network_message/disconnected/?\n";
+    }
+
 }
