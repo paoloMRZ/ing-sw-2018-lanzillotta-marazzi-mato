@@ -1,6 +1,6 @@
 package it.polimi.se2018.client.connection_handler;
 
-import it.polimi.se2018.graphic.InitWindow;
+import it.polimi.se2018.client.graphic.InitWindow;
 
 /**
  * La classe ha il compito di gestire la connessione tra client e server in base alla tecnologia di comunicazione scelta dal client.

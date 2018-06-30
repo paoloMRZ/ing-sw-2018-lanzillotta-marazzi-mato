@@ -15,7 +15,7 @@ public class ClientMessageCreator {
      */
 
     public static String getDisconnectMessage(String sender){
-        return "/" + sender + "/###/network/disconnected/?\n";
+        return "/" + sender + "/###/network_message/disconnected/?\n";
     }
 
     /**

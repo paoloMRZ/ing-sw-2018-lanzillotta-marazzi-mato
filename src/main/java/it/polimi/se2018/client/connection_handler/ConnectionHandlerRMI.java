@@ -1,7 +1,7 @@
 package it.polimi.se2018.client.connection_handler;
 
 
-import it.polimi.se2018.graphic.InitWindow;
+import it.polimi.se2018.client.graphic.InitWindow;
 import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 import it.polimi.se2018.server.network.fake_client.FakeClientRMIInterface;
@@ -52,7 +52,7 @@ public class ConnectionHandlerRMI extends ConnectionHandler implements ClientInt
         try {
             fakeClientInterface.sendToserver(message);
         } catch (RemoteException e) {
-            super.notifica("/###/!/network/disconnected/" + super.getNickname() + "\n");
+            super.notifica("/###/!/network_message/disconnected/" + super.getNickname() + "\n");
         }
     }
 
@@ -75,7 +75,7 @@ public class ConnectionHandlerRMI extends ConnectionHandler implements ClientInt
     public void accept(FakeClientRMIInterface fakeClientInterface) {
         this.fakeClientInterface = fakeClientInterface;
         if(this.fakeClientInterface == null)
-            super.notifica("/###/!/network/disconnected/" + super.getNickname() + "\n");
+            super.notifica("/###/!/network_message/disconnected/" + super.getNickname() + "\n");
 
     }
 

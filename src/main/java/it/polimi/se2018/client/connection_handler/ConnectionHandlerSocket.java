@@ -2,7 +2,7 @@ package it.polimi.se2018.client.connection_handler;
 
 
 import it.polimi.se2018.client.message.ClientMessageParser;
-import it.polimi.se2018.graphic.InitWindow;
+import it.polimi.se2018.client.graphic.InitWindow;
 import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 
@@ -75,7 +75,7 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
             out.write(message);
             out.flush();
         } catch (IOException e) {
-            super.notifica("/###/!/network/disconnected/" + super.getNickname() + "\n"); //TODO da sistemare
+            super.notifica("/###/!/network_message/disconnected/" + super.getNickname() + "\n"); //TODO da sistemare
         }
     }
 
@@ -101,6 +101,6 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
                 isOpen = false;
             }
         }
-        super.notifica("/###/!/network/disconnected/" + super.getNickname() + "\n"); //TODO da sistemare
+        super.notifica("/###/!/network_message/disconnected/" + super.getNickname() + "\n"); //TODO da sistemare
     }
 }
