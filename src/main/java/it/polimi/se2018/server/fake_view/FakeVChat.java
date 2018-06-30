@@ -71,7 +71,7 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
     }
     public void update(SuccessValue mex) {
         //todo discutere
-        fake.messageOutBox(ServerMessageCreator.getUseUtensilSuccessMessage(mex.getPlayer(),String.valueOf(mex.getCard()),"Number",String.valueOf(mex.getValue())));
+        fake.messageOutBox(ServerMessageCreator.getUseUtensilSuccessMessage(mex.getPlayer(),String.valueOf(mex.getCard()),"Value",String.valueOf(mex.getValue())));
     }
     public void update(SuccessActivation mex) {
         fake.messageOutBox(ServerMessageCreator.getActivateUtensilSuccessMessage(

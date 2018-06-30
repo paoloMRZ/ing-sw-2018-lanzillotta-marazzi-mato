@@ -75,8 +75,8 @@ public class MediumAdapter implements AdapterResolution {
         //Dimensioni della carta
         sizeSideEnemy.add(new ArrayList<>(Arrays.asList(200,170)));
 
-        //Posizionamento della griglia sulla Side
-        sizeSideEnemy.add(new ArrayList<>(Arrays.asList(0d,0d,10d,12d)));
+        //Posizionamento della griglia sulla Side (Right, Top, Left, Bottom)
+        sizeSideEnemy.add(new ArrayList<>(Arrays.asList(0d,0d,4d,12d)));
 
         //Dimensioni dell'intestazione con il nome dell'avversario
         sizeSideEnemy.add(new ArrayList<>(Arrays.asList(18)));

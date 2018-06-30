@@ -1,11 +1,13 @@
 package it.polimi.se2018.test_player;
 
+import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
+import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
@@ -17,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static it.polimi.se2018.server.model.Color.WHITE;
 import static it.polimi.se2018.server.model.Color.YELLOW;
@@ -33,7 +36,7 @@ public class PlayerTest {
     private static ArrayList<Side> sides = new ArrayList<>();
 
     @Before
-    public void setup() throws InvalidShadeValueException, InvalidFavoursValueException, InvalidColorValueException {
+    public void setup() throws InvalidValueException {
         casualList.add(new Cell(YELLOW, 0));
         casualList.add(new Cell(Color.BLUE, 0));
         casualList.add(new Cell(Color.WHITE, 0));
@@ -57,9 +60,12 @@ public class PlayerTest {
 
         casualSide = new Side("test", 4, casualList);
         sides.add(casualSide);
+        FakeView fake = new FakeView();
+        Controller controller = new Controller(new ArrayList<>(Arrays.asList("Tester","secondo")));
+        fake.register(controller);
         ColorDiagonals testerCard = new ColorDiagonals();
         obj = new Objective("TestName", "TestDescription", 4, testerCard, false);
-        player = new Player(obj,"Tester", null);
+        player = controller.getPlayerByName("Tester");
 
     }
 

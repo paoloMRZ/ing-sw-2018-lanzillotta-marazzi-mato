@@ -49,6 +49,8 @@ public class SideCardLabel{
         this.nickName = nickName;
         this.pathCard = sideCard;
         this.adapter = adapterResolution;
+
+        //Configuro la raccolta iniziale di dadi posizionati sulla Side (Al momentodella creazione composta da tutti dadi white0)
         setInitDicePutHistory();
 
         //Creo e dimensiono la cella della griglia posta sulla carta Side
@@ -185,18 +187,23 @@ public class SideCardLabel{
 
 
     /**
-     * Metodo utilizzato per l'update delle carte Side avversarie a seguito di una modifica
+     * Metodo utilizzato per l'update delle carte Side avversarie a seguito di una modifica. Viene anche aggiornata la lista diePutHistory per la creazione
+     * della carta a seguito di un aggiornamento.
      *
-     * @param cellUpdate Riferimento alla lista di informazioni sulle celle della Side
      */
 
     @SuppressWarnings("unchecked")
-    public void updateSide(List<String> cellUpdate){
+    public void updateSide(){
         int imageSize = (Integer)adapter.getSidePlayerSize().get(5).get(0);
-        int k=1;
+        int k;
+        if(dicePutHistory.size()==21) k=1;
+        else k=0;
+
         for(int i=0; i<4; i++) {
             for (int j=0; j<5; j++) {
-                if (!cellUpdate.get(k).equals(EMPTYCELL)) gridPane.add(configureDieView(cellUpdate.get(k),imageSize,imageSize),j,i);
+                if (!dicePutHistory.get(k).equals(EMPTYCELL)) {
+                    gridPane.add(configureDieView(dicePutHistory.get(k),imageSize,imageSize),j,i);
+                }
                 k++;
             }
         }
@@ -218,7 +225,7 @@ public class SideCardLabel{
     public SideCardLabel callPlayerSide(String sideCard, String nickName, boolean includeShadowGrid, AdapterResolution adapterResolution){
         SideCardLabel callPlayerSide = new SideCardLabel(sideCard, nickName, includeShadowGrid,adapterResolution);
         int imageSize = (Integer)adapter.getSidePlayerSize().get(4).get(0);
-        callPlayerSide.setDicePutHistoryAfterCall(dicePutHistory);
+        callPlayerSide.setDicePutHistory(dicePutHistory);
         int k=0;
         for(int i=0; i<4; i++) {
             for (int j = 0; j < 5; j++) {
@@ -230,6 +237,35 @@ public class SideCardLabel{
     }
 
 
+
+
+
+    /**
+     * Metodo utilizzato per l'aggiornamento dei dadi posizionati sulla Side di un avversario. A seguito dell'utilizzo di alcune carte Utensili che permettono lo
+     * spostamento dei dadi posti su di essa, è necessario impostare la nuova lista diePutHistory per il successivo update.
+     * Il metodo è richiamato anche per settare allo stesso modo la carta Side del giocatore turnante per visualizzarla nelle schermate dedicate alle carte Utensili
+     * interessate alla sua visualizzazione.
+     *
+     * @param dicePutHistory Riferimento alla lista di informazioni relative ai dadi posti sulla carta Side
+     */
+
+    public void setDicePutHistory(List<String> dicePutHistory) {
+        this.dicePutHistory = (ArrayList<String>) dicePutHistory;
+    }
+
+
+
+
+
+    /**
+     * Metodo utilizzato per restituire il riferimento alla lista di dadi posizionati sulla Side.
+     *
+     * @return Lista dei dadi posizionati sulla Side
+     */
+
+    public ArrayList<String> getDicePutHistory() {
+        return dicePutHistory;
+    }
 
 
 
@@ -257,10 +293,6 @@ public class SideCardLabel{
 
     public String getPathCard() {
         return pathCard;
-    }
-
-    private void setDicePutHistoryAfterCall(List<String> dicePutHistory){
-        this.dicePutHistory = (ArrayList<String>) dicePutHistory;
     }
 
     private void setInitDicePutHistory(){

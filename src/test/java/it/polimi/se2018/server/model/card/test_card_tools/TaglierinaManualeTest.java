@@ -9,6 +9,7 @@ import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidColorVa
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidSomethingWasNotDoneGood;
+import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_schema.Cell;
@@ -69,8 +70,9 @@ public class TaglierinaManualeTest {
 
         this.chosenOne = new Side("toTEST", 5, this.sideContent);
         sides.add(chosenOne);
+        FakeView fake = new FakeView();
         controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
-
+        fake.register(controller);
 
         Player player1 = controller.getPlayerByName("primo");
         Player player2 = controller.getPlayerByName("secondo");
@@ -81,6 +83,12 @@ public class TaglierinaManualeTest {
         player2.setMySide(0);
         player2.setFavours();
     }
+/*
+    @Test
+    public int nothing(){
+        return 1;
+    }*/
+
 
     @Test(expected = InvalidValueException.class)
     public void playerNameCorrupted() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
@@ -93,7 +101,7 @@ public class TaglierinaManualeTest {
         Dice d3 = new Dice(Color.BLUE, 5);
         Dice d4 = new Dice(Color.BLUE, 1);
         Dice d5 = new Dice(Color.BLUE, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
 
         controller.getcAction().workOnSide("primo", controller.getcAction()
@@ -110,7 +118,7 @@ public class TaglierinaManualeTest {
         Assert.fail("Fail: Non ha lanciato eccezione!");
     }
     @Test
-    public void wellDone() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
+    public void wellDone(){
         try {
             this.message = new ToolCard12("primo", 1,
                     new ArrayList(Arrays.asList(0, 0, 1, 1, 0, 0, 0, 2, 1, 1)));

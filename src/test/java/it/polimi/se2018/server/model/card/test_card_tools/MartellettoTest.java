@@ -21,7 +21,7 @@ import java.util.Arrays;
 
 import static junit.framework.TestCase.fail;
 
-/*
+
 public class MartellettoTest {
 
     private Martelletto mar= new Martelletto();
@@ -57,13 +57,14 @@ public class MartellettoTest {
     @Test
     public void happy(){
         try {
+            /*
             controller.getcTurn().setRound();
             controller.getcTurn().setTurn();
             controller.getcTurn().setTurn();
             controller.getcTurn().setTurn();
             controller.getcTurn().setTurn();
 
-
+*/
             Dice d1 = new Dice(Color.BLUE, 1);
             Dice d2 = new Dice(Color.GREEN, 4);
             Dice d3 = new Dice(Color.PURPLE, 4);
@@ -93,10 +94,10 @@ public class MartellettoTest {
     }
     @Test(expected = InvalidActivationException.class)
     public void invalid() throws InvalidHowManyTimes, InvalidValueException, InvalidActivationException, InvalidSomethingWasNotDoneGood {
-            controller.getcTurn().setRound();
+           /* controller.getcTurn().setRound();
             controller.getcTurn().setTurn();
             controller.getcTurn().setTurn();
-
+*/
 
 
 
@@ -156,4 +157,3 @@ public class MartellettoTest {
         }
     }
 }
-*/

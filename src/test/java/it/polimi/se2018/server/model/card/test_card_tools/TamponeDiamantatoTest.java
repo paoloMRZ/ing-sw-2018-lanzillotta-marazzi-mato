@@ -4,6 +4,7 @@ import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.events.tool_mex.ToolCard10;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidSomethingWasNotDoneGood;
+import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_utensils.TamponeDiamantato;
@@ -29,7 +30,10 @@ public class TamponeDiamantatoTest {
     public void settings(){
 
         this.tampone=new TamponeDiamantato();
+        FakeView fake = new FakeView();
         controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
+        fake.register(controller);
+
     }
     @Test(expected = InvalidValueException.class)
     public void dieNotExisting() throws InvalidValueException, InvalidSomethingWasNotDoneGood {

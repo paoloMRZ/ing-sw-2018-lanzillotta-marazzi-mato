@@ -1,11 +1,14 @@
 package it.polimi.se2018.test_controller;
 
+import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.controller.ControllerPoints;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.*;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
+import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.model.Color;
+import it.polimi.se2018.server.model.NotifyModel;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.Table;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
@@ -23,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -37,7 +41,8 @@ public class ControllerPointsTest {
     private static Table lobby;
     private static Objective objectivePrivateOne;
     private static Objective objectivePrivateTwo;
-
+    private FakeView f;
+    private Controller controller;
 
     @Before
     public void setuUpCard() throws InvalidShadeValueException, InvalidFavoursValueException, InvalidShadeException, NoDicesNearException, NotEmptyCellException, InvalidColorException, InvalidCoordinatesException, NearDiceInvalidException {
@@ -106,6 +111,9 @@ public class ControllerPointsTest {
         objectives.add(new Objective("TesterName3", "TesterDescription3", 2, new CoupleOfShades(1,2), false));
 
 
+        f= new FakeView();
+        controller =new Controller(new ArrayList<>(Arrays.asList("SIMONE","MARCO")));
+        f.register(controller);
     }
 
 
@@ -148,7 +156,7 @@ public class ControllerPointsTest {
         players.get(0).setFavours();
 
         lobby = new Table(null, objectives, players, null);
-        controllerPoints = new ControllerPoints(lobby, null);
+        controllerPoints = new ControllerPoints(lobby, controller);
 
         controllerPoints.updateScoreOfPlayer();
 
@@ -182,6 +190,18 @@ public class ControllerPointsTest {
         sides.get(1).put(3,2, new Dice(Color.PURPLE, 1));
         sides.get(1).put(3,3, new Dice(Color.BLUE, 2));
 
+        players= new ArrayList<>();
+        //Settaggio manuale della carta obbiettivo Privata del player 1
+        objectivePrivateOne = new Objective("TesterNamePrivate", "TesterDescriptionPrivate", 0, new ShadesOfCard(Color.YELLOW), true);
+
+        //Settaggio manuale dei player
+        players.add(new Player(objectivePrivateOne, "SIMONE", null));
+
+
+        //Settaggio carta Side per i player
+        players.get(0).setSideSelection(sides);
+        players.get(0).setMySide(0);
+        players.get(0).setFavours();
         //Settaggio manuale della carta obbiettivo Privata del player 2
         objectivePrivateTwo = new Objective("TesterNamePrivate", "TesterDescriptionPrivate", 0, new ShadesOfCard(Color.RED), true);
 
@@ -192,7 +212,7 @@ public class ControllerPointsTest {
         players.get(1).setFavours();
 
         lobby = new Table(null, objectives, players, null);
-        controllerPoints = new ControllerPoints(lobby, null);
+        controllerPoints = new ControllerPoints(lobby, controller);
 
         assertEquals("SIMONE", controllerPoints.nameOfWinner());
     }

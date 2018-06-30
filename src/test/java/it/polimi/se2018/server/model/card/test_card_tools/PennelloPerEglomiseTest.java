@@ -7,6 +7,7 @@ import it.polimi.se2018.server.exceptions.InvalidCellException;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.InvalidShadeException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.*;
+import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_schema.Cell;
@@ -32,6 +33,8 @@ public class PennelloPerEglomiseTest {
     private Side chosenOne = null;
     private Reserve supportReserve = null;
     private ArrayList<Side> sides = new ArrayList<>();
+    private Player player1;
+    private Player player2;
     @Before
     public void settings() throws InvalidValueException {
         this.pennello = new PennelloPerEglomise();
@@ -66,11 +69,12 @@ public class PennelloPerEglomiseTest {
         this.chosenOne = new Side("toTEST", 5, this.sideContent);
 
         sides.add(chosenOne);
+        FakeView fake = new FakeView();
         controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
+        fake.register(controller);
 
-
-        Player player1 = controller.getPlayerByName("primo");
-        Player player2 = controller.getPlayerByName("secondo");
+        player1 = controller.getPlayerByName("primo");
+        player2 = controller.getPlayerByName("secondo");
         player1.setSideSelection(sides);
         player1.setMySide(0);
         player1.setFavours();

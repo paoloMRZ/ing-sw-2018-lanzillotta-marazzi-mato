@@ -310,20 +310,6 @@ public class ServerMessageCreator {
         String message = "/###/!/end/winner/";
         if(statistics!=null) message = message.concat(statistics);
 
-       /* int i = 0; //(List<String> nicknames, List<String> scores, String nameOfWinner) prototipo vecchio
-
-        for (String nick : nicknames) {
-
-            if (i == 0)
-                message = message.concat(nick + "&" + scores.get(i));
-            else
-                message = message.concat("&" + nick + "&" + scores.get(i));
-
-            i++;
-        }
-
-        return message.concat("&" + nameOfWinner + "\n");*/
-
        return message;
     }
 

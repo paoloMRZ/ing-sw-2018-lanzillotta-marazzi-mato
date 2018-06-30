@@ -13,7 +13,6 @@ import it.polimi.se2018.server.message.server_message.ServerMessageCreator;
 import it.polimi.se2018.server.message.server_message.ServerMessageParser;
 import it.polimi.se2018.server.network.Lobby;
 
-import javax.jnlp.IntegrationService;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +23,10 @@ public class FakeView{
     public FakeView(Lobby blob){
         this.chat=new FakeVChat(this);
         this.toOut= blob;
+    }
+    public FakeView(){
+        this.chat=new FakeVChat(this);
+        this.toOut= null;
     }
     //directed to out
     public void register(Controller controller){
@@ -123,7 +126,7 @@ public class FakeView{
 
 
     public void messageOutBox(String mex){
-       toOut.notifyFromFakeView(mex);
+        if(toOut!=null) toOut.notifyFromFakeView(mex);
     }
 
     private ArrayList<Integer> transformer(List<String> ins,int dadove){
