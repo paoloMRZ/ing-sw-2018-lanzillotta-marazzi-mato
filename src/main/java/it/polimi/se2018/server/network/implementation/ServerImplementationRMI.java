@@ -19,24 +19,21 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class ServerImplementationRMI extends UnicastRemoteObject implements ServerInterface {
 
-    private static final int PORT = 1099;
+    private static final int PORT = 1099; //Per RMI si usa la porta standard senza possibilità di scelta da parte dell'utente.
     private Lobby lobby;
 
     /**
      * Costruttore della classe.
      *
-     * @param lobby sala d'attesa in cui vengono inseriti tutti i client che superano la verifica del nickname.
      * @throws RemoteException viene lanciata se il nickname passato è già utilizzato da un'altro client nella lobby.
      */
-    public ServerImplementationRMI(Lobby lobby) throws RemoteException, MalformedURLException {
+    public ServerImplementationRMI() throws RemoteException, MalformedURLException {
         super(0);
 
         LocateRegistry.createRegistry(PORT);
         Naming.rebind("//localhost/MyServer", this);
 
-        if (lobby != null) {
-            this.lobby = lobby;
-        }
+        this.lobby = Lobby.factoryLobby();
     }
 
     /**
@@ -51,8 +48,7 @@ public class ServerImplementationRMI extends UnicastRemoteObject implements Serv
     @Override
     public void add(ClientInterface clientInterface, String nickname) throws RemoteException, InvalidNicknameException, GameStartedException {
 
-        FakeClientRMI fakeClient = new FakeClientRMI(clientInterface, lobby, nickname);
-
+        FakeClientRMI fakeClient = new FakeClientRMI(clientInterface, nickname);
         lobby.add(fakeClient);
     }
 

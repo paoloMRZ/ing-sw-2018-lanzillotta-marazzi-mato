@@ -103,13 +103,14 @@ public class SelectorContent {
 
         switch (cardName){
             case PINZASGROSSATRICE:
-                if(!oldX.getText().trim().isEmpty() && !oldY.getText().trim().isEmpty() && !newX.getText().trim().isEmpty() && !newY.getText().trim().isEmpty()) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(getInfoData(),reserveLabel.getPos()))));
-                else AlertValidation.display("Errore", "Inserisci correttamente le coordinate\ndel dado da spostare!");
+
+                connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(getInfoData(),reserveLabel.getPos()))));
                 break;
 
             case PENNELLOPEREGLOMISE: case ALESATOREPERLALAMINDADIRAME:
 
-                connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(oldX.getText(),oldY.getText(),newX.getText(),newY.getText()))));
+                if(!oldX.getText().trim().isEmpty() && !oldY.getText().trim().isEmpty() && !newX.getText().trim().isEmpty() && !newY.getText().trim().isEmpty()) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(oldX.getText(),oldY.getText(),newX.getText(),newY.getText()))));
+                else AlertValidation.display("Errore", "Inserisci correttamente le coordinate\ndel dado da spostare!");
                 break;
 
             case LATHEKIN:

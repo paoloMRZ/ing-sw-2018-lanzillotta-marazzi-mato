@@ -24,6 +24,8 @@ public class SideEnemyLabel{
     private HBox labelSideEnemy;
     private ArrayList<SideCardLabel> sideEnemy;
     private AdapterResolution adapter;
+    private ArrayList<String> nameOfEnemies;
+    private ArrayList<String> cardOfEnemies;
 
 
     /**
@@ -35,8 +37,14 @@ public class SideEnemyLabel{
      */
 
     SideEnemyLabel(List<String> nameOfPlayers, List<String> sideName, AdapterResolution adapterResolution) {
+
+        //Configurazione degli attributi della classe (Per il dimensionamento e per un eventuale aggiornamento delle carte)
         this.adapter = adapterResolution;
-        sideEnemy = new ArrayList<>();
+        this.cardOfEnemies = (ArrayList<String>) sideName;
+        this.nameOfEnemies = (ArrayList<String>) nameOfPlayers;
+        this.sideEnemy = new ArrayList<>();
+
+        //Configurazione elemento grafico
         setSideEnemy(nameOfPlayers,sideName);
     }
 
@@ -108,9 +116,32 @@ public class SideEnemyLabel{
      */
 
     public void updateSideEnemies(List<String> infoSide){
+
+        //Estraggo il nome dell'avversario a cui aggiornare la Side
         String nameOfEnemy = infoSide.get(0);
+
+        //Estraggo le informazioni sulla history di put dei dadi sulle carte Side. Ricerco quindi il nome dell'avversario
+        //suddetto e imposto la nuova collezione per l'aggiornamento
+
+        List<List<String>> allHistoryEnemies = new ArrayList<>();
+
         for (SideCardLabel side: sideEnemy) {
-            if(side.getNickName().equals(nameOfEnemy)) side.updateSide(infoSide);
+            if(side.getNickName().equals(nameOfEnemy)) allHistoryEnemies.add(new ArrayList<>(infoSide));
+            else allHistoryEnemies.add(new ArrayList<>(side.getDicePutHistory()));
         }
+
+        //Pulisco la collezione di side
+        sideEnemy.clear();
+
+        //Ricreo la collezione di carte avversarie
+        setSideEnemy(nameOfEnemies,cardOfEnemies);
+
+        //Imposto la cronologia di posizionamenti dei dai sulle Side avversarie e aggiorno di conseguenza
+        for (SideCardLabel side: sideEnemy) {
+            side.setDicePutHistory(allHistoryEnemies.get(sideEnemy.indexOf(side)));
+            side.updateSide();
+        }
+
+
     }
 }

@@ -17,12 +17,11 @@ public abstract class FakeClient {
     /**
      * Costruttore della classe.
      *
-     * @param lobby    stanza di gioco.
      * @param nickname nickname scelto dal giocatore.
      */
-    public FakeClient(FakeClientObserver lobby, String nickname) {
-        if (lobby != null && nickname != null) {
-            this.lobby = lobby;
+    FakeClient(String nickname) {
+        if (nickname != null) {
+            this.lobby = Lobby.factoryLobby();
             this.nickname = nickname;
             this.isFreezed = false;
         }

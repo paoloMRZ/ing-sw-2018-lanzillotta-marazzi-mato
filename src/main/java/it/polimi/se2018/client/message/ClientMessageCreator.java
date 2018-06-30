@@ -19,6 +19,16 @@ public class ClientMessageCreator {
     }
 
     /**
+     * Il metodo restituisce il messaggio mandato dal server per disconnettere un client.
+     *
+     * @param nickname client che è stato disconnesso.
+     * @return messaggio.
+     */
+    public static String getServerDisconnectMessage(String nickname){
+        return "/###/network_message/disconnected/" + nickname + "\n";
+    }
+
+    /**
      * Il metodo costruisce un messaggio per notificare al server l'intenzione di eseguire un piazzamento sulla
      * prorpria griglia di gioco.
      *
