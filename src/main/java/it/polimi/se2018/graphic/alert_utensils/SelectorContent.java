@@ -349,7 +349,7 @@ public class SelectorContent {
         ArrayList<Double> positionGridPlayer = new ArrayList<>(Arrays.asList(0d, 0d, 0d, 18d));
         ArrayList<Double> sizeRectPlayer = new ArrayList<>(Arrays.asList(60d, 60d));
 
-        node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(),/*connectionHandler.getNickname()*/"Simone",sizeGridPlayer,positionGridPlayer,sizeSidePlayer, sizeRectPlayer,true,reserveLabel).getAnchorPane(),labelCoordinate);
+        node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(),connectionHandler.getNickname(),sizeGridPlayer,positionGridPlayer,sizeSidePlayer, sizeRectPlayer,true,reserveLabel).getAnchorPane(),labelCoordinate);
     }
 
     private void configureActionOnReserve(){
