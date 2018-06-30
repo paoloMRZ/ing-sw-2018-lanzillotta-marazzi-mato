@@ -140,11 +140,13 @@ public class InitWindow extends Application {
                         List<String> sideSelection = ClientMessageParser.getInformationsFromMessage(message.getText());
                         sideChoiceLabel = new SideChoiceLabel(sideSelection, connectionHandler,adapterResolution);
 
-                        Scene sceneChoice = new Scene(sideChoiceLabel.getSideChoise(), 1150, 900);
+                        Scene sceneChoice = new Scene(sideChoiceLabel.getSideChoise(), adapterResolution.getSideChoiceLabelSize().get(2).get(0), adapterResolution.getSideChoiceLabelSize().get(2).get(1));
                         Platform.runLater(() -> {
                             alertSwitcher.closeAlert();
-                            primaryStage.setMaxHeight(adapterResolution.getPrimaryStageSize().get(1));
-                            primaryStage.setMaxWidth(adapterResolution.getPrimaryStageSize().get(0));
+                            primaryStage.setMaxHeight(adapterResolution.getSideChoiceLabelSize().get(2).get(1));
+                            primaryStage.setMaxWidth(adapterResolution.getSideChoiceLabelSize().get(2).get(0));
+                            primaryStage.setMinHeight(adapterResolution.getSideChoiceLabelSize().get(2).get(1));
+                            primaryStage.setMinWidth(adapterResolution.getSideChoiceLabelSize().get(2).get(0));
                             primaryStage.centerOnScreen();
                             primaryStage.setScene(sceneChoice);
                         });
@@ -365,6 +367,16 @@ public class InitWindow extends Application {
                 //MESSAGGIO SUCCESSO ATTIVAZIONE DI UNA CARTA UTENSILE MULTIPARAMETRO
                 if (ClientMessageParser.isSuccessUseUtensilMessage(newValue)) {
 
+                    /*
+                    List<String> updateInfoUtensil = ClientMessageParser.getInformationsFromMessage(newValue);
+                    anchorGame.getChildren().remove(nodeSetting);
+                    settingLabel.updateFavours(updateInfoUtensil.get(1));
+                    settingLabel.updateAction();
+                    nodeSetting = settingLabel.getSettingLabel();
+                    buttonGameLabel.getAlertCardUtensils().closeExecutionUtensil();
+                    AlertValidation.display("Successo", "La carta è stata attivata!!");
+                    adapterResolution.putSettingLabel(anchorGame, nodeSetting);
+                    */
                 }
             }
 
@@ -373,7 +385,6 @@ public class InitWindow extends Application {
 
             //MESSAGGIO SUCCESSO UTILIZZO CARTA UTENSILE
             if (ClientMessageParser.isUseUtensilEndMessage(newValue)) {
-
                 List<String> updateInfoUtensil = ClientMessageParser.getInformationsFromMessage(newValue);
                 anchorGame.getChildren().remove(nodeSetting);
                 settingLabel.updateFavours(updateInfoUtensil.get(1));
@@ -382,7 +393,6 @@ public class InitWindow extends Application {
                 buttonGameLabel.getAlertCardUtensils().closeExecutionUtensil();
                 AlertValidation.display("Successo", "La carta è stata attivata!!");
                 adapterResolution.putSettingLabel(anchorGame, nodeSetting);
-
             }
 
 

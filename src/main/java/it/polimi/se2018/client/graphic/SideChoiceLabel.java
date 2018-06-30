@@ -99,7 +99,7 @@ public class SideChoiceLabel{
 
         sideChoise = new AnchorPane();
         sideChoise.setPrefSize(sizeWindow.get(0), sizeWindow.get(1));
-        sideChoise.setStyle("-fx-background-image: url(back-choice-side.png); -fx-background-size: contain; -fx-background-position: center; -fx-background-repeat: no-repeat;");
+        sideChoise.setStyle("-fx-background-image: url(back-choice-side.png); -fx-background-size: cover; -fx-background-position: center; -fx-background-repeat: no-repeat;");
 
         label.getChildren().addAll(labelRequest,firstLevel,secondLevel,continueButton);
         label.setAlignment(Pos.CENTER);
