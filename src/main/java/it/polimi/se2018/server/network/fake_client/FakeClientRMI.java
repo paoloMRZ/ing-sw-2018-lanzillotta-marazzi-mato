@@ -6,6 +6,7 @@ import it.polimi.se2018.server.exceptions.ConnectionCloseException;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.security.InvalidParameterException;
 
 
 /**
@@ -17,7 +18,7 @@ import java.rmi.server.UnicastRemoteObject;
 public class FakeClientRMI extends FakeClient implements FakeClientRMIInterface {
 
     private ClientInterface clientInterface;
-    private boolean isOpen;
+    private boolean isFreeze;
     /**
      * Costruttore della classe.
      *
@@ -30,12 +31,13 @@ public class FakeClientRMI extends FakeClient implements FakeClientRMIInterface 
 
         if(clientInterface != null && lobby != null){
             this.clientInterface = clientInterface;
-            this.isOpen = true;
+            this.isFreeze = false;
 
             //Passo al vero client l'interfaccia remota del suo corrispettivo fake client su server (cioè questo oggetto).
             FakeClientRMIInterface remoteRef = (FakeClientRMIInterface) UnicastRemoteObject.exportObject(this, 0);
             clientInterface.accept(remoteRef);
-        } //TODO gestire parametri sbagliati.
+        } else
+            throw new InvalidParameterException();
     }
 
     /**
@@ -45,7 +47,7 @@ public class FakeClientRMI extends FakeClient implements FakeClientRMIInterface 
      */
     @Override
     public void update(String message) throws ConnectionCloseException {
-        if (isOpen) {
+        if (!isFreeze) {
             try {
                 clientInterface.sendToClient(message);
             } catch (RemoteException e) {
@@ -63,19 +65,18 @@ public class FakeClientRMI extends FakeClient implements FakeClientRMIInterface 
         try {
             //In pratica vado a mettere a null i rispettivi riferimenti alle interfacce pubbliche.
             clientInterface.accept(null);
-            this.isOpen = false;
-
         } catch (RemoteException e) {
             //Non si è interessati al fatto che la chiusura può non essere andata a buon fine perché se si sta chiudendo
             //questa connessione significa che non si è più intenzionati ad usarla.
         }
 
         this.clientInterface = null;
+        this.isFreeze = true;
     }
 
     @Override
     public boolean isFreezed() {
-        return !isOpen;
+        return isFreeze;
     }
 
     /**
@@ -89,7 +90,7 @@ public class FakeClientRMI extends FakeClient implements FakeClientRMIInterface 
      */
     @Override
     public void sendToserver(String message) {
-        if(isOpen) {
+        if(!isFreeze) {
             lobby.notifyFromFakeClient(message);
         }
     }
