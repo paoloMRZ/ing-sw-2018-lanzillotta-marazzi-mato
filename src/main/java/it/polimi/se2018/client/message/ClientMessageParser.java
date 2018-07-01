@@ -333,7 +333,7 @@ public class ClientMessageParser {
      * @param message messaggio da conrtollare
      * @return true se il metodo notifica la fine della partita.
      */
-    public boolean isWinnerMessage(String message){
+    public static boolean isWinnerMessage(String message){
         return (message.replace("\n", "").split("/")[5]).equals("winner");
     }
 

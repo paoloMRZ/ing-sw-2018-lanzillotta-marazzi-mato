@@ -1,15 +1,14 @@
 package it.polimi.se2018.client.graphic;
 
 import it.polimi.se2018.client.connection_handler.ConnectionHandler;
+import it.polimi.se2018.client.connection_handler.ConnectionHandlerObserver;
+import it.polimi.se2018.client.graphic.alert_box.*;
+import it.polimi.se2018.client.graphic.alert_utensils.AlertCardUtensils;
 import it.polimi.se2018.client.message.ClientMessageParser;
 import it.polimi.se2018.client.graphic.adapter_gui.AdapterResolution;
 import it.polimi.se2018.client.graphic.adapter_gui.FullAdapter;
 import it.polimi.se2018.client.graphic.adapter_gui.MediumAdapter;
 import it.polimi.se2018.client.graphic.adapter_gui.SmallAdapter;
-import it.polimi.se2018.client.graphic.alert_box.AlertCloseButton;
-import it.polimi.se2018.client.graphic.alert_box.AlertLoadingGame;
-import it.polimi.se2018.client.graphic.alert_box.AlertSwitcher;
-import it.polimi.se2018.client.graphic.alert_box.AlertValidation;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -33,10 +32,20 @@ import java.util.stream.Collectors;
 import static it.polimi.se2018.client.graphic.Utility.*;
 
 
-public class InitWindow extends Application {
+/**
+ * Classe InitWindow utilizzata per il collegamento con il server da parte del Client. Configurerà tutti i settaggi scelti dal giocatore (Tipo di Connessione, Modalità di Gioco)
+ * per permettergli dio giocare una partita qualora ci fosse collegato almeno un giocatore avversario. L'interfaccia che permette al client di interagire con il gioco è
+ * per una prima fase interamente gestita con la GUI del programma e, solamente in seguito a una scelta dello stesso, potrà proseguire la aprtita continuando sulla GUI oppure
+ * giocando tramite la Cli di sistema.
+ *
+ * @author Simone Lanzillotta
+ */
 
-    //Elementi grafici e TextField per l'ascolto dei messaggi in ingresso
-    private BorderPane borderPane;
+
+
+
+public class InitWindow extends Application implements ConnectionHandlerObserver{
+
     private ConnectionHandler connectionHandler;
     private TextField message = new TextField();
     private Boolean startGame = true;
@@ -66,6 +75,7 @@ public class InitWindow extends Application {
     private List<String> nameOfEnemies;
     private List<String> sideOfEnemies;
     private HBox cardOfenemies;
+    private AlertCardUtensils alertCardUtensils;
 
 
     //Costanti di intestazione delle varie finestra
@@ -73,6 +83,7 @@ public class InitWindow extends Application {
     private static final String FULLSIZE = "1920x1080 (Full HD)";
     private static final String MEDIUMSIZE = "1400x900 (Scelta consigliata)";
     private static final String SMALLSIZE = "1366x768";
+    private static final String ERROR = "Error";
 
 
 
@@ -84,18 +95,18 @@ public class InitWindow extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        //Imposto il nome della finestra principale
+        //TODO: SCHERMATA LOGIN
+
+        //Configurazione della Schermata di Login
         primaryStage.setTitle(SAGRADA);
         primaryStage.getIcons().add(new Image("iconPack/icon-sagrada.png", 10, 10, false, true));
         primaryStage.setOnCloseRequest(e -> closeWindow(primaryStage, e));
 
-        //TODO: SCHERMATA LOGIN
         ImageView startButton = shadowEffect(configureImageView("", "button-start-game", ".png", 200, 90));
         AlertSwitcher alertSwitcher = new AlertSwitcher();
         ComboBox comboBox = setChoiceResolution();
         startButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-
-            if(comboBox.getValue()==null) AlertValidation.display("Errore", "Selziona la risuluzione\ndi gioco!");
+            if(comboBox.getValue()==null) AlertValidation.display(ERROR, "Seleziona la risuluzione\ndi gioco!");
             else {
                 selectorAdapter();
                 tabCardLabel = new TabCardLabel(adapterResolution);
@@ -103,9 +114,8 @@ public class InitWindow extends Application {
             }
         });
 
-        borderPane = new BorderPane();
+        BorderPane borderPane = new BorderPane();
         borderPane.setStyle("-fx-background-image: url(back-init.jpg); -fx-background-size: contain; -fx-background-position: center; -fx-background-repeat: no-repeat;");
-
 
         VBox layout = new VBox(50);
         layout.getChildren().addAll(startButton,comboBox);
@@ -215,6 +225,7 @@ public class InitWindow extends Application {
                             buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils, adapterResolution);
                             buttonGameLabel.checkPermission(connectionHandler.getNickname(),ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
                             nodeButton = buttonGameLabel.getLabelButtonGame();
+                            alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
                             adapterResolution.putButtonLabel(anchorGame, nodeButton);
 
 
@@ -230,7 +241,7 @@ public class InitWindow extends Application {
                                 primaryStage.setScene(sceneGame);
                             });
                         } else {
-                            updateGUI(newText);
+                            updateGUI(newText, primaryStage);
                         }
 
                     }
@@ -244,11 +255,11 @@ public class InitWindow extends Application {
                             adapterResolution.putReserveLabel(anchorGame, nodeReserve);
                             isInitReserve = false;
                         } else {
-                            updateGUI(newText);
+                            updateGUI(newText,primaryStage);
                         }
                 }
 
-                else updateGUI(newText);
+                else updateGUI(newText,primaryStage);
             }
         });
     }
@@ -258,11 +269,11 @@ public class InitWindow extends Application {
 
 
 
-    private void updateGUI(String newValue) {
+    private void updateGUI(String newValue, Stage primaryStage) {
 
         Platform.runLater(() -> {
-            //TODO: MESSAGGI DI TIPO UPDATE
-            System.out.println(newValue);
+
+            //MESSAGGI DI TIPO UPDATE
             if (ClientMessageParser.isUpdateMessage(newValue)) {
 
                 //MESSAGGIO UPDATE PER IL CAMBIO DEL TURNO
@@ -316,9 +327,13 @@ public class InitWindow extends Application {
                     List<String> infoSide = ClientMessageParser.getInformationsFromMessage(newValue);
                     if(infoSide.get(0).equals(connectionHandler.getNickname())) {
                         anchorGame.getChildren().remove(sidePlayer);
+                        anchorGame.getChildren().remove(nodeButton);
                         playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), true, adapterResolution);
                         playerSide.updateSideAfterPut(ClientMessageParser.getInformationsFromMessage(newValue));
                         sidePlayer = playerSide.getAnchorPane();
+                        buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils,adapterResolution);
+                        nodeButton = buttonGameLabel.getLabelButtonGame();
+                        adapterResolution.putButtonLabel(anchorGame, nodeButton);
                         adapterResolution.putSideLabel(anchorGame,sidePlayer);
                     }
                     else {
@@ -339,6 +354,7 @@ public class InitWindow extends Application {
                     buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils,adapterResolution);
 
                     nodeButton = buttonGameLabel.getLabelButtonGame();
+                    alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
                     adapterResolution.putButtonLabel(anchorGame, nodeButton);
                     adapterResolution.putReserveLabel(anchorGame, nodeReserve);
                 }
@@ -360,23 +376,16 @@ public class InitWindow extends Application {
 
                 //MESSAGGIO SUCCESSO RICHIESTA DI ATTIVAZIONE DI UNA CARTA UTENSILE
                 if (ClientMessageParser.isSuccessActivateUtensilMessage(newValue)) {
-                    buttonGameLabel.getAlertCardUtensils().launchExecutionUtensil();
+                    List<String> updateInfoUtensil = ClientMessageParser.getInformationsFromMessage(newValue);
+                    anchorGame.getChildren().remove(nodeSetting);
+                    alertCardUtensils.updateCostUtensil(updateInfoUtensil.get(2),updateInfoUtensil.get(0));
+                    alertCardUtensils.launchExecutionUtensil(false,null);
                 }
 
 
                 //MESSAGGIO SUCCESSO ATTIVAZIONE DI UNA CARTA UTENSILE MULTIPARAMETRO
                 if (ClientMessageParser.isSuccessUseUtensilMessage(newValue)) {
-
-                    /*
-                    List<String> updateInfoUtensil = ClientMessageParser.getInformationsFromMessage(newValue);
-                    anchorGame.getChildren().remove(nodeSetting);
-                    settingLabel.updateFavours(updateInfoUtensil.get(1));
-                    settingLabel.updateAction();
-                    nodeSetting = settingLabel.getSettingLabel();
-                    buttonGameLabel.getAlertCardUtensils().closeExecutionUtensil();
-                    AlertValidation.display("Successo", "La carta è stata attivata!!");
-                    adapterResolution.putSettingLabel(anchorGame, nodeSetting);
-                    */
+                    alertCardUtensils.launchExecutionUtensil(true,newValue);
                 }
             }
 
@@ -387,25 +396,33 @@ public class InitWindow extends Application {
             if (ClientMessageParser.isUseUtensilEndMessage(newValue)) {
                 List<String> updateInfoUtensil = ClientMessageParser.getInformationsFromMessage(newValue);
                 anchorGame.getChildren().remove(nodeSetting);
-                settingLabel.updateFavours(updateInfoUtensil.get(1));
                 settingLabel.updateAction();
+                settingLabel.updateFavours(updateInfoUtensil.get(3));
                 nodeSetting = settingLabel.getSettingLabel();
+                adapterResolution.putSettingLabel(anchorGame, nodeSetting);
                 buttonGameLabel.getAlertCardUtensils().closeExecutionUtensil();
                 AlertValidation.display("Successo", "La carta è stata attivata!!");
-                adapterResolution.putSettingLabel(anchorGame, nodeSetting);
             }
 
 
             //TODO: MESSAGGI DI TIPO ERRORE
             if (ClientMessageParser.isErrorMessage(newValue)) {
                 if (ClientMessageParser.isErrorPutMessage(newValue))
-                    AlertValidation.display("Errore", "Il tuo posizionamento non è valido!");
+                    AlertValidation.display(ERROR, "Il tuo posizionamento non è valido!");
                 if (ClientMessageParser.isErrorActivateUtensilMessage(newValue))
-                    AlertValidation.display("Errore", "Non puoi utilizzare la carta selezionata!");
+                    AlertValidation.display(ERROR, "Non puoi utilizzare la carta selezionata!");
                 if (ClientMessageParser.isClientDisconnectedMessage(newValue))
                     AlertValidation.display("Disconnessione", ClientMessageParser.getInformationsFromMessage(newValue) + "si è disconnesso");
                 if (ClientMessageParser.isUnauthorizedPutMessage(newValue))
-                    AlertValidation.display("Errore", "Hai già effettutato\nquesta azione!");
+                    AlertValidation.display(ERROR, "Hai già effettutato\nquesta azione!");
+                if(ClientMessageParser.isErrorUseUtensilMessage(newValue))
+                    AlertValidation.display(ERROR, "Non hai inserito correttamente\ni parametri richiesti!");
+            }
+
+
+            //TODO: MESSAGGIO END DELLA PARTITA
+            if(ClientMessageParser.isWinnerMessage(newValue)){
+                AlertWinner.display("Sagrada", "Complimenti!", primaryStage);
             }
 
         });
@@ -473,7 +490,7 @@ public class InitWindow extends Application {
      * @param message Riferimento al messaggio inviato dalla lobby all'interfaccia grafica
      */
 
-    public void sendToView(String message) {
+    public void NetworkRequest(String message) {
         //il messaggio in ingresso deve essere interpretato, quindi procedo con la classificazione
         this.message.setText(message);
     }
