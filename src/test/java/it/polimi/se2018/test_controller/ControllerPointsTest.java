@@ -8,7 +8,6 @@ import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavours
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidShadeValueException;
 import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.model.Color;
-import it.polimi.se2018.server.model.NotifyModel;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.Table;
 import it.polimi.se2018.server.model.card.card_objective.Objective;
@@ -19,9 +18,6 @@ import it.polimi.se2018.server.model.card.card_objective.obj_algos.algos.ShadesO
 import it.polimi.se2018.server.model.card.card_schema.Cell;
 import it.polimi.se2018.server.model.card.card_schema.Side;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
-import it.polimi.se2018.server.model.dice_sachet.DiceSachet;
-import it.polimi.se2018.server.model.grid.RoundGrid;
-import it.polimi.se2018.server.model.grid.ScoreGrid;
 import org.junit.Before;
 import org.junit.Test;
 

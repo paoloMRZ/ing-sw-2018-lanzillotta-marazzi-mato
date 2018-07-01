@@ -9,7 +9,6 @@ public class SuccessValue extends Activate{
     public SuccessValue( String player,int index,int numb){
         super(player,index);
         this.value= numb ;
-        this.die=die;
     }
     public int getDie(){
         return die;

@@ -60,6 +60,9 @@ public class Utensils implements Visitable{
     public int getPreviousCost() {
         return previousCost;
     }
+    public void undoCostUpdate(){
+        cost=getPreviousCost();
+    }
 
     public Color getSquareColor(){
         return squareColor;

@@ -104,7 +104,7 @@ public class AlesatorePerLaminaDiRameTest {
 
         fail("Fail: Non ha lanciato eccezione!");
     }
-/*
+
     @Test(expected = InvalidValueException.class)
     public void dieNotExisting() throws InvalidValueException, InvalidCellException{
         //i dati dell'input nel messaggio seguono la convenzione stabilita in MultiParam
@@ -317,5 +317,5 @@ public class AlesatorePerLaminaDiRameTest {
 
 
     }
-    */
+
 }

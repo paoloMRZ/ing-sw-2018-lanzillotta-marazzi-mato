@@ -21,6 +21,7 @@ public class TenagliaARotelle extends Utensils {
         super(8,"tenaglia-a-rotelle", Color.RED,"Dopo il tuo primo turno scegli immediatamente" +
                 " un altro dado Salta il tuo secondo turno in questo round");
     }
+
     public void accept(Visitor c, Activate m){
         c.visit(this,m);
     }

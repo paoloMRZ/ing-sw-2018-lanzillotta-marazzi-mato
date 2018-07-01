@@ -123,7 +123,7 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
                 }
                 else{
                     controller.getUtensils(mex.getCard()).accept(controller.getcCard(), mex);
-                    controller.messageComingChecking(mex);
+                    //controller.messageComingChecking(mex);
                 }
             }
         }

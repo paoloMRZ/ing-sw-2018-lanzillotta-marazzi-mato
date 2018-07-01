@@ -120,9 +120,10 @@ public class ControllerCard implements Visitor {
 
 
     public void visit(PennelloPerPastaSalda itemPennelloPasta,Activate mex){
-        ToolCard6 m=(ToolCard6) mex;
-        if(!m.getisBis()) {
+        ToolDouble mu=(ToolDouble) mex;
+        if(!mu.getisBis()) {
             try {
+                ToolCard6 m=(ToolCard6) mex;
                 if (itemPennelloPasta.getIsBusy()) {
                     int value = itemPennelloPasta.function(controller, m);
                     controller.getcChat().notifyObserver(new SuccessValue(m.getPlayer(), m.getCard(), value));
@@ -131,7 +132,7 @@ public class ControllerCard implements Visitor {
                             controller.getTurn().getFavours(),
                             itemPennelloPasta.getCost(), m.getPlayer()));
             } catch (InvalidValueException e) {
-                controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(), m.getCard()));
+                controller.getcChat().notifyObserver(new ErrorSelectionUtensil(mex.getPlayer(), mex.getCard()));
             } catch (Exception e) {
                 controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
             }
@@ -158,7 +159,7 @@ public class ControllerCard implements Visitor {
 
                 controller.getcAction().putBackInReserve();
                 controller.cleanAll();
-                controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(), m.getCard()));
+                controller.getcChat().notifyObserver(new ErrorSelectionUtensil(mex.getPlayer(), mex.getCard()));
             } catch (Exception e) {
                 controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e));
             }
@@ -204,14 +205,18 @@ public class ControllerCard implements Visitor {
                                                                                     itemMartelletto.getCost(),m.getPlayer()));
                 itemMartelletto.setTheUse();
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemMartelletto.getNumber(),m.getCard(),
+            else{
+                itemMartelletto.undoCostUpdate();
+                controller.getcChat().notifyObserver(new ErrorActivation(itemMartelletto.getNumber(),m.getCard(),
                                                                 controller.getTurn().getFavours(),
                                                                   itemMartelletto.getCost(),m.getPlayer()));
+            }
         }
         catch(InvalidValueException e){
             controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));
         }
         catch( InvalidActivationException e){
+            itemMartelletto.undoCostUpdate();
             controller.getcChat().notifyObserver(new ErrorActivation(itemMartelletto.getNumber(),m.getCard(),
                                                                         controller.getTurn().getFavours(),
                                                                         itemMartelletto.getCost(),m.getPlayer()));
@@ -223,9 +228,9 @@ public class ControllerCard implements Visitor {
 
 
     public void visit(DiluentePerPastaSalda itemDiluente,Activate mex){
-
-        ToolCard11 m=(ToolCard11) mex;
-        if(!m.getisBis()){
+        ToolDouble mu=(ToolDouble) mex;
+        if(!mu.getisBis()){
+            ToolCard11 m=(ToolCard11) mex;
             try {
                 if (itemDiluente.getIsBusy()) {
                     String color = itemDiluente.function(controller, m);
@@ -253,13 +258,13 @@ public class ControllerCard implements Visitor {
 
                 controller.getcChat().notifyObserver(new SuccessActivationFinalized(itemDiluente.getNumber(),mess.getCard(),
                                                                                 controller.getTurn().getFavours(),
-                                                                                 itemDiluente.getCost(),m.getPlayer()));
+                                                                                 itemDiluente.getCost(),mex.getPlayer()));
                 itemDiluente.setTheUse();
                 controller.cleanAll();
             }
             else controller.getcChat().notifyObserver(new ErrorActivation(itemDiluente.getNumber(),mess.getCard(),
                                                                         controller.getTurn().getFavours(),
-                                                                         itemDiluente.getCost(),m.getPlayer()));
+                                                                         itemDiluente.getCost(),mex.getPlayer()));
         }
         catch(InvalidValueException | InvalidCellException e){
             controller.getcChat().notifyObserver(new ErrorSelectionUtensil(mess.getPlayer(),mess.getCard()));
@@ -412,9 +417,12 @@ public class ControllerCard implements Visitor {
                 itemTe.setTheUse();
                 controller.cleanAll();
             }
-            else controller.getcChat().notifyObserver(new ErrorActivation(itemTe.getNumber(),m.getCard(),
+            else{
+                itemTe.undoCostUpdate();
+                controller.getcChat().notifyObserver(new ErrorActivation(itemTe.getNumber(),m.getCard(),
                                                                             controller.getTurn().getFavours(),
-                                                                            itemTe.getCost(),m.getPlayer()));
+                                                                           itemTe.getCost(),m.getPlayer()));
+            }
         }
         catch(InvalidValueException | InvalidCellException e){
             controller.getcAction().putBackInReserve(controller.getHoldingResDie());
@@ -422,6 +430,7 @@ public class ControllerCard implements Visitor {
             controller.cleanAll();
         }
         catch( InvalidActivationException | InvalidHowManyTimes e){
+            itemTe.undoCostUpdate();
             controller.getcChat().notifyObserver(new ErrorActivation(itemTe.getNumber(),m.getCard(),
                                                                         controller.getTurn().getFavours(),
                                                                         itemTe.getCost(),m.getPlayer()));

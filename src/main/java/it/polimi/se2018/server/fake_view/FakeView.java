@@ -19,6 +19,7 @@ import java.util.List;
 public class FakeView{
     private Lobby toOut;
     private FakeVChat chat;
+    private String message;
 
     public FakeView(Lobby blob){
         this.chat=new FakeVChat(this);
@@ -95,7 +96,6 @@ public class FakeView{
                     break;
             }
 
-            chat.notifyObserver(new Activate(sender,Integer.parseInt(data.get(0))));
         }
 
         else if(ServerMessageParser.isPutMessage(m)){
@@ -127,6 +127,7 @@ public class FakeView{
 
     public void messageOutBox(String mex){
         if(toOut!=null) toOut.notifyFromFakeView(mex);
+        message=mex;
     }
 
     private ArrayList<Integer> transformer(List<String> ins,int dadove){
@@ -143,4 +144,7 @@ public class FakeView{
         return ret;
     }
 
+    public String getMessage() {
+        return message;
+    }
 }

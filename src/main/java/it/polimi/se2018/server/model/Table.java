@@ -40,7 +40,7 @@ import java.util.stream.IntStream;
 
 public class Table {
 
-    private final ArrayList<Utensils> utensilsDeck;
+    private ArrayList<Utensils> utensilsDeck;
     private final  ArrayList<Objective> objectiveDeck;
     private final ArrayList<Player> playersList;
     private final DiceSachet diceSachet;
@@ -381,6 +381,9 @@ public class Table {
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
+    public void resetUtensilsDeck(ArrayList<Utensils> newDeck){
+        utensilsDeck= new ArrayList<>(newDeck);
+    }
 /////////////////////////////////////////////////////////////////////////////////////////////
     private void setStartMexObjs(){
         String message ="";

@@ -4,24 +4,21 @@ import java.util.ArrayList;
 
 
 
-public class ToolCard6Bis extends ToolMultiParam{
+public class ToolCard6Bis extends ToolDouble{
 
-    private ArrayList<Integer> data;
     private boolean decision;
-    private boolean isBis=true;
+    private ArrayList<Integer> data;
 
     public ToolCard6Bis(String player, int card, boolean letItDown, ArrayList<Integer> inputs){
-        super(player,card);
+        super(player,card,0,true);
         this.decision=letItDown;
         this.data=new ArrayList<>(inputs);
     }
-    public ArrayList<Integer> getAttributes(){
-        return data;
-    }
+
     public boolean getDecision(){
         return decision;
     }
-    public boolean getisBis(){
-        return isBis;
+    public ArrayList<Integer> getAttributes(){
+        return data;
     }
 }

@@ -3,7 +3,7 @@ package it.polimi.se2018.server.events.tool_mex;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ToolCard4 extends ToolCard2{
+public class ToolCard4 extends ToolMultiParam{
     private int row2;
     private int col2;
     private int row2New;

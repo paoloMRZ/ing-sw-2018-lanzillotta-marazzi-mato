@@ -9,7 +9,7 @@ public class SuccessColor extends Activate {
     public SuccessColor( String player,int index,String color){
         super(player,index);
         this.value=color ;
-        this.die=die;
+
     }
     public int getDie(){
         return die;

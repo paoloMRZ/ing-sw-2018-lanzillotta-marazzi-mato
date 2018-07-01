@@ -15,7 +15,10 @@ import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.card.card_schema.Cell;
 import it.polimi.se2018.server.model.card.card_schema.Side;
+import it.polimi.se2018.server.model.card.card_utensils.RigaInSughero;
+import it.polimi.se2018.server.model.card.card_utensils.TamponeDiamantato;
 import it.polimi.se2018.server.model.card.card_utensils.TenagliaARotelle;
+import it.polimi.se2018.server.model.card.card_utensils.Utensils;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 import it.polimi.se2018.server.model.reserve.Reserve;
 import org.junit.Assert;
@@ -41,13 +44,11 @@ public class TenagliaARotelleTest {
     private Reserve supportReserve = null;
     private ToolCard8 message=null;
     private ArrayList<Side> sides = new ArrayList<>();
-    private Player player1;
-    private Player player2;
+    private FakeView fake;
 
 
     @Before
-    public void settings() throws InvalidValueException, InvalidHowManyTimes {
-        this.tenaglia = new TenagliaARotelle();
+    public void setup() throws InvalidValueException {
 
         this.sideContent = new ArrayList<>(20);
         //Aurorae Magnificus
@@ -76,14 +77,25 @@ public class TenagliaARotelleTest {
         sideContent.add(new Cell(Color.GREEN, 0));
         sideContent.add(new Cell(Color.WHITE, 4));
 
-        this.chosenOne = new Side("toTEST", 5, this.sideContent);
+        chosenOne = new Side("toTEST", 5, sideContent);
         sides.add(chosenOne);
-        FakeView fake = new FakeView();
-        controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
+
+        fake=new FakeView();
+        controller= new Controller(new ArrayList<String>(Arrays.asList("primo","secondo")));
         fake.register(controller);
 
-        player1 = controller.getPlayerByName("primo");
-        player2 = controller.getPlayerByName("secondo");
+
+    }
+
+    @Test(expected= NullPointerException.class)//problemi di adiacenza
+    public void testerBadValue() throws Exception {
+
+        controller.START();
+        fake.messageIncoming("/primo/###/start/side_reply/0");
+        fake.messageIncoming("/secondo/###/start/side_reply/0");
+
+        Player player1 = controller.getPlayerByName("primo");
+        Player player2 = controller.getPlayerByName("secondo");
         player1.setSideSelection(sides);
         player1.setMySide(0);
         player1.setFavours();
@@ -91,100 +103,67 @@ public class TenagliaARotelleTest {
         player2.setMySide(0);
         player2.setFavours();
 
-    }
-    @Test(expected = InvalidValueException.class)
-    public void playerNameCorrupted() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood, InvalidHowManyTimes, InvalidActivationException {
+        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new TenagliaARotelle(),
+                new RigaInSughero(),
+                new TamponeDiamantato())));
 
-        this.message = new ToolCard8("pippo", 1, new ArrayList(Arrays.asList(0, 1, 1)));
-
-        Dice d1 = new Dice(Color.BLUE, 1);
-        Dice d2 = new Dice(Color.BLUE, 1);
-        Dice d3 = new Dice(Color.BLUE, 1);
-        Dice d4 = new Dice(Color.BLUE, 1);
-        Dice d5 = new Dice(Color.BLUE, 1);
+        Dice d1 = new Dice(Color.BLUE, 5);
+        Dice d2 = new Dice(Color.GREEN, 5);
+        Dice d3 = new Dice(Color.PURPLE, 4);
+        Dice d4 = new Dice(Color.YELLOW, 4);
+        Dice d5 = new Dice(Color.YELLOW, 1);
         this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
 
-        tenaglia.function(controller, message);
+        fake.messageIncoming("/primo/###/put/?/1&0&1");
 
+        fake.messageIncoming("/primo/###/utensil/activate/0");
 
-        Assert.fail("Fail: Non ha lanciato eccezione!");
+        fake.messageIncoming("/primo/###/utensil/use/0&8&0&0&2");
+
+        Dice itsHim = controller.getcAction().takeALookToDie("primo", 0, 2);
+        assertEquals(5,itsHim.getNumber());
+        assertEquals(Color.BLUE,itsHim.getColor());
+
     }
 
     @Test
-    public void testerGood(){
-        try {
-            Dice d1 = new Dice(Color.BLUE, 1);
-            Dice d2 = new Dice(Color.BLUE, 2);
-            Dice d3 = new Dice(Color.BLUE, 2);
-            Dice d4 = new Dice(Color.BLUE, 2);
-            Dice d5 = new Dice(Color.BLUE, 2);
-            this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
-            controller.getcAction().resettingReserve(supportReserve);
-            player1.reductor();
+    public void testerGood() throws Exception {
 
-            this.message = new ToolCard8("primo", 1, new ArrayList<>(Arrays.asList(0, 0, 2)));
+        controller.START();
+        fake.messageIncoming("/primo/###/start/side_reply/0");
+        fake.messageIncoming("/secondo/###/start/side_reply/0");
 
-            tenaglia.function(controller, message);
+        Player player1 = controller.getPlayerByName("primo");
+        Player player2 = controller.getPlayerByName("secondo");
+        player1.setSideSelection(sides);
+        player1.setMySide(0);
+        player1.setFavours();
+        player2.setSideSelection(sides);
+        player2.setMySide(0);
+        player2.setFavours();
 
-            Dice itsHim = controller.getcAction().takeALookToDie(message.getPlayer(), 0, 2);
-            assertEquals(1,itsHim.getNumber());
-            assertEquals(Color.BLUE,itsHim.getColor());
+        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new TenagliaARotelle(),
+                new RigaInSughero(),
+                new TamponeDiamantato())));
 
-        }
-        catch(  Exception e ){
-            fail("error"+ e);
-        }
-    }
-
-    @Test(expected= InvalidValueException.class)
-    public void testerBadValue() throws InvalidActivationException, InvalidValueException, InvalidSomethingWasNotDoneGood, InvalidCellException, InvalidHowManyTimes {
-
-            Dice d1 = new Dice(Color.BLUE, 1);
-            Dice d2 = new Dice(Color.BLUE, 2);
-            Dice d3 = new Dice(Color.BLUE, 2);
-            Dice d4 = new Dice(Color.BLUE, 2);
-            Dice d5 = new Dice(Color.BLUE, 2);
-            this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
-            controller.getcAction().resettingReserve(supportReserve);
-            player1.reductor();
-            player1.reductor();
-
-
-
-        this.message = new ToolCard8("primo", 1, new ArrayList<>(Arrays.asList(0, 0, 2)));
-
-            tenaglia.function(controller, message);
-
-            Dice itsHim = controller.getcAction().takeALookToDie(message.getPlayer(), 0, 2);
-            assertEquals(1,itsHim.getNumber());
-            assertEquals(Color.BLUE,itsHim.getColor());
-
-            fail("error");
-
-    }
-    @Test(expected= InvalidActivationException.class)
-    public void testerBadActivation() throws InvalidActivationException, InvalidValueException, InvalidSomethingWasNotDoneGood, InvalidCellException, InvalidHowManyTimes {
-
-        Dice d1 = new Dice(Color.BLUE, 1);
-        Dice d2 = new Dice(Color.BLUE, 2);
-        Dice d3 = new Dice(Color.BLUE, 2);
-        Dice d4 = new Dice(Color.BLUE, 2);
-        Dice d5 = new Dice(Color.BLUE, 2);
+        Dice d1 = new Dice(Color.BLUE, 4);
+        Dice d2 = new Dice(Color.GREEN, 5);
+        Dice d3 = new Dice(Color.PURPLE, 4);
+        Dice d4 = new Dice(Color.YELLOW, 4);
+        Dice d5 = new Dice(Color.YELLOW, 1);
         this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
 
-        player1.reductor();
+        fake.messageIncoming("/primo/###/put/?/1&0&1");
 
-        this.message = new ToolCard8("primo", 1, new ArrayList<>(Arrays.asList(0, 0, 2)));
+        fake.messageIncoming("/primo/###/utensil/activate/0");
 
-        tenaglia.function(controller, message);
+        fake.messageIncoming("/primo/###/utensil/use/0&8&0&0&2");
 
-        Dice itsHim = controller.getcAction().takeALookToDie(message.getPlayer(), 0, 2);
-        assertEquals(1,itsHim.getNumber());
+        Dice itsHim = controller.getcAction().takeALookToDie("primo", 0, 2);
+        assertEquals(4,itsHim.getNumber());
         assertEquals(Color.BLUE,itsHim.getColor());
-
-        fail("error");
 
     }
 

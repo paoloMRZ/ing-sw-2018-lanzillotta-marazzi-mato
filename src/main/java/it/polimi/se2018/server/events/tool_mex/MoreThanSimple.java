@@ -16,13 +16,9 @@ public class MoreThanSimple extends Activate{
     public MoreThanSimple (String player, int cardIndex, boolean addUp, int whichDie){
 
         super(player,cardIndex);
-
             this.die=whichDie;
             this.decision=addUp;
-
-
     }
-
     public int getDie(){
         return die;
     }

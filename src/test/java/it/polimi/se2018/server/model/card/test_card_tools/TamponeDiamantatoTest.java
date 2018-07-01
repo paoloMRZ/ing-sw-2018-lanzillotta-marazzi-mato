@@ -20,7 +20,6 @@ import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 
 public class TamponeDiamantatoTest {
-    private ArrayList<Player> players=null;
     private TamponeDiamantato tampone=null;
     private Controller controller=null;
     private ToolCard10 message=null;

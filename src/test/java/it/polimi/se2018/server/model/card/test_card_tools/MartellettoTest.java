@@ -5,10 +5,16 @@ import it.polimi.se2018.server.exceptions.InvalidActivationException;
 import it.polimi.se2018.server.exceptions.InvalidHowManyTimes;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidSomethingWasNotDoneGood;
+import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.Table;
+import it.polimi.se2018.server.model.card.card_schema.Cell;
+import it.polimi.se2018.server.model.card.card_schema.Side;
 import it.polimi.se2018.server.model.card.card_utensils.Martelletto;
+import it.polimi.se2018.server.model.card.card_utensils.PennelloPerPastaSalda;
+import it.polimi.se2018.server.model.card.card_utensils.TaglierinaCircolare;
+import it.polimi.se2018.server.model.card.card_utensils.Utensils;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 import it.polimi.se2018.server.model.dice_sachet.DiceSachet;
 import it.polimi.se2018.server.model.reserve.Reserve;
@@ -19,18 +25,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertEquals;
 
 
 public class MartellettoTest {
 
     private Martelletto mar= new Martelletto();
-
-
-    private ArrayList<String> playersName= new ArrayList<>(Arrays.asList("1", "3", "2"));
-    private Controller controller=new Controller(playersName);
-    private Reserve tester=null;
-
 
     private ArrayList<Integer> countingBefore;
     private ArrayList<Color> colorsBefore;
@@ -39,90 +41,136 @@ public class MartellettoTest {
     private ArrayList<Color> colorsAfter;
 
 
-
-
+    private Side chosenOne = null;
+    private ArrayList<Cell> sideContent = null;
+    private FakeView fake;
+    private Controller controller;
+    private Reserve supportReserve = null;
+    private ArrayList<Side> sides = new ArrayList<>();
 
     @Before
-    public void settings() throws InvalidValueException, InvalidHowManyTimes{
+    public void setup() throws InvalidValueException {
+
+        this.sideContent = new ArrayList<>(20);
+        //Aurorae Magnificus
+
+        sideContent.add(new Cell(Color.WHITE, 5));
+        sideContent.add(new Cell(Color.GREEN, 0));
+        sideContent.add(new Cell(Color.BLUE, 0));
+        sideContent.add(new Cell(Color.PURPLE, 0));
+        sideContent.add(new Cell(Color.WHITE, 2));
+
+        sideContent.add(new Cell(Color.PURPLE, 0));
+        sideContent.add(new Cell(Color.WHITE, 0));
+        sideContent.add(new Cell(Color.WHITE, 0));
+        sideContent.add(new Cell(Color.WHITE, 0));
+        sideContent.add(new Cell(Color.YELLOW, 0));
+
+        sideContent.add(new Cell(Color.YELLOW, 0));
+        sideContent.add(new Cell(Color.WHITE, 0));
+        sideContent.add(new Cell(Color.WHITE, 6));
+        sideContent.add(new Cell(Color.WHITE, 0));
+        sideContent.add(new Cell(Color.PURPLE, 0));
+
+        sideContent.add(new Cell(Color.WHITE, 1));
+        sideContent.add(new Cell(Color.WHITE, 0));
+        sideContent.add(new Cell(Color.WHITE, 0));
+        sideContent.add(new Cell(Color.GREEN, 0));
+        sideContent.add(new Cell(Color.WHITE, 4));
+
+        chosenOne = new Side("toTEST", 5, sideContent);
+        sides.add(chosenOne);
+
+        fake=new FakeView();
+        controller= new Controller(new ArrayList<String>(Arrays.asList("primo","secondo")));
+        fake.register(controller);
 
         countingBefore=new ArrayList<>();
         colorsBefore=new ArrayList<>();
 
         countingAfter=new ArrayList<>();
         colorsAfter=new ArrayList<>();
+
     }
-
-
 
     @Test
-    public void happy(){
-        try {
-            /*
-            controller.getcTurn().setRound();
-            controller.getcTurn().setTurn();
-            controller.getcTurn().setTurn();
-            controller.getcTurn().setTurn();
-            controller.getcTurn().setTurn();
+    public void tool7ERROR() throws Exception {
 
-*/
-            Dice d1 = new Dice(Color.BLUE, 1);
-            Dice d2 = new Dice(Color.GREEN, 4);
-            Dice d3 = new Dice(Color.PURPLE, 4);
-            Dice d4 = new Dice(Color.YELLOW, 4);
-            Dice d5 = new Dice(Color.YELLOW, 1);
+        controller.START();
+        fake.messageIncoming("/primo/###/start/side_reply/0");
+        fake.messageIncoming("/secondo/###/start/side_reply/0");
 
-            this.tester = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
-            controller.getcAction().resettingReserve(tester);
-        }
-        catch(Exception e){
-            fail("setting dentro test"+e);
-        }
+        Player player1 = controller.getPlayerByName("primo");
+        Player player2 = controller.getPlayerByName("secondo");
+        player1.setSideSelection(sides);
+        player1.setMySide(0);
+        player1.setFavours();
+        player2.setSideSelection(sides);
+        player2.setMySide(0);
+        player2.setFavours();
 
-        try {
-            counter(true);
+        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new TaglierinaCircolare(),
+                new PennelloPerPastaSalda(),
+                new Martelletto())));
 
-            mar.function(controller);
+        Dice d1 = new Dice(Color.BLUE, 1);
+        Dice d2 = new Dice(Color.GREEN, 4);
+        Dice d3 = new Dice(Color.PURPLE, 4);
+        Dice d4 = new Dice(Color.YELLOW, 4);
+        Dice d5 = new Dice(Color.YELLOW, 1);
+        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        controller.getcAction().resettingReserve(supportReserve);
 
-            counter(false);
-
-            comparing();
-        }
-        catch(Exception e){
-            fail("ha lanciato eccezione"+ e);
-        }
-
+        fake.messageIncoming("/primo/###/utensil/activate/2");
+        counter(true);
+        fake.messageIncoming("/primo/###/utensil/use/2&7");
+        counter(false);
+        assertEquals("/###/primo/error/activate/2&7&1&5\n",fake.getMessage());
+        comparing();
     }
-    @Test(expected = InvalidActivationException.class)
-    public void invalid() throws InvalidHowManyTimes, InvalidValueException, InvalidActivationException, InvalidSomethingWasNotDoneGood {
-           /* controller.getcTurn().setRound();
-            controller.getcTurn().setTurn();
-            controller.getcTurn().setTurn();
-*/
+    @Test
+    public void tool7() throws Exception {
 
+        controller.START();
+        fake.messageIncoming("/primo/###/start/side_reply/0");
+        fake.messageIncoming("/secondo/###/start/side_reply/0");
 
+        Player player1 = controller.getPlayerByName("primo");
+        Player player2 = controller.getPlayerByName("secondo");
+        player1.setSideSelection(sides);
+        player1.setMySide(0);
+        player1.setFavours();
+        player2.setSideSelection(sides);
+        player2.setMySide(0);
+        player2.setFavours();
 
-            Dice d1 = new Dice(Color.BLUE, 1);
-            Dice d2 = new Dice(Color.GREEN, 4);
-            Dice d3 = new Dice(Color.PURPLE, 4);
-            Dice d4 = new Dice(Color.YELLOW, 4);
-            Dice d5 = new Dice(Color.YELLOW, 1);
+        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new TaglierinaCircolare(),
+                new PennelloPerPastaSalda(),
+                new Martelletto())));
 
-            this.tester = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
-            controller.getcAction().resettingReserve(tester);
+        Dice d1 = new Dice(Color.BLUE, 1);
+        Dice d2 = new Dice(Color.GREEN, 4);
+        Dice d3 = new Dice(Color.PURPLE, 4);
+        Dice d4 = new Dice(Color.YELLOW, 4);
+        Dice d5 = new Dice(Color.YELLOW, 1);
+        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        controller.getcAction().resettingReserve(supportReserve);
+        String prima =supportReserve.toString();
+        fake.messageIncoming("/primo/###/update/turn/?");
+        fake.messageIncoming("/secondo/###/update/turn/?");
+        fake.messageIncoming("/secondo/###/update/turn/?");
 
-
-
-            counter(true);
-
-            mar.function(controller);
-
-            counter(false);
-
-            comparing();
-
-            fail("non ha lanciato excp");
-
+        fake.messageIncoming("/primo/###/utensil/activate/2");
+        counter(true);
+        fake.messageIncoming("/primo/###/utensil/use/2&7");
+        counter(false);
+        comparing();
+        String dopo = controller.getcAction().getReserve().toString();
+        System.out.println(prima+"!!!!!"+dopo);
+        assertTrue(!prima.equals(dopo));
+        //todo può essere utile come tipo di testing? ci sono probabilità, basse, che sia uguale a prima
     }
+
 
     private void counter(boolean isBefore){
         ArrayList<Dice> container = controller.getcAction().getReserve().getDices();
