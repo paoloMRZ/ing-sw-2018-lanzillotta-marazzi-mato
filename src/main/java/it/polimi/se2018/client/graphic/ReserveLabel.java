@@ -147,4 +147,8 @@ public class ReserveLabel{
     public TextField getTextField() {
         return listener;
     }
+
+    public String getDieName() {
+        return dieName;
+    }
 }

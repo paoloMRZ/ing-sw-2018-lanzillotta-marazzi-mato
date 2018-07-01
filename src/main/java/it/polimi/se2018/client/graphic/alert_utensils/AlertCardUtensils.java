@@ -7,11 +7,15 @@ import it.polimi.se2018.client.graphic.ReserveLabel;
 import it.polimi.se2018.client.graphic.SideCardLabel;
 import it.polimi.se2018.client.graphic.adapter_gui.AdapterResolution;
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -23,9 +27,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static it.polimi.se2018.client.graphic.Utility.*;
+import static java.lang.Integer.parseInt;
 
 
 /**
@@ -37,7 +44,7 @@ import static it.polimi.se2018.client.graphic.Utility.*;
  */
 
 
-public class AlertCardUtensils {
+public class AlertCardUtensils implements ChangeListener<String> {
 
     private static final String EXTENSION = ".png";
     private static final String SUBDIRECTORY = "";
@@ -52,6 +59,11 @@ public class AlertCardUtensils {
     private SideCardLabel playerSide;
     private Stage window;
     private AdapterResolution adapter;
+    private TextField costOfFirst = new TextField();
+    private TextField costOfSecond = new TextField();
+    private TextField costOfThird = new TextField();
+    private ArrayList<String> infoCostHistory;
+    private HBox cardSelection;
 
 
     /**
@@ -84,10 +96,10 @@ public class AlertCardUtensils {
 
         window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
-        window.setOnCloseRequest(Event::consume);
+        //window.setOnCloseRequest(Event::consume);
         window.setTitle(title);
-        window.setWidth(1100);
-        window.setHeight(800);
+        window.setMaxWidth(1100);
+        window.setMaxHeight(800);
 
         StackPane baseWindow = new StackPane();
 
@@ -119,9 +131,114 @@ public class AlertCardUtensils {
         layoutButton.setAlignment(Pos.CENTER);
 
 
+        //Inizializzo i costi delle utensili
+        infoCostHistory = new ArrayList<>(Arrays.asList("1", "1","1"));
+
         //Layout card
-        HBox layoutCard = new HBox(40);
-        layoutCard.setAlignment(Pos.CENTER);
+        setCardCollection();
+
+
+        //Layout finale
+        VBox layoutFinal = new VBox(37);
+        layoutFinal.setAlignment(Pos.CENTER);
+        layoutFinal.getChildren().addAll(labelText, cardSelection, layoutButton);
+
+        baseWindow.getChildren().addAll(backWindow, layoutFinal);
+
+        Scene scene = new Scene(baseWindow);
+        window.setScene(scene);
+        window.showAndWait();
+    }
+
+
+    /**
+     * Metodo richiamato a seguito della convalida da parte del server dell'utilizzo della carta Utensile selezionata
+     *
+     */
+
+    public void launchExecutionUtensil(Boolean isBisActivate, String bisContent){
+        ActionUtensils actionUtensils = null;
+        try {
+            //DA TOGLIERE
+            actionUtensils = new ActionUtensils(cardUtensils.getDictionaryUtensils(),String.valueOf(cardUtensils.getKeyName().get(Integer.parseInt(selection))), reserve, connectionHandler,selection, playerSide, window,adapter,bisContent);
+            actionUtensils.setBisEffect(isBisActivate);
+
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+
+        window.setWidth(1200);
+        window.setHeight(900);
+        window.centerOnScreen();
+
+        Scene scene = new Scene(actionUtensils.getWindow());
+        Platform.runLater(() -> {
+            window.setScene(scene);
+        });
+
+    }
+
+
+    /**
+     * Metodo utilizzato per chiudere la finestra di interazione con le carte Utensili
+     *
+     */
+
+    public void closeExecutionUtensil(){
+        window.close();
+    }
+
+
+    /**
+     * Metodo utilizzato per cambaire dinamicamente il costo associato ad una carta Utensile specifica
+     *
+     * @param observableValue Riferimento all'oggetto osservabile su cui applicare le modifiche
+     * @param oldValue Contenuto vecchio del TextField
+     * @param newValue Contenuto nuovo del TextField
+     */
+
+    @Override
+    public void changed(ObservableValue observableValue, String oldValue, String newValue) {
+
+        try{
+            StringProperty textProperty = (StringProperty) observableValue;
+            TextField textField = (TextField) textProperty.getBean();
+
+            if(textField == costOfFirst){
+                infoCostHistory.set(0,newValue);
+                setCardCollection();
+            }
+
+            else if(textField == costOfSecond){
+                infoCostHistory.set(1,newValue);
+                setCardCollection();
+            }
+
+            else if(textField == costOfThird){
+                infoCostHistory.set(2,newValue);
+                setCardCollection();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+
+
+    /**
+     * Metodo utlizzato per la configurazione dell'elemento grafico contenente le carte Utensile utilizzabili per la partita corrente
+     *
+     */
+
+    private void setCardCollection(){
+
+        //Layout card
+        cardSelection = new HBox(40);
+        cardSelection.setAlignment(Pos.CENTER);
+        Label costFavours;
 
         for (String card:cardUtensils.getKeyName()) {
             VBox vbox = new VBox(10);
@@ -135,59 +252,30 @@ public class AlertCardUtensils {
                 selection = String.valueOf(cardUtensils.getKeyName().indexOf(card));
             });
 
-            //TODO: modificare aggiornamento con listener
-            item.setUserData("1");
-            node.getChildren().add(item);
-            Label costFavours = setFontStyle(new Label("Costo: " + item.getUserData().toString()),40);
+            item.setUserData(String.valueOf(infoCostHistory.get(cardUtensils.getKeyName().indexOf(card))));
+            costFavours = setFontStyle(new Label("Costo: " + item.getUserData().toString()),40);
             costFavours.setAlignment(Pos.CENTER);
+
+
+            node.getChildren().add(item);
             vbox.getChildren().addAll(node, costFavours);
             vbox.setAlignment(Pos.CENTER);
-            layoutCard.getChildren().add(vbox);
+            cardSelection.getChildren().add(vbox);
         }
 
-
-        //Layout finale
-        VBox layoutFinal = new VBox(37);
-        layoutFinal.setAlignment(Pos.CENTER);
-        layoutFinal.getChildren().addAll(labelText, layoutCard, layoutButton);
-
-        baseWindow.getChildren().addAll(backWindow, layoutFinal);
-
-        Scene scene = new Scene(baseWindow);
-        window.setScene(scene);
-        window.showAndWait();
-    }
-
-
-    /**
-     * Metodo richiamato a seguito della convalida da parte del server dell'utilizo della carta Utensile selezionata
-     *
-     */
-
-    public void launchExecutionUtensil(){
-        ActionUtensils actionUtensils = null;
-        try {
-            actionUtensils = new ActionUtensils(cardUtensils.getDictionaryUtensils(),String.valueOf(cardUtensils.getKeyName().get(Integer.parseInt(selection))), reserve, connectionHandler,selection, playerSide, window,adapter);
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        Scene scene = new Scene(actionUtensils.getWindow());
-        window.setWidth(1200);
-        window.setHeight(900);
-        window.centerOnScreen();
-
-        Platform.runLater(() -> window.setScene(scene));
 
     }
 
 
-    /**
-     * Metodo utilizzato per chiudere la finestra di interazione con le carte Utensili
-     *
-     */
 
-    public void closeExecutionUtensil(){
-        window.close();
+    public void updateCostUtensil(String newValue, String cardUtensil){
+
+        switch (cardUtensil){
+            case "0": changed(costOfFirst.textProperty(),this.costOfFirst.getText(),newValue); break;
+            case "1": changed(costOfSecond.textProperty(),this.costOfSecond.getText(),newValue); break;
+            case "2": changed(costOfThird.textProperty(),this.costOfThird.getText(),newValue); break;
+        }
+
     }
 
 }

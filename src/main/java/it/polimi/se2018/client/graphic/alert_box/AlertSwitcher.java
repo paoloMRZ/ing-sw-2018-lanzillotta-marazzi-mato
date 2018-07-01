@@ -2,6 +2,7 @@ package it.polimi.se2018.client.graphic.alert_box;
 
 import it.polimi.se2018.client.graphic.InitWindow;
 import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -55,6 +56,7 @@ public class AlertSwitcher{
         //Configurazione del pannello
         window.initModality(Modality.APPLICATION_MODAL);
         window.getIcons().add(new Image("iconPack/icon-sagrada.png", 10, 10, false, true));
+        window.setOnCloseRequest(Event::consume);
         window.setTitle(title);
         window.setMaxWidth(550);
         window.setMaxHeight(480);
