@@ -29,9 +29,11 @@ public class Reserve {
 
 
     public void put(Dice d){
-        Dice tmp= new Dice(d.getColor(),d.getNumber());
-        dices.add(tmp);
-        setUpdate();
+        if(d!=null) {
+            Dice tmp = new Dice(d.getColor(), d.getNumber());
+            dices.add(tmp);
+            setUpdate();
+        }
     }
 
     //passo ina copia per rispettare le regole di incapsulamento
@@ -57,13 +59,17 @@ public class Reserve {
     //todo toString da fare
     public String toString(){
         String message = "";
-        for (Dice die : dices) {
-            if (dices.indexOf(die) == 0)
-                message = message.concat(die.getColor().name() + die.getNumber());
-            else
-                message = message.concat("&" + die.getColor().name() + die.getNumber());
+        if(dices.isEmpty()){
+            message = message.concat("white0");
         }
-
+        else{
+            for (Dice die : dices) {
+                if (dices.indexOf(die) == 0)
+                    message = message.concat(die.getColor().name() + die.getNumber());
+                else
+                    message = message.concat("&" + die.getColor().name() + die.getNumber());
+            }
+        }
         message = message.concat("\n");
 
         return message;

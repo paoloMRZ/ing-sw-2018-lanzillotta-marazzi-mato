@@ -43,7 +43,7 @@ public class ControllerTurn implements ObserverTimer {
         this.numbOfPlayers=lobby.peopleCounter();
         this.indexAmongPs=numbOfPlayers;
         this.counterCMod=numbOfPlayers;
-        this.sagradaTimer=new SagradaTimer((60*60));
+        this.sagradaTimer=new SagradaTimer((100));
         sagradaTimer.add(this);
     }
 
@@ -127,11 +127,6 @@ public class ControllerTurn implements ObserverTimer {
                 sagradaTimer.stop();
                 timeIsOn = false;
                 controller.getcChat().notifyObserver(new TimeIsUp(turnOf));
-                /*
-                if (!getTurn().getDidPlayDie() && !getTurn().getDidPlayCard()) {
-                    getTurn().forget();
-                    controller.getcChat().notifyObserver(new Freeze(turnOf));
-                }*/
             }
             if(!andata && turnOf.equals(firstPlayer) ){
                 callerModifier();
@@ -222,7 +217,6 @@ public void setThePlayers() throws InvalidValueException {
             else {
                 indexAmongPs=indexAmongPs-1;
                 counterCMod=counterCMod-1;
-
             }
         }
         else{

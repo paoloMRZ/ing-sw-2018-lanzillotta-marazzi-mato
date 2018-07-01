@@ -87,20 +87,21 @@ public class Cell {
      * @throws InvalidShadeException lanciata quando il dado da inserire non rispetta la restrizione di sfumatura della cella.
      */
     public void putDice(Dice d) throws NotEmptyCellException, InvalidColorException, InvalidShadeException {
+        if(d!=null) {
+            //Controlla se la cella è già occupata, se si lancia un'eccezione.
+            if (this.dice != null) throw new NotEmptyCellException();
 
-        //Controlla se la cella è già occupata, se si lancia un'eccezione.
-        if(this.dice != null) throw new NotEmptyCellException();
+            //Controlla se c'è una restrizione di colore. Se è violata lancia un'eccesione.
+            if (this.color != Color.WHITE && d.getColor() != this.color)
+                throw new InvalidColorException();
 
-        //Controlla se c'è una restrizione di colore. Se è violata lancia un'eccesione.
-        if(this.color != Color.WHITE && d.getColor() != this.color)
-            throw new InvalidColorException();
+            //Controlla se c'è una restrizione di sfumatura. Se è violata lancia un'eccezione.
+            if (this.number != 0 && d.getNumber() != this.number) throw new InvalidShadeException();
 
-        //Controlla se c'è una restrizione di sfumatura. Se è violata lancia un'eccezione.
-        if(this.number != 0 && d.getNumber() != this.number) throw  new InvalidShadeException();
-
-        //Se non è stata sollevata nessuna eccezione posiziona il dado.
-        //Dichiaro un nuovo dice con i valori di quello passato per non esporre il riferimento.
-        this.dice = new Dice(d.getColor(), d.getNumber());
+            //Se non è stata sollevata nessuna eccezione posiziona il dado.
+            //Dichiaro un nuovo dice con i valori di quello passato per non esporre il riferimento.
+            this.dice = new Dice(d.getColor(), d.getNumber());
+        }
     }
 
     /**
@@ -112,17 +113,17 @@ public class Cell {
      * @throws InvalidShadeException lanciata quando il dado da inserire non rispetta la restrizione di sfumatura della cella.
      */
     public void putDiceIgnoringColor(Dice d) throws NotEmptyCellException, InvalidShadeException {
+        if(d!=null) {
+            //Controlla se la cella è già occupata, se si lancia un'eccezione.
+            if (this.dice != null) throw new NotEmptyCellException();
 
-        //Controlla se la cella è già occupata, se si lancia un'eccezione.
-        if(this.dice != null) throw new NotEmptyCellException();
+            //Controlla se c'è una restrizione di sfumatura. Se è violata lancia un'eccezione.
+            if (this.number != 0 && d.getNumber() != this.number) throw new InvalidShadeException();
 
-        //Controlla se c'è una restrizione di sfumatura. Se è violata lancia un'eccezione.
-        if(this.number != 0 && d.getNumber() != this.number) throw  new InvalidShadeException();
-
-        //Se non è stata sollevata nessuna eccezione posiziona il dado.
-        //Dichiaro un nuovo dice con i valori di quello passato per non esporre il riferimento.
-        this.dice = new Dice(d.getColor(), d.getNumber());
-
+            //Se non è stata sollevata nessuna eccezione posiziona il dado.
+            //Dichiaro un nuovo dice con i valori di quello passato per non esporre il riferimento.
+            this.dice = new Dice(d.getColor(), d.getNumber());
+        }
     }
 
     /**
@@ -134,16 +135,17 @@ public class Cell {
      * @throws InvalidColorException lanciata quando il dado da inserire non rispetta la restrizione di colore della cella.
      */
     public void putDiceIgnoringShade(Dice d) throws NotEmptyCellException, InvalidColorException {
+        if(d!=null) {
+            //Controlla se la cella è già occupata, se si lancia un'eccezione.
+            if (this.dice != null) throw new NotEmptyCellException();
 
-        //Controlla se la cella è già occupata, se si lancia un'eccezione.
-        if(this.dice != null) throw new NotEmptyCellException();
+            //Controlla se c'è una restrizione di colore. Se è violata lancia un'eccesione.
+            if (this.color != Color.WHITE && d.getColor() != this.color) throw new InvalidColorException();
 
-        //Controlla se c'è una restrizione di colore. Se è violata lancia un'eccesione.
-        if(this.color != Color.WHITE && d.getColor() != this.color) throw new InvalidColorException();
-
-        //Se non è stata sollevata nessuna eccezione posiziona il dado.
-        //Dichiaro un nuovo dice con i valori di quello passato per non esporre il riferimento.
-        this.dice = new Dice(d.getColor(), d.getNumber());
+            //Se non è stata sollevata nessuna eccezione posiziona il dado.
+            //Dichiaro un nuovo dice con i valori di quello passato per non esporre il riferimento.
+            this.dice = new Dice(d.getColor(), d.getNumber());
+        }
     }
 
     /**

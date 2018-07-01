@@ -361,10 +361,8 @@ public class ControllerCard implements Visitor {
                 controller.getPlayerByName(m.getPlayer()).putDice(controller.getHoldingADiceMoveInProgress(),
                         m.getAttributes().get(6),
                         m.getAttributes().get(7));
-            } catch (InvalidCellException e1) {
-                e1.printStackTrace();
-            } catch (InvalidValueException e1) {
-                e1.printStackTrace();
+            } catch (InvalidValueException|InvalidCellException e1) {
+                controller.getcChat().notifyObserver(new ErrorSomethingNotGood(e1));
             }
 
             controller.getcChat().notifyObserver(new ErrorSelectionUtensil(m.getPlayer(),m.getCard()));

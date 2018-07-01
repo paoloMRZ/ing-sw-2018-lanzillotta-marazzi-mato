@@ -381,7 +381,7 @@ public class Table {
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-    public void resetUtensilsDeck(ArrayList<Utensils> newDeck){
+    public void resetUtensilsDeck(List<Utensils> newDeck){
         utensilsDeck= new ArrayList<>(newDeck);
     }
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -438,6 +438,7 @@ public class Table {
     }
 
     public void setUpdateDiceToRoundGrid() {
+        roundGrid.putAtFinishedRound(reserve.getDices());
         launchCommunication(new UpdateM(null,"round",reserve.toString()));
     }
 }

@@ -41,61 +41,79 @@ public class RoundGrid {
 
     public void put(int posOnGrid,Dice d) throws InvalidValueException{
         //ricopro il dado in ArrayList nel caso nella posizoine non ci siano già dati
-        if(posOnGrid>9 || posOnGrid <0) throw new InvalidValueException();
-        else{
-            Dice tmp = new Dice(d.getColor(), d.getNumber());
+        if(d!=null) {
+            try {
+                if (posOnGrid > 9 || posOnGrid < 0) throw new InvalidValueException();
+                else {
+                    Dice tmp = new Dice(d.getColor(), d.getNumber());
 
-            //SE LA POSIZIONE NON HA ELEMENTI
-            if (roundDices.get(posOnGrid) == null) {
-                ArrayList<Dice> toSave = new ArrayList<>();
-                toSave.add(tmp);
-                roundDices.add(posOnGrid,toSave);
-            } else {
-                roundDices.get(posOnGrid).add(tmp);
+                    //SE LA POSIZIONE NON HA ELEMENTI
+                    if (roundDices.get(posOnGrid) == null) {
+                        ArrayList<Dice> toSave = new ArrayList<>();
+                        toSave.add(tmp);
+                        roundDices.add(posOnGrid, toSave);
+                    } else {
+                        roundDices.get(posOnGrid).add(tmp);
+                    }
+                }
+                setUpdate();
+            } catch (IndexOutOfBoundsException e) {
+                throw new InvalidValueException();
             }
         }
-        setUpdate();
     }
 
     public Dice pick(int posOnGrid,int posOnLilGroup)throws InvalidValueException{
 
         if(posOnGrid>9 || posOnGrid <0) throw new InvalidValueException();
         else{
+            try{
            Dice tmp = roundDices.get(posOnGrid).get(posOnLilGroup);
            Dice ret = new Dice(tmp.getColor(),tmp.getNumber());
            roundDices.get(posOnGrid).remove(posOnLilGroup);
            //se non ci sono più elementi mi garantisco che sia posto a null, utile alla put
            if(roundDices.get(posOnGrid).isEmpty()) roundDices.set(posOnGrid,null);
            setUpdate();
-           return ret;
+           return ret;}
+           catch (NullPointerException | IndexOutOfBoundsException e){
+               throw new InvalidValueException();
+           }
         }
 
     }
     public Dice show(int posOnGrid,int posOnLilGroup)throws InvalidValueException{
-
-        if(posOnGrid>9 || posOnGrid <0) throw new InvalidValueException();
-        else{
-            Dice tmp = roundDices.get(posOnGrid).get(posOnLilGroup);
-            Dice ret = new Dice(tmp.getColor(),tmp.getNumber());
-            return ret;
+        try {
+            if (posOnGrid > 9 || posOnGrid < 0) throw new InvalidValueException();
+            else {
+                Dice tmp = roundDices.get(posOnGrid).get(posOnLilGroup);
+                if (tmp == null) throw new InvalidValueException();
+                Dice ret = new Dice(tmp.getColor(), tmp.getNumber());
+                return ret;
+            }
         }
-
+        catch (NullPointerException| IndexOutOfBoundsException e){
+            throw new InvalidValueException();
+        }
     }
 
 
     //metodo dedicato alle rimanenze della riserva che finiscono sulla griglia, viene appeso perchè è l'ultimo
     //round appena giocato
     public void putAtFinishedRound(ArrayList<Dice> lastD){
-        ArrayList<Dice> save = new ArrayList<>();
-        Iterator<Dice> el = lastD.iterator();
+        if(lastD!=null && !lastD.isEmpty()) {
 
-        while(el.hasNext()){
-            Dice tmp =el.next();
-            Dice toSave= new Dice(tmp.getColor(),tmp.getNumber());
-            save.add(toSave);
+            ArrayList<Dice> save = new ArrayList<>();
+            Iterator<Dice> el = lastD.iterator();
+
+            while (el.hasNext()) {
+                Dice tmp = el.next();
+                Dice toSave = new Dice(tmp.getColor(), tmp.getNumber());
+                save.add(toSave);
+            }
+            roundDices.add(save);
+            setUpdate();
         }
-        roundDices.add(save);
-        setUpdate();
+        else roundDices.add(new ArrayList<>());
     }
 
 
@@ -119,6 +137,7 @@ public class RoundGrid {
                     if (roundDices.indexOf(diceList) != 0){
                         message = message.concat("&white0");
                     }
+                    else message = message.concat("white0");
                 }
                 else{
                     if (roundDices.indexOf(diceList) != 0){

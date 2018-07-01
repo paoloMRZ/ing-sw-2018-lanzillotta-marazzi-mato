@@ -31,7 +31,7 @@ public class FakeView{
     }
     //directed to out
     public void register(Controller controller){
-        chat.register( controller.getcChat());
+        if(controller!=null) chat.register( controller.getcChat());
     }
 
     public void messageIncoming(String m){

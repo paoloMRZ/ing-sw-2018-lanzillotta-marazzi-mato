@@ -209,8 +209,10 @@ public class Player {
      */
 
     public void putDice(Dice die, int row, int col) throws InvalidCellException, InvalidCoordinatesException {
-        this.mySide.put(row,col,die);
-        launchCommunication(mySide.setUpdate());
+        if(die!=null) {
+            this.mySide.put(row, col, die);
+            launchCommunication(mySide.setUpdate());
+        }
     }
 
 
@@ -346,8 +348,10 @@ public class Player {
      */
 
     public void putWithoutDicesNear(int row, int col, Dice die) throws InvalidColorException, NotEmptyCellException, InvalidShadeException, InvalidCoordinatesException {
+        if(die!=null){
         mySide.putWithoutDicesNear(row,col,die);
         launchCommunication(mySide.setUpdate());
+        }
     }
     public Dice sidePick(int row, int col) throws InvalidCoordinatesException {
         Dice dado = mySide.pick(row,col);

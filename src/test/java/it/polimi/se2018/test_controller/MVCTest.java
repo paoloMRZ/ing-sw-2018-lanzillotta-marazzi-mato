@@ -1,7 +1,6 @@
 package it.polimi.se2018.test_controller;
 
 import it.polimi.se2018.server.controller.Controller;
-import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
@@ -15,14 +14,12 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class MVCTest {
     private Side chosenOne = null;
-    private ArrayList<Cell> sideContent = null;
     private FakeView fake;
     private Controller controller;
     private Reserve supportReserve = null;
@@ -31,7 +28,7 @@ public class MVCTest {
     @Before
     public void setup() throws Exception {
 
-        this.sideContent = new ArrayList<>(20);
+        ArrayList<Cell> sideContent = new ArrayList<>(20);
         //Aurorae Magnificus
 
         sideContent.add(new Cell(Color.WHITE, 5));
@@ -62,7 +59,7 @@ public class MVCTest {
         sides.add(chosenOne);
 
         fake=new FakeView();
-        controller= new Controller(new ArrayList<String>(Arrays.asList("primo","secondo")));
+        controller= new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
         fake.register(controller);
 
         controller.START();
@@ -79,33 +76,30 @@ public class MVCTest {
         player2.setFavours();
     }
     @Test
-    public void piazzamento() throws Exception {
+    public void piazzamento(){
 
         Dice d1 = new Dice(Color.BLUE, 5);
         Dice d2 = new Dice(Color.BLUE, 6);
         Dice d3 = new Dice(Color.BLUE, 6);
         Dice d4 = new Dice(Color.BLUE, 6);
         Dice d5 = new Dice(Color.BLUE, 6);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
 
         fake.messageIncoming("/primo/###/put/?/0&0&0");
         assertEquals("/###/primo/success/put/0&0&0\n",fake.getMessage());
     }
     @Test
-    public void tool1() throws Exception {
-
-
-        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new PinzaSgrossatrice(),
+    public void tool1(){
+        controller.resetUtensils(new ArrayList<>(Arrays.asList(new PinzaSgrossatrice(),
                                                                         new PennelloPerEglomise(),
                                                                             new AlesatorePerLaminaDiRame())));
-
         Dice d1 = new Dice(Color.RED, 5);
         Dice d2 = new Dice(Color.BLUE, 6);
         Dice d3 = new Dice(Color.BLUE, 6);
         Dice d4 = new Dice(Color.BLUE, 6);
         Dice d5 = new Dice(Color.BLUE, 6);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
 
         fake.messageIncoming("/primo/###/utensil/activate/0");
@@ -117,10 +111,10 @@ public class MVCTest {
         assertEquals("/###/primo/utensil/end/0&1&2&4\n",fake.getMessage());
     }
     @Test
-    public void tool2() throws Exception {
+    public void tool2(){
 
 
-        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new PinzaSgrossatrice(),
+        controller.resetUtensils(new ArrayList<>(Arrays.asList(new PinzaSgrossatrice(),
                 new PennelloPerEglomise(),
                 new AlesatorePerLaminaDiRame())));
 
@@ -129,7 +123,7 @@ public class MVCTest {
         Dice d3 = new Dice(Color.PURPLE, 4);
         Dice d4 = new Dice(Color.PURPLE, 4);
         Dice d5 = new Dice(Color.YELLOW, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
 
         fake.messageIncoming("/primo/###/put/?/0&0&2");
@@ -149,7 +143,7 @@ public class MVCTest {
 
 
 
-        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new PinzaSgrossatrice(),
+        controller.resetUtensils(new ArrayList<>(Arrays.asList(new PinzaSgrossatrice(),
                 new PennelloPerEglomise(),
                 new AlesatorePerLaminaDiRame())));
 
@@ -158,7 +152,7 @@ public class MVCTest {
         Dice d3 = new Dice(Color.PURPLE, 4);
         Dice d4 = new Dice(Color.PURPLE, 4);
         Dice d5 = new Dice(Color.YELLOW, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
 
         chosenOne.put(0,1,d2);
@@ -177,7 +171,7 @@ public class MVCTest {
     public void tool4() throws Exception {
 
 
-        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new PinzaSgrossatrice(),
+        controller.resetUtensils(new ArrayList<>(Arrays.asList(new PinzaSgrossatrice(),
                 new PennelloPerEglomise(),
                 new Lathekin())));
 
@@ -186,7 +180,7 @@ public class MVCTest {
         Dice d3 = new Dice(Color.PURPLE, 4);
         Dice d4 = new Dice(Color.PURPLE, 4);
         Dice d5 = new Dice(Color.YELLOW, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
 
         chosenOne.put(0,1,d2);
@@ -205,7 +199,7 @@ public class MVCTest {
     public void tool5() throws Exception {
 
 
-        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new TaglierinaCircolare(),
+        controller.resetUtensils(new ArrayList<>(Arrays.asList(new TaglierinaCircolare(),
                 new PennelloPerPastaSalda(),
                 new Martelletto())));
 
@@ -214,7 +208,7 @@ public class MVCTest {
         Dice d3 = new Dice(Color.BLUE, 1);
         Dice d4 = new Dice(Color.BLUE, 1);
         Dice d5 = new Dice(Color.BLUE, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
 
         controller.getcAction().putOnGrid(0, new Dice(Color.YELLOW, 4));
@@ -229,10 +223,10 @@ public class MVCTest {
         assertEquals("/###/primo/utensil/end/0&5&2&4\n",fake.getMessage());
     }
     @Test
-    public void tool6() throws Exception {
+    public void tool6(){
 
 
-        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new TaglierinaCircolare(),
+        controller.resetUtensils(new ArrayList<>(Arrays.asList(new TaglierinaCircolare(),
                 new PennelloPerPastaSalda(),
                 new Martelletto())));
 
@@ -241,7 +235,7 @@ public class MVCTest {
         Dice d3 = new Dice(Color.BLUE, 1);
         Dice d4 = new Dice(Color.BLUE, 1);
         Dice d5 = new Dice(Color.BLUE, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
 
 
@@ -254,12 +248,12 @@ public class MVCTest {
         System.out.println(fake.getMessage());
         assertEquals("/###/primo/utensil/end/1&6&2&4\n",fake.getMessage());
     }
+
     @Test
-    public void tool7ERROR() throws Exception {
+    public void tool7(){
 
 
-
-        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new TaglierinaCircolare(),
+        controller.resetUtensils(new ArrayList<>(Arrays.asList(new TaglierinaCircolare(),
                 new PennelloPerPastaSalda(),
                 new Martelletto())));
 
@@ -268,31 +262,7 @@ public class MVCTest {
         Dice d3 = new Dice(Color.BLUE, 1);
         Dice d4 = new Dice(Color.BLUE, 1);
         Dice d5 = new Dice(Color.BLUE, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
-        controller.getcAction().resettingReserve(supportReserve);
-
-
-
-        fake.messageIncoming("/primo/###/utensil/activate/2");
-        assertEquals("/###/primo/success/activate/2&7&2&5\n",fake.getMessage());
-        fake.messageIncoming("/primo/###/utensil/use/2&7");
-
-        assertEquals("/###/primo/error/activate/2&7&1&5\n",fake.getMessage());
-    }
-    @Test
-    public void tool7() throws Exception {
-
-
-        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new TaglierinaCircolare(),
-                new PennelloPerPastaSalda(),
-                new Martelletto())));
-
-        Dice d1 = new Dice(Color.BLUE, 1);
-        Dice d2 = new Dice(Color.BLUE, 1);
-        Dice d3 = new Dice(Color.BLUE, 1);
-        Dice d4 = new Dice(Color.BLUE, 1);
-        Dice d5 = new Dice(Color.BLUE, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
 
         fake.messageIncoming("/primo/###/update/turn/?");
@@ -306,11 +276,9 @@ public class MVCTest {
         assertEquals("/###/primo/utensil/end/2&7&2&4\n",fake.getMessage());
     }
     @Test
-    public void tool8() throws Exception {
+    public void tool8(){
 
-
-
-        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new TenagliaARotelle(),
+        controller.resetUtensils(new ArrayList<>(Arrays.asList(new TenagliaARotelle(),
                 new RigaInSughero(),
                 new TamponeDiamantato())));
 
@@ -319,7 +287,7 @@ public class MVCTest {
         Dice d3 = new Dice(Color.PURPLE, 4);
         Dice d4 = new Dice(Color.YELLOW, 4);
         Dice d5 = new Dice(Color.YELLOW, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
         fake.messageIncoming("/primo/###/put/?/0&0&0");
         assertEquals("/###/primo/success/put/0&0&0\n",fake.getMessage());
@@ -331,10 +299,9 @@ public class MVCTest {
         assertEquals("/###/primo/utensil/end/0&8&2&4\n",fake.getMessage());
     }
     @Test
-    public void tool8ERROR() throws Exception {
+    public void tool9(){
 
-
-        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new TenagliaARotelle(),
+        controller.resetUtensils(new ArrayList<>(Arrays.asList(new TenagliaARotelle(),
                 new RigaInSughero(),
                 new TamponeDiamantato())));
 
@@ -343,34 +310,7 @@ public class MVCTest {
         Dice d3 = new Dice(Color.PURPLE, 4);
         Dice d4 = new Dice(Color.YELLOW, 4);
         Dice d5 = new Dice(Color.YELLOW, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
-        controller.getcAction().resettingReserve(supportReserve);
-        controller.getPlayerByName("primo").reductor();
-
-        fake.messageIncoming("/primo/###/put/?/0&0&0");
-        assertEquals("/###/primo/success/put/0&0&0\n",fake.getMessage());
-
-        fake.messageIncoming("/primo/###/utensil/activate/0");
-        assertEquals("/###/primo/success/activate/0&8&2&5\n",fake.getMessage());
-
-        fake.messageIncoming("/primo/###/utensil/use/0&8&0&0&1");
-        assertEquals("/###/primo/error/activate/0&8&1&5\n",fake.getMessage());
-    }
-    @Test
-    public void tool9() throws Exception {
-
-
-
-        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new TenagliaARotelle(),
-                new RigaInSughero(),
-                new TamponeDiamantato())));
-
-        Dice d1 = new Dice(Color.BLUE, 5);
-        Dice d2 = new Dice(Color.GREEN, 4);
-        Dice d3 = new Dice(Color.PURPLE, 4);
-        Dice d4 = new Dice(Color.YELLOW, 4);
-        Dice d5 = new Dice(Color.YELLOW, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
 
         fake.messageIncoming("/primo/###/utensil/activate/1");
@@ -380,10 +320,10 @@ public class MVCTest {
         assertEquals("/###/primo/utensil/end/1&9&2&4\n",fake.getMessage());
     }
     @Test
-    public void tool10() throws Exception {
+    public void tool10(){
 
 
-        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new TenagliaARotelle(),
+        controller.resetUtensils(new ArrayList<>(Arrays.asList(new TenagliaARotelle(),
                 new RigaInSughero(),
                 new TamponeDiamantato())));
 
@@ -392,7 +332,7 @@ public class MVCTest {
         Dice d3 = new Dice(Color.PURPLE, 4);
         Dice d4 = new Dice(Color.YELLOW, 4);
         Dice d5 = new Dice(Color.YELLOW, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
 
         fake.messageIncoming("/primo/###/utensil/activate/2");
@@ -406,7 +346,7 @@ public class MVCTest {
 
 
 
-        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new TaglierinaCircolare(),
+        controller.resetUtensils(new ArrayList<>(Arrays.asList(new TaglierinaCircolare(),
                 new DiluentePerPastaSalda(),
                 new TaglierinaManuale())));
 
@@ -415,7 +355,7 @@ public class MVCTest {
         Dice d3 = new Dice(Color.BLUE, 1);
         Dice d4 = new Dice(Color.BLUE, 1);
         Dice d5 = new Dice(Color.BLUE, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
 
 
@@ -436,7 +376,7 @@ public class MVCTest {
     public void tool12() throws Exception {
 
 
-        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new TaglierinaCircolare(),
+        controller.resetUtensils(new ArrayList<>(Arrays.asList(new TaglierinaCircolare(),
                 new DiluentePerPastaSalda(),
                 new TaglierinaManuale())));
 
@@ -445,7 +385,7 @@ public class MVCTest {
         Dice d3 = new Dice(Color.BLUE, 5);
         Dice d4 = new Dice(Color.BLUE, 1);
         Dice d5 = new Dice(Color.BLUE, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
 
         controller.getcAction().workOnSide("primo", controller.getcAction()

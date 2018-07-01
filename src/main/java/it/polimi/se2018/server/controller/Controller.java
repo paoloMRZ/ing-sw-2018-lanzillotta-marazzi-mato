@@ -2,6 +2,7 @@ package it.polimi.se2018.server.controller;
 
 import it.polimi.se2018.server.events.*;
 import it.polimi.se2018.server.events.responses.Choice;
+import it.polimi.se2018.server.events.responses.ErrorSomethingNotGood;
 import it.polimi.se2018.server.events.responses.PassTurn;
 import it.polimi.se2018.server.events.responses.UpdateM;
 import it.polimi.se2018.server.events.tool_mex.Activate;
@@ -372,7 +373,7 @@ public class Controller{
         try {
             lobby.callPlayerByName(m.getPlayer()).forget();
         } catch (InvalidValueException e) {
-            e.printStackTrace();
+            cChat.notifyObserver(new ErrorSomethingNotGood(e));
         }
     }
 
@@ -384,7 +385,7 @@ public class Controller{
         try {
             lobby.callPlayerByName(m.getPlayer()).remember();
         } catch (InvalidValueException e) {
-            e.printStackTrace();
+            cChat.notifyObserver(new ErrorSomethingNotGood(e));
         }
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -404,6 +405,9 @@ public class Controller{
     public Dice getHoldingADiceMoveInProgress(){
         return lobby.getHoldingADiceMoveInProgress();
     }
+
+    /**Metodo che pulisce il riferimento
+     */
     public void cleanHoldingADiceMoveInProgress(){
        lobby.cleanHoldingADiceMoveInProgress();
     }
@@ -432,7 +436,7 @@ public class Controller{
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void resetUtensils(ArrayList<Utensils> newDeck){
+    public void resetUtensils(List<Utensils> newDeck){
         lobby.resetUtensilsDeck(newDeck);
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

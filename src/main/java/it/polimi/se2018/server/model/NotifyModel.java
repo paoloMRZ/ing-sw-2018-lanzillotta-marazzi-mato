@@ -9,7 +9,7 @@ public class NotifyModel implements ModelObservable {
     private ViewAsObserver view;
 
     public void register(ViewAsObserver o){
-        this.view=o;
+        if(o!=null) this.view=o;
     }
 
     public void unregister(){
