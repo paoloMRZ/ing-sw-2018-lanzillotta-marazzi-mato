@@ -176,6 +176,13 @@ public class FullAdapter implements AdapterResolution{
     }
 
     @Override
+    public List<Double> getSidePlayerUtensilSize() {
+
+        //Posizone Grid della Side visualizzata nelle schermate dedicate alle carte Utensile (Right, Top, Left, Bottom)
+        return new ArrayList<>(Arrays.asList(0d, 0d, 10d, 21d));
+    }
+
+    @Override
     public void putSettingLabel(AnchorPane anchorGame, HBox settingLabel) {
         configureAnchorPane(anchorGame, settingLabel, 720d, 50d, 110d, 920d);
 

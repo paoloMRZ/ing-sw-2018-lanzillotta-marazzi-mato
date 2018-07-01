@@ -173,6 +173,13 @@ public class MediumAdapter implements AdapterResolution {
     }
 
     @Override
+    public List<Double> getSidePlayerUtensilSize() {
+
+        //Posizone Grid della Side visualizzata nelle schermate dedicate alle carte Utensile (Right, Top, Left, Bottom)
+        return new ArrayList<>(Arrays.asList(0d, 0d, 10d, 21d));
+    }
+
+    @Override
     public void putSettingLabel(AnchorPane anchorGame, HBox settingLabel) {
         configureAnchorPane(anchorGame, settingLabel, 835d, 80d, 70d, 800d);
 

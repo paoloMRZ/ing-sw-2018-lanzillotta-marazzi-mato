@@ -103,7 +103,7 @@ public class SelectorContent {
         rect.setStroke(Color.RED);
         rect.setStrokeWidth(2d);
         group = new Group(rect);
-        toolSide = playerSide.callPlayerSide(playerSide.getPathCard(),connectionHandler.getNickname(),true,adapter);
+        toolSide = playerSide.callPlayerSide(playerSide.getPathCard(),connectionHandler.getNickname(),true,true,adapter);
     }
 
 

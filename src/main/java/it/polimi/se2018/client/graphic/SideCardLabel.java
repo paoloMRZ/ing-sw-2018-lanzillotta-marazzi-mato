@@ -44,7 +44,7 @@ public class SideCardLabel{
      */
 
     @SuppressWarnings("unchecked")
-    SideCardLabel(String sideCard, String nickName, boolean includeShadowGrid, AdapterResolution adapterResolution){
+    SideCardLabel(String sideCard, String nickName, boolean includeShadowGrid, boolean isCallUtensil, AdapterResolution adapterResolution){
 
         this.nickName = nickName;
         this.pathCard = sideCard;
@@ -60,7 +60,7 @@ public class SideCardLabel{
         setAnchorSide(sideCard,includeShadowGrid);
 
         //Posiziono la griglia sull'anchorPane creato
-        setPositionGrid(includeShadowGrid);
+        setPositionGrid(includeShadowGrid,isCallUtensil);
 
         ArrayList<Double> sizeRect = (ArrayList<Double>) adapter.getSidePlayerSize().get(3);
         if(includeShadowGrid) {
@@ -143,10 +143,11 @@ public class SideCardLabel{
      */
 
     @SuppressWarnings("unchecked")
-    private void setPositionGrid(Boolean includeShadowGrid){
+    private void setPositionGrid(Boolean includeShadowGrid,Boolean isCallUtensil){
         ArrayList<Double> positionGrid;
         if(includeShadowGrid){
-            positionGrid = (ArrayList<Double>) adapter.getSidePlayerSize().get(2);
+            if(!isCallUtensil) positionGrid = (ArrayList<Double>) adapter.getSidePlayerSize().get(2);
+            else positionGrid = (ArrayList<Double>) adapter.getSidePlayerUtensilSize();
             configureAnchorPane(anchorPane,gridPane,positionGrid.get(0),positionGrid.get(1),positionGrid.get(2),positionGrid.get(3));
         }
         else{
@@ -222,8 +223,8 @@ public class SideCardLabel{
      * @return Riferimento all'elemento SideCardLabel creato
      */
 
-    public SideCardLabel callPlayerSide(String sideCard, String nickName, boolean includeShadowGrid, AdapterResolution adapterResolution){
-        SideCardLabel callPlayerSide = new SideCardLabel(sideCard, nickName, includeShadowGrid,adapterResolution);
+    public SideCardLabel callPlayerSide(String sideCard, String nickName, boolean includeShadowGrid, boolean isCallUtensil, AdapterResolution adapterResolution){
+        SideCardLabel callPlayerSide = new SideCardLabel(sideCard, nickName, includeShadowGrid, isCallUtensil,adapterResolution);
         int imageSize = (Integer)adapter.getSidePlayerSize().get(4).get(0);
         callPlayerSide.setDicePutHistory(dicePutHistory);
         int k=0;

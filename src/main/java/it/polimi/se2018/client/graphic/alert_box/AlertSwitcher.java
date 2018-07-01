@@ -110,7 +110,7 @@ public class AlertSwitcher{
                     int portValue = 0;
                     if(connectionType.equals(SOCKET)) portValue= Integer.parseInt(textPort.getText());
                     sceneLoading = new SceneLoading(window,init).getSceneLoading();
-                    sceneNickName = new SceneNickName(window,connectionType,init,portValue,textIP.getText(),sceneLoading, sceneConnection).getSceneNickName();
+                    sceneNickName = new SceneNickName(window,connectionType,interfaceType,init,portValue,textIP.getText(),sceneLoading, sceneConnection).getSceneNickName();
                     window.setScene(sceneNickName);
                 }
             });
@@ -138,7 +138,6 @@ public class AlertSwitcher{
         layuot.setAlignment(Pos.CENTER);
         sceneConnection = new Scene(layuot,550,480);
         window.setScene(sceneConnection);
-        window.setOnCloseRequest(e -> window.close());
         window.showAndWait();
     }
 

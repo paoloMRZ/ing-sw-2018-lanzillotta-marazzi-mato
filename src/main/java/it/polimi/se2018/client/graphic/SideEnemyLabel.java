@@ -71,7 +71,7 @@ public class SideEnemyLabel{
             labelName.setAlignment(Pos.CENTER);
 
             //Configurazione carta Side
-            sideEnemy.add(new SideCardLabel(sideName.get(i), nameOfPlayers.get(i),false,adapter));
+            sideEnemy.add(new SideCardLabel(sideName.get(i), nameOfPlayers.get(i),false,false,adapter));
 
             //Settaggio Finale
             cardEnemy.getChildren().addAll(labelName, sideEnemy.get(i).getAnchorPane());

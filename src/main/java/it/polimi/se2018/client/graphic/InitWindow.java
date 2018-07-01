@@ -1,5 +1,6 @@
 package it.polimi.se2018.client.graphic;
 
+import it.polimi.se2018.client.cli.Cli;
 import it.polimi.se2018.client.connection_handler.ConnectionHandler;
 import it.polimi.se2018.client.connection_handler.ConnectionHandlerObserver;
 import it.polimi.se2018.client.graphic.alert_box.*;
@@ -47,10 +48,12 @@ import static it.polimi.se2018.client.graphic.Utility.*;
 public class InitWindow extends Application implements ConnectionHandlerObserver{
 
     private ConnectionHandler connectionHandler;
+    private Cli initCli;
     private TextField message = new TextField();
     private Boolean startGame = true;
     private Boolean isInitReserve = true;
     private AnchorPane anchorGame;
+    private Stage primaryStage;
 
     //Elementi grafici della schermata game
     private AdapterResolution adapterResolution;
@@ -93,9 +96,12 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage init) {
 
         //TODO: SCHERMATA LOGIN
+
+
+        this.primaryStage = init;
 
         //Configurazione della Schermata di Login
         primaryStage.setTitle(SAGRADA);
@@ -217,7 +223,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                             adapterResolution.putSettingLabel(anchorGame, nodeSetting);
 
                             //Posiziono la carta Side del giocatore
-                            playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), true, adapterResolution);
+                            playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), true, false, adapterResolution);
                             sidePlayer = playerSide.getAnchorPane();
                             adapterResolution.putSideLabel(anchorGame, sidePlayer);
 
@@ -328,11 +334,12 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                     if(infoSide.get(0).equals(connectionHandler.getNickname())) {
                         anchorGame.getChildren().remove(sidePlayer);
                         anchorGame.getChildren().remove(nodeButton);
-                        playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), true, adapterResolution);
+                        playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), true, false,adapterResolution);
                         playerSide.updateSideAfterPut(ClientMessageParser.getInformationsFromMessage(newValue));
                         sidePlayer = playerSide.getAnchorPane();
                         buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils,adapterResolution);
                         nodeButton = buttonGameLabel.getLabelButtonGame();
+                        alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
                         adapterResolution.putButtonLabel(anchorGame, nodeButton);
                         adapterResolution.putSideLabel(anchorGame,sidePlayer);
                     }
@@ -400,8 +407,8 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                 settingLabel.updateFavours(updateInfoUtensil.get(3));
                 nodeSetting = settingLabel.getSettingLabel();
                 adapterResolution.putSettingLabel(anchorGame, nodeSetting);
-                buttonGameLabel.getAlertCardUtensils().closeExecutionUtensil();
-                AlertValidation.display("Successo", "La carta è stata attivata!!");
+                alertCardUtensils.closeExecutionUtensil();
+                Platform.runLater(() -> AlertValidation.display("Successo", "La carta è stata attivata!!"));
             }
 
 
@@ -536,5 +543,14 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
             case MEDIUMSIZE: adapterResolution = new MediumAdapter(); break;
             case SMALLSIZE: adapterResolution = new SmallAdapter(); break;
         }
+    }
+
+
+    public void setInitCli(Cli initCli) {
+        this.initCli = initCli;
+    }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
     }
 }
