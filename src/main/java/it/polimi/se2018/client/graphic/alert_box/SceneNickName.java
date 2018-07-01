@@ -75,7 +75,7 @@ public class SceneNickName {
         //Validation of input
         continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             Platform.runLater(() -> {
-                if(isValidInput(textNick.getText(), connectionType, init, port, iP)) {
+                if(isValidInput(textNick.getText(), connectionType, interfaceType, init, port, iP)) {
                     if(interfaceType.equals("Gui")) window.setScene(sceneLoading);
                     else {
                         init.getPrimaryStage().hide();
@@ -92,7 +92,7 @@ public class SceneNickName {
 }
 
 
-    private static boolean isValidInput(String input, String connectionType, InitWindow init, int port, String iP) {
+    private static boolean isValidInput(String input, String connectionType, String interfaceType, InitWindow init, int port, String iP) {
 
         boolean value = false;
         if (input.trim().isEmpty()) {
@@ -102,11 +102,12 @@ public class SceneNickName {
             try {
                 if (connectionType.equals("Socket")) {
                     init.setConnectionHandler(new ConnectionHandlerSocket(input, init, iP, port));
-                    init.setInitCli(new Cli(init.getConnectionHandler().getNickname()));
+                    if(interfaceType.equals("Cli")) init.setInitCli(new Cli(init.getConnectionHandler().getNickname()));
                 }
-                else if (connectionType.equals("Rmi"))
+                else if (connectionType.equals("Rmi")) {
                     init.setConnectionHandler(new ConnectionHandlerRMI(input, init, iP));
-                    init.setInitCli(new Cli(init.getConnectionHandler().getNickname()));
+                    if (interfaceType.equals("Cli")) init.setInitCli(new Cli(init.getConnectionHandler().getNickname()));
+                }
                 value = true;
             } catch (InvalidNicknameException e) {
                 AlertValidation.display("Sagrada", "Attenzione! Nickname già utilizzato!.");
