@@ -1,7 +1,6 @@
 package it.polimi.se2018.client.connection_handler;
 
 
-import it.polimi.se2018.client.graphic.InitWindow;
 import it.polimi.se2018.client.message.ClientMessageCreator;
 import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
@@ -31,7 +30,7 @@ public class ConnectionHandlerRMI extends ConnectionHandler implements ClientInt
      * @param nickname nickname scelto dall'utente.
      * @throws InvalidNicknameException viene sollevata se il nickname scelto è già in uso sul server.
      */
-    public ConnectionHandlerRMI(String nickname, InitWindow view, String host) throws InvalidNicknameException, GameStartedException, NotBoundException, MalformedURLException, RemoteException {
+    public ConnectionHandlerRMI(String nickname, ConnectionHandlerObserver view, String host) throws InvalidNicknameException, GameStartedException, NotBoundException, MalformedURLException, RemoteException {
 
         super(view, nickname);
 

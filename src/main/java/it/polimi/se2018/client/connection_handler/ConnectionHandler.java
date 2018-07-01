@@ -1,17 +1,15 @@
 package it.polimi.se2018.client.connection_handler;
 
-import it.polimi.se2018.client.graphic.InitWindow;
-
 /**
  * La classe ha il compito di gestire la connessione tra client e server in base alla tecnologia di comunicazione scelta dal client.
  * @author Marazzi Paolo
  */
 public abstract class ConnectionHandler  {
 
-    private InitWindow view;
+    private ConnectionHandlerObserver view;
     private String nickname;
 
-    public ConnectionHandler(InitWindow view, String nickname){
+    public ConnectionHandler(ConnectionHandlerObserver view, String nickname){
         this.view = view;
         this.nickname = nickname;
     }
@@ -21,7 +19,7 @@ public abstract class ConnectionHandler  {
      * @param message messaggio da inviare alla view.
      */
     void notifica(String message){
-        view.sendToView(message);
+        view.NetworkRequest(message);
     }
 
     /**

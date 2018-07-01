@@ -3,7 +3,6 @@ package it.polimi.se2018.client.connection_handler;
 
 import it.polimi.se2018.client.message.ClientMessageCreator;
 import it.polimi.se2018.client.message.ClientMessageParser;
-import it.polimi.se2018.client.graphic.InitWindow;
 import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 
@@ -34,7 +33,7 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
      * @param nickname nickname con cui collegarsi al server.
      * @throws InvalidNicknameException viene sollevata quando il nickanme scelto è già utilizzato da un'altro client connesso al server.
      */
-    public ConnectionHandlerSocket(String nickname, InitWindow view, String host, int port) throws InvalidNicknameException, GameStartedException, IOException {
+    public ConnectionHandlerSocket(String nickname, ConnectionHandlerObserver view, String host, int port) throws InvalidNicknameException, GameStartedException, IOException {
 
         super(view, nickname);
 
