@@ -149,7 +149,8 @@ public class SmallAdapter implements  AdapterResolution {
     public List<List<Integer>> getSideChoiceLabelSize() {
         List<List<Integer>> sizeSideEnemy = new ArrayList<>();
 
-        sizeSideEnemy.add(new ArrayList<>(Arrays.asList(360, 303)));
+        //Dimensione del rettangolo per l'effetto Focus
+        sizeSideEnemy.add(new ArrayList<>(Arrays.asList(350, 293)));
 
         //Dimensione intestazione della Finestra
         //Dimensioni (Larghezza, Altezza) del bottone per interagire con la Finestra
