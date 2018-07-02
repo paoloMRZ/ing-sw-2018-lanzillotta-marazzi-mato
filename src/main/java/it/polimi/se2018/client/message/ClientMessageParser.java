@@ -336,5 +336,13 @@ public class ClientMessageParser {
     public static boolean isWinnerMessage(String message){
         return (message.replace("\n", "").split("/")[5]).equals("winner");
     }
-
+    /**
+     * Il metodo controlla se il messaggio è un messaggio che notifica i nuovi prezzi delle carte utensili.
+     *
+     * @param message messaggio da controllare
+     * @return true se è un messaggio dei costi, false altrimenti.
+     */
+    public static boolean isUpdatePriceMessage(String message){
+        return message.split("/")[3].equals(UPDATE) && message.split("/")[4].equals("price");
+    }
 }

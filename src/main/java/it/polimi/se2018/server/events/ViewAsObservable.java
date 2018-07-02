@@ -9,8 +9,6 @@ public interface ViewAsObservable {
     public void notifyObserver(Activate mex);
     public void notifyObserver(SimpleMove mex);
 
-    public void notifyObserver(UpdateReq mex);
-
     public void notifyObserver(HookMessage mex);
 
     public void notifyObserver(Freeze mex);

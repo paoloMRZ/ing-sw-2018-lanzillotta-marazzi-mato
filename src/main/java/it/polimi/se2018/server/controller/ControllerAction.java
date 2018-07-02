@@ -33,11 +33,11 @@ public class ControllerAction {
 
     /**
      * Costruttore della classe di azioni
-     * @param LOBBY riferimento alla classe principale del model
+     * @param lob riferimento alla classe principale del model
      * @param controller riferimento alla classe principale dei controller
      */
-    public ControllerAction(Table LOBBY,Controller controller){
-        this.lobby=LOBBY;
+    public ControllerAction(Table lob,Controller controller){
+        this.lobby=lob;
         this.controller=controller;
     }
 
@@ -50,8 +50,8 @@ public class ControllerAction {
      * @param d riferimento del dado dato preso o da riserva o da un altro punto dello schema
      * @param row la riga dove porre il dado
      * @param col colonna dove porre il dado
-     * @throws InvalidValueException
-     * @throws InvalidCellException
+     * @throws InvalidValueException eccezione che indica che richiediamo un parametro non valido.
+     * @throws InvalidCellException eccezione lanciata con un inserimento sbagliato, probabilmente per la presenza di un dado.
      */
     public void workOnSide(String name,Dice d, int row, int col)throws InvalidValueException, InvalidCellException {
         lobby.callPlayerByName(name).putDice(d,row,col);
@@ -64,8 +64,8 @@ public class ControllerAction {
      * @param oldCol colonna precedente
      * @param newRow riga nuova
      * @param newCol colonna nuova
-     * @throws InvalidValueException
-     * @throws InvalidCellException
+     * @throws InvalidValueException eccezione che indica che richiediamo un parametro non valido.
+     * @throws InvalidCellException eccezione lanciata con un inserimento sbagliato, probabilmente per la presenza di un dado.
      */
     public void workOnSideIgnoreColor(String name,int oldRow, int oldCol,int newRow, int newCol)throws InvalidValueException, InvalidCellException{
         lobby.callPlayerByName(name).putDiceIgnoreColor(oldRow,oldCol,newRow,newCol);
@@ -78,8 +78,8 @@ public class ControllerAction {
      * @param oldCol colonna precedente
      * @param newRow riga nuova
      * @param newCol colonna nuova
-     * @throws InvalidValueException
-     * @throws InvalidCellException
+     * @throws InvalidValueException eccezione che indica che richiediamo un parametro non valido.
+     * @throws InvalidCellException eccezione lanciata con un inserimento sbagliato, raccoglie più tipi di sotto eccezioni.
      */
     public void workOnSideIgnoreValue(String name,int oldRow, int oldCol,int newRow, int newCol)throws InvalidValueException, InvalidCellException{
         lobby.callPlayerByName(name).putDiceIgnoreValue(oldRow,oldCol,newRow,newCol);
@@ -91,11 +91,11 @@ public class ControllerAction {
      * @param die indice del dado nella riserva
      * @param row riga dove posizionare
      * @param col colonna dove posizionare
-     * @throws InvalidValueException
-     * @throws InvalidShadeException
-     * @throws NotEmptyCellException
-     * @throws InvalidColorException
-     * @throws InvalidSomethingWasNotDoneGood
+     * @throws InvalidValueException eccezione che indica che richiediamo un parametro non valido.
+     * @throws InvalidShadeException eccezione lanciata ad indicare che la sfumatura che cerchiamo di porre è errata.
+     * @throws NotEmptyCellException eccezione perc ui la cella non è vuota.
+     * @throws InvalidColorException eccezione di colore.
+     * @throws InvalidSomethingWasNotDoneGood eccezione lanciata ad indicare un'eccezione inaspettata.
      */
     public void putNoNeighbours(String name, int die, int row, int col) throws InvalidValueException, InvalidShadeException, NotEmptyCellException, InvalidColorException, InvalidSomethingWasNotDoneGood {
         Dice tmp= pickFromReserve(die);
@@ -120,13 +120,13 @@ public class ControllerAction {
     }
 
     /**
-     *Overloading del metodo putBackInReserve che in questo caso appende alla riserva attuale nel model
+     * Overloading del metodo putBackInReserve che in questo caso appende alla riserva attuale nel model
      * un dado a mia scelto passandogli il riferimento di tale
-     * @param D riferimento del dado da inserire
+     * @param d riferimento del dado da inserire
      */
-    public void putBackInReserve(Dice D){
+    public void putBackInReserve(Dice d){
         Reserve toStoreAgain=lobby.getReserve();
-        toStoreAgain.put(D);
+        toStoreAgain.put(d);
         lobby.setReserve(toStoreAgain);
     }
 
@@ -134,8 +134,8 @@ public class ControllerAction {
      * Metodo che  pesca un dado dalla riserva in base all'indice che gli passiamo.
      * @param whichOne indice del dado scleto nell'elenco della riserva.
      * @return riferimento al dado ritornato in risposta dal model.
-     * @throws InvalidValueException
-     * @throws InvalidSomethingWasNotDoneGood
+     * @throws InvalidValueException eccezione che indica che richiediamo un parametro non valido.
+     * @throws InvalidSomethingWasNotDoneGood eccezione lanciata ad indicare un'eccezione inaspettata.
      */
     public Dice pickFromReserve(int whichOne) throws InvalidValueException, InvalidSomethingWasNotDoneGood {
         try {
@@ -153,7 +153,7 @@ public class ControllerAction {
      * Metodo che segna che il player nel attuale turno ha attivato una carta utensile e gli scala il prezzo giusto.
      * @param name nome del giocatore che ha attivato la carta.
      * @param price prezzo da scalare al giocatore.
-     * @throws InvalidValueException
+     * @throws InvalidValueException eccezione che indica che richiediamo un parametro non valido.
      */
     public void playerActivatedCard(String name,int price)throws InvalidValueException{
         lobby.callPlayerByName(name).setDidPlayCard(price);
@@ -161,7 +161,7 @@ public class ControllerAction {
 
     /**
      * Metodo che sostituisce la riserva attuale nel model con la riserva che gli passo.
-     * @param reserve
+     * @param reserve riserva da inserire
      */
     public void resettingReserve(Reserve reserve){
         lobby.setReserve(reserve);
@@ -172,8 +172,8 @@ public class ControllerAction {
      *
      * @param onGrid casella del round.
      * @param inGrid dentro la lista di dadi nella casella di dadi
-     * @return
-     * @throws InvalidValueException
+     * @return dado trato dalla roundgrid
+     * @throws InvalidValueException eccezione che indica che richiediamo un parametro non valido..
      */
     public Dice takeFromGrid(int onGrid,int inGrid) throws InvalidValueException {
         Dice d= lobby.getRoundGrid().pick(onGrid,inGrid);
@@ -186,7 +186,7 @@ public class ControllerAction {
      *
      * @param onGrid indice della casella di round.
      * @param d riferimento del dado da appendere.
-     * @throws InvalidValueException
+     * @throws InvalidValueException eccezione che indica che richiediamo un parametro non valido..
      */
     public void putOnGrid(int onGrid,Dice d) throws InvalidValueException {
         lobby.getRoundGrid().put(onGrid,d);
@@ -199,7 +199,7 @@ public class ControllerAction {
      * @param row coordinata riga del dado
      * @param col coordinata colonna del dado
      * @return riferimento della copia del dado
-     * @throws InvalidValueException
+     * @throws InvalidValueException eccezione che indica che richiediamo un parametro non valido..
      */
     public Dice takeALookToDie(String name, int row, int col) throws InvalidValueException {
         return lobby.callPlayerByName(name).showSelectedCell(row,col).showDice();
@@ -210,7 +210,7 @@ public class ControllerAction {
      * @param onBox coord. della cella round.
      * @param inBox coord. nella lista della cella round.
      * @return riferimento a copia del dado.
-     * @throws InvalidValueException
+     * @throws InvalidValueException eccezione che indica che richiediamo un parametro non valido..
      */
     public Dice takeALookToDieInGrid(int onBox, int inBox) throws InvalidValueException {
         return lobby.getRoundGrid().show(onBox,inBox);
@@ -265,24 +265,11 @@ public class ControllerAction {
             int row = coords.get(0);
             int col = coords.get(1);
             lobby.responder().notifyObserver(new ErrorSelection(move.getDiceIndex(),row,col,destination));
-        } catch (InvalidSomethingWasNotDoneGood invalidSomethingWasNotDoneGood) {
-            invalidSomethingWasNotDoneGood.printStackTrace();
+        } catch (InvalidSomethingWasNotDoneGood invalidSomethingWasNotDoneGood ) {
+            controller.getcChat().notifyObserver(new ErrorSomethingNotGood(invalidSomethingWasNotDoneGood));
         }
     }
 
-    /**
-     * Metodo che richiede  messaggi di aggiornamento su alcune parti del model.
-     * @param m messaggio con una stringa nella quale sono indicati gli elementi da aggiornare.
-     */
-    public void refresher(UpdateReq m){
-        try{
-        lobby.refresh(m);
-        controller.getTurn().refresh(m);}
-        catch (Exception e ){
-            lobby.responder().notifyObserver(new
-                    ErrorSomethingNotGood(e));
-        }
-    }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 

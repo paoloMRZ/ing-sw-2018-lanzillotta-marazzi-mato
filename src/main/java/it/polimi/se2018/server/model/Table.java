@@ -329,11 +329,7 @@ public class Table {
         }
     }
 ////////////////////////////////////////////////////////////////////////////////
-    public void refresh(UpdateReq m){
-        launchCommunication(reserve.updateForcer(m));
-        launchCommunication(roundGrid.updateForcer(m));
-        launchCommunication(scoreGrid.updateForcer(m));
-    }
+
     private void launchCommunication(UpdateM m){
         if(m!=null) chat.notifyObserver(m);
     }
@@ -348,6 +344,16 @@ public class Table {
 
     public void setUpdateScoreGrid(){
         launchCommunication(scoreGrid.setUpdate());
+    }
+
+    public void setUpdateCostUtensils(){
+        String message="";
+        for(int i=0;i<utensilsDeck.size();i++){
+            message=message.concat(String.valueOf(utensilsDeck.get(i).getCost()));
+            if(i!=utensilsDeck.size()-1) message= message.concat("&");
+        }
+        message=message.concat("\n");
+        launchCommunication(new UpdateM(null,"price",message));
     }
 
     /////////////////////////////////////////////////////////////////////////////////

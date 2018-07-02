@@ -9,7 +9,7 @@ public interface ControllerAsObserver {
     public void update(Activate mex);
     public void update(SimpleMove mex);
 
-    public void update(UpdateReq mex);
+
     public void update(HookMessage mex);
 
 

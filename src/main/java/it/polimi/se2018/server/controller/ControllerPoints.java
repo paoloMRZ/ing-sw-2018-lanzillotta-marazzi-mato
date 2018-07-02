@@ -19,6 +19,7 @@ import java.util.List;
  *      • I giocatori perdono 1 Punto Vittoria per ogni spazio libero rimasto sulla loro vetrata.
  *
  * @author Simone Lanzillotta
+ * @author Kevin Mato(nameofwinner, integrazione a messaggistica)
  */
 
 
@@ -192,7 +193,7 @@ public class ControllerPoints {
             ArrayList<String> compareFinalPoint;
             ArrayList<String> compareObjectivePoint;
             ArrayList<String> compareFavoursPoint;
-            ArrayList<String> compareRound;
+            ArrayList<String> compareRound;//todo remove
 
             String nameOfWinner = null;
 

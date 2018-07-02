@@ -6,6 +6,7 @@ import java.util.List;
  * La classe è una raccolta di metodi per la creazione dei messaggi che il server invia al client.
  *
  * @author Marazzi Paolo
+ * @author Kevin Mato
  */
 
 public class ServerMessageCreator {
@@ -61,7 +62,7 @@ public class ServerMessageCreator {
      * @param cardIndex  indice che identifica la carta utensile scelta dal client.
      * @param cardNumber numero della carta utensile.
      * @param price      nuovo prezzo della carta utensile che è stata attivata.
-     * @param favours
+     * @param favours   favori del giocatore nel momento dell'attivazione.
      * @return messaggio.
      */
     public static String getActivateUtensilSuccessMessage(String addressee, String cardIndex, String cardNumber, String price, String favours) {
@@ -309,9 +310,21 @@ public class ServerMessageCreator {
     public static String getEndGameMessage(String statistics){
         String message = "/###/!/end/winner/";
         if(statistics!=null) message = message.concat(statistics);
+        else return null;
 
        return message;
     }
 
+    /**
+     * Il metodo restituisce il messaggio da mandare ai client per aggiornarli sui costi delle carte utensile.
+     * @param costs stringa con i costi delle utensili
+     * @return messaggio.
+     */
+    public static String getUpdatePriceMessage(String costs){
+        if(costs!=null) {
+            return "/###/!/update/price/" + costs;
+        }
+        else return  null;
+    }
 
 }
