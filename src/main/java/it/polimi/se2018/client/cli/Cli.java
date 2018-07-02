@@ -1,23 +1,27 @@
 package it.polimi.se2018.client.cli;
 
 
-import it.polimi.se2018.client.connection_handler.ConnectionHandlerObserver;
-import it.polimi.se2018.client.cli.controller.translater.Translater;
 import it.polimi.se2018.client.cli.controller.states.*;
+import it.polimi.se2018.client.cli.controller.states.states_utensil.*;
 import it.polimi.se2018.client.cli.controller.stdin_controller.Input;
 import it.polimi.se2018.client.cli.controller.stdin_controller.InputObserver;
+import it.polimi.se2018.client.cli.controller.translater.Translater;
 import it.polimi.se2018.client.cli.game.Game;
 import it.polimi.se2018.client.cli.game.info.DieInfo;
 import it.polimi.se2018.client.cli.game.schema.SideCard;
 import it.polimi.se2018.client.connection_handler.ConnectionHandler;
+import it.polimi.se2018.client.connection_handler.ConnectionHandlerObserver;
 import it.polimi.se2018.client.message.ClientMessageParser;
+import org.fusesource.jansi.Ansi;
 
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cli implements InputObserver, ConnectionHandlerObserver {
+import static org.fusesource.jansi.Ansi.ansi;
+
+public class Cli implements InputObserver, ConnectionHandlerObserver  {
 
     private static final String DEFAULT_MESSAGE = "NONE";
 
@@ -39,9 +43,79 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
 
             this.fatalError = false;
 
+            this.state = new WaitState("In attesa di altri giocatori!");
+
         }else
             throw new InvalidParameterException();
 
+    }
+
+
+    private void utensilActivation(int utensilNumber, int utensilIndex){
+
+        switch (utensilNumber){
+
+            case 1: state = new Utensil1State(utensilIndex); break;
+
+            case 2: state = new Utensil23State(utensilIndex); break;
+
+            case 3: state = new Utensil23State(utensilIndex); break;
+
+            case 4: state = new Utensil4State(utensilIndex); break;
+
+            case 5: state = new Utensil5State(utensilIndex); break;
+
+            case 6: state = new Utensil61011State(utensilIndex); break;
+
+            case 8: state = new Utensil89State(utensilIndex); break;
+
+            case 9: state = new Utensil89State(utensilIndex); break;
+
+            case 7: state = new Utensil7State(utensilIndex); break;
+
+            case 10: state = new Utensil61011State(utensilIndex); break;
+
+            case 11: state = new Utensil61011State(utensilIndex); break;
+
+            case 12: state = new Utensil12State(utensilIndex); break;
+
+            default: //Non è possibile arrivare in questo stato.
+        }
+    }
+
+    private void utensilSecondPhaseActivation(int utensilNumber, int utensilIndex, String message){
+
+        if(utensilNumber == 6) {
+            int dieValue = Integer.parseInt(ClientMessageParser.getInformationsFromMessage(message).get(2)); //Recupero il nuovo valore del dado.
+            game.setSecondPhaseValue(dieValue); //Setto il relativo campo in game.
+            state = new Utensil6SecondPhaseState(utensilIndex); //Cambio lo stato.
+        }
+
+        if(utensilNumber == 11){
+            String color = ClientMessageParser.getInformationsFromMessage(message).get(2).toLowerCase(); //Recupero il colore dal messaggio.
+            game.setSecondPhaseColor(Translater.getColorFromText(color)); //Setto il relativo campo in game.
+            state = new Utensil11SecondPhaseState(utensilIndex); //Cambio lo stato.
+        }
+    }
+
+
+    private void manageUpdateMessage(String message){
+
+        if (ClientMessageParser.isUpdateSideMessage(message))
+            manageUpdateSideMessage(message);
+
+        if (ClientMessageParser.isUpdateRoundMessage(message))
+            manageUpdateRoundMessage(message);
+
+        if (ClientMessageParser.isUpdateRoundgridMessage(message))
+            manageUpdateRoundGridMessage(message);
+
+        if (ClientMessageParser.isUpdateReserveMessage(message))
+            manageUpdateReserveMessage(message);
+
+
+        if (ClientMessageParser.isUpdateTurnMessage(message))
+            manageUpdateTurnMessage(message);
     }
 
 
@@ -50,7 +124,7 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
         ArrayList<String> cells = new ArrayList<>(ClientMessageParser.getInformationsFromMessage(message)); //Estraggo le info sulle celle dal messaggio.
         String addressee = cells.remove(0); //Rimuovo la prima posizione perchè contiene il nickname.
 
-        ArrayList<DieInfo> diceOnCard = new ArrayList<>(Translater.fromMessageToDieInfo(cells)); //Converto il messaggio in informazioni utilizzabili per la stampa a schermo.
+        ArrayList<DieInfo> diceOnCard = new ArrayList<>(Translater.fromMessageToDieInfo(cells, true)); //Converto il messaggio in informazioni utilizzabili per la stampa a schermo.
 
         if (addressee.equals(game.getMyNickname())) { //Controllo se il messaggio di update è relativo alla mia carta.
 
@@ -64,14 +138,14 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
             diceOnEnemysCards.set(enemyIndex, diceOnCard);
             game.setDiceOnEnemysCards(diceOnEnemysCards);
 
-            //NB--> In questo caso non notifico allo stato. LO schermo si aggiornerà quando il giocatore selezionerà
-            // da menà l'azione che gli permette di vedere le carte dei suoi avversri.
+            //NB--> In questo caso non notifico allo stato. Lo schermo si aggiornerà quando il giocatore selezionerà
+            // da menù l'azione che gli permette di vedere le carte dei suoi avversri.
         }
     }
 
     private void manageUpdateRoundMessage(String message){
 
-        ArrayList<DieInfo> newRound = new ArrayList<>(Translater.fromMessageToDieInfo(ClientMessageParser.getInformationsFromMessage(message))); //Estraggo dal messaggio il nuovo round da aggiungere alla roundrid.
+        ArrayList<DieInfo> newRound = new ArrayList<>(Translater.fromMessageToDieInfo(ClientMessageParser.getInformationsFromMessage(message),false)); //Estraggo dal messaggio il nuovo round da aggiungere alla roundrid.
         ArrayList<ArrayList<DieInfo>> roundGrid = new ArrayList<>(game.getRoundgrid()); //Recupero la roundgrid attuale.
         roundGrid.add(newRound); //Aggiungo il nuovo round alla roundgrid.
         game.setRoundgrid(roundGrid); //Aggiorno game.
@@ -85,7 +159,7 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
 
         //Trasformo ogni round in una lista di info stampabili e l'aggiungo in alla nuova roundgrid.
         for (List<String> round : ClientMessageParser.getInformationsFromUpdateRoundgridMessage(message)) {
-            newRoundGrid.add(new ArrayList<>(Translater.fromMessageToDieInfo(round)));
+            newRoundGrid.add(new ArrayList<>(Translater.fromMessageToDieInfo(round,false)));
         }
 
         game.setRoundgrid(newRoundGrid); //Aggiorno game.
@@ -97,7 +171,7 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
 
         //estraggo una lista di dieInfo dal campo informazioni e aggiorno game.
 
-        game.setReserve(Translater.fromMessageToDieInfo(ClientMessageParser.getInformationsFromMessage(message)));
+        game.setReserve(Translater.fromMessageToDieInfo(ClientMessageParser.getInformationsFromMessage(message), false));
         state.handleNetwork(message); //Notifico lo stato della modifica appena avvenuta.
     }
 
@@ -114,6 +188,26 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
             state = new NotMyTurnState();
     }
 
+
+    private void manageStartMessage(String message) throws IOException, ClassNotFoundException {
+
+        if (ClientMessageParser.isStartChoseSideMessage(message))
+            manageChooseSideMessage(message);
+
+        if (ClientMessageParser.isStartSideListMessage(message))
+            manageSideListMessage(message);
+
+        if (ClientMessageParser.isStartPrivateObjectiveMessage(message))
+            game.setPrivateObjective(Translater.getObjectiveCardFromName(ClientMessageParser.getInformationsFromMessage(message).get(0)));
+
+        if (ClientMessageParser.isStartPublicObjectiveMessage(message))
+            game.setPublicObjective(Translater.getObjectiveCardFromName(ClientMessageParser.getInformationsFromMessage(message)));
+
+
+        if (ClientMessageParser.isStartUtensilMessage(message))
+            game.setUtensils(Translater.getUtensilCardFromName(ClientMessageParser.getInformationsFromMessage(message)));
+    }
+
     private void manageChooseSideMessage(String message) throws IOException, ClassNotFoundException {
 
         //Recupero le informazioni dal messaggio e rimuovo i segnalini favore associati ad ogni carta (tengo solo i nomi delle carte).
@@ -127,7 +221,7 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
         ArrayList<SideCard> cards = new ArrayList<>(Translater.getSideCardFromName(cardNames));
 
         //Attivo lo stato che permette al giocatore di scegliere con quale carata giocare.
-        state = new ChoseSideState(game.getMyNickname(), cards.get(0), cards.get(1), cards.get(2), cards.get(3));
+        state = new ChoseSideState(game.getMyNickname(), cards);
     }
 
     private void manageSideListMessage(String message) throws IOException, ClassNotFoundException {
@@ -167,57 +261,98 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
     }
 
 
-    private void manageUpdateMessage(String message){
-
-        if (ClientMessageParser.isUpdateSideMessage(message))
-            manageUpdateSideMessage(message);
-
-        if (ClientMessageParser.isUpdateRoundMessage(message))
-            manageUpdateRoundMessage(message);
-
-        if (ClientMessageParser.isUpdateRoundgridMessage(message))
-            manageUpdateRoundGridMessage(message);
-
-        if (ClientMessageParser.isUpdateReserveMessage(message))
-            manageUpdateReserveMessage(message);
-
-
-        if (ClientMessageParser.isUpdateTurnMessage(message))
-            manageUpdateTurnMessage(message);
-    }
-
-    private void manageStartMessage(String message) throws IOException, ClassNotFoundException {
-
-        if (ClientMessageParser.isStartChoseSideMessage(message))
-            manageChooseSideMessage(message);
-
-        if (ClientMessageParser.isStartSideListMessage(message))
-            manageSideListMessage(message);
-
-        if (ClientMessageParser.isStartPrivateObjectiveMessage(message))
-            game.setPrivateObjective(Translater.getObjectiveCardFromName(ClientMessageParser.getInformationsFromMessage(message).get(0)));
-
-        if (ClientMessageParser.isStartPublicObjectiveMessage(message))
-            game.setPublicObjective(Translater.getObjectiveCardFromName(ClientMessageParser.getInformationsFromMessage(message)));
-
-
-        if (ClientMessageParser.isStartUtensilMessage(message))
-            game.setUtensils(Translater.getUtensilCardFromName(ClientMessageParser.getInformationsFromMessage(message)));
-    }
-
     private void manageNetworkMessage(String message){
 
-        if (ClientMessageParser.isNewConnectionMessage(message)) {
-            if (!ClientMessageParser.getInformationsFromMessage(message).get(0).equals(game.getMyNickname()))
-                state.handleNetwork(message);
-        }
+        //Controllo se ho ricevuto un messaggio di connessione relativo ad un altro giocatore. Ignoro i miei messaggi di connessione.
+        if (ClientMessageParser.isNewConnectionMessage(message) && !ClientMessageParser.getInformationsFromMessage(message).get(0).equals(game.getMyNickname()))
+            state.handleNetwork(message);
 
         if (ClientMessageParser.isClientDisconnectedMessage(message)) {
             if (!ClientMessageParser.getInformationsFromMessage(message).get(0).equals(game.getMyNickname()))
                 state.handleNetwork(message);
-            //TODO else Se noi siamo stati disconnessi bisogna lanciare una schermata dedicata.
+            else
+                state = new DisconnectedState();
         }
     }
+
+    private void manageSuccessMessage(String message){
+
+        if (ClientMessageParser.isSuccessPutMessage(message))
+            state.handleNetwork(message);
+
+        if(ClientMessageParser.isSuccessActivateUtensilMessage(message))
+            manageActivateUtensil(message);
+
+        if(ClientMessageParser.isSuccessUseUtensilMessage(message))
+            manageSuccessUseUtensil(message);
+    }
+
+    private void manageActivateUtensil(String message){
+
+        int utensilNumber = Integer.parseInt(ClientMessageParser.getInformationsFromMessage(message).get(1)); //Recupero il numero della carta utensile.
+        int utensilIndex = Integer.parseInt(ClientMessageParser.getInformationsFromMessage(message).get(0)); //Recupero l'indice della carta utensile.
+
+        utensilActivation(utensilNumber,utensilIndex); //Richiamo il metodo che si occupa di impostare lo stato in base all'utensile che è stato attivato.
+    }
+
+    private void manageSuccessUseUtensil(String message){
+
+        int utensilIndex = Integer.parseInt(ClientMessageParser.getInformationsFromMessage(message).get(0)); //Recupero l'indice della carta utensile.
+        int utensilNumber = (game.getUtensils().get(utensilIndex)).getNumber(); //Recupero il numero della carta utensile.
+
+        utensilSecondPhaseActivation(utensilNumber,utensilIndex, message); //Richiamo il metodo che si occupa di impostare lo stato relativo all'utensile che ha superato la prima fase.
+
+    }
+
+
+    private void manageEndUtensilMessage(String message){
+
+        int newCardPrize = Integer.parseInt(ClientMessageParser.getInformationsFromMessage(message).get(2)); //Recupero il costo aggiornato della carta.
+        int playerFavours = Integer.parseInt(ClientMessageParser.getInformationsFromMessage(message).get(3)); //Recupero i segnali favore rimasti al giocatore.
+        int cardIndex = Integer.parseInt(ClientMessageParser.getInformationsFromMessage(message).get(0)); //Recupero l'indice della carta.
+
+        //Resetto gli eventuali salvataggi fatti per la gestione della seconda fase.
+        game.setSecondPhaseDie(new DieInfo(Ansi.Color.WHITE,0));
+        game.setSecondPhaseColor(Ansi.Color.WHITE);
+        game.setSecondPhaseValue(0);
+
+        game.setUtensilPrize(cardIndex, newCardPrize); //Aggiorno il coso carta.
+
+        game.setFavours(playerFavours); //Aggiorno i segnalini favore rimasti al giocatore.
+
+        state = new MyTurnState(); //Cambio lo stato --> Mi ripoto nello stato "MyTurn".
+
+    }
+
+    private void manageErrorMessage(String message){
+
+        if (ClientMessageParser.isErrorPutMessage(message))
+            state.handleNetwork(message);
+
+        if(ClientMessageParser.isErrorActivateUtensilMessage(message))
+            state.handleNetwork(message);
+
+        if(ClientMessageParser.isErrorUseUtensilMessage(message)){
+
+            int utensilIndex = Integer.parseInt(ClientMessageParser.getInformationsFromMessage(message).get(0)); //Recupero l'indice dell'utensile che ha sollevato l'errore.
+
+            //Se il "dado di seconda fase" in game è diverso da (BIANCO,0) significa che l'errore è stato sollevato in secoda fase.
+            if(game.getSecondPhaseDie().getColor() != Ansi.Color.WHITE && game.getSecondPhaseDie().getNumber() != 0){
+
+                //Riattivo lo stato di seconda fase che ha generato errore.
+                if(game.getUtensilNumberbyIndex(utensilIndex) == 6)
+                    state = new Utensil6SecondPhaseState(utensilIndex);
+                else
+                    state = new Utensil11SecondPhaseState(utensilIndex);
+            }
+            else
+                utensilActivation(game.getUtensilNumberbyIndex(utensilIndex), utensilIndex); //Riattivo lo stato di prima fase che ha generato errore.
+        }
+
+        if(ClientMessageParser.isUnauthorizedPutMessage(message)) //Gestione del messaggio che notifica che la mossa selezionata è già stata fatta in questo turno.
+            state.handleNetwork(message);
+    }
+
 
     @Override
     public void InputRequest(int request) {
@@ -225,10 +360,20 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
 
             String response = state.handleInput(request);
 
-            if (!response.equals(DEFAULT_MESSAGE))
+            if (!response.equals(DEFAULT_MESSAGE)){
+
+                if(response.split("/")[4].equals("side_reply"))
+                    state = new WaitState("In attesa della scelta degli altri giocatori!");
+
                 this.connectionHandler.sendToServer(response);
 
-            //TODO fare controllo per lanciare la scena di caricamento.
+                if(ClientMessageParser.isClientDisconnectedMessage(response)) {
+                    System.out.print(ansi().eraseScreen());
+                    System.exit(0);
+                }
+
+            }
+
         }
     }
 
@@ -239,11 +384,14 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
 
             try {
 
-                if (ClientMessageParser.isSuccessPutMessage(message))
-                    state.handleNetwork(message);
+                if(ClientMessageParser.isSuccessMessage(message))
+                    manageSuccessMessage(message);
 
-                if (ClientMessageParser.isErrorPutMessage(message))
-                    state.handleNetwork(message);
+                if(ClientMessageParser.isErrorMessage(message))
+                    manageErrorMessage(message);
+
+                if(ClientMessageParser.isUseUtensilEndMessage(message))
+                    manageEndUtensilMessage(message);
 
                 if (ClientMessageParser.isUpdateMessage(message))
                     manageUpdateMessage(message);
@@ -254,7 +402,8 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
                 if (ClientMessageParser.isNetworkMessage(message))
                     manageNetworkMessage(message);
 
-            } catch (IOException | ClassNotFoundException | NullPointerException e) {
+
+            } catch (IOException | ClassNotFoundException e) { //TODO aggiungere nullPointer alle eccezioni gestiste!
                 this.fatalError = true;
                 state = new FatalErrorState(e);
             }

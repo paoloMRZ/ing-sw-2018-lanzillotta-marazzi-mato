@@ -1,13 +1,15 @@
 package it.polimi.se2018.client.cli.controller.states;
 
 
-
+import it.polimi.se2018.client.cli.game.Game;
 import it.polimi.se2018.client.cli.game.schema.SideCard;
 import it.polimi.se2018.client.cli.print.scenes.ChoseSideScene;
 import it.polimi.se2018.client.message.ClientMessageCreator;
 import it.polimi.se2018.client.message.ClientMessageParser;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChoseSideState implements StateInterface {
 
@@ -16,17 +18,24 @@ public class ChoseSideState implements StateInterface {
     private static final String NETWORK_MESSAGE = " si è disconnesso!";
     private static final String ERROR_MESSAGE = "ERRORE: Inserisci un valore valido!";
 
+    private Game game;
+
+    private ArrayList<SideCard> cards;
 
     private ChoseSideScene choseSideScene;
     private String myNickanme;
 
-    public ChoseSideState(String myNickname, SideCard card1, SideCard card2, SideCard card3, SideCard card4){
+    public ChoseSideState(String myNickname, List<SideCard> cards){
 
-        if(myNickname != null && card1 != null && card2 != null && card3 != null && card4 != null){
+        if(myNickname != null && cards.size() == 4){
 
             this.myNickanme = myNickname;
 
-            choseSideScene = new ChoseSideScene(card1,card2,card3,card4);
+            this.cards = new ArrayList<>(cards);
+
+            this.game = Game.factoryGame();
+
+            choseSideScene = new ChoseSideScene(cards.get(0),cards.get(1),cards.get(2),cards.get(3));
             choseSideScene.printScene(); //Stampo la scena.
 
         }else
@@ -36,11 +45,14 @@ public class ChoseSideState implements StateInterface {
     @Override
     public String handleInput(int request) { //Gestione delle richieste da stdin.
 
-        if(request >= 1 && request <= 4) //Se ricevo un numero rta 1 e 4 vuol dire che il giocatore ha scelto una carta.
+        if(request >= 1 && request <= 4) { //Se ricevo un numero rta 1 e 4 vuol dire che il giocatore ha scelto una carta.
+
+            game.setFavours(cards.get(request - 1).getFavours()); //Setto i segnalini favore del giocatore in base alla carta scelta.
+
             //Restituisco il messaggio da mandare al server per notificarlo della scelta fatta.
             //Il client passa un numero tra 1 e 4, ma il server si aspetta un numero tra 0 e 3, per questo faccio request-1.
-            return ClientMessageCreator.getSideReplyMessage(myNickanme,String.valueOf(request-1));
-
+            return ClientMessageCreator.getSideReplyMessage(myNickanme, String.valueOf(request - 1));
+        }
         else{//Se non ho ricevuto una richiesta non valida lo notifico a schermo ristampando la scena con un messaggio di errore.
             choseSideScene.addMessage(ERROR_MESSAGE);
             choseSideScene.printScene();

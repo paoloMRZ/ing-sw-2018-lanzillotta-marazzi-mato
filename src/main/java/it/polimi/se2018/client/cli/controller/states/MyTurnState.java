@@ -2,6 +2,7 @@ package it.polimi.se2018.client.cli.controller.states;
 
 
 import it.polimi.se2018.client.cli.game.Game;
+import it.polimi.se2018.client.cli.game.utenil.UtensilCard;
 import it.polimi.se2018.client.cli.print.scenes.EnemyCardScene;
 import it.polimi.se2018.client.cli.print.scenes.GameScene;
 import it.polimi.se2018.client.cli.print.scenes.ShowRoundGridScene;
@@ -15,9 +16,11 @@ public class MyTurnState  implements StateInterface{
     private static final String NETWORK_DISCONNECT_MESSAGE = " si è disconnesso!";
     private static final String ERROR_MESSAGE = "ERRORE: Inserisci un valore valido!";
     private static final String SUCCESS_PUT_MESSAGE = "Piazzamento avvenuto con successo!";
-    private static final String ERROR_PUT_MESSAGE = "Piazzamento non consentito!";
+    private static final String ERROR_PUT_MESSAGE = "ERRORE: Piazzamento non consentito!";
+    private static final String ERROR_ACTIVATE_UTENSIL_MESSAGE = "ERRORE: Non puoi utilizzare questa carta!";
+    private static final String ERROR_UNAUTHORIZED_MESSAGE = "ERRORE: Hai già effettuato questa mossa!";
 
-
+    private static final int EXIT_REQUEST = 1000; //Indica che il giocatore ha scelto di chiudere sagrada.
     private static final int INPUT_ERROR = 999; //Indica che è stato inserito un input non corretto.
     private static final int INPUT_INT_BACK_MENU = 888; //Indica che è stata inserita una richiesta per tornare al menù principale.
 
@@ -31,6 +34,9 @@ public class MyTurnState  implements StateInterface{
     private int putDieRow;
     private int putDieCol;
 
+    private boolean selectionUtensil;
+    private int utensilSelected;
+
     public MyTurnState(){
         game = Game.factoryGame();
 
@@ -41,8 +47,19 @@ public class MyTurnState  implements StateInterface{
 
         putDieCounter = 0;
         puttingDie = false;
+        selectionUtensil = false;
     }
 
+
+    private boolean isValidUtensilNumber(int number){
+
+        for(UtensilCard card: game.getUtensils()){
+            if(card.getNumber() == number)
+                return true;
+        }
+
+        return false;
+    }
 
     private boolean isValidReserveDieIndex(int index){
         return index >= 0 && index < game.getReserve().size();
@@ -84,6 +101,19 @@ public class MyTurnState  implements StateInterface{
     }
 
 
+    private int manageSelectionUtensilInput(int request){
+
+        if(request == INPUT_INT_BACK_MENU)
+            return INPUT_INT_BACK_MENU;
+
+        if(isValidUtensilNumber(request)) {
+            this.utensilSelected = request;
+            return 6;
+        }
+        else
+            return INPUT_ERROR;
+    }
+
     private void showUtensils(){
         gameScene.setShowUtensils();
         gameScene.printScene();
@@ -110,6 +140,8 @@ public class MyTurnState  implements StateInterface{
         puttingDie = false;
         putDieCounter = 0;
 
+        selectionUtensil = false;
+
         gameScene.setMyTurnMenu();
         gameScene.printScene();
     }
@@ -122,8 +154,11 @@ public class MyTurnState  implements StateInterface{
     @Override
     public String handleInput(int request) {
 
-        if(puttingDie)
+        if(puttingDie) //Controllo se l'input che sto gestendo è relativo al posizionamento di un dado.
             request = managePutInput(request);
+
+        if(selectionUtensil)
+            request = manageSelectionUtensilInput(request);
 
         switch (request){
 
@@ -167,7 +202,18 @@ public class MyTurnState  implements StateInterface{
             }break;
 
             case 6:{ //Scelta dell'utensile.
-                //TODO da implementare quando farò gli utensili.
+
+                if(!selectionUtensil){
+                    gameScene.setShowUtensils();
+                    gameScene.setSelectUtensilMenu();
+                    gameScene.printScene();
+
+                    selectionUtensil = true;
+                }else {
+
+                    selectionUtensil = false;
+                    return ClientMessageCreator.getActivateUtensilMessage(game.getMyNickname(), String.valueOf(game.getUtensilIndexFromNumber(utensilSelected)));
+                }
             }break;
 
             case 7: return ClientMessageCreator.getPassTurnMessage(game.getMyNickname()); //Passa turno.
@@ -175,6 +221,8 @@ public class MyTurnState  implements StateInterface{
             case INPUT_INT_BACK_MENU: backToMainMenu(); break;
 
             case INPUT_ERROR: showErrorMessage(); break;
+
+            case EXIT_REQUEST: return ClientMessageCreator.getDisconnectMessage(game.getMyNickname());
 
             default: showErrorMessage(); break;
         }
@@ -216,6 +264,16 @@ public class MyTurnState  implements StateInterface{
 
         if(ClientMessageParser.isErrorPutMessage(request)){
             gameScene.addMessage(ERROR_PUT_MESSAGE);
+            gameScene.printScene();
+        }
+
+        if(ClientMessageParser.isErrorActivateUtensilMessage(request)){
+            gameScene.addMessage(ERROR_ACTIVATE_UTENSIL_MESSAGE);
+            gameScene.printScene();
+        }
+
+        if(ClientMessageParser.isUnauthorizedPutMessage(request)){
+            gameScene.addMessage(ERROR_UNAUTHORIZED_MESSAGE);
             gameScene.printScene();
         }
     }

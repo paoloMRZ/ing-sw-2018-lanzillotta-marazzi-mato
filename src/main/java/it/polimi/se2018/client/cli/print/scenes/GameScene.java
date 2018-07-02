@@ -49,11 +49,6 @@ public class GameScene {
     private static final int ROUNDGRID_SMALL_ROW = 4;
     private static final int ROUNDGRID_SMALL_COL = 70;
 
-    private static final int ROUNDGRID_BIG_ROW = 3;
-    private static final int ROUNDGRID_BIG_COL = 5;
-
-    private static final int ROUNDGRID_TITLE_ROW = 1;
-    private static final int ROUNDGRID_TITLE_COL = 5;
 
     private static final int MESSAGES_ROW = 32;
     private static final int MESSAGES_COL = 56;
@@ -86,13 +81,11 @@ public class GameScene {
     private static final String TEXT2_SELECTDICE = "Seleziona riga ('q' per annullare): ";
     private static final String TEXT3_SELECTDICE = "Seleziona colonna ('q' per annullare): ";
 
-    private static final String TEXT_SELECTUTENSIL = "Seleziona utensile: ";
+    private static final String TEXT_SELECTUTENSIL = "Numero carta ('q' per annullare): ";
 
     private static final String MESSAGE_TEXT = "MESSAGGI";
     private static final String MESSAGE_HEAD = " [*] ";
 
-
-    private static final String ROUNDGRID_TITLE = "***** Round *****";
 
     private SideCard card;
     private ArrayList<DieInfo> reserve;
@@ -109,7 +102,7 @@ public class GameScene {
 
     private boolean printObjective;
 
-    public GameScene(SideCard card, List<DieInfo> diceOnCard , List<DieInfo> reserve, List<ArrayList<DieInfo>> roundGrid, List<ObjectiveCard> objectiveCards, List<UtensilCard> utensilCards, int favours){
+    public GameScene(SideCard card, List<DieInfo> diceOnCard ,List<DieInfo> reserve, List<ArrayList<DieInfo>> roundGrid, List<ObjectiveCard> objectiveCards, List<UtensilCard> utensilCards, int favours){
         if(card != null && reserve != null && roundGrid!=null && objectiveCards != null && utensilCards != null && favours>=0) {
 
             this.card = new SideCard(card.getName(),card.getFavours(), new ArrayList<>(card.getCells()));
@@ -399,9 +392,9 @@ public class GameScene {
     public void addMessage(String message){
         if(messages.size() < 5) //La casella contiene al massimo sette messaggi.
             messages.add(message);
-        else { //Se la casella è piene aggiungo in coda e rimuovo il primo messaggio.
+        else { //Se la casella è piena la svuoto e aggiungo il messaggio.
+            messages.clear();
             messages.add(message);
-            messages.remove(0);
         }
     }
 }
