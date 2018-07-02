@@ -364,7 +364,7 @@ public class MVCTest {
 
         fake.messageIncoming("/primo/###/utensil/use/1&11&1");
         System.out.println(fake.getMessage());
-        fake.messageIncoming("/primo/###/utensil/use/1&11bis&5&0&0");
+        fake.messageIncoming("/primo/###/utensil/use/1&11bis&5&1&0&0");
         System.out.println(fake.getMessage());
         System.out.println(controller.getcAction().getReserve().toString());
         System.out.println(controller.getPlayerByName("primo").getMySide().toString());

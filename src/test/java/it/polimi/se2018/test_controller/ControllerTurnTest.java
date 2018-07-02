@@ -120,13 +120,6 @@ public class ControllerTurnTest{
         fake.messageIncoming("/primo/###/put/?/0&0&1");
         assertEquals("/###/primo/error/unauthorized\n",fake.getMessage());
 
-        fake.messageIncoming("/primo/###/utensil/activate/0");
-        assertEquals("/###/primo/success/activate/0&1&2&5\n",fake.getMessage());
-        fake.messageIncoming("/primo/###/utensil/use/0&1&1&0");
-        assertEquals("/###/primo/utensil/end/0&1&2&4\n",fake.getMessage());
-
-        fake.messageIncoming("/primo/###/utensil/activate/0");
-        assertEquals("/###/primo/error/unauthorized\n",fake.getMessage());
     }
     @Test
     public void alreadyDoneCard(){

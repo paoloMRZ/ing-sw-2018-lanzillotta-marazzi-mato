@@ -419,7 +419,7 @@ public class MVCErrorTest{
 
             fake.messageIncoming("/primo/###/utensil/use/1&11&1");
             System.out.println(fake.getMessage());
-            fake.messageIncoming("/primo/###/utensil/use/1&11bis&5&0&10");
+            fake.messageIncoming("/primo/###/utensil/use/1&11bis&1&5&0&10");
             System.out.println(fake.getMessage());
             System.out.println(controller.getcAction().getReserve().toString());
             System.out.println(controller.getPlayerByName("primo").getMySide().toString());

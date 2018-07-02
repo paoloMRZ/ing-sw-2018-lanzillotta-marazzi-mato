@@ -87,7 +87,7 @@ public class FakeView{
                     chat.notifyObserver(new ToolCard11(sender,Integer.parseInt(data.get(0)),Integer.parseInt(data.get(2))));
                     break;
                 case "11bis":
-                    chat.notifyObserver(new ToolCard11Bis(sender,Integer.parseInt(data.get(0)),transformer(data,2)));
+                    chat.notifyObserver(new ToolCard11Bis(sender,Integer.parseInt(data.get(0)),data.get(2).equals("1"),transformer(data,2)));
                     break;
                 case "12":
                     chat.notifyObserver(new ToolCard12(sender,Integer.parseInt(data.get(0)),transformer(data,2)));

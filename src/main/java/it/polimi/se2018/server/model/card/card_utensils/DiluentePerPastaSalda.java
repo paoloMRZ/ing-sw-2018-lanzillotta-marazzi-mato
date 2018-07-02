@@ -46,10 +46,14 @@ public class DiluentePerPastaSalda extends Utensils  implements Visitable {
         int row=messageCont.get(1);
         int col=messageCont.get(2);
 
-        Dice dadozzo= controller.getHoldingADiceMoveInProgress();
-        Dice copyofDadozzo=new Dice(dadozzo.getColor(),value);
-        controller.getcAction().workOnSide(name,copyofDadozzo,row,col);
+        if(myMessage.getDecision()) {
 
+            Dice dadozzo = controller.getHoldingADiceMoveInProgress();
+            Dice copyofDadozzo = new Dice(dadozzo.getColor(), value);
+            controller.getcAction().workOnSide(name, copyofDadozzo, row, col);
+
+        }
+        else controller.cleanHoldingADiceMoveInProgress();
     }
 
 

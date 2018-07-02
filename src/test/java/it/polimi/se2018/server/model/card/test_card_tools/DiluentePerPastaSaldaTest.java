@@ -88,7 +88,7 @@ public class DiluentePerPastaSaldaTest {
     public void wellDone() throws InvalidValueException, InvalidCellException, InvalidSomethingWasNotDoneGood {
         try {
             this.message = new ToolCard11("primo", 1, 0);
-            this.mex=new ToolCard11Bis("primo",1,
+            this.mex=new ToolCard11Bis("primo",1,true,
                     new ArrayList(Arrays.asList(5,0,0)));
 
             Dice d1 = new Dice(Color.BLUE, 1);
