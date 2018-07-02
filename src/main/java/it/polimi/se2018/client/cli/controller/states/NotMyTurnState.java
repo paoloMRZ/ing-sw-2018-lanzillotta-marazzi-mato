@@ -5,6 +5,7 @@ import it.polimi.se2018.client.cli.game.Game;
 import it.polimi.se2018.client.cli.print.scenes.EnemyCardScene;
 import it.polimi.se2018.client.cli.print.scenes.GameScene;
 import it.polimi.se2018.client.cli.print.scenes.ShowRoundGridScene;
+import it.polimi.se2018.client.message.ClientMessageCreator;
 import it.polimi.se2018.client.message.ClientMessageParser;
 
 public class NotMyTurnState implements StateInterface {
@@ -15,6 +16,7 @@ public class NotMyTurnState implements StateInterface {
     private static final String ERROR_MESSAGE = "ERRORE: Inserisci un valore valido!";
     private static final int INPUT_ERROR = 999; //Indica che è stato inserito un input non corretto.
     private static final int INPUT_INT_BACK_MENU = 888; //Indica che è stata inserita una richiesta per tornare al menù principale.
+    private static final int EXIT_REQUEST = 1000; //Indica che il giocatore ha scelto di chiudere sagrada.
 
     private Game game;
 
@@ -75,6 +77,8 @@ public class NotMyTurnState implements StateInterface {
             case INPUT_INT_BACK_MENU: gameScene.printScene(); break; //Ristampo la scena principale in modo da stampare il menù principale.
 
             case INPUT_ERROR: showErrorMessage(); break; //Visualizzo il messagio di errore.
+
+            case EXIT_REQUEST: return ClientMessageCreator.getDisconnectMessage(game.getMyNickname());
 
             default: showErrorMessage(); break; //Visualizzo il messagio di errore.
         }

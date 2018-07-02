@@ -67,6 +67,9 @@ public class RoundGrindPrinter {
                 row = row + 4; //Scendo alla riga successiva.
             }
 
+            if(dice.isEmpty()) //Se il round non contiene dadi il for precedente non viene eseguito, quindi devo scendere "manualmente" di riga per stampare il margine inferiore.
+                row = row + 4; //Scendo alla riga successiva.
+
             MarginPrinter.printRowMargin(row-1,col,5); //Stampo il margine orizzontale inferiore.
 
             row = startRow + 2; //Mi riporto alla riga iniziale.
@@ -76,7 +79,7 @@ public class RoundGrindPrinter {
         }
 
 
-       printEmptyRound(startRow, col, rounds.size() );
+        printEmptyRound(startRow, col, rounds.size() );
 
     }
 
@@ -95,7 +98,8 @@ public class RoundGrindPrinter {
             MarginPrinter.printColMargin(row-1, col+5, 4); //Stampo il margine verticale destro.
             MarginPrinter.printRowMargin(row-1,col-1,7); //Stampo il margine orizzontale superiore.
 
-            DiePrinter.printDie(dice.get(0).getColor(),dice.get(0).getNumber(),row, col); //Stampo il dado.
+            if(!dice.isEmpty()) //Se il round contiene dadi stampo il primo se no lascio lo spazio vuoto.
+                DiePrinter.printDie(dice.get(0).getColor(),dice.get(0).getNumber(),row, col); //Stampo il dado.
 
             MarginPrinter.printRowMargin(row+3,col-1,7); //Stampo il margine orizzontale inferiore.
 

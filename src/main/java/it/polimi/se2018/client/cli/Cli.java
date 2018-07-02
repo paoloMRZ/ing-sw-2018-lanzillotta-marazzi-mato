@@ -19,7 +19,9 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cli implements InputObserver, ConnectionHandlerObserver {
+import static org.fusesource.jansi.Ansi.ansi;
+
+public class Cli implements InputObserver, ConnectionHandlerObserver  {
 
     private static final String DEFAULT_MESSAGE = "NONE";
 
@@ -40,6 +42,8 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
             game.setMyNickname(myNickname);
 
             this.fatalError = false;
+
+            this.state = new WaitState("In attesa di altri giocatori!");
 
         }else
             throw new InvalidParameterException();
@@ -120,7 +124,7 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
         ArrayList<String> cells = new ArrayList<>(ClientMessageParser.getInformationsFromMessage(message)); //Estraggo le info sulle celle dal messaggio.
         String addressee = cells.remove(0); //Rimuovo la prima posizione perchè contiene il nickname.
 
-        ArrayList<DieInfo> diceOnCard = new ArrayList<>(Translater.fromMessageToDieInfo(cells)); //Converto il messaggio in informazioni utilizzabili per la stampa a schermo.
+        ArrayList<DieInfo> diceOnCard = new ArrayList<>(Translater.fromMessageToDieInfo(cells, true)); //Converto il messaggio in informazioni utilizzabili per la stampa a schermo.
 
         if (addressee.equals(game.getMyNickname())) { //Controllo se il messaggio di update è relativo alla mia carta.
 
@@ -141,7 +145,7 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
 
     private void manageUpdateRoundMessage(String message){
 
-        ArrayList<DieInfo> newRound = new ArrayList<>(Translater.fromMessageToDieInfo(ClientMessageParser.getInformationsFromMessage(message))); //Estraggo dal messaggio il nuovo round da aggiungere alla roundrid.
+        ArrayList<DieInfo> newRound = new ArrayList<>(Translater.fromMessageToDieInfo(ClientMessageParser.getInformationsFromMessage(message),false)); //Estraggo dal messaggio il nuovo round da aggiungere alla roundrid.
         ArrayList<ArrayList<DieInfo>> roundGrid = new ArrayList<>(game.getRoundgrid()); //Recupero la roundgrid attuale.
         roundGrid.add(newRound); //Aggiungo il nuovo round alla roundgrid.
         game.setRoundgrid(roundGrid); //Aggiorno game.
@@ -155,7 +159,7 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
 
         //Trasformo ogni round in una lista di info stampabili e l'aggiungo in alla nuova roundgrid.
         for (List<String> round : ClientMessageParser.getInformationsFromUpdateRoundgridMessage(message)) {
-            newRoundGrid.add(new ArrayList<>(Translater.fromMessageToDieInfo(round)));
+            newRoundGrid.add(new ArrayList<>(Translater.fromMessageToDieInfo(round,false)));
         }
 
         game.setRoundgrid(newRoundGrid); //Aggiorno game.
@@ -167,7 +171,7 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
 
         //estraggo una lista di dieInfo dal campo informazioni e aggiorno game.
 
-        game.setReserve(Translater.fromMessageToDieInfo(ClientMessageParser.getInformationsFromMessage(message)));
+        game.setReserve(Translater.fromMessageToDieInfo(ClientMessageParser.getInformationsFromMessage(message), false));
         state.handleNetwork(message); //Notifico lo stato della modifica appena avvenuta.
     }
 
@@ -217,7 +221,7 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
         ArrayList<SideCard> cards = new ArrayList<>(Translater.getSideCardFromName(cardNames));
 
         //Attivo lo stato che permette al giocatore di scegliere con quale carata giocare.
-        state = new ChoseSideState(game.getMyNickname(), cards.get(0), cards.get(1), cards.get(2), cards.get(3));
+        state = new ChoseSideState(game.getMyNickname(), cards);
     }
 
     private void manageSideListMessage(String message) throws IOException, ClassNotFoundException {
@@ -259,15 +263,15 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
 
     private void manageNetworkMessage(String message){
 
-        if (ClientMessageParser.isNewConnectionMessage(message)) {
-            if (!ClientMessageParser.getInformationsFromMessage(message).get(0).equals(game.getMyNickname()))
-                state.handleNetwork(message);
-        }
+        //Controllo se ho ricevuto un messaggio di connessione relativo ad un altro giocatore. Ignoro i miei messaggi di connessione.
+        if (ClientMessageParser.isNewConnectionMessage(message) && !ClientMessageParser.getInformationsFromMessage(message).get(0).equals(game.getMyNickname()))
+            state.handleNetwork(message);
 
         if (ClientMessageParser.isClientDisconnectedMessage(message)) {
             if (!ClientMessageParser.getInformationsFromMessage(message).get(0).equals(game.getMyNickname()))
                 state.handleNetwork(message);
-            //TODO else Se noi siamo stati disconnessi bisogna lanciare una schermata dedicata.
+            else
+                state = new DisconnectedState();
         }
     }
 
@@ -344,6 +348,9 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
             else
                 utensilActivation(game.getUtensilNumberbyIndex(utensilIndex), utensilIndex); //Riattivo lo stato di prima fase che ha generato errore.
         }
+
+        if(ClientMessageParser.isUnauthorizedPutMessage(message)) //Gestione del messaggio che notifica che la mossa selezionata è già stata fatta in questo turno.
+            state.handleNetwork(message);
     }
 
 
@@ -353,10 +360,20 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
 
             String response = state.handleInput(request);
 
-            if (!response.equals(DEFAULT_MESSAGE))
+            if (!response.equals(DEFAULT_MESSAGE)){
+
+                if(response.split("/")[4].equals("side_reply"))
+                    state = new WaitState("In attesa della scelta degli altri giocatori!");
+
                 this.connectionHandler.sendToServer(response);
 
-            //TODO fare controllo per lanciare la scena di caricamento.
+                if(ClientMessageParser.isClientDisconnectedMessage(response)) {
+                    System.out.print(ansi().eraseScreen());
+                    System.exit(0);
+                }
+
+            }
+
         }
     }
 
@@ -384,6 +401,7 @@ public class Cli implements InputObserver, ConnectionHandlerObserver {
 
                 if (ClientMessageParser.isNetworkMessage(message))
                     manageNetworkMessage(message);
+
 
             } catch (IOException | ClassNotFoundException e) { //TODO aggiungere nullPointer alle eccezioni gestiste!
                 this.fatalError = true;

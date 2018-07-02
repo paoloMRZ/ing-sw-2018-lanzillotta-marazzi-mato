@@ -36,7 +36,7 @@ public class Translater {
     }
 
 
-    public static List<DieInfo> fromMessageToDieInfo(List<String> infoFromMessage){
+    public static List<DieInfo> fromMessageToDieInfo(List<String> infoFromMessage, boolean acceptWhite){
         ArrayList<DieInfo> diceList = new ArrayList<>();
 
         Ansi.Color dieColor;
@@ -53,6 +53,11 @@ public class Translater {
 
             messageNumber = info.substring(info.length()-1, info.length()); //Estraggo il numero dalla stringa.
             dieNumber = Integer.parseInt(messageNumber);
+
+            if(dieColor == Ansi.Color.WHITE && !acceptWhite) { //Se trovo bianco ed il booleano mi indica che non è accettabile creo una lista vuota e mi fermo.
+                diceList = new ArrayList<>(); //Creo lista vuota.
+                break;
+            }
 
             diceList.add(new DieInfo(dieColor, dieNumber )); //Aggiungo il dado appena estratto alla lista.
 

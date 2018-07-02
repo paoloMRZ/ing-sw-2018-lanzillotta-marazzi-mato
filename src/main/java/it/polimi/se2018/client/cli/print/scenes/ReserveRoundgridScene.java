@@ -16,7 +16,7 @@ public class ReserveRoundgridScene {
     private static final String TEXT_HEAD = "[] ";
     private static final String TEXT_TAIL = " >> ";
 
-    private static final int CARD_ROW = 10;
+    private static final int CARD_ROW = 15;
     private static final int CARD_COL = 3;
 
     private static final int ROUNDGRID_ROW = 4;

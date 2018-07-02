@@ -18,8 +18,9 @@ public class MyTurnState  implements StateInterface{
     private static final String SUCCESS_PUT_MESSAGE = "Piazzamento avvenuto con successo!";
     private static final String ERROR_PUT_MESSAGE = "ERRORE: Piazzamento non consentito!";
     private static final String ERROR_ACTIVATE_UTENSIL_MESSAGE = "ERRORE: Non puoi utilizzare questa carta!";
+    private static final String ERROR_UNAUTHORIZED_MESSAGE = "ERRORE: Hai già effettuato questa mossa!";
 
-
+    private static final int EXIT_REQUEST = 1000; //Indica che il giocatore ha scelto di chiudere sagrada.
     private static final int INPUT_ERROR = 999; //Indica che è stato inserito un input non corretto.
     private static final int INPUT_INT_BACK_MENU = 888; //Indica che è stata inserita una richiesta per tornare al menù principale.
 
@@ -221,6 +222,8 @@ public class MyTurnState  implements StateInterface{
 
             case INPUT_ERROR: showErrorMessage(); break;
 
+            case EXIT_REQUEST: return ClientMessageCreator.getDisconnectMessage(game.getMyNickname());
+
             default: showErrorMessage(); break;
         }
 
@@ -266,6 +269,11 @@ public class MyTurnState  implements StateInterface{
 
         if(ClientMessageParser.isErrorActivateUtensilMessage(request)){
             gameScene.addMessage(ERROR_ACTIVATE_UTENSIL_MESSAGE);
+            gameScene.printScene();
+        }
+
+        if(ClientMessageParser.isUnauthorizedPutMessage(request)){
+            gameScene.addMessage(ERROR_UNAUTHORIZED_MESSAGE);
             gameScene.printScene();
         }
     }

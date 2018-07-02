@@ -392,9 +392,9 @@ public class GameScene {
     public void addMessage(String message){
         if(messages.size() < 5) //La casella contiene al massimo sette messaggi.
             messages.add(message);
-        else { //Se la casella è piene aggiungo in coda e rimuovo il primo messaggio.
+        else { //Se la casella è piena la svuoto e aggiungo il messaggio.
+            messages.clear();
             messages.add(message);
-            messages.remove(0);
         }
     }
 }
