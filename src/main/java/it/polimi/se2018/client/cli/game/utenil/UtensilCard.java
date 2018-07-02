@@ -20,9 +20,11 @@ public class UtensilCard implements Serializable {
             throw new InvalidParameterException();
     }
 
-    public void upPrize(){
-        if(prize == 1)
-            prize++;
+    public void setPrize(int prize){
+        if(prize > 2)
+            this.prize = 2;
+        else
+            this.prize = prize;
     }
 
     public int getPrize(){return prize;}

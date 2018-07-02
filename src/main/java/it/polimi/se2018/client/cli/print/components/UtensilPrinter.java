@@ -46,12 +46,19 @@ public class UtensilPrinter {
 
     }
 
+
+    private static void printPrize(int startRow, int startCol, int prize){
+        System.out.print(ansi().cursor(startRow+HIGH, startCol+1).bold().a("Costo: " + prize).boldOff());
+    }
+
     public static void printUtensil(int startRow, int startCol, UtensilCard utensilCard){
 
         printMargin(startRow,startCol);
 
         System.out.print(ansi().cursor(startRow+SECOND_ROW, startCol+NUMBER_COL).bold().a(utensilCard.getNumber()).boldOff());
         System.out.print(ansi().cursor(startRow+TITLE_ROW, startCol + ( (LEN - 1 - utensilCard.getName().length() ) / 2) ).bold().a(utensilCard.getName()).boldOff());
+
+        printPrize(startRow, startCol, utensilCard.getPrize());
 
         TextPrinter.printText(startRow+DESCRIPTION_ROW, startCol+DESCRIPTION_COL, utensilCard.getDescription(), TEXT_SPACE );
     }

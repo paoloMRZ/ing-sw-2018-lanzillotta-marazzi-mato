@@ -15,6 +15,27 @@ public class Translater {
 
     private Translater(){}
 
+    public static Ansi.Color getColorFromText(String textColor){
+
+        switch (textColor){ //Faccio il parsing del colore.
+
+            case "white": return Ansi.Color.WHITE;
+
+            case "green": return Ansi.Color.GREEN;
+
+            case "blue": return  Ansi.Color.BLUE;
+
+            case "red": return Ansi.Color.RED;
+
+            case "yellow": return Ansi.Color.YELLOW;
+
+            case "purple": return Ansi.Color.MAGENTA;
+
+            default: return Ansi.Color.WHITE;
+        }
+    }
+
+
     public static List<DieInfo> fromMessageToDieInfo(List<String> infoFromMessage){
         ArrayList<DieInfo> diceList = new ArrayList<>();
 
@@ -26,24 +47,9 @@ public class Translater {
 
         for(String info : infoFromMessage){
 
-            messageColor = info.toLowerCase().substring(0,info.length()-1);
+            messageColor = info.toLowerCase().substring(0,info.length()-1); //estrapolo il colore dal messaggio.
 
-            switch (messageColor){ //Faccio il parsing del colore.
-
-                case "white": dieColor = Ansi.Color.WHITE; break;
-
-                case "green": dieColor = Ansi.Color.GREEN; break;
-
-                case "blue": dieColor = Ansi.Color.BLUE; break;
-
-                case "red": dieColor = Ansi.Color.RED; break;
-
-                case "yellow": dieColor = Ansi.Color.YELLOW; break;
-
-                case "purple": dieColor = Ansi.Color.MAGENTA; break;
-
-                default: dieColor = Ansi.Color.WHITE;
-            }
+            dieColor = getColorFromText(messageColor); //Recupero il colore in codifica ansi.
 
             messageNumber = info.substring(info.length()-1, info.length()); //Estraggo il numero dalla stringa.
             dieNumber = Integer.parseInt(messageNumber);
@@ -73,7 +79,7 @@ public class Translater {
 
         SideCard card;
         CardFileReader reader;
-        
+
         reader = new CardFileReader(cardName);
         card = reader.readSideCard();
         reader.close();

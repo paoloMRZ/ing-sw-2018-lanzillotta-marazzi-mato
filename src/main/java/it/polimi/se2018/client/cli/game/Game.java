@@ -41,6 +41,12 @@ public class Game {
     private ArrayList<String> enemyNicknames;
     private ArrayList<ArrayList<DieInfo>> diceOnEnemysCards;
 
+    private DieInfo secondPhaseDie;
+
+    private Ansi.Color secondPhaseColor;
+
+    private int secondPhaseValue;
+
     private int favours;
 
     private String turnOf;
@@ -88,7 +94,6 @@ public class Game {
         diceOnEnemysCards.add(diceOnMyCard);
 
 
-
         SideCard emptyCard = new SideCard("empty", 1, emptyCells);
 
         myCard = emptyCard;
@@ -107,6 +112,10 @@ public class Game {
 
         favours = 0;
         turnOf = "empty";
+
+        secondPhaseDie = new DieInfo(Ansi.Color.WHITE, 0);
+        secondPhaseColor = Ansi.Color.WHITE;
+        secondPhaseValue = 0;
     }
 
     public static Game factoryGame(){
@@ -193,6 +202,14 @@ public class Game {
             throw new InvalidParameterException();
     }
 
+    public void setUtensilPrize(int indexOfUtensil, int prize){
+        this.utensils.get(indexOfUtensil).setPrize(prize);
+    }
+
+    public int getUtensilNumberbyIndex(int indexOfUtensil){
+        return utensils.get(indexOfUtensil).getNumber();
+    }
+
     public void setDiceOnEnemysCards(ArrayList<ArrayList<DieInfo>> diceOnEnemysCards) {
         if(diceOnEnemysCards != null)
             this.diceOnEnemysCards = new ArrayList<>(diceOnEnemysCards);
@@ -205,6 +222,21 @@ public class Game {
             this.diceOnMyCard = new ArrayList<>(diceOnMyCard);
         else
             throw new InvalidParameterException();
+    }
+
+    public void setSecondPhaseDie(DieInfo dieInfo){
+        if(dieInfo != null)
+            this.secondPhaseDie = dieInfo; //DieInfo è immutabile.
+        else
+            throw new InvalidParameterException();
+    }
+
+    public void setSecondPhaseColor(Ansi.Color color){
+        this.secondPhaseColor = color;
+    }
+
+    public void setSecondPhaseValue(int value){
+        this.secondPhaseValue = value;
     }
 
     public int getFavours() {
@@ -263,5 +295,32 @@ public class Game {
 
     public List<ArrayList<DieInfo>> getDiceOnEnemysCards() {
         return new ArrayList<>(diceOnEnemysCards);
+    }
+
+    public DieInfo getSecondPhaseDie() {
+        return secondPhaseDie; //Die info è immutabile.
+    }
+
+    public Ansi.Color getSecondPhaseColor() {
+        return secondPhaseColor;
+    }
+
+    public int getSecondPhaseValue() {
+        return secondPhaseValue;
+    }
+
+    public int getUtensilIndexFromNumber(int number){
+
+        if(number >= 1 && number <= 12){
+            for(UtensilCard card: utensils){
+                if(card.getNumber() == number)
+                    return utensils.indexOf(card);
+            }
+
+            throw new InvalidParameterException();
+
+
+        }else
+            throw new InvalidParameterException();
     }
 }
