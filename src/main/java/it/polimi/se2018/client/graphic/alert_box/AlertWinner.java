@@ -44,7 +44,6 @@ public class AlertWinner {
 
         ImageView backButton = shadowEffect(configureImageView("","button-back", ".png",128,61));
         backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-
             window.close();
             primaryStage.close();
         });

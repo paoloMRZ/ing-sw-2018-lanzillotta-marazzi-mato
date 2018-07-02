@@ -27,6 +27,8 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,10 +77,12 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
     private VBox nodeButton;
     private String resolution;
     private AnchorPane sidePlayer;
+    private AnchorPane roundGame;
     private List<String> nameOfEnemies;
     private List<String> sideOfEnemies;
     private HBox cardOfenemies;
     private AlertCardUtensils alertCardUtensils;
+    private ArrayList<String> costUtensilHistory;
 
 
     //Costanti di intestazione delle varie finestra
@@ -99,8 +103,6 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
     public void start(Stage init) {
 
         //TODO: SCHERMATA LOGIN
-
-
         this.primaryStage = init;
 
         //Configurazione della Schermata di Login
@@ -215,7 +217,8 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
                             //Posiziono la roundGrid
                             roundLabel = new RoundLabel(adapterResolution);
-                            adapterResolution.putRoundGridLabel(anchorGame, roundLabel.getAnchorRound());
+                            roundGame = roundLabel.getAnchorRound();
+                            adapterResolution.putRoundGridLabel(anchorGame,roundGame);
 
                             //Posiziono la griglia con le informazioni sul giocatore
                             settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(message.getText()).get(0), adapterResolution);
@@ -228,7 +231,8 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                             adapterResolution.putSideLabel(anchorGame, sidePlayer);
 
                             //Posiziono la griglia dei pulsanti
-                            buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils, adapterResolution);
+                            costUtensilHistory = new ArrayList<>(Arrays.asList("1","1","1"));
+                            buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils, costUtensilHistory,adapterResolution);
                             buttonGameLabel.checkPermission(connectionHandler.getNickname(),ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
                             nodeButton = buttonGameLabel.getLabelButtonGame();
                             alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
@@ -318,9 +322,10 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                 //MESSAGGIO UPDATE DELLA ROUNDGRID QUANDO EVENTUALMENTE SI CAMBIANO I SUOI DADI (UTILIZZO UTENSILE)
                 if (ClientMessageParser.isUpdateRoundgridMessage(newValue)) {
                     List<List<String>> roundGridInfo = ClientMessageParser.getInformationsFromUpdateRoundgridMessage(newValue);
-                    anchorGame.getChildren().remove(roundLabel);
+                    anchorGame.getChildren().remove(roundGame);
                     roundLabel = new RoundLabel(adapterResolution);
-                    adapterResolution.putRoundGridLabel(anchorGame, roundLabel.getAnchorRound());
+                    roundGame = roundLabel.getAnchorRound();
+                    adapterResolution.putRoundGridLabel(anchorGame, roundGame);
 
                     for (List<String> dieInfo : roundGridInfo) {
                         roundLabel.proceedRound(dieInfo);
@@ -334,12 +339,15 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                     if(infoSide.get(0).equals(connectionHandler.getNickname())) {
                         anchorGame.getChildren().remove(sidePlayer);
                         anchorGame.getChildren().remove(nodeButton);
+
                         playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), true, false,adapterResolution);
                         playerSide.updateSideAfterPut(ClientMessageParser.getInformationsFromMessage(newValue));
                         sidePlayer = playerSide.getAnchorPane();
-                        buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils,adapterResolution);
+
+                        buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils,costUtensilHistory,adapterResolution);
                         nodeButton = buttonGameLabel.getLabelButtonGame();
                         alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
+
                         adapterResolution.putButtonLabel(anchorGame, nodeButton);
                         adapterResolution.putSideLabel(anchorGame,sidePlayer);
                     }
@@ -358,7 +366,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                     anchorGame.getChildren().remove(nodeReserve);
                     anchorGame.getChildren().remove(nodeButton);
                     nodeReserve = reserve.getHBox();
-                    buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils,adapterResolution);
+                    buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils,costUtensilHistory,adapterResolution);
 
                     nodeButton = buttonGameLabel.getLabelButtonGame();
                     alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
@@ -385,7 +393,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                 if (ClientMessageParser.isSuccessActivateUtensilMessage(newValue)) {
                     List<String> updateInfoUtensil = ClientMessageParser.getInformationsFromMessage(newValue);
                     anchorGame.getChildren().remove(nodeSetting);
-                    alertCardUtensils.updateCostUtensil(updateInfoUtensil.get(2),updateInfoUtensil.get(0));
+                    costUtensilHistory.set(Integer.parseInt(updateInfoUtensil.get(0)),updateInfoUtensil.get(2));
                     alertCardUtensils.launchExecutionUtensil(false,null);
                 }
 
@@ -531,7 +539,6 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
 
 
-
     /**
      * Metodo utilizzato per impostare l'adapter adeguato alla risoluzione selezionata
      *
@@ -546,10 +553,24 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
     }
 
 
+
+    /**
+     * Metodo utilizzato per la creazione dell'oggetto Cli nel caso in cui la scelta di interfaccia del giocatore ricadesse su "CLI"
+     *
+     * @param initCli Riferimento all'oogetto Cli creato in fase di connessione
+     */
+
     public void setInitCli(Cli initCli) {
         this.initCli = initCli;
     }
 
+
+
+    /**
+     * Metodo Getter per restituire la Finestra root dell'applicazione
+     *
+     * @return Rifeirimento al PrimaryStage
+     */
     public Stage getPrimaryStage() {
         return primaryStage;
     }

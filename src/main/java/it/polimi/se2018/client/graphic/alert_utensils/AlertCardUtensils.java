@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import static it.polimi.se2018.client.graphic.Utility.*;
 import static java.lang.Integer.parseInt;
@@ -44,7 +45,7 @@ import static java.lang.Integer.parseInt;
  */
 
 
-public class AlertCardUtensils implements ChangeListener<String> {
+public class AlertCardUtensils{
 
     private static final String EXTENSION = ".png";
     private static final String SUBDIRECTORY = "";
@@ -59,9 +60,6 @@ public class AlertCardUtensils implements ChangeListener<String> {
     private SideCardLabel playerSide;
     private Stage window;
     private AdapterResolution adapter;
-    private TextField costOfFirst = new TextField();
-    private TextField costOfSecond = new TextField();
-    private TextField costOfThird = new TextField();
     private ArrayList<String> infoCostHistory;
     private HBox cardSelection;
 
@@ -75,12 +73,13 @@ public class AlertCardUtensils implements ChangeListener<String> {
      * @param playerSide Riferimento alla carta Side del giocatore
      */
 
-    public AlertCardUtensils(CardCreatorLabel cardUtensils, ConnectionHandler connectionHandler, ReserveLabel reserve, SideCardLabel playerSide, AdapterResolution adapterResolution){
+    public AlertCardUtensils(CardCreatorLabel cardUtensils, ConnectionHandler connectionHandler, ReserveLabel reserve, SideCardLabel playerSide, List<String> updateCostUtensil, AdapterResolution adapterResolution){
         this.cardUtensils = cardUtensils;
         this.connectionHandler = connectionHandler;
         this.reserve = reserve;
         this.playerSide = playerSide;
         this.adapter = adapterResolution;
+        this.infoCostHistory = new ArrayList<>(updateCostUtensil);
     }
 
 
@@ -93,13 +92,13 @@ public class AlertCardUtensils implements ChangeListener<String> {
 
     public void display(String title, String message){
 
-
+        //Configurazione della finestra visualizzata
         window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
-        //window.setOnCloseRequest(Event::consume);
+        window.setOnCloseRequest(Event::consume);
         window.setTitle(title);
-        window.setMaxWidth(1100);
-        window.setMaxHeight(800);
+        window.setMaxWidth(1200);
+        window.setMaxHeight(900);
 
         StackPane baseWindow = new StackPane();
 
@@ -131,9 +130,6 @@ public class AlertCardUtensils implements ChangeListener<String> {
         layoutButton.setAlignment(Pos.CENTER);
 
 
-        //Inizializzo i costi delle utensili
-        infoCostHistory = new ArrayList<>(Arrays.asList("1", "1","1"));
-
         //Layout card
         setCardCollection();
 
@@ -159,10 +155,8 @@ public class AlertCardUtensils implements ChangeListener<String> {
     public void launchExecutionUtensil(Boolean isBisActivate, String bisContent){
         ActionUtensils actionUtensils = null;
         try {
-            //DA TOGLIERE
             actionUtensils = new ActionUtensils(cardUtensils.getDictionaryUtensils(),String.valueOf(cardUtensils.getKeyName().get(Integer.parseInt(selection))), reserve, connectionHandler,selection, playerSide, window,adapter,bisContent);
             actionUtensils.setBisEffect(isBisActivate);
-
         } catch (IOException e1) {
             e1.printStackTrace();
         }
@@ -172,9 +166,7 @@ public class AlertCardUtensils implements ChangeListener<String> {
         window.centerOnScreen();
 
         Scene scene = new Scene(actionUtensils.getWindow());
-        Platform.runLater(() -> {
-            window.setScene(scene);
-        });
+        Platform.runLater(() -> window.setScene(scene));
 
     }
 
@@ -187,44 +179,6 @@ public class AlertCardUtensils implements ChangeListener<String> {
     public void closeExecutionUtensil(){
         window.close();
     }
-
-
-    /**
-     * Metodo utilizzato per cambaire dinamicamente il costo associato ad una carta Utensile specifica
-     *
-     * @param observableValue Riferimento all'oggetto osservabile su cui applicare le modifiche
-     * @param oldValue Contenuto vecchio del TextField
-     * @param newValue Contenuto nuovo del TextField
-     */
-
-    @Override
-    public void changed(ObservableValue observableValue, String oldValue, String newValue) {
-
-        try{
-            StringProperty textProperty = (StringProperty) observableValue;
-            TextField textField = (TextField) textProperty.getBean();
-
-            if(textField == costOfFirst){
-                infoCostHistory.set(0,newValue);
-                setCardCollection();
-            }
-
-            else if(textField == costOfSecond){
-                infoCostHistory.set(1,newValue);
-                setCardCollection();
-            }
-
-            else if(textField == costOfThird){
-                infoCostHistory.set(2,newValue);
-                setCardCollection();
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-
-    }
-
 
 
 
@@ -265,17 +219,4 @@ public class AlertCardUtensils implements ChangeListener<String> {
 
 
     }
-
-
-
-    public void updateCostUtensil(String newValue, String cardUtensil){
-
-        switch (cardUtensil){
-            case "0": changed(costOfFirst.textProperty(),this.costOfFirst.getText(),newValue); break;
-            case "1": changed(costOfSecond.textProperty(),this.costOfSecond.getText(),newValue); break;
-            case "2": changed(costOfThird.textProperty(),this.costOfThird.getText(),newValue); break;
-        }
-
-    }
-
 }

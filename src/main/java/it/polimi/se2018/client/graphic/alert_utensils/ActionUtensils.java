@@ -6,10 +6,8 @@ import it.polimi.se2018.client.connection_handler.ConnectionHandler;
 import it.polimi.se2018.client.graphic.ReserveLabel;
 import it.polimi.se2018.client.graphic.SideCardLabel;
 import it.polimi.se2018.client.graphic.adapter_gui.AdapterResolution;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -80,11 +78,11 @@ public class ActionUtensils {
             if(!isBisEffect) selectorContent.configureMessage(finalName, dictionaryCardUtensils, finalPath);
             else{
                 switch (finalName){
-                    case "Diluente Per Pasta Salda":
+                    case "Diluente Per Pasta Salda Bis":
                         selectorContent.configureMessage(finalName, dictionaryCardUtensils, finalPath);
                         break;
 
-                    case "Pennello Per Pasta Salda":
+                    case "Pennello Per Pasta Salda Bis":
                         selectorContent.configureMessage(finalName, dictionaryCardUtensils, finalPath);
                         break;
                 }

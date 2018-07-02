@@ -137,9 +137,6 @@ public class AlertInfoCard {
         return backButton;
     }
 
-    public static ArrayList<String> getNameCard() {
-        return nameCard;
-    }
 
     public static String getInfoData() {
         return infoData;

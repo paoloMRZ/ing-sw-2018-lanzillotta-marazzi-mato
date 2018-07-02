@@ -11,6 +11,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import java.util.ArrayList;
+import java.util.List;
+
 import static it.polimi.se2018.client.graphic.Utility.*;
 
 
@@ -48,10 +50,10 @@ public class ButtonGameLabel {
      * @param adapterResolution Riferimento all'adapter per il dimensionamento
      */
 
-    public ButtonGameLabel(ConnectionHandler connectionHandler, ReserveLabel reserve, SideCardLabel playerSide, CardCreatorLabel cardUtensils, AdapterResolution adapterResolution){
+    public ButtonGameLabel(ConnectionHandler connectionHandler, ReserveLabel reserve, SideCardLabel playerSide, CardCreatorLabel cardUtensils, List<String> updateCostUtensil, AdapterResolution adapterResolution){
 
         ArrayList<Integer> sizeButton = (ArrayList<Integer>)adapterResolution.getButtonLabelSize();
-        alertCardUtensils = new AlertCardUtensils(cardUtensils,connectionHandler,reserve,playerSide,adapterResolution);
+        alertCardUtensils = new AlertCardUtensils(cardUtensils,connectionHandler,reserve,playerSide,updateCostUtensil,adapterResolution);
 
 
         //Configuro il bottone Azione per il piazzamento del dado

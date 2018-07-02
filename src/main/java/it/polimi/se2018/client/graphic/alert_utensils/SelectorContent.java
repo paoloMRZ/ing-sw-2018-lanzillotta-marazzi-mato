@@ -171,7 +171,6 @@ public class SelectorContent {
 
     public VBox configureNode(String cardName,String bisContent){
 
-
         switch (cardName){
             case PINZASGROSSATRICE:
                 node = new VBox(15);
@@ -238,7 +237,7 @@ public class SelectorContent {
                 node = new VBox(25);
                 node.setAlignment(Pos.TOP_CENTER);
                 String lowerCase = bisContent.toLowerCase(Locale.ENGLISH);
-                ImageView dieExtractItem = configureDieView(lowerCase + String.valueOf(1) ,70, 70);
+                ImageView dieExtractItem = configureImageView("/diePack",lowerCase + String.valueOf(1),".bmp" ,70, 70);
                 node.getChildren().addAll(setFontStyle(new Label("Hai estratto il dado:"), 25), dieExtractItem);
 
                 VBox selectionLabel = new VBox(15);
@@ -334,15 +333,15 @@ public class SelectorContent {
         node = new VBox(10);
         node.setAlignment(Pos.CENTER);
 
-        oldXFirstDie.setPromptText("X");
-        oldYFirstDie.setPromptText("Y");
-        newXFirstDie.setPromptText("X");
-        newYFirstDie.setPromptText("Y");
+        oldXFirstDie.setPromptText("Riga");
+        oldYFirstDie.setPromptText("Colonna");
+        newXFirstDie.setPromptText("Riga");
+        newYFirstDie.setPromptText("Colonna");
 
-        oldXSecondDie.setPromptText("X");
-        oldYSecondDie.setPromptText("Y");
-        newXSecondDie.setPromptText("X");
-        newYSecondDie.setPromptText("Y");
+        oldXSecondDie.setPromptText("Riga");
+        oldYSecondDie.setPromptText("Colonna");
+        newXSecondDie.setPromptText("Riga");
+        newYSecondDie.setPromptText("Colonna");
 
         oldXFirstDie.setPrefSize(100,20);
         oldYFirstDie.setPrefSize(100,20);
@@ -378,10 +377,10 @@ public class SelectorContent {
 
     private HBox configureCoordinateInput(Double spacingVBox, Double spacingHBox, ArrayList<TextField> coordonateBox, Boolean isDisabled){
 
-        coordonateBox.get(0).setPromptText("X");
-        coordonateBox.get(1).setPromptText("Y");
-        coordonateBox.get(2).setPromptText("X");
-        coordonateBox.get(3).setPromptText("Y");
+        coordonateBox.get(0).setPromptText("Riga");
+        coordonateBox.get(1).setPromptText("Colonna");
+        coordonateBox.get(2).setPromptText("Riga");
+        coordonateBox.get(3).setPromptText("Colonna");
 
         if(isDisabled){
             coordonateBox.get(0).setDisable(true);

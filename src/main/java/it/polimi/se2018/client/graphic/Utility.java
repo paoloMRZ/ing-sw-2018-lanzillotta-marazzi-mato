@@ -61,24 +61,6 @@ public class Utility {
     }
 
 
-
-
-    /**
-     * Metodo che crea un elemento ImageView ristretto solo alle immagini native di formato bmp
-     *
-     * @param path Percorso della risorsa
-     * @param requestedWidth Larghezza richiesta
-     * @param requestedHeight Altezza richiesta
-     * @return Riferimento all'oggetto ImageView contenente l'immagine desiderata
-     */
-
-    public static ImageView configureDieView(String path, int requestedWidth, int requestedHeight){
-        return new ImageView(new Image("diePack/die-" + path + ".bmp",requestedWidth,requestedHeight,false,true));
-    }
-
-
-
-
     /**
      * Metodo che crea un elemento Background ristretto solo alle immagini native di formato png
      *
