@@ -1,5 +1,6 @@
 package it.polimi.se2018.client.graphic.alert_box;
 
+import it.polimi.se2018.client.cli.Cli;
 import it.polimi.se2018.client.connection_handler.ConnectionHandlerRMI;
 import it.polimi.se2018.client.connection_handler.ConnectionHandlerSocket;
 import it.polimi.se2018.client.graphic.InitWindow;
@@ -31,7 +32,7 @@ public class SceneNickName {
     private static final String SUBDIRECTORY = "";
     private Scene sceneNickName;
 
-    public SceneNickName(Stage window, String connectionType, InitWindow init, int port, String iP, Scene sceneLoading, Scene sceneConnection){
+    public SceneNickName(Stage window, String connectionType, String interfaceType, InitWindow init, int port, String iP, Scene sceneLoading, Scene sceneConnection){
 
         //Label per accogliere il titolo della finestra
         Label labelTitle = setFontStyle(new Label("Scegli il tuo nickName"),25);
@@ -74,7 +75,13 @@ public class SceneNickName {
         //Validation of input
         continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             Platform.runLater(() -> {
-                if(isValidInput(textNick.getText(), connectionType, init, port, iP)) window.setScene(sceneLoading);
+                if(isValidInput(textNick.getText(), connectionType, interfaceType, init, port, iP)) {
+                    if(interfaceType.equals("Gui")) window.setScene(sceneLoading);
+                    else {
+                        init.getPrimaryStage().hide();
+                        window.close();
+                    }
+                }
             });
         });
 
@@ -85,7 +92,7 @@ public class SceneNickName {
 }
 
 
-    private static boolean isValidInput(String input, String connectionType, InitWindow init, int port, String iP) {
+    private static boolean isValidInput(String input, String connectionType, String interfaceType, InitWindow init, int port, String iP) {
 
         boolean value = false;
         if (input.trim().isEmpty()) {
@@ -95,9 +102,12 @@ public class SceneNickName {
             try {
                 if (connectionType.equals("Socket")) {
                     init.setConnectionHandler(new ConnectionHandlerSocket(input, init, iP, port));
+                    if(interfaceType.equals("Cli")) init.setInitCli(new Cli(init.getConnectionHandler().getNickname()));
                 }
-                else if (connectionType.equals("Rmi"))
+                else if (connectionType.equals("Rmi")) {
                     init.setConnectionHandler(new ConnectionHandlerRMI(input, init, iP));
+                    if (interfaceType.equals("Cli")) init.setInitCli(new Cli(init.getConnectionHandler().getNickname()));
+                }
                 value = true;
             } catch (InvalidNicknameException e) {
                 AlertValidation.display("Sagrada", "Attenzione! Nickname già utilizzato!.");

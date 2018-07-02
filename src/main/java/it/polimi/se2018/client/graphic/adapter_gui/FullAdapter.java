@@ -160,7 +160,7 @@ public class FullAdapter implements AdapterResolution{
         sizeSideEnemy.add(new ArrayList<>(Arrays.asList(30,200,80,20)));
 
         //Dimensioni della finestra
-        sizeSideEnemy.add(new ArrayList<>(Arrays.asList(1000,820)));
+        sizeSideEnemy.add(new ArrayList<>(Arrays.asList(1100,900)));
 
         //Spacing Orizzontale tra le coppie di carte Side visualizzate
         //Dimensioni (Larghezza,Altezza) delle carte Side visualizzate
@@ -173,6 +173,13 @@ public class FullAdapter implements AdapterResolution{
     @Override
     public List<Integer> getPrimaryStageSize(){
         return new ArrayList<>(Arrays.asList(1920,1080));
+    }
+
+    @Override
+    public List<Double> getSidePlayerUtensilSize() {
+
+        //Posizone Grid della Side visualizzata nelle schermate dedicate alle carte Utensile (Right, Top, Left, Bottom)
+        return new ArrayList<>(Arrays.asList(0d, 0d, 10d, 21d));
     }
 
     @Override

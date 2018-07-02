@@ -1,15 +1,15 @@
 package it.polimi.se2018.client.graphic;
 
+import it.polimi.se2018.client.cli.Cli;
 import it.polimi.se2018.client.connection_handler.ConnectionHandler;
+import it.polimi.se2018.client.connection_handler.ConnectionHandlerObserver;
+import it.polimi.se2018.client.graphic.alert_box.*;
+import it.polimi.se2018.client.graphic.alert_utensils.AlertCardUtensils;
 import it.polimi.se2018.client.message.ClientMessageParser;
 import it.polimi.se2018.client.graphic.adapter_gui.AdapterResolution;
 import it.polimi.se2018.client.graphic.adapter_gui.FullAdapter;
 import it.polimi.se2018.client.graphic.adapter_gui.MediumAdapter;
 import it.polimi.se2018.client.graphic.adapter_gui.SmallAdapter;
-import it.polimi.se2018.client.graphic.alert_box.AlertCloseButton;
-import it.polimi.se2018.client.graphic.alert_box.AlertLoadingGame;
-import it.polimi.se2018.client.graphic.alert_box.AlertSwitcher;
-import it.polimi.se2018.client.graphic.alert_box.AlertValidation;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -27,21 +27,35 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static it.polimi.se2018.client.graphic.Utility.*;
 
 
-public class InitWindow extends Application {
+/**
+ * Classe InitWindow utilizzata per il collegamento con il server da parte del Client. Configurerà tutti i settaggi scelti dal giocatore (Tipo di Connessione, Modalità di Gioco)
+ * per permettergli dio giocare una partita qualora ci fosse collegato almeno un giocatore avversario. L'interfaccia che permette al client di interagire con il gioco è
+ * per una prima fase interamente gestita con la GUI del programma e, solamente in seguito a una scelta dello stesso, potrà proseguire la aprtita continuando sulla GUI oppure
+ * giocando tramite la Cli di sistema.
+ *
+ * @author Simone Lanzillotta
+ */
 
-    //Elementi grafici e TextField per l'ascolto dei messaggi in ingresso
-    private BorderPane borderPane;
+
+
+
+public class InitWindow extends Application implements ConnectionHandlerObserver{
+
     private ConnectionHandler connectionHandler;
+    private Cli initCli;
     private TextField message = new TextField();
     private Boolean startGame = true;
     private Boolean isInitReserve = true;
     private AnchorPane anchorGame;
+    private Stage primaryStage;
 
     //Elementi grafici della schermata game
     private AdapterResolution adapterResolution;
@@ -63,9 +77,13 @@ public class InitWindow extends Application {
     private VBox nodeButton;
     private String resolution;
     private AnchorPane sidePlayer;
+    private AnchorPane roundGame;
     private List<String> nameOfEnemies;
     private List<String> sideOfEnemies;
     private HBox cardOfenemies;
+    private AlertCardUtensils alertCardUtensils;
+    private ArrayList<String> costUtensilHistory;
+    private boolean isuseUtensil = false;
 
 
     //Costanti di intestazione delle varie finestra
@@ -73,6 +91,7 @@ public class InitWindow extends Application {
     private static final String FULLSIZE = "1920x1080 (Full HD)";
     private static final String MEDIUMSIZE = "1400x900 (Scelta consigliata)";
     private static final String SMALLSIZE = "1366x768";
+    private static final String ERROR = "Error";
 
 
 
@@ -82,20 +101,21 @@ public class InitWindow extends Application {
 
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage init) {
 
-        //Imposto il nome della finestra principale
+        //TODO: SCHERMATA LOGIN
+        this.primaryStage = init;
+
+        //Configurazione della Schermata di Login
         primaryStage.setTitle(SAGRADA);
         primaryStage.getIcons().add(new Image("iconPack/icon-sagrada.png", 10, 10, false, true));
         primaryStage.setOnCloseRequest(e -> closeWindow(primaryStage, e));
 
-        //TODO: SCHERMATA LOGIN
         ImageView startButton = shadowEffect(configureImageView("", "button-start-game", ".png", 200, 90));
         AlertSwitcher alertSwitcher = new AlertSwitcher();
         ComboBox comboBox = setChoiceResolution();
         startButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-
-            if(comboBox.getValue()==null) AlertValidation.display("Errore", "Selziona la risuluzione\ndi gioco!");
+            if(comboBox.getValue()==null) AlertValidation.display(ERROR, "Seleziona la risuluzione\ndi gioco!");
             else {
                 selectorAdapter();
                 tabCardLabel = new TabCardLabel(adapterResolution);
@@ -103,9 +123,8 @@ public class InitWindow extends Application {
             }
         });
 
-        borderPane = new BorderPane();
+        BorderPane borderPane = new BorderPane();
         borderPane.setStyle("-fx-background-image: url(back-init.jpg); -fx-background-size: contain; -fx-background-position: center; -fx-background-repeat: no-repeat;");
-
 
         VBox layout = new VBox(50);
         layout.getChildren().addAll(startButton,comboBox);
@@ -199,7 +218,8 @@ public class InitWindow extends Application {
 
                             //Posiziono la roundGrid
                             roundLabel = new RoundLabel(adapterResolution);
-                            adapterResolution.putRoundGridLabel(anchorGame, roundLabel.getAnchorRound());
+                            roundGame = roundLabel.getAnchorRound();
+                            adapterResolution.putRoundGridLabel(anchorGame,roundGame);
 
                             //Posiziono la griglia con le informazioni sul giocatore
                             settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(message.getText()).get(0), adapterResolution);
@@ -207,14 +227,16 @@ public class InitWindow extends Application {
                             adapterResolution.putSettingLabel(anchorGame, nodeSetting);
 
                             //Posiziono la carta Side del giocatore
-                            playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), true, adapterResolution);
+                            playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), true, false, adapterResolution);
                             sidePlayer = playerSide.getAnchorPane();
                             adapterResolution.putSideLabel(anchorGame, sidePlayer);
 
                             //Posiziono la griglia dei pulsanti
-                            buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils, adapterResolution);
+                            costUtensilHistory = new ArrayList<>(Arrays.asList("1","1","1"));
+                            buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils, costUtensilHistory,adapterResolution);
                             buttonGameLabel.checkPermission(connectionHandler.getNickname(),ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
                             nodeButton = buttonGameLabel.getLabelButtonGame();
+                            alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
                             adapterResolution.putButtonLabel(anchorGame, nodeButton);
 
 
@@ -230,7 +252,7 @@ public class InitWindow extends Application {
                                 primaryStage.setScene(sceneGame);
                             });
                         } else {
-                            updateGUI(newText);
+                            updateGUI(newText, primaryStage);
                         }
 
                     }
@@ -244,11 +266,11 @@ public class InitWindow extends Application {
                             adapterResolution.putReserveLabel(anchorGame, nodeReserve);
                             isInitReserve = false;
                         } else {
-                            updateGUI(newText);
+                            updateGUI(newText,primaryStage);
                         }
                 }
 
-                else updateGUI(newText);
+                else updateGUI(newText,primaryStage);
             }
         });
     }
@@ -258,11 +280,11 @@ public class InitWindow extends Application {
 
 
 
-    private void updateGUI(String newValue) {
+    private void updateGUI(String newValue, Stage primaryStage) {
 
         Platform.runLater(() -> {
-            //TODO: MESSAGGI DI TIPO UPDATE
-            System.out.println(newValue);
+
+            //MESSAGGI DI TIPO UPDATE
             if (ClientMessageParser.isUpdateMessage(newValue)) {
 
                 //MESSAGGIO UPDATE PER IL CAMBIO DEL TURNO
@@ -301,9 +323,10 @@ public class InitWindow extends Application {
                 //MESSAGGIO UPDATE DELLA ROUNDGRID QUANDO EVENTUALMENTE SI CAMBIANO I SUOI DADI (UTILIZZO UTENSILE)
                 if (ClientMessageParser.isUpdateRoundgridMessage(newValue)) {
                     List<List<String>> roundGridInfo = ClientMessageParser.getInformationsFromUpdateRoundgridMessage(newValue);
-                    anchorGame.getChildren().remove(roundLabel);
+                    anchorGame.getChildren().remove(roundGame);
                     roundLabel = new RoundLabel(adapterResolution);
-                    adapterResolution.putRoundGridLabel(anchorGame, roundLabel.getAnchorRound());
+                    roundGame = roundLabel.getAnchorRound();
+                    adapterResolution.putRoundGridLabel(anchorGame, roundGame);
 
                     for (List<String> dieInfo : roundGridInfo) {
                         roundLabel.proceedRound(dieInfo);
@@ -316,10 +339,18 @@ public class InitWindow extends Application {
                     List<String> infoSide = ClientMessageParser.getInformationsFromMessage(newValue);
                     if(infoSide.get(0).equals(connectionHandler.getNickname())) {
                         anchorGame.getChildren().remove(sidePlayer);
-                        playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), true, adapterResolution);
+                        playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), true, false,adapterResolution);
                         playerSide.updateSideAfterPut(ClientMessageParser.getInformationsFromMessage(newValue));
                         sidePlayer = playerSide.getAnchorPane();
                         adapterResolution.putSideLabel(anchorGame,sidePlayer);
+
+                        if(!isuseUtensil) {
+                            anchorGame.getChildren().remove(nodeButton);
+                            buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils, costUtensilHistory, adapterResolution);
+                            nodeButton = buttonGameLabel.getLabelButtonGame();
+                            alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
+                            adapterResolution.putButtonLabel(anchorGame, nodeButton);
+                        }
                     }
                     else {
                         anchorGame.getChildren().remove(cardOfenemies);
@@ -333,14 +364,20 @@ public class InitWindow extends Application {
 
                 //MESSAGGIO UPDATE DELLA RISERVA
                 if (ClientMessageParser.isUpdateReserveMessage(newValue)) {
-                    anchorGame.getChildren().remove(nodeReserve);
-                    anchorGame.getChildren().remove(nodeButton);
-                    nodeReserve = reserve.getHBox();
-                    buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils,adapterResolution);
 
-                    nodeButton = buttonGameLabel.getLabelButtonGame();
-                    adapterResolution.putButtonLabel(anchorGame, nodeButton);
+                    //Aggiornamento del riferimento alla nuova riserva ricevuta
+                    anchorGame.getChildren().remove(nodeReserve);
+                    nodeReserve = reserve.getHBox();
                     adapterResolution.putReserveLabel(anchorGame, nodeReserve);
+
+                    //Aggiornamento del riferimento del ButtonGameLabel -> in caso di utilizzo di un utensile, questa operazione va fatta solamente nel messaggio di END ACTIVATE
+                    if(!isuseUtensil) {
+                        anchorGame.getChildren().remove(nodeButton);
+                        buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils, costUtensilHistory, adapterResolution);
+                        nodeButton = buttonGameLabel.getLabelButtonGame();
+                        alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
+                        adapterResolution.putButtonLabel(anchorGame, nodeButton);
+                    }
                 }
             }
 
@@ -360,23 +397,24 @@ public class InitWindow extends Application {
 
                 //MESSAGGIO SUCCESSO RICHIESTA DI ATTIVAZIONE DI UNA CARTA UTENSILE
                 if (ClientMessageParser.isSuccessActivateUtensilMessage(newValue)) {
-                    buttonGameLabel.getAlertCardUtensils().launchExecutionUtensil();
+
+                    //Prelevo le informazioni sulla Utensile Attivata
+                    List<String> updateInfoUtensil = ClientMessageParser.getInformationsFromMessage(newValue);
+
+                    //Aggiorno la lista storica dei costi delle Utensili dal campo 0 (indice carta Attivata) e dal campo 2 (nuovo costo Utensile)
+                    costUtensilHistory.set(Integer.parseInt(updateInfoUtensil.get(0)),updateInfoUtensil.get(2));
+
+                    //Blocco gli aggiornamenti relativi a carta Side e Riserva fino alla ricezione del messaggio di End
+                    isuseUtensil = true;
+
+                    //Lancio la schermata specifica dell'utilizzo della carta Utensile selezionata
+                    alertCardUtensils.launchExecutionUtensil(false,null);
                 }
 
 
                 //MESSAGGIO SUCCESSO ATTIVAZIONE DI UNA CARTA UTENSILE MULTIPARAMETRO
                 if (ClientMessageParser.isSuccessUseUtensilMessage(newValue)) {
-
-                    /*
-                    List<String> updateInfoUtensil = ClientMessageParser.getInformationsFromMessage(newValue);
-                    anchorGame.getChildren().remove(nodeSetting);
-                    settingLabel.updateFavours(updateInfoUtensil.get(1));
-                    settingLabel.updateAction();
-                    nodeSetting = settingLabel.getSettingLabel();
-                    buttonGameLabel.getAlertCardUtensils().closeExecutionUtensil();
-                    AlertValidation.display("Successo", "La carta è stata attivata!!");
-                    adapterResolution.putSettingLabel(anchorGame, nodeSetting);
-                    */
+                    alertCardUtensils.launchExecutionUtensil(true,newValue);
                 }
             }
 
@@ -387,25 +425,34 @@ public class InitWindow extends Application {
             if (ClientMessageParser.isUseUtensilEndMessage(newValue)) {
                 List<String> updateInfoUtensil = ClientMessageParser.getInformationsFromMessage(newValue);
                 anchorGame.getChildren().remove(nodeSetting);
-                settingLabel.updateFavours(updateInfoUtensil.get(1));
                 settingLabel.updateAction();
+                settingLabel.updateFavours(updateInfoUtensil.get(3));
                 nodeSetting = settingLabel.getSettingLabel();
-                buttonGameLabel.getAlertCardUtensils().closeExecutionUtensil();
-                AlertValidation.display("Successo", "La carta è stata attivata!!");
                 adapterResolution.putSettingLabel(anchorGame, nodeSetting);
+                alertCardUtensils.closeExecutionUtensil();
+                isuseUtensil = false;
+                Platform.runLater(() -> AlertValidation.display("Successo", "La carta è stata attivata!!"));
             }
 
 
             //TODO: MESSAGGI DI TIPO ERRORE
             if (ClientMessageParser.isErrorMessage(newValue)) {
                 if (ClientMessageParser.isErrorPutMessage(newValue))
-                    AlertValidation.display("Errore", "Il tuo posizionamento non è valido!");
+                    AlertValidation.display(ERROR, "Il tuo posizionamento non è valido!");
                 if (ClientMessageParser.isErrorActivateUtensilMessage(newValue))
-                    AlertValidation.display("Errore", "Non puoi utilizzare la carta selezionata!");
+                    AlertValidation.display(ERROR, "Non puoi utilizzare la carta selezionata!");
                 if (ClientMessageParser.isClientDisconnectedMessage(newValue))
                     AlertValidation.display("Disconnessione", ClientMessageParser.getInformationsFromMessage(newValue) + "si è disconnesso");
                 if (ClientMessageParser.isUnauthorizedPutMessage(newValue))
-                    AlertValidation.display("Errore", "Hai già effettutato\nquesta azione!");
+                    AlertValidation.display(ERROR, "Hai già effettutato\nquesta azione!");
+                if(ClientMessageParser.isErrorUseUtensilMessage(newValue))
+                    AlertValidation.display(ERROR, "Non hai inserito correttamente\ni parametri richiesti!");
+            }
+
+
+            //TODO: MESSAGGIO END DELLA PARTITA
+            if(ClientMessageParser.isWinnerMessage(newValue)){
+                AlertWinner.display("Sagrada", "Complimenti!", primaryStage);
             }
 
         });
@@ -473,7 +520,7 @@ public class InitWindow extends Application {
      * @param message Riferimento al messaggio inviato dalla lobby all'interfaccia grafica
      */
 
-    public void sendToView(String message) {
+    public void NetworkRequest(String message) {
         //il messaggio in ingresso deve essere interpretato, quindi procedo con la classificazione
         this.message.setText(message);
     }
@@ -507,7 +554,6 @@ public class InitWindow extends Application {
 
 
 
-
     /**
      * Metodo utilizzato per impostare l'adapter adeguato alla risoluzione selezionata
      *
@@ -519,5 +565,28 @@ public class InitWindow extends Application {
             case MEDIUMSIZE: adapterResolution = new MediumAdapter(); break;
             case SMALLSIZE: adapterResolution = new SmallAdapter(); break;
         }
+    }
+
+
+
+    /**
+     * Metodo utilizzato per la creazione dell'oggetto Cli nel caso in cui la scelta di interfaccia del giocatore ricadesse su "CLI"
+     *
+     * @param initCli Riferimento all'oogetto Cli creato in fase di connessione
+     */
+
+    public void setInitCli(Cli initCli) {
+        this.initCli = initCli;
+    }
+
+
+
+    /**
+     * Metodo Getter per restituire la Finestra root dell'applicazione
+     *
+     * @return Rifeirimento al PrimaryStage
+     */
+    public Stage getPrimaryStage() {
+        return primaryStage;
     }
 }

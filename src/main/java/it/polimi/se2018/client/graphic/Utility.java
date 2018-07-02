@@ -1,6 +1,5 @@
 package it.polimi.se2018.client.graphic;
 
-import it.polimi.se2018.client.message.ClientMessageParser;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -10,16 +9,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+
 
 /**
  * Classe Utility adibita a raccogliere metodi static per la cinfigurazione dei vari componenti delle scene da visualizzare
@@ -31,7 +28,7 @@ import java.util.stream.Stream;
 public class Utility {
 
     private static DropShadow shadow = new DropShadow();
-    private static String font = "Matura MT Script Capitals";
+    private static final String FONT = "Matura MT Script Capitals";
 
 
     /**
@@ -62,24 +59,6 @@ public class Utility {
     public static ImageView configureImageView(String subDirectory, String nameResources, String extension, int requestedWidth, int requestedHeight){
         return new ImageView(new Image(subDirectory + nameResources + extension,requestedWidth,requestedHeight,false,true));
     }
-
-
-
-
-    /**
-     * Metodo che crea un elemento ImageView ristretto solo alle immagini native di formato bmp
-     *
-     * @param path Percorso della risorsa
-     * @param requestedWidth Larghezza richiesta
-     * @param requestedHeight Altezza richiesta
-     * @return Riferimento all'oggetto ImageView contenente l'immagine desiderata
-     */
-
-    public static ImageView configureDieView(String path, int requestedWidth, int requestedHeight){
-        return new ImageView(new Image("diePack/die-" + path + ".bmp",requestedWidth,requestedHeight,false,true));
-    }
-
-
 
 
     /**
@@ -143,7 +122,7 @@ public class Utility {
      */
 
     public static Label setFontStyle(Label header, int size){
-        header.setFont(Font.font(font, size));
+        header.setFont(Font.font(FONT, size));
         header.setAlignment(Pos.CENTER);
         return header;
     }

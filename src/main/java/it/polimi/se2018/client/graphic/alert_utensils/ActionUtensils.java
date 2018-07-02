@@ -6,10 +6,8 @@ import it.polimi.se2018.client.connection_handler.ConnectionHandler;
 import it.polimi.se2018.client.graphic.ReserveLabel;
 import it.polimi.se2018.client.graphic.SideCardLabel;
 import it.polimi.se2018.client.graphic.adapter_gui.AdapterResolution;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -33,10 +31,9 @@ public class ActionUtensils {
 
     private StackPane window = new StackPane();
     private ReserveLabel reserveLabel;
-    private static boolean isDisable = false;
-    private static boolean isBisEffect = false;
+    private boolean isBisEffect = false;
 
-    public ActionUtensils(Map<String, String> dictionaryCardUtensils, String keyNameOfCard, ReserveLabel reserve, ConnectionHandler connectionHandler, String selection, SideCardLabel playerSide, Stage primaryWindow, AdapterResolution adapterResolution) throws IOException {
+    public ActionUtensils(Map<String, String> dictionaryCardUtensils, String keyNameOfCard, ReserveLabel reserve, ConnectionHandler connectionHandler, String selection, SideCardLabel playerSide, Stage primaryWindow, AdapterResolution adapterResolution, String bisContent) throws IOException {
 
         this.reserveLabel = reserve;
 
@@ -66,7 +63,11 @@ public class ActionUtensils {
         HBox bodyContent = new HBox(100);
         ImageView cardImage = configureImageView(SUBDIRECTORY,keyNameOfCard,EXTENSION, 300,450);
         SelectorContent selectorContent = new SelectorContent(this.reserveLabel, connectionHandler,selection, playerSide,adapterResolution);
-        bodyContent.getChildren().addAll(cardImage, selectorContent.configureNode(name));
+        if(!isBisEffect) bodyContent.getChildren().addAll(cardImage, selectorContent.configureNode(name,bisContent));
+        else {
+            name = name.concat(" ".concat("Bis"));
+            bodyContent.getChildren().addAll(cardImage, selectorContent.configureNode(name,bisContent));
+        }
         bodyContent.setAlignment(Pos.CENTER);
 
         //End content
@@ -77,27 +78,22 @@ public class ActionUtensils {
             if(!isBisEffect) selectorContent.configureMessage(finalName, dictionaryCardUtensils, finalPath);
             else{
                 switch (finalName){
-                    case "Diluente Per Pasta Salda": ActionUtensils actionUtensils = null;
-                        try {
-                            actionUtensils = new ActionUtensils(dictionaryCardUtensils,"cardutensils/diluente-per-pasta-salda-bis", reserve, connectionHandler,selection, playerSide, primaryWindow,adapterResolution);
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
-                        }
-                        Scene scene = new Scene(actionUtensils.getWindow());
-                        primaryWindow.setWidth(1200);
-                        primaryWindow.setHeight(900);
-                        primaryWindow.centerOnScreen();
-                        isBisEffect = false;
-                        Platform.runLater(() -> primaryWindow.setScene(scene));
+                    case "Diluente Per Pasta Salda Bis":
+                        selectorContent.configureMessage(finalName, dictionaryCardUtensils, finalPath);
+                        break;
+
+                    case "Pennello Per Pasta Salda Bis":
+                        selectorContent.configureMessage(finalName, dictionaryCardUtensils, finalPath);
+                        break;
                 }
             }
         });
-        continueButton.setDisable(isDisable);
+
         HBox endContent = new HBox(continueButton);
         endContent.setAlignment(Pos.CENTER);
 
 
-        //Final Window
+        //Configurazione finale della finestra
         VBox finalLayout = new VBox(30);
         finalLayout.setAlignment(Pos.CENTER);
         finalLayout.getChildren().addAll(headerInfo,bodyContent,endContent);
@@ -117,7 +113,8 @@ public class ActionUtensils {
         return window;
     }
 
-    public static void setDisable(boolean disable) {
-        isDisable = disable;
+    public void setBisEffect(boolean activate) {
+        isBisEffect = activate;
     }
+
 }

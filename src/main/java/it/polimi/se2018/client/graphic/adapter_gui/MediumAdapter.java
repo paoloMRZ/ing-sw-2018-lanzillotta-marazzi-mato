@@ -157,7 +157,7 @@ public class MediumAdapter implements AdapterResolution {
         sizeSideEnemy.add(new ArrayList<>(Arrays.asList(35,220,90,30)));
 
         //Dimensioni della finestra
-        sizeSideEnemy.add(new ArrayList<>(Arrays.asList(1000,820)));
+        sizeSideEnemy.add(new ArrayList<>(Arrays.asList(1100,900)));
 
         //Spacing Orizzontale tra le coppie di carte Side visualizzate
         //Dimensioni (Larghezza,Altezza) delle carte Side visualizzate
@@ -170,6 +170,13 @@ public class MediumAdapter implements AdapterResolution {
     @Override
     public List<Integer> getPrimaryStageSize(){
         return new ArrayList<>(Arrays.asList(1400,900));
+    }
+
+    @Override
+    public List<Double> getSidePlayerUtensilSize() {
+
+        //Posizone Grid della Side visualizzata nelle schermate dedicate alle carte Utensile (Right, Top, Left, Bottom)
+        return new ArrayList<>(Arrays.asList(0d, 0d, 10d, 21d));
     }
 
     @Override

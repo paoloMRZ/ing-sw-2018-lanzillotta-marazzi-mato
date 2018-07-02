@@ -42,6 +42,7 @@ public class SelectorContent {
     private static final String DILUENTEPERPASTASALDA = "Diluente Per Pasta Salda";
     private static final String TAGLIERINAMANUALE = "Taglierina Manuale";
     private static final String DILUENTEPERPASTASALDABIS = "Diluente Per Pasta Salda Bis";
+    private static final String PENNELLOPERPASTASALDABIS = "Pennello Per Pasta Salda Bis";
     private static final String TITLERESERVE = "Riserva: ";
 
 
@@ -77,8 +78,15 @@ public class SelectorContent {
     private Boolean firstClick = true;
     private HBox roundDice;
 
+    //UTENSILE6
+    private TextField posX = new TextField();
+    private TextField posY = new TextField();
+
+
+    //UTENSILE9
+    private SideCardLabel toolSide;
+
     //UTENSILE11
-    private static String dieExtract;
     private String dieChoose;
     private HashMap<StackPane, Boolean> cell = new HashMap<>();
     private Group group;
@@ -95,6 +103,7 @@ public class SelectorContent {
         rect.setStroke(Color.RED);
         rect.setStrokeWidth(2d);
         group = new Group(rect);
+        toolSide = playerSide.callPlayerSide(playerSide.getPathCard(),connectionHandler.getNickname(),true,true,adapter);
     }
 
 
@@ -133,6 +142,13 @@ public class SelectorContent {
                 connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Collections.singletonList(dieChoose))));
                 break;
 
+
+            case PENNELLOPERPASTASALDABIS:
+
+                if(!posX.getText().trim().isEmpty() && !posY.getText().trim().isEmpty()) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList("1",posX.getText(),posY.getText()))));
+                else connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList("0",posX.getText(),posY.getText()))));
+                break;
+
             case TAGLIERINAMANUALE:
 
                 if(!oldXFirstDie.getText().trim().isEmpty() && !oldYFirstDie.getText().trim().isEmpty() && !newXFirstDie.getText().trim().isEmpty() && !newYFirstDie.getText().trim().isEmpty()){
@@ -144,12 +160,16 @@ public class SelectorContent {
                 }
 
                  break;
+
+            case RIGAINSUGHERO:
+
+                connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(reserveLabel.getPos(), toolSide.getPosX(), toolSide.getPosY()))));
+                break;
         }
 
     }
 
-    public VBox configureNode(String cardName){
-
+    public VBox configureNode(String cardName,String bisContent){
 
         switch (cardName){
             case PINZASGROSSATRICE:
@@ -190,9 +210,24 @@ public class SelectorContent {
                 node.getChildren().addAll(setFontStyle(new Label(TITLERESERVE), 30),reserveLabel.callReserve());
                 break;
 
+            case PENNELLOPERPASTASALDABIS:
+
+                node = new VBox(15);
+                node.setAlignment(Pos.TOP_CENTER);
+                posX.setPromptText("Riga");
+                posY.setPromptText("Colonna");
+                VBox posDie = new VBox(posX,posY);
+                posDie.setAlignment(Pos.CENTER);
+                posDie.setSpacing(20);
+                String dieSelected = reserveLabel.getDieName();
+                ImageView dieExtract = configureImageView("/diePack/die-", dieSelected.replace(dieSelected.charAt(dieSelected.length()-1), bisContent.charAt(0)),".bmp",60,60);
+                node.getChildren().addAll(setFontStyle(new Label("La tua carta Side"), 20),toolSide.getAnchorPane(), setFontStyle(new Label("Dado estratto"), 15), dieExtract, posDie);
+                break;
+
+
             case RIGAINSUGHERO: case TENAGLIAAROTELLE: node = new VBox(20);
                 node.setAlignment(Pos.CENTER);
-                node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(), connectionHandler.getNickname(),true,adapter).getAnchorPane(),
+                node.getChildren().addAll(toolSide.getAnchorPane(),
                         setFontStyle(new Label(TITLERESERVE), 20), reserveLabel.callReserve());
                 break;
 
@@ -201,7 +236,8 @@ public class SelectorContent {
             case DILUENTEPERPASTASALDABIS:
                 node = new VBox(25);
                 node.setAlignment(Pos.TOP_CENTER);
-                ImageView dieExtractItem = configureDieView(dieExtract + String.valueOf(1) ,70, 70);
+                String lowerCase = bisContent.toLowerCase(Locale.ENGLISH);
+                ImageView dieExtractItem = configureImageView("/diePack/die-",lowerCase + String.valueOf(1),".bmp" ,70, 70);
                 node.getChildren().addAll(setFontStyle(new Label("Hai estratto il dado:"), 25), dieExtractItem);
 
                 VBox selectionLabel = new VBox(15);
@@ -211,8 +247,8 @@ public class SelectorContent {
                     StackPane button = new StackPane();
                     button.setPrefSize(70,70);
                     button.setStyle("-fx-border-color: transparent; -fx-border-width: 2; -fx-background-radius: 0; -fx-background-color: transparent;");
-                    String pathDie = dieExtract + String.valueOf(i);
-                    ImageView die = shadowEffect(configureImageView("/diePack/", "die-" + pathDie, ".bmp",70,70));
+                    String pathDie = lowerCase + String.valueOf(i);
+                    ImageView die = shadowEffect(configureImageView("/diePack/die-", pathDie, ".bmp",70,70));
                     button.getChildren().add(die);
 
                     cell.put(button, false);
@@ -264,8 +300,7 @@ public class SelectorContent {
                 HBox labelCoordinate = new HBox(firstDie, secondDie);
                 labelCoordinate.setSpacing(20d);
                 labelCoordinate.setAlignment(Pos.CENTER);
-                node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(), connectionHandler.getNickname(),true,adapter).getAnchorPane(),
-                        setFontStyle(new Label(TITLERESERVE), 20), reserveLabel.callReserve(),labelCoordinate);
+                node.getChildren().addAll(toolSide.getAnchorPane(), setFontStyle(new Label(TITLERESERVE), 20), reserveLabel.callReserve(),labelCoordinate);
                 break;
 
         }
@@ -278,7 +313,7 @@ public class SelectorContent {
 
 
 
-    //METODI CONFIGURAZIONE PER LE CARTE UTENSILI 2
+    //METODI CONFIGURAZIONE PER LE CARTE UTENSILI 2 e 3
     private void configureMovingWithoutRestrict(){
 
         node = new VBox(10);
@@ -291,22 +326,22 @@ public class SelectorContent {
         labelCoordinate.setSpacing(40d);
         labelCoordinate.setAlignment(Pos.CENTER);
 
-        node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(), connectionHandler.getNickname(),false,adapter).getAnchorPane(),labelCoordinate);
+        node.getChildren().addAll(toolSide.getAnchorPane(),labelCoordinate);
     }
 
     private void configureMovingWithRestrict(){
         node = new VBox(10);
         node.setAlignment(Pos.CENTER);
 
-        oldXFirstDie.setPromptText("X");
-        oldYFirstDie.setPromptText("Y");
-        newXFirstDie.setPromptText("X");
-        newYFirstDie.setPromptText("Y");
+        oldXFirstDie.setPromptText("Riga");
+        oldYFirstDie.setPromptText("Colonna");
+        newXFirstDie.setPromptText("Riga");
+        newYFirstDie.setPromptText("Colonna");
 
-        oldXSecondDie.setPromptText("X");
-        oldYSecondDie.setPromptText("Y");
-        newXSecondDie.setPromptText("X");
-        newYSecondDie.setPromptText("Y");
+        oldXSecondDie.setPromptText("Riga");
+        oldYSecondDie.setPromptText("Colonna");
+        newXSecondDie.setPromptText("Riga");
+        newYSecondDie.setPromptText("Colonna");
 
         oldXFirstDie.setPrefSize(100,20);
         oldYFirstDie.setPrefSize(100,20);
@@ -331,7 +366,7 @@ public class SelectorContent {
         labelCoordinate.setAlignment(Pos.CENTER);
 
 
-        node.getChildren().addAll(playerSide.callPlayerSide(playerSide.getPathCard(),connectionHandler.getNickname(),true,adapter).getAnchorPane(),labelCoordinate);
+        node.getChildren().addAll(toolSide.getAnchorPane(),labelCoordinate);
     }
 
     private void configureActionOnReserve(){
@@ -342,10 +377,10 @@ public class SelectorContent {
 
     private HBox configureCoordinateInput(Double spacingVBox, Double spacingHBox, ArrayList<TextField> coordonateBox, Boolean isDisabled){
 
-        coordonateBox.get(0).setPromptText("X");
-        coordonateBox.get(1).setPromptText("Y");
-        coordonateBox.get(2).setPromptText("X");
-        coordonateBox.get(3).setPromptText("Y");
+        coordonateBox.get(0).setPromptText("Riga");
+        coordonateBox.get(1).setPromptText("Colonna");
+        coordonateBox.get(2).setPromptText("Riga");
+        coordonateBox.get(3).setPromptText("Colonna");
 
         if(isDisabled){
             coordonateBox.get(0).setDisable(true);
@@ -496,12 +531,6 @@ public class SelectorContent {
         }
 
         return root;
-    }
-
-
-    //METODI CONFIGURAZIONE PER LA CARTA UTENSILE 11
-    public static void setDieChoose(String dieExtract) {
-        SelectorContent.dieExtract = dieExtract;
     }
 
 

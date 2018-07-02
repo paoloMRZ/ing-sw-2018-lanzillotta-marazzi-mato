@@ -2,6 +2,7 @@ package it.polimi.se2018.client.graphic.alert_box;
 
 import it.polimi.se2018.client.graphic.InitWindow;
 import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -55,6 +56,7 @@ public class AlertSwitcher{
         //Configurazione del pannello
         window.initModality(Modality.APPLICATION_MODAL);
         window.getIcons().add(new Image("iconPack/icon-sagrada.png", 10, 10, false, true));
+        window.setOnCloseRequest(Event::consume);
         window.setTitle(title);
         window.setMaxWidth(550);
         window.setMaxHeight(480);
@@ -108,7 +110,7 @@ public class AlertSwitcher{
                     int portValue = 0;
                     if(connectionType.equals(SOCKET)) portValue= Integer.parseInt(textPort.getText());
                     sceneLoading = new SceneLoading(window,init).getSceneLoading();
-                    sceneNickName = new SceneNickName(window,connectionType,init,portValue,textIP.getText(),sceneLoading, sceneConnection).getSceneNickName();
+                    sceneNickName = new SceneNickName(window,connectionType,interfaceType,init,portValue,textIP.getText(),sceneLoading, sceneConnection).getSceneNickName();
                     window.setScene(sceneNickName);
                 }
             });
@@ -136,7 +138,6 @@ public class AlertSwitcher{
         layuot.setAlignment(Pos.CENTER);
         sceneConnection = new Scene(layuot,550,480);
         window.setScene(sceneConnection);
-        window.setOnCloseRequest(e -> window.close());
         window.showAndWait();
     }
 
