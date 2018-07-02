@@ -339,18 +339,18 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                     List<String> infoSide = ClientMessageParser.getInformationsFromMessage(newValue);
                     if(infoSide.get(0).equals(connectionHandler.getNickname())) {
                         anchorGame.getChildren().remove(sidePlayer);
-                        anchorGame.getChildren().remove(nodeButton);
-
                         playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), true, false,adapterResolution);
                         playerSide.updateSideAfterPut(ClientMessageParser.getInformationsFromMessage(newValue));
                         sidePlayer = playerSide.getAnchorPane();
-
-                        buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils,costUtensilHistory,adapterResolution);
-                        nodeButton = buttonGameLabel.getLabelButtonGame();
-                        alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
-
-                        adapterResolution.putButtonLabel(anchorGame, nodeButton);
                         adapterResolution.putSideLabel(anchorGame,sidePlayer);
+
+                        if(!isuseUtensil) {
+                            anchorGame.getChildren().remove(nodeButton);
+                            buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils, costUtensilHistory, adapterResolution);
+                            nodeButton = buttonGameLabel.getLabelButtonGame();
+                            alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
+                            adapterResolution.putButtonLabel(anchorGame, nodeButton);
+                        }
                     }
                     else {
                         anchorGame.getChildren().remove(cardOfenemies);
@@ -397,9 +397,17 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
                 //MESSAGGIO SUCCESSO RICHIESTA DI ATTIVAZIONE DI UNA CARTA UTENSILE
                 if (ClientMessageParser.isSuccessActivateUtensilMessage(newValue)) {
+
+                    //Prelevo le informazioni sulla Utensile Attivata
                     List<String> updateInfoUtensil = ClientMessageParser.getInformationsFromMessage(newValue);
+
+                    //Aggiorno la lista storica dei costi delle Utensili dal campo 0 (indice carta Attivata) e dal campo 2 (nuovo costo Utensile)
                     costUtensilHistory.set(Integer.parseInt(updateInfoUtensil.get(0)),updateInfoUtensil.get(2));
+
+                    //Blocco gli aggiornamenti relativi a carta Side e Riserva fino alla ricezione del messaggio di End
                     isuseUtensil = true;
+
+                    //Lancio la schermata specifica dell'utilizzo della carta Utensile selezionata
                     alertCardUtensils.launchExecutionUtensil(false,null);
                 }
 
