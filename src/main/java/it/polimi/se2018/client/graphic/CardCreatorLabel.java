@@ -39,7 +39,7 @@ public class CardCreatorLabel{
      * Costruttore della Classe
      *
      * @param nameOfCard Collezione dei nomi delle carte (Utensili o Obbiettivo Pubblico)
-     * @param dictionaryUtensils Riferimento alla struttura dati che associa d ogni eventuale carta Utensile il proprio numero
+     * @param dictionaryUtensils Riferimento alla struttura dati che associa ad ogni eventuale carta Utensile il proprio numero
      * @param isPrivate Booleano che specifica se si intende creare l'elemento grafico rappresentante Obbiettivo Privato (TRUE) o le carte Pubbliche (FALSE)
      * @param path Stringa contenente il percorso utilizzato per accedere alle risorse
      * @param adapterResolution Riferimento all'adapter per il dimensionamento
@@ -148,7 +148,7 @@ public class CardCreatorLabel{
      * Metodo utilizzato per restituire il riferimento alla struttura dati contenente i numeri delle carti Utensili
      * associate al proprio nome
      *
-     * @return Ruferimento alal struttura dati dictionaryUtenssils
+     * @return Riferimento alla struttura dati dictionaryUtenssils
      */
 
     public Map<String, String> getDictionaryUtensils() {

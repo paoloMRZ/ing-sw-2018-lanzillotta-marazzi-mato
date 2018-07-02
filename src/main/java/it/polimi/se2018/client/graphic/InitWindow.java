@@ -5,6 +5,7 @@ import it.polimi.se2018.client.connection_handler.ConnectionHandler;
 import it.polimi.se2018.client.connection_handler.ConnectionHandlerObserver;
 import it.polimi.se2018.client.graphic.alert_box.*;
 import it.polimi.se2018.client.graphic.alert_utensils.AlertCardUtensils;
+import it.polimi.se2018.client.message.ClientMessageCreator;
 import it.polimi.se2018.client.message.ClientMessageParser;
 import it.polimi.se2018.client.graphic.adapter_gui.AdapterResolution;
 import it.polimi.se2018.client.graphic.adapter_gui.FullAdapter;
@@ -46,16 +47,25 @@ import static it.polimi.se2018.client.graphic.Utility.*;
 
 
 
-
 public class InitWindow extends Application implements ConnectionHandlerObserver{
 
+    //Riferimenti alla schermata Parent della schermata di gioco
+    private AnchorPane anchorGame;
+    private Stage primaryStage;
+    private String resolution;
+    private AlertSwitcher alertSwitcher;
+
+    //Riferimenti descrittivi del giocatore
     private ConnectionHandler connectionHandler;
     private Cli initCli;
+    private String favours;
+
+    //Elementi di controllo messagistica
     private TextField message = new TextField();
     private Boolean startGame = true;
     private Boolean isInitReserve = true;
-    private AnchorPane anchorGame;
-    private Stage primaryStage;
+    private Boolean isUseUtensil = false;
+
 
     //Elementi grafici della schermata game
     private AdapterResolution adapterResolution;
@@ -75,15 +85,13 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
     private HBox nodeReserve;
     private HBox nodeSetting;
     private VBox nodeButton;
-    private String resolution;
-    private AnchorPane sidePlayer;
-    private AnchorPane roundGame;
-    private List<String> nameOfEnemies;
-    private List<String> sideOfEnemies;
-    private HBox cardOfenemies;
+    private AnchorPane nodeSidePlayer;
+    private AnchorPane nodeRoundGame;
+    private HBox nodeCardOfEnemies;
     private AlertCardUtensils alertCardUtensils;
     private ArrayList<String> costUtensilHistory;
-    private boolean isuseUtensil = false;
+    private List<String> nameOfEnemies;
+    private List<String> sideOfEnemies;
 
 
     //Costanti di intestazione delle varie finestra
@@ -92,6 +100,10 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
     private static final String MEDIUMSIZE = "1400x900 (Scelta consigliata)";
     private static final String SMALLSIZE = "1366x768";
     private static final String ERROR = "Error";
+    private static final String ROUND = "RoundUpdate";
+    private static final String TURN = "TurnUpdate";
+    private static final String PUT = "PutUpdate";
+    private static final String UTENSIL = "UtensilUpdate";
 
 
 
@@ -111,31 +123,37 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
         primaryStage.getIcons().add(new Image("iconPack/icon-sagrada.png", 10, 10, false, true));
         primaryStage.setOnCloseRequest(e -> closeWindow(primaryStage, e));
 
-        ImageView startButton = shadowEffect(configureImageView("", "button-start-game", ".png", 200, 90));
-        AlertSwitcher alertSwitcher = new AlertSwitcher();
+        ImageView startButton = shadowEffect(configureImageView("", "button-start-game", ".png", 190, 90));
         ComboBox comboBox = setChoiceResolution();
+
+        BorderPane borderPane = new BorderPane();
+        borderPane.setStyle("-fx-background-image: url(back-init.jpg); -fx-background-size: cover; -fx-background-position: center; -fx-background-repeat: no-repeat;");
+
         startButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if(comboBox.getValue()==null) AlertValidation.display(ERROR, "Seleziona la risuluzione\ndi gioco!");
             else {
                 selectorAdapter();
                 tabCardLabel = new TabCardLabel(adapterResolution);
+                alertSwitcher = new AlertSwitcher();
                 alertSwitcher.display(SAGRADA, "Scegli la modalità di connessione:", this);
             }
         });
 
-        BorderPane borderPane = new BorderPane();
-        borderPane.setStyle("-fx-background-image: url(back-init.jpg); -fx-background-size: contain; -fx-background-position: center; -fx-background-repeat: no-repeat;");
+
 
         VBox layout = new VBox(50);
         layout.getChildren().addAll(startButton,comboBox);
         layout.setAlignment(Pos.CENTER);
         borderPane.setCenter(layout);
 
-        Scene sceneLogin = new Scene(borderPane, 718, 878);
+
+        Scene sceneLogin = new Scene(borderPane, 880,650);
         primaryStage.setScene(sceneLogin);
         primaryStage.centerOnScreen();
         primaryStage.setMaxHeight(650);
-        primaryStage.setMaxWidth(878);
+        primaryStage.setMaxWidth(880);
+        primaryStage.setMinHeight(650);
+        primaryStage.setMinWidth(880);
         primaryStage.show();
 
 
@@ -179,8 +197,8 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                         sideOfEnemies.remove(nameOfEnemies.indexOf(connectionHandler.getNickname()));
                         nameOfEnemies.remove(connectionHandler.getNickname());
                         enemiesSide = new SideEnemyLabel(nameOfEnemies, sideOfEnemies, adapterResolution);
-                        cardOfenemies = enemiesSide.getLabelSideEnemy();
-                        adapterResolution.putSideEnemyLabel(anchorGame,cardOfenemies);
+                        nodeCardOfEnemies = enemiesSide.getLabelSideEnemy();
+                        adapterResolution.putSideEnemyLabel(anchorGame,nodeCardOfEnemies);
                     }
 
 
@@ -218,8 +236,8 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
                             //Posiziono la roundGrid
                             roundLabel = new RoundLabel(adapterResolution);
-                            roundGame = roundLabel.getAnchorRound();
-                            adapterResolution.putRoundGridLabel(anchorGame,roundGame);
+                            nodeRoundGame = roundLabel.getAnchorRound();
+                            adapterResolution.putRoundGridLabel(anchorGame,nodeRoundGame);
 
                             //Posiziono la griglia con le informazioni sul giocatore
                             settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(message.getText()).get(0), adapterResolution);
@@ -228,8 +246,9 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
                             //Posiziono la carta Side del giocatore
                             playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), true, false, adapterResolution);
-                            sidePlayer = playerSide.getAnchorPane();
-                            adapterResolution.putSideLabel(anchorGame, sidePlayer);
+                            nodeSidePlayer = playerSide.getAnchorPane();
+                            favours = sideChoiceLabel.getFavours();
+                            adapterResolution.putSideLabel(anchorGame, nodeSidePlayer);
 
                             //Posiziono la griglia dei pulsanti
                             costUtensilHistory = new ArrayList<>(Arrays.asList("1","1","1"));
@@ -289,13 +308,11 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
                 //MESSAGGIO UPDATE PER IL CAMBIO DEL TURNO
                 if (ClientMessageParser.isUpdateTurnMessage(newValue)) {
-                    settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(newValue).get(0),adapterResolution);
-                    anchorGame.getChildren().remove(nodeSetting);
-                    settingLabel.updateTurn(ClientMessageParser.getInformationsFromMessage(newValue).get(0));
-                    nodeSetting = settingLabel.getSettingLabel();
-                    adapterResolution.putSettingLabel(anchorGame, nodeSetting);
 
+                    //Aggiornamento della Griglia informativa del Giocatore
+                    resetSettingLabel(TURN,newValue);
 
+                    //Abilitazione/Disabilitazione dei bottoni Azione
                     anchorGame.getChildren().remove(nodeButton);
                     buttonGameLabel.checkPermission(connectionHandler.getNickname(),ClientMessageParser.getInformationsFromMessage(newValue).get(0));
                     nodeButton = buttonGameLabel.getLabelButtonGame();
@@ -306,27 +323,28 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                 //MESSAGGIO UPDATE PER IL CAMBIO DEL ROUND
                 if (ClientMessageParser.isUpdateRoundMessage(newValue)) {
                     List<String> roundInfo = ClientMessageParser.getInformationsFromMessage(newValue);
+
+                    //Inserimento dei dadi residui della Riserva nella RoundGrid
                     roundLabel.proceedRound(roundInfo);
-                    settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(newValue).get(0),adapterResolution);
-                    anchorGame.getChildren().remove(nodeSetting);
+
+                    //Aggiornamento della Griglia dei Bottoni
                     anchorGame.getChildren().remove(nodeButton);
-
-
                     buttonGameLabel.checkPermission(connectionHandler.getNickname(), ClientMessageParser.getInformationsFromMessage(newValue).get(0));
-                    nodeSetting = settingLabel.getSettingLabel();
                     nodeButton = buttonGameLabel.getLabelButtonGame();
-                    adapterResolution.putSettingLabel(anchorGame, nodeSetting);
                     adapterResolution.putButtonLabel(anchorGame, nodeButton);
+
+                    //Aggiornamento della griglia Informazione del giocatore
+                    resetSettingLabel(ROUND,newValue);
                 }
 
 
                 //MESSAGGIO UPDATE DELLA ROUNDGRID QUANDO EVENTUALMENTE SI CAMBIANO I SUOI DADI (UTILIZZO UTENSILE)
                 if (ClientMessageParser.isUpdateRoundgridMessage(newValue)) {
                     List<List<String>> roundGridInfo = ClientMessageParser.getInformationsFromUpdateRoundgridMessage(newValue);
-                    anchorGame.getChildren().remove(roundGame);
+                    anchorGame.getChildren().remove(nodeRoundGame);
                     roundLabel = new RoundLabel(adapterResolution);
-                    roundGame = roundLabel.getAnchorRound();
-                    adapterResolution.putRoundGridLabel(anchorGame, roundGame);
+                    nodeRoundGame = roundLabel.getAnchorRound();
+                    adapterResolution.putRoundGridLabel(anchorGame, nodeRoundGame);
 
                     for (List<String> dieInfo : roundGridInfo) {
                         roundLabel.proceedRound(dieInfo);
@@ -338,25 +356,19 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                 if (ClientMessageParser.isUpdateSideMessage(newValue)) {
                     List<String> infoSide = ClientMessageParser.getInformationsFromMessage(newValue);
                     if(infoSide.get(0).equals(connectionHandler.getNickname())) {
-                        anchorGame.getChildren().remove(sidePlayer);
+                        anchorGame.getChildren().remove(nodeSidePlayer);
                         playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), true, false,adapterResolution);
                         playerSide.updateSideAfterPut(ClientMessageParser.getInformationsFromMessage(newValue));
-                        sidePlayer = playerSide.getAnchorPane();
-                        adapterResolution.putSideLabel(anchorGame,sidePlayer);
+                        nodeSidePlayer = playerSide.getAnchorPane();
+                        adapterResolution.putSideLabel(anchorGame,nodeSidePlayer);
 
-                        if(!isuseUtensil) {
-                            anchorGame.getChildren().remove(nodeButton);
-                            buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils, costUtensilHistory, adapterResolution);
-                            nodeButton = buttonGameLabel.getLabelButtonGame();
-                            alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
-                            adapterResolution.putButtonLabel(anchorGame, nodeButton);
-                        }
+                        if(!isUseUtensil) resetButtonLabel();
                     }
                     else {
-                        anchorGame.getChildren().remove(cardOfenemies);
+                        anchorGame.getChildren().remove(nodeCardOfEnemies);
                         enemiesSide.updateSideEnemies(infoSide);
-                        cardOfenemies = enemiesSide.getLabelSideEnemy();
-                        adapterResolution.putSideEnemyLabel(anchorGame,cardOfenemies);
+                        nodeCardOfEnemies = enemiesSide.getLabelSideEnemy();
+                        adapterResolution.putSideEnemyLabel(anchorGame,nodeCardOfEnemies);
 
                     }
                 }
@@ -371,13 +383,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                     adapterResolution.putReserveLabel(anchorGame, nodeReserve);
 
                     //Aggiornamento del riferimento del ButtonGameLabel -> in caso di utilizzo di un utensile, questa operazione va fatta solamente nel messaggio di END ACTIVATE
-                    if(!isuseUtensil) {
-                        anchorGame.getChildren().remove(nodeButton);
-                        buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils, costUtensilHistory, adapterResolution);
-                        nodeButton = buttonGameLabel.getLabelButtonGame();
-                        alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
-                        adapterResolution.putButtonLabel(anchorGame, nodeButton);
-                    }
+                    if(!isUseUtensil) resetButtonLabel();
                 }
             }
 
@@ -387,11 +393,8 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
                 //MESSAGGIO SUCCESSO PER IL PIAZZAMENTO DEI DADI
                 if (ClientMessageParser.isSuccessPutMessage(newValue)) {
+                    resetSettingLabel(PUT,newValue);
                     AlertValidation.display(SAGRADA, "La tua azione è andata\n a buon fine!");
-                    anchorGame.getChildren().remove(nodeSetting);
-                    settingLabel.updateAction();
-                    nodeSetting = settingLabel.getSettingLabel();
-                    adapterResolution.putSettingLabel(anchorGame, nodeSetting);
                 }
 
 
@@ -405,7 +408,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                     costUtensilHistory.set(Integer.parseInt(updateInfoUtensil.get(0)),updateInfoUtensil.get(2));
 
                     //Blocco gli aggiornamenti relativi a carta Side e Riserva fino alla ricezione del messaggio di End
-                    isuseUtensil = true;
+                    isUseUtensil = true;
 
                     //Lancio la schermata specifica dell'utilizzo della carta Utensile selezionata
                     alertCardUtensils.launchExecutionUtensil(false,null);
@@ -423,14 +426,18 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
             //MESSAGGIO SUCCESSO UTILIZZO CARTA UTENSILE
             if (ClientMessageParser.isUseUtensilEndMessage(newValue)) {
-                List<String> updateInfoUtensil = ClientMessageParser.getInformationsFromMessage(newValue);
-                anchorGame.getChildren().remove(nodeSetting);
-                settingLabel.updateAction();
-                settingLabel.updateFavours(updateInfoUtensil.get(3));
-                nodeSetting = settingLabel.getSettingLabel();
-                adapterResolution.putSettingLabel(anchorGame, nodeSetting);
+
+                //Aggiornamento della griglia Informazioni del giocatore
+                resetSettingLabel(UTENSIL,newValue);
+
+                //Chiusura della finestra dedicata alle carte utensili
                 alertCardUtensils.closeExecutionUtensil();
-                isuseUtensil = false;
+
+                //Aggiornamento della girglia dei bottoni
+                resetButtonLabel();
+
+                //Termia azione Attivazione delle Utensili
+                isUseUtensil = false;
                 Platform.runLater(() -> AlertValidation.display("Successo", "La carta è stata attivata!!"));
             }
 
@@ -452,7 +459,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
             //TODO: MESSAGGIO END DELLA PARTITA
             if(ClientMessageParser.isWinnerMessage(newValue)){
-                AlertWinner.display("Sagrada", "Complimenti!", primaryStage);
+                AlertWinner.display(SAGRADA, "Complimenti!", primaryStage);
             }
 
         });
@@ -461,6 +468,61 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
 
 
+
+
+
+    /**
+     * Metodo di supporto alla fase di aggiornamento dell'elemento grafico SettingLabel. A seguito infatti di modifiche ad alcuni attributi di classe durante le fasi
+     * di gioco, è necessario creare una nuova istanza dell'ogetto per aggiornare tutte le referenze. Vengono riconosciute quindi diverse fasi di aggiornamento:
+     *
+     *  -> Fase di aggiornamento Turnazione -> richiama updateTurn(String infoTurnOf)
+     *  -> Fase di aggiornamento inizio nuovo Round -> crea un nuovo oggetto settato con i riferimenti ai segnalini Favore aggiornati
+     *  -> Fase di aggiornamento Azione -> richiama updateAction()
+     */
+
+    private void resetSettingLabel(String typeUpdate, String infoUpdate){
+
+        anchorGame.getChildren().remove(nodeSetting);
+        switch (typeUpdate){
+            case ROUND:
+                settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", favours, ClientMessageParser.getInformationsFromMessage(infoUpdate).get(0),adapterResolution);
+                break;
+
+            case PUT:
+                settingLabel.updateAction();
+                break;
+
+            case TURN:
+                settingLabel.updateTurn(ClientMessageParser.getInformationsFromMessage(infoUpdate).get(0));
+                break;
+
+            case UTENSIL:
+                settingLabel.updateAction();
+                settingLabel.updateFavours(ClientMessageParser.getInformationsFromMessage(infoUpdate).get(3));
+
+        }
+
+        nodeSetting = settingLabel.getSettingLabel();
+        adapterResolution.putSettingLabel(anchorGame, nodeSetting);
+    }
+
+
+
+
+
+    /**
+     * Metodo di supporto alla fase di aggiornamento dell'elemento grafico ButtonGameLabel. A seguito infatti di modifiche ad alcuni attributi di classe durante le fasi
+     * di gioco, è necessario creare una nuova istanza dell'ogetto per aggiornare tutte le referenze.
+     *
+     */
+
+    private void resetButtonLabel(){
+        anchorGame.getChildren().remove(nodeButton);
+        buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils, costUtensilHistory, adapterResolution);
+        alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
+        nodeButton = buttonGameLabel.getLabelButtonGame();
+        adapterResolution.putButtonLabel(anchorGame, nodeButton);
+    }
 
 
 
@@ -508,7 +570,10 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
     private void closeWindow(Stage primaryStage, WindowEvent e) {
         boolean answer = AlertCloseButton.display(SAGRADA, "Vuoi davvero uscire da Sagrada?");
-        if (answer) primaryStage.close();
+        if (answer) {
+            connectionHandler.sendToServer(ClientMessageCreator.getDisconnectMessage(connectionHandler.getNickname()));
+            primaryStage.close();
+        }
         else e.consume();
     }
 

@@ -35,13 +35,6 @@ import java.util.List;
 
 public interface AdapterResolution {
 
-
-    /**
-     * Configurazione della dimensione delle icone e del testo relative al SettingLabel (Informazioni di gioco)
-     *
-     * @return Riferimento alla lista dimensioni
-     */
-
     List<Integer> getSettingLabelSize();
     List<List<? extends Number>> getSidePlayerSize();
     List<Integer> getButtonLabelSize();
@@ -55,7 +48,6 @@ public interface AdapterResolution {
     List<List<Integer>> getSideChoiceLabelSize();
     List<Integer> getPrimaryStageSize();
     List<Double> getSidePlayerUtensilSize();
-
 
     void putSettingLabel(AnchorPane root, HBox settingLabel);
     void putSideLabel(AnchorPane root, AnchorPane sidePlayer);

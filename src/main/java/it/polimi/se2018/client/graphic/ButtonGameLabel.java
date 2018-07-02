@@ -61,8 +61,13 @@ public class ButtonGameLabel {
         buttonGame.setFitWidth(sizeButton.get(0));
         buttonGame.setFitHeight(sizeButton.get(1));
         buttonGame.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            if(reserve.getPos() != null) connectionHandler.sendToServer(ClientMessageCreator.getPutDiceMessage(connectionHandler.getNickname(), reserve.getPos(), playerSide.getPosX(), playerSide.getPosY()));
-            else AlertValidation.display("Errore", "Non hai selezionato nella riserva\nil dado da inserire!");
+
+            if(playerSide.getPosX() != null && playerSide.getPosY()!=null) {
+                if (reserve.getPos() != null)
+                    connectionHandler.sendToServer(ClientMessageCreator.getPutDiceMessage(connectionHandler.getNickname(), reserve.getPos(), playerSide.getPosX(), playerSide.getPosY()));
+                else AlertValidation.display("Errore", "Non hai selezionato nella riserva\nil dado da inserire!");
+            }
+            else AlertValidation.display("Errore", "Non hai selezionato la cella in cui\nposizionare il dado!");
         });
 
 

@@ -6,6 +6,7 @@ import it.polimi.se2018.client.connection_handler.ConnectionHandler;
 import it.polimi.se2018.client.graphic.ReserveLabel;
 import it.polimi.se2018.client.graphic.SideCardLabel;
 import it.polimi.se2018.client.graphic.adapter_gui.AdapterResolution;
+import it.polimi.se2018.client.message.ClientMessageParser;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -20,73 +21,86 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static it.polimi.se2018.client.graphic.Utility.*;
 
+
+/**
+ * Classe utilizzata per configurare la finestra specifica della carta Utensile selezionata per l'attivazione da parte del giocatore. A seguito quindi della richiesta di attivazione
+ * e della rispettiva conferma, viene aperta automaticamente una schermata che raccoglie tutti gli elementi con i quali l'utente è chiamato ad interagire.
+ *
+ * @author Simone Lanzillotta
+ */
+
+
+
+
 public class ActionUtensils {
 
+    //Costanti di intestazione delle varie finestra
     private static final String EXTENSION = ".png";
     private static final String SUBDIRECTORY = "/cardUtensils/";
 
     private StackPane window = new StackPane();
     private ReserveLabel reserveLabel;
-    private boolean isBisEffect = false;
 
-    public ActionUtensils(Map<String, String> dictionaryCardUtensils, String keyNameOfCard, ReserveLabel reserve, ConnectionHandler connectionHandler, String selection, SideCardLabel playerSide, Stage primaryWindow, AdapterResolution adapterResolution, String bisContent) throws IOException {
 
+
+
+
+
+
+
+
+    public ActionUtensils(Map<String, String> dictionaryCardUtensils, String keyNameOfCard, ReserveLabel reserve, ConnectionHandler connectionHandler, String selection, SideCardLabel playerSide, AdapterResolution adapterResolution, String bisContent, Boolean isBisEffect) throws IOException {
+
+        //Configurazione della Riserva
         this.reserveLabel = reserve;
 
+        //Configurazione del Parser Jackson per la lettura da file
         InputStream is = getClass().getClassLoader().getResourceAsStream("cardUtensilInfo.json");
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(is);
 
         //Formattazione per la stampa del nome in ingresso (che è il percorso della carta selezionata)
-        String[] stretchSplit = keyNameOfCard.split("-");
-        String name = stretchSplit[0].substring(0, 1).toUpperCase().concat(stretchSplit[0].substring(1));
-        for (int i = 1; i < stretchSplit.length; i++) {
-            name = name.concat(" ".concat(stretchSplit[i].substring(0, 1).toUpperCase().concat(stretchSplit[i].substring(1))));
-        }
+        String name = setUpperWord(keyNameOfCard);
 
-
-        //Header Info
+        //Configurazione Header Title
         VBox headerInfo = new VBox(5);
         headerInfo.setAlignment(Pos.CENTER);
         Label header = setFontStyle(new Label("Hai selezionato: " + name), 35);
         header.setTextAlignment(TextAlignment.CENTER);
 
-        Label cardInfo = setFontStyle(new Label(root.at("/" + name).asText()), 25);
+        //Configurazione Header Body e importazione delle informazioni sulle varie intestazioni delle finestra dedicate tramite il Parser
+        Label cardInfo;
+        if(!isBisEffect) cardInfo = setFontStyle(new Label(root.at("/" + name).asText()), 25);
+        else cardInfo = setFontStyle(new Label(root.at("/" + name.concat(" " + "Bis")).asText()), 25);
         cardInfo.setTextAlignment(TextAlignment.CENTER);
         headerInfo.getChildren().addAll(header, cardInfo);
 
-        //Body content
+        //Estrazione delle informazioni relative all'aativazione delle carte Utensili MultiParamatero
+        List<String> infoBis = new ArrayList<>();
+        if(isBisEffect) infoBis = ClientMessageParser.getInformationsFromMessage(bisContent);
+
+        //Configurazione Body Content
         HBox bodyContent = new HBox(100);
+        bodyContent.setAlignment(Pos.CENTER);
         ImageView cardImage = configureImageView(SUBDIRECTORY,keyNameOfCard,EXTENSION, 300,450);
         SelectorContent selectorContent = new SelectorContent(this.reserveLabel, connectionHandler,selection, playerSide,adapterResolution);
-        if(!isBisEffect) bodyContent.getChildren().addAll(cardImage, selectorContent.configureNode(name,bisContent));
-        else {
-            name = name.concat(" ".concat("Bis"));
-            bodyContent.getChildren().addAll(cardImage, selectorContent.configureNode(name,bisContent));
-        }
-        bodyContent.setAlignment(Pos.CENTER);
+        if(!isBisEffect) bodyContent.getChildren().addAll(cardImage, selectorContent.configureNode(name));
+        else bodyContent.getChildren().addAll(cardImage, selectorContent.configureNodeBis(name,infoBis.get(2)));
 
-        //End content
+        //Configurazione End Content
         ImageView continueButton = shadowEffect(configureImageView("","button-continue",EXTENSION,180,90));
         String finalName = name;
         String finalPath = keyNameOfCard;
         continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
             if(!isBisEffect) selectorContent.configureMessage(finalName, dictionaryCardUtensils, finalPath);
-            else{
-                switch (finalName){
-                    case "Diluente Per Pasta Salda Bis":
-                        selectorContent.configureMessage(finalName, dictionaryCardUtensils, finalPath);
-                        break;
+            else selectorContent.configureMessageBis(finalName, dictionaryCardUtensils, finalPath);
 
-                    case "Pennello Per Pasta Salda Bis":
-                        selectorContent.configureMessage(finalName, dictionaryCardUtensils, finalPath);
-                        break;
-                }
-            }
         });
 
         HBox endContent = new HBox(continueButton);
@@ -109,12 +123,39 @@ public class ActionUtensils {
 
     }
 
+
+
+
+    /**
+     * Metodo Getter che restituisce il riferimento al Parent della finestra configurata per la carta Utensile selezionata
+     *
+     * @return Riferimento al Parent window
+     */
+
     public StackPane getWindow() {
         return window;
     }
 
-    public void setBisEffect(boolean activate) {
-        isBisEffect = activate;
+
+
+
+
+
+    /**
+     * Metodo di supporto per formattare il nome della carta Utensile selezionata per l'inseriemnto nell'header della finestra
+     *
+     * @param pathCard Percorso della carta Utensile
+     * @return Stringa formattata per l'header della finestra
+     */
+
+    private String setUpperWord(String pathCard){
+        String[] stretchSplit = pathCard.split("-");
+        String name = stretchSplit[0].substring(0, 1).toUpperCase().concat(stretchSplit[0].substring(1));
+        for (int i = 1; i < stretchSplit.length; i++) {
+            name = name.concat(" ".concat(stretchSplit[i].substring(0, 1).toUpperCase().concat(stretchSplit[i].substring(1))));
+        }
+
+        return name;
     }
 
 }

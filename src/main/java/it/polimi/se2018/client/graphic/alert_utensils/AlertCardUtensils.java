@@ -47,6 +47,7 @@ import static java.lang.Integer.parseInt;
 
 public class AlertCardUtensils{
 
+    //Costanti di intestazione delle varie finestra
     private static final String EXTENSION = ".png";
     private static final String SUBDIRECTORY = "";
 
@@ -155,8 +156,7 @@ public class AlertCardUtensils{
     public void launchExecutionUtensil(Boolean isBisActivate, String bisContent){
         ActionUtensils actionUtensils = null;
         try {
-            actionUtensils = new ActionUtensils(cardUtensils.getDictionaryUtensils(),String.valueOf(cardUtensils.getKeyName().get(Integer.parseInt(selection))), reserve, connectionHandler,selection, playerSide, window,adapter,bisContent);
-            actionUtensils.setBisEffect(isBisActivate);
+            actionUtensils = new ActionUtensils(cardUtensils.getDictionaryUtensils(),String.valueOf(cardUtensils.getKeyName().get(Integer.parseInt(selection))),reserve,connectionHandler,selection, playerSide,adapter,bisContent,isBisActivate);
         } catch (IOException e1) {
             e1.printStackTrace();
         }
@@ -189,7 +189,7 @@ public class AlertCardUtensils{
 
     private void setCardCollection(){
 
-        //Layout card
+        //Configurazione elemento Grafico che conterrà le immagini delle carte Utensili estratte
         cardSelection = new HBox(40);
         cardSelection.setAlignment(Pos.CENTER);
         Label costFavours;
@@ -209,7 +209,6 @@ public class AlertCardUtensils{
             item.setUserData(String.valueOf(infoCostHistory.get(cardUtensils.getKeyName().indexOf(card))));
             costFavours = setFontStyle(new Label("Costo: " + item.getUserData().toString()),40);
             costFavours.setAlignment(Pos.CENTER);
-
 
             node.getChildren().add(item);
             vbox.getChildren().addAll(node, costFavours);
