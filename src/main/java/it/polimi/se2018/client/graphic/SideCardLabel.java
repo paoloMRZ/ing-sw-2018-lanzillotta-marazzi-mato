@@ -230,7 +230,7 @@ public class SideCardLabel{
         int k=0;
         for(int i=0; i<4; i++) {
             for (int j = 0; j < 5; j++) {
-                if(!dicePutHistory.get(k).equals(EMPTYCELL)) callPlayerSide.getGridPane().add(configureImageView("/diePack/", dicePutHistory.get(k),".bmp" ,imageSize, imageSize), j, i);
+                if(!dicePutHistory.get(k).equals(EMPTYCELL)) callPlayerSide.getGridPane().add(configureImageView("/diePack/die-", dicePutHistory.get(k),".bmp" ,imageSize, imageSize), j, i);
                 k++;
             }
         }

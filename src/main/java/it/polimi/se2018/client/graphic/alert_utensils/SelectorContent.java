@@ -220,7 +220,7 @@ public class SelectorContent {
                 posDie.setAlignment(Pos.CENTER);
                 posDie.setSpacing(20);
                 String dieSelected = reserveLabel.getDieName();
-                ImageView dieExtract = configureImageView("/diePack/", dieSelected.replace(dieSelected.charAt(dieSelected.length()-1), bisContent.charAt(0)),".bmp",60,60);
+                ImageView dieExtract = configureImageView("/diePack/die-", dieSelected.replace(dieSelected.charAt(dieSelected.length()-1), bisContent.charAt(0)),".bmp",60,60);
                 node.getChildren().addAll(setFontStyle(new Label("La tua carta Side"), 20),toolSide.getAnchorPane(), setFontStyle(new Label("Dado estratto"), 15), dieExtract, posDie);
                 break;
 
@@ -237,7 +237,7 @@ public class SelectorContent {
                 node = new VBox(25);
                 node.setAlignment(Pos.TOP_CENTER);
                 String lowerCase = bisContent.toLowerCase(Locale.ENGLISH);
-                ImageView dieExtractItem = configureImageView("/diePack",lowerCase + String.valueOf(1),".bmp" ,70, 70);
+                ImageView dieExtractItem = configureImageView("/diePack/die-",lowerCase + String.valueOf(1),".bmp" ,70, 70);
                 node.getChildren().addAll(setFontStyle(new Label("Hai estratto il dado:"), 25), dieExtractItem);
 
                 VBox selectionLabel = new VBox(15);
@@ -248,7 +248,7 @@ public class SelectorContent {
                     button.setPrefSize(70,70);
                     button.setStyle("-fx-border-color: transparent; -fx-border-width: 2; -fx-background-radius: 0; -fx-background-color: transparent;");
                     String pathDie = lowerCase + String.valueOf(i);
-                    ImageView die = shadowEffect(configureImageView("/diePack/", "die-" + pathDie, ".bmp",70,70));
+                    ImageView die = shadowEffect(configureImageView("/diePack/die-", pathDie, ".bmp",70,70));
                     button.getChildren().add(die);
 
                     cell.put(button, false);

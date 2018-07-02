@@ -83,6 +83,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
     private HBox cardOfenemies;
     private AlertCardUtensils alertCardUtensils;
     private ArrayList<String> costUtensilHistory;
+    private boolean isuseUtensil = false;
 
 
     //Costanti di intestazione delle varie finestra
@@ -363,15 +364,20 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
                 //MESSAGGIO UPDATE DELLA RISERVA
                 if (ClientMessageParser.isUpdateReserveMessage(newValue)) {
-                    anchorGame.getChildren().remove(nodeReserve);
-                    anchorGame.getChildren().remove(nodeButton);
-                    nodeReserve = reserve.getHBox();
-                    buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils,costUtensilHistory,adapterResolution);
 
-                    nodeButton = buttonGameLabel.getLabelButtonGame();
-                    alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
-                    adapterResolution.putButtonLabel(anchorGame, nodeButton);
+                    //Aggiornamento del riferimento alla nuova riserva ricevuta
+                    anchorGame.getChildren().remove(nodeReserve);
+                    nodeReserve = reserve.getHBox();
                     adapterResolution.putReserveLabel(anchorGame, nodeReserve);
+
+                    //Aggiornamento del riferimento del ButtonGameLabel -> in caso di utilizzo di un utensile, questa operazione va fatta solamente nel messaggio di END ACTIVATE
+                    if(!isuseUtensil) {
+                        anchorGame.getChildren().remove(nodeButton);
+                        buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils, costUtensilHistory, adapterResolution);
+                        nodeButton = buttonGameLabel.getLabelButtonGame();
+                        alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
+                        adapterResolution.putButtonLabel(anchorGame, nodeButton);
+                    }
                 }
             }
 
@@ -392,8 +398,8 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                 //MESSAGGIO SUCCESSO RICHIESTA DI ATTIVAZIONE DI UNA CARTA UTENSILE
                 if (ClientMessageParser.isSuccessActivateUtensilMessage(newValue)) {
                     List<String> updateInfoUtensil = ClientMessageParser.getInformationsFromMessage(newValue);
-                    anchorGame.getChildren().remove(nodeSetting);
                     costUtensilHistory.set(Integer.parseInt(updateInfoUtensil.get(0)),updateInfoUtensil.get(2));
+                    isuseUtensil = true;
                     alertCardUtensils.launchExecutionUtensil(false,null);
                 }
 
@@ -416,6 +422,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                 nodeSetting = settingLabel.getSettingLabel();
                 adapterResolution.putSettingLabel(anchorGame, nodeSetting);
                 alertCardUtensils.closeExecutionUtensil();
+                isuseUtensil = false;
                 Platform.runLater(() -> AlertValidation.display("Successo", "La carta è stata attivata!!"));
             }
 
