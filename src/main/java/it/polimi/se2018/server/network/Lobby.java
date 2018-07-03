@@ -96,10 +96,6 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
     }
 
 
-    public boolean isOpen(){
-        return isOpen;
-    }
-
     /**
      * Il metodo effettua una ricerca per nickname.
      *
@@ -242,7 +238,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
      * Per eseguire questa procedura invia un messaggio di disconnessione per ogni giocatore e chiude le connessioni
      * di tutti i giocatori.
      */
-    private void emptyLobby(){
+    private void clearLobby(){
 
         for(FakeClient client: connections) { //Per ogni client presente invio un messaggio di disconnessione e chiudo la relativa connessione.
 
@@ -346,6 +342,11 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
             }else{ //Se no lo mando privato.
                 sendPrivate(message);
             }
+
+            //Se ho mandato un messaggio che segnala il termine di una partita svuto la lobby per pormi nello stato iniziale.
+            //Quindi posso accettare nuove connessioni per avviare una nuova partita.
+            if(NetworkMessageParser.isWinnerMessage(message))
+                clearLobby();
         }
     }
 
@@ -362,7 +363,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
         else //Se non ci sono abbastanza giocatori fermo il timer e svuoto la lobby. In pratica mi rimetto nelle "condizioni iniziali".
         {
             timer.stop();
-            emptyLobby();
+            clearLobby();
         }
     }
 }
