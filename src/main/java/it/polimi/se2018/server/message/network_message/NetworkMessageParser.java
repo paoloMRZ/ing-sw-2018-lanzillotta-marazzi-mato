@@ -32,4 +32,14 @@ public class NetworkMessageParser {
         return message.split("/")[5];
     }
 
+    /**
+     * Il metodo controlla se il messaggio passato è un messaggio che notifica la fine della partita.
+     *
+     * @param message messaggio da conrtollare
+     * @return true se il metodo notifica la fine della partita.
+     */
+    public static boolean isWinnerMessage(String message){
+        return (message.replace("\n", "").split("/")[4]).equals("winner");
+    }
+
 }

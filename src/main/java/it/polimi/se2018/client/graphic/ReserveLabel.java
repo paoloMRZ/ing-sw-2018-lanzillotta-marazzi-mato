@@ -75,27 +75,29 @@ public class ReserveLabel{
         reserve.setAlignment(Pos.CENTER);
         int num = diceInfo.size();
 
-        for (int i = 0; i < num; i++) {
-            String lowerDieInfo = diceInfo.get(i).toLowerCase(Locale.ENGLISH);
-            StackPane button = new StackPane();
-            button.setPrefSize(imageSize,imageSize);
-            button.setStyle("-fx-border-color: transparent; -fx-border-width: 2; -fx-background-radius: 0; -fx-background-color: transparent;");
+        //Controllo che la riserva rivecuta non sia vuota, quindi creo la riserva (Altrimenti lalascio vuota)
+        if(!(num==1 && diceInfo.get(0).equals("white0"))) {
+            for (int i = 0; i < num; i++) {
+                String lowerDieInfo = diceInfo.get(i).toLowerCase(Locale.ENGLISH);
+                StackPane button = new StackPane();
+                button.setPrefSize(imageSize, imageSize);
+                button.setStyle("-fx-border-color: transparent; -fx-border-width: 2; -fx-background-radius: 0; -fx-background-color: transparent;");
 
-            ImageView die = shadowEffect(new ImageView(new Image("/diePack/die-" + lowerDieInfo + ".bmp", imageSize, imageSize, false, true)));
-            button.getChildren().add(die);
+                ImageView die = shadowEffect(new ImageView(new Image("/diePack/die-" + lowerDieInfo + ".bmp", imageSize, imageSize, false, true)));
+                button.getChildren().add(die);
 
-            int finalI = i;
-            cell.put(button, false);
-            die.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-                setFocusStyle(cell,button,group);
-                pos = String.valueOf(finalI);
-                dieName = diceInfo.get(finalI).toLowerCase();
-                listener.setText(dieName);
-            });
-            
-            reserve.getChildren().add(button);
+                int finalI = i;
+                cell.put(button, false);
+                die.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+                    setFocusStyle(cell, button, group);
+                    pos = String.valueOf(finalI);
+                    dieName = diceInfo.get(finalI).toLowerCase();
+                    listener.setText(dieName);
+                });
+
+                reserve.getChildren().add(button);
+            }
         }
-
         return reserve;
     }
 

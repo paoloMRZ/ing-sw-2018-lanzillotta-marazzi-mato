@@ -94,8 +94,6 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
 
                 if (tmp != null)
                     super.notifica(tmp);
-                else
-                    isOpen = false;
 
             } catch (IOException e) {
                 isOpen = false;

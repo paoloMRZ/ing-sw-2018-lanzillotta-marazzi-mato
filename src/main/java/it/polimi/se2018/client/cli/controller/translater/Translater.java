@@ -4,7 +4,7 @@ import it.polimi.se2018.client.cli.file_reader.CardFileReader;
 import it.polimi.se2018.client.cli.game.info.DieInfo;
 import it.polimi.se2018.client.cli.game.objective.ObjectiveCard;
 import it.polimi.se2018.client.cli.game.schema.SideCard;
-import it.polimi.se2018.client.cli.game.utenil.UtensilCard;
+import it.polimi.se2018.client.cli.game.utensil.UtensilCard;
 import org.fusesource.jansi.Ansi;
 
 import java.io.IOException;
