@@ -334,7 +334,7 @@ public class ClientMessageParser {
      * @return true se il metodo notifica la fine della partita.
      */
     public static boolean isWinnerMessage(String message){
-        return (message.replace("\n", "").split("/")[5]).equals("winner");
+        return (message.replace("\n", "").split("/")[4]).equals("winner");
     }
 
 }
