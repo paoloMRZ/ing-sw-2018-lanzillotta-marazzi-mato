@@ -31,6 +31,7 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
     private ConnectionHandler connectionHandler;
 
     private boolean fatalError;
+    private boolean endGame;
 
     public Cli(String myNickname){
 
@@ -42,6 +43,7 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
             game.setMyNickname(myNickname);
 
             this.fatalError = false;
+            this.endGame = false;
 
             this.state = new WaitState("In attesa di altri giocatori!");
 
@@ -116,6 +118,21 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
 
         if (ClientMessageParser.isUpdateTurnMessage(message))
             manageUpdateTurnMessage(message);
+
+        if(ClientMessageParser.isUpdatePriceMessage(message))
+            manageUpdatePriceMessage(message);
+
+    }
+
+    private void manageUpdatePriceMessage(String message){
+
+        int i = 0;
+
+        //Aggiorno il costo di ogni carta utensile sulla base delle informazioni contenute nel messaggio.
+        for(String price : ClientMessageParser.getInformationsFromMessage(message)){
+            game.setUtensilPrize(i,Integer.parseInt(price));
+            i++;
+        }
     }
 
 
@@ -370,6 +387,29 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
             state.handleNetwork(message);
     }
 
+    private void manageWinnerMessage(String message){
+
+        ArrayList<String> nicknames = new ArrayList<>();
+        ArrayList<Integer> scores = new ArrayList<>();
+
+        int i = 0;
+
+        for(String info : ClientMessageParser.getInformationsFromMessage(message)){
+
+            if(i < ClientMessageParser.getInformationsFromMessage(message).size()-1){ //L'ultimo elemento del campo informazioni del messaggio non mi interessa.
+
+                if(i%2==0) //Nei campi pari trovo i nicknem in quelli dispari i punteggi.
+                    nicknames.add(info);
+                else
+                    scores.add(Integer.parseInt(info));
+            }
+
+            i++;
+        }
+
+        this.endGame = true; //Mi permette di ignorare qualsiasi messaggio proveniente dalla rete.
+        state = new EndGameState(nicknames,scores);
+    }
 
     @Override
     public void InputRequest(int request) {
@@ -397,7 +437,7 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
     @Override
     public void NetworkRequest(String message) {
 
-        if(!fatalError && !message.equals("")) {
+        if(!endGame && !fatalError && !message.equals("")) {
 
             try {
 
@@ -419,6 +459,8 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
                 if (ClientMessageParser.isNetworkMessage(message))
                     manageNetworkMessage(message);
 
+                if(ClientMessageParser.isWinnerMessage(message))
+                    manageWinnerMessage(message);
 
             } catch (IOException | ClassNotFoundException e) { //TODO aggiungere nullPointer alle eccezioni gestiste!
                 this.fatalError = true;
