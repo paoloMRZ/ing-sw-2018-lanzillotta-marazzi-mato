@@ -57,7 +57,6 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
     //Riferimenti descrittivi del giocatore
     private ConnectionHandler connectionHandler;
-    private Cli initCli;
     private String favours;
 
     //Elementi di controllo messagistica
@@ -65,7 +64,6 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
     private Boolean startGame = true;
     private Boolean isInitReserve = true;
     private Boolean isUseUtensil = false;
-
 
     //Elementi grafici della schermata game
     private AdapterResolution adapterResolution;
@@ -92,7 +90,6 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
     private ArrayList<String> costUtensilHistory;
     private List<String> nameOfEnemies;
     private List<String> sideOfEnemies;
-
 
     //Costanti di intestazione delle varie finestra
     private static final String SAGRADA = "Sagrada";
@@ -632,17 +629,6 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
         }
     }
 
-
-
-    /**
-     * Metodo utilizzato per la creazione dell'oggetto Cli nel caso in cui la scelta di interfaccia del giocatore ricadesse su "CLI"
-     *
-     * @param initCli Riferimento all'oogetto Cli creato in fase di connessione
-     */
-
-    public void setInitCli(Cli initCli) {
-        this.initCli = initCli;
-    }
 
 
 
