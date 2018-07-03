@@ -60,8 +60,6 @@ public class FakeClientSocket extends FakeClient implements Runnable {
 
                 if (message != null)
                     lobby.notifyFromFakeClient(message); //Notifico la lobby del messaggio ricevuto.
-                else
-                    isOpen = false;
 
 
             } catch (IOException e) {
