@@ -130,33 +130,39 @@ public class RoundLabel{
         hBox.setAlignment(Pos.CENTER);
         hBoxHistory.setAlignment(Pos.CENTER);
         for (String aDieInfo : dieInfo) {
-            String lowerDieInfo = aDieInfo.toLowerCase(Locale.ENGLISH);
-            ImageView imageDie = configureImageView("/diePack/die-", lowerDieInfo, ".bmp", sizeProceed.get(2), sizeProceed.get(2));
-            imageDie.setFitWidth(sizeProceed.get(2));
-            imageDie.setFitHeight(sizeProceed.get(2));
-            hBox.getChildren().add(imageDie);
 
-            ImageView elementHistory = shadowEffect(configureImageView("/diePack/die-", lowerDieInfo, ".bmp", 177, 177));
-            elementHistory.setFitWidth(sizeProceed.get(3));
-            elementHistory.setFitHeight(sizeProceed.get(3));
-            StackPane button = new StackPane(elementHistory);
-            cell.put(button, false);
-            elementHistory.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-                        if(!cell.get(button)){
-                            button.getChildren().add(group);
-                            cell.replace(button, false, true);
-                        }
-                        else {
-                            button.getChildren().remove(group);
-                            cell.replace(button, true, false);
-                        }
+            //Controllo che il contenuto residuo della riserva da aggiungere alla RoundGrid non sia vuoto
 
-                        dieFromRoundSelected = String.valueOf(dieInfo.indexOf(aDieInfo));
+                String lowerDieInfo = aDieInfo.toLowerCase(Locale.ENGLISH);
+                ImageView imageDie;
+                if (!aDieInfo.equals("white0")) imageDie = configureImageView("/diePack/die-", lowerDieInfo, ".bmp", sizeProceed.get(2), sizeProceed.get(2));
+                else imageDie = configureImageView("/iconPack/", "icon-empty", ".png", sizeProceed.get(2), sizeProceed.get(2));
+                imageDie.setFitWidth(sizeProceed.get(2));
+                imageDie.setFitHeight(sizeProceed.get(2));
+                hBox.getChildren().add(imageDie);
 
-            });
-            hBoxHistory.getChildren().addAll(button);
+                ImageView elementHistory;
+                if (!aDieInfo.equals("white0")) elementHistory = shadowEffect(configureImageView("/diePack/die-", lowerDieInfo, ".bmp", 177, 177));
+                else elementHistory = shadowEffect(configureImageView("/iconPack/", "icon-empty", ".png", 177, 177));
+                elementHistory.setFitWidth(sizeProceed.get(3));
+                elementHistory.setFitHeight(sizeProceed.get(3));
+                StackPane button = new StackPane(elementHistory);
+                cell.put(button, false);
+                elementHistory.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+                    if (!cell.get(button)) {
+                        button.getChildren().add(group);
+                        cell.replace(button, false, true);
+                    } else {
+                        button.getChildren().remove(group);
+                        cell.replace(button, true, false);
+                    }
+
+                    dieFromRoundSelected = String.valueOf(dieInfo.indexOf(aDieInfo));
+
+                });
+                hBoxHistory.getChildren().addAll(button);
+
         }
-
         roundHistory.add(hBoxHistory);
         roundNumber++;
         MenuItem item = new MenuItem("", hBox);

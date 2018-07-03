@@ -309,6 +309,9 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                     //Aggiornamento della Griglia informativa del Giocatore
                     resetSettingLabel(TURN,newValue);
 
+                    //Aggiornamento della Griglia dei bottoni Azione
+                    resetButtonLabel();
+
                     //Abilitazione/Disabilitazione dei bottoni Azione
                     anchorGame.getChildren().remove(nodeButton);
                     buttonGameLabel.checkPermission(connectionHandler.getNickname(),ClientMessageParser.getInformationsFromMessage(newValue).get(0));
@@ -374,6 +377,8 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                 //MESSAGGIO UPDATE DELLA RISERVA
                 if (ClientMessageParser.isUpdateReserveMessage(newValue)) {
 
+                    reserve = new ReserveLabel(ClientMessageParser.getInformationsFromMessage(newValue), adapterResolution);
+
                     //Aggiornamento del riferimento alla nuova riserva ricevuta
                     anchorGame.getChildren().remove(nodeReserve);
                     nodeReserve = reserve.getHBox();
@@ -382,6 +387,16 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                     //Aggiornamento del riferimento del ButtonGameLabel -> in caso di utilizzo di un utensile, questa operazione va fatta solamente nel messaggio di END ACTIVATE
                     if(!isUseUtensil) resetButtonLabel();
                 }
+
+
+
+                //MESSAGGIO UPDATE DEL COSTO DEGLI UTENSILI
+                if(ClientMessageParser.isUpdatePriceMessage(newValue)){
+                    //Aggiorno la lista storica dei costi delle Utensili
+                    costUtensilHistory = (ArrayList<String>)ClientMessageParser.getInformationsFromMessage(newValue);
+                }
+
+
             }
 
 
@@ -400,9 +415,6 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
                     //Prelevo le informazioni sulla Utensile Attivata
                     List<String> updateInfoUtensil = ClientMessageParser.getInformationsFromMessage(newValue);
-
-                    //Aggiorno la lista storica dei costi delle Utensili dal campo 0 (indice carta Attivata) e dal campo 2 (nuovo costo Utensile)
-                    costUtensilHistory.set(Integer.parseInt(updateInfoUtensil.get(0)),updateInfoUtensil.get(2));
 
                     //Blocco gli aggiornamenti relativi a carta Side e Riserva fino alla ricezione del messaggio di End
                     isUseUtensil = true;
@@ -456,7 +468,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
             //TODO: MESSAGGIO END DELLA PARTITA
             if(ClientMessageParser.isWinnerMessage(newValue)){
-                AlertWinner.display(SAGRADA, "Complimenti!", primaryStage);
+                AlertWinner.display(SAGRADA, primaryStage, ClientMessageParser.getInformationsFromMessage(newValue));
             }
 
         });
