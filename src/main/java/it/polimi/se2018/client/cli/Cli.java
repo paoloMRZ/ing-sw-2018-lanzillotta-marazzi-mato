@@ -189,6 +189,24 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
     }
 
 
+    private void manageStartUtensilMessage(String message) throws IOException, ClassNotFoundException {
+
+        ArrayList<String> utensils = new ArrayList<>();
+        int i = 0;
+
+        //Estrapolo i nomi delgi utensili che si trovano nelle posizioni pari dell'arrayList restituito dal metodo di parsing del messaggio.
+        for(String info: ClientMessageParser.getInformationsFromMessage(message)){
+
+            if(i%2==0)
+                utensils.add(info); //Aggiungo il nome alla lista di nomi.
+
+            i++;
+        }
+
+        game.setUtensils(Translater.getUtensilCardFromName(utensils)); //Traduco i nomi in "utensili stampabili a schermo" che salvo nel campo dedicato dentro l'oggetto game.
+
+    }
+
     private void manageStartMessage(String message) throws IOException, ClassNotFoundException {
 
         if (ClientMessageParser.isStartChoseSideMessage(message))
@@ -203,9 +221,8 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
         if (ClientMessageParser.isStartPublicObjectiveMessage(message))
             game.setPublicObjective(Translater.getObjectiveCardFromName(ClientMessageParser.getInformationsFromMessage(message)));
 
-
         if (ClientMessageParser.isStartUtensilMessage(message))
-            game.setUtensils(Translater.getUtensilCardFromName(ClientMessageParser.getInformationsFromMessage(message)));
+            manageStartUtensilMessage(message);
     }
 
     private void manageChooseSideMessage(String message) throws IOException, ClassNotFoundException {
@@ -380,7 +397,7 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
     @Override
     public void NetworkRequest(String message) {
 
-        if(!fatalError) {
+        if(!fatalError && !message.equals("")) {
 
             try {
 

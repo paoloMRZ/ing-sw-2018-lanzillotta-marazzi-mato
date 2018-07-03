@@ -1,7 +1,7 @@
 package it.polimi.se2018.client.cli.print.components;
 
 
-import it.polimi.se2018.client.cli.game.utenil.UtensilCard;
+import it.polimi.se2018.client.cli.game.utensil.UtensilCard;
 import it.polimi.se2018.client.cli.print.utils.MarginPrinter;
 import it.polimi.se2018.client.cli.print.utils.TextPrinter;
 

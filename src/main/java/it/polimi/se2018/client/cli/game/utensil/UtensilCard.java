@@ -1,4 +1,4 @@
-package it.polimi.se2018.client.cli.game.utenil;
+package it.polimi.se2018.client.cli.game.utensil;
 
 import java.io.Serializable;
 import java.security.InvalidParameterException;

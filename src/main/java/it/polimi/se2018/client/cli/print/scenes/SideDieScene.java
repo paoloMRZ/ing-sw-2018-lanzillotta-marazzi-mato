@@ -3,7 +3,7 @@ package it.polimi.se2018.client.cli.print.scenes;
 
 import it.polimi.se2018.client.cli.game.Game;
 import it.polimi.se2018.client.cli.game.info.DieInfo;
-import it.polimi.se2018.client.cli.game.utenil.UtensilCard;
+import it.polimi.se2018.client.cli.game.utensil.UtensilCard;
 import it.polimi.se2018.client.cli.print.components.DiePrinter;
 import it.polimi.se2018.client.cli.print.components.SidePrinter;
 import it.polimi.se2018.client.cli.print.components.UtensilPrinter;
