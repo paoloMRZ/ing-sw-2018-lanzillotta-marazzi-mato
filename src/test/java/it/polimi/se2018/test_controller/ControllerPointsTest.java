@@ -108,7 +108,7 @@ public class ControllerPointsTest {
 
 
         f= new FakeView();
-        controller =new Controller(new ArrayList<>(Arrays.asList("SIMONE","MARCO")));
+        controller =new Controller(new ArrayList<>(Arrays.asList("SIMONE","MARCO")),10);
         f.register(controller);
     }
 

@@ -9,6 +9,5 @@ public class InvalidSomethingWasNotDoneGood extends SagradaException {
     //Così se esce questa allora abbiamo sbagliato qualcosa di grave, ma molto.
 
     public InvalidSomethingWasNotDoneGood(){super();}
-    public InvalidSomethingWasNotDoneGood(String msg){super(msg);}
 
 }

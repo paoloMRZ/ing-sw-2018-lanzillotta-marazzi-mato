@@ -34,7 +34,7 @@ public class PinzaSgrossatriceTest {
     public void settings(){
         this.pinza=new PinzaSgrossatrice();
         FakeView fake = new FakeView();
-        controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
+        controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")),10);
         fake.register(controller);
 
     }

@@ -177,7 +177,7 @@ public class Table {
      * @return riserva creata simulando un'estrazione ripetuta (e casuale) di dadi
      */
 
-    public Reserve createReserve() {
+    private Reserve createReserve() {
         ArrayList<Dice> giveTo = new ArrayList<>();
         for (int i = (playersList.size() * 2 + 1); i > 0; i--) {
             giveTo.add(diceSachet.getDiceFromSachet());
@@ -287,29 +287,73 @@ public class Table {
         }
     }
 
-
+    /**
+     * Metodo che ritorna la roundgrid del gioco.
+     * @return roundgrid del gioco.
+     */
     public RoundGrid getRoundGrid(){
         return roundGrid;
     }
+
+    /**
+     * Metdo che ritorna il sacchetto del gioco.
+     * @return sacchetto del gioco.
+     */
     public DiceSachet getDiceSachet(){
         return diceSachet;
     }
+
+    /**
+     * Ricerca di un giocatore in base alla sua posiione nell'elenco.
+     * @param x il numero cosrrispondente alla su apozine nell'lelenco.
+     * @return reference del giocatore ricercato.
+     */
     public Player callPlayerByNumber(int x){
         return playersList.get(x);
     }
+
+    /**
+     * Metodo che ritorna il nome del player turnante.
+     * @return nome del player turnante.
+     */
+    private String playerTurnante(){
+        for(Player p: playersList){
+            if(p.getIsMyTurn()) return p.getName();
+        }
+        return "?";
+    }
+    /**
+     * Metodo che ritorna il numero di giocatori della partita.
+     * @return numero di giocaori.
+     */
     public int peopleCounter(){
         return playersList.size();
     }
+
+    /**
+     * Metodo che ritorna istanza del comuicator del model.
+     * @return cominucatore del model.
+     */
     public NotifyModel responder(){
         return chat;
     }
 
+    /**
+     * Metodo che prepara i giocatori alla partita mostrandogli gli elementi pubblici e le side a dispoizione.
+     * @throws IOException non lanciabile realmente.
+     */
     public void preparePlayers() throws IOException {
         setCardPlayer(playersList);
         setStartMexObjs();
         setStartMexUtensils();
 
     }
+
+    /**
+     * Metodo che mette l'attributo is my turn del giocatore turnante a true e degli altri a false.
+     * resetta anche lo stato delle utensili.
+     * @param call numero del giocatore turnante.
+     */
     public void rotatingPlayerTurn(int call){
         for (Player p :playersList){
             if(p.getIsMyTurn()) p.setIsMyTurner();
@@ -317,12 +361,21 @@ public class Table {
         callPlayerByNumber(call).setIsMyTurner();
         toggleToResetUtensils();
     }
+
+    /**
+     * Metodo che cambia lo stato delle carte utensili.
+     * Ed elimina il dado tenuto in sospeso nel model.
+     */
     private void toggleToResetUtensils(){
         for (Utensils u : utensilsDeck){
             if(u.getIsBusy()) u.setTheUse();
         }
         cleanHoldingADiceMoveInProgress();
     }
+
+    /**
+     * Metodo che resetta gli attributi di tutti i giocatori.
+     */
     public void newRoundForPlayers(){
         for (Player p :playersList){
             p.restoreValues();
@@ -330,68 +383,194 @@ public class Table {
     }
 ////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Metodo che lancia un evento di aggiornamento del model.
+     * @param m messaggio contenente i nuovi dati.
+     */
     private void launchCommunication(UpdateM m){
         if(m!=null) chat.notifyObserver(m);
     }
 
-    public void setUpdateReserve(){
+    /**
+     * Metodo che fa scattare l'aggiornamento della riserva.
+     */
+    private void setUpdateReserve(){
         launchCommunication(reserve.setUpdate());
     }
-
+    /**
+     * Metodo che fa scattare l'aggiornamento della roundgrid.
+     */
     public void setUpdateRoundGrid(){
         launchCommunication(roundGrid.setUpdate());
     }
-
+    /**
+     * Metodo che fa scattare il messaggio finale della scoregrid.
+     */
     public void setUpdateScoreGrid(){
         launchCommunication(scoreGrid.setUpdate());
     }
 
-    public void setUpdateCostUtensils(){
-        String message="";
-        for(int i=0;i<utensilsDeck.size();i++){
-            message=message.concat(String.valueOf(utensilsDeck.get(i).getCost()));
-            if(i!=utensilsDeck.size()-1) message= message.concat("&");
+    /**
+     * Metodo che crea il contenuto del messaggio di aggiornamento che diverrà un messaggio di start contente
+     * le carte obiettivo pubbliche chiamando il metodo creatore relativo al topic del messaggio.
+     * Il metodo è da considerarsi un toString del deck obiettivi pubblici e segue la convenzione del protocollo
+     * di gioco. Inseguito lancia il messaggio.
+     */
+    private void setStartMexObjs(){
+        String message = startMexObjs();
+
+        launchCommunication(new UpdateM(null,"public_objective",message));
+    }
+    /**
+     * Metodo che crea il contenuto del messaggio di aggiornamento che diverrà un messaggio di start contente
+     * le carte utensile chiamando il metodo creatore relativo al topic del messaggio.
+     * Il metodo è da considerarsi un toString del deck utensili e segue la convenzione del protocollo
+     * di gioco. Inseguito lancia il messaggio.
+     */
+    private void setStartMexUtensils(){
+        String message = startMexUtensils();
+        launchCommunication(new UpdateM(null,"utensils",message));
+    }
+    /**
+     * Metodo che crea il contenuto del messaggio di aggiornamento che diverrà un messaggio di start contente
+     * le carte schema scelte da tutti i giocatori chiamando il metodo creatore relativo al topic del messaggio.
+     * Inseguito lancia il messaggio.
+     */
+    public void setShowEnemiesChoice(){
+        String message = showEnemiesChoice();
+        launchCommunication(new UpdateM(null,"side_list",message));
+    }
+    /**
+     * Metodo che crea il contenuto del messaggio di aggiornamento che diverrà un messaggio di start contente
+     * le carta obiettivo privata chiamando il metodo creatore relativo al topic del messaggio.
+     */
+    public void setShowPrivate(String turner) throws InvalidValueException {
+        if(turner!=null){
+            launchCommunication(new UpdateM(
+                    turner,"private_objective",showPrivate(turner)));
         }
-        message=message.concat("\n");
+    }
+
+    /**
+     * Metodo che crea il contenuto del messaggio di aggiornamento che diverrà un messaggio contente
+     * i dadi rismasti e aggiunti alla roundgrid chiamando il metodo creatore relativo al topic del messaggio.
+     * Inseguito lancia il messaggio.
+     */
+    public void setUpdateDiceToRoundGrid() {
+        String message=updateDiceToRoundGrid();
+        launchCommunication(new UpdateM(null,"round",message));
+    }
+    /**
+     * Metodo che fa scattare l'aggiornamento dei costi delle utensili.
+     */
+    public void setUpdateCostUtensils(){
+        String message= updateCostUtensils();
         launchCommunication(new UpdateM(null,"price",message));
     }
 
+    /**
+     * Metodo che lancia una serie di messaggi che permette al giocatore che si riconnette di essere aggiornato sullo
+     * status della partita.
+     * @param player nome del player che si riconnette.
+     * @throws InvalidValueException lanciato dalle call a metodi privati.
+     */
+    public void setReconnect(String player) throws InvalidValueException {
+
+        launchCommunication(new UpdateM(player,"utensils",startMexUtensils(),false));
+        launchCommunication(new UpdateM(player,"public_objective",startMexObjs(),false));
+        setShowPrivate(player);
+        String message = showEnemiesChoice();
+        launchCommunication(new UpdateM(player,"side_list",message,false));
+        launchCommunication(new UpdateM(player,"reserve",reserve.toString(),false));
+        launchCommunication(new UpdateM(player,"RoundGrid",roundGrid.toString(),false));
+        launchCommunication(new UpdateM(player,"turn",playerTurnante(),false));
+
+    }
     /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Metodo che mette tiene in sospeso un dado nel model, dovuto ad uso a più fasi di una carta utensile.
+     * @param d riferimento del dado in questione.
+     */
     public void setHoldingADiceMoveInProgress(Dice d){
         holdingADiceMoveInProgress=d;
     }
+    /**
+     * Metodo che mette prende in sospeso un dado nel model, dovuto ad uso a più fasi di una carta utensile.
+     * @return dado tenuto in sospeso all'interno del model.
+     */
+
     public Dice getHoldingADiceMoveInProgress(){
         return holdingADiceMoveInProgress;
     }
+    /**Metodo che pulisce il riferimento del dado tenuto in sospeso nel model
+     */
     public void cleanHoldingADiceMoveInProgress(){
         holdingADiceMoveInProgress=null;
     }
+    /**
+     * Metodo che tiene in sospeso un dado della riserva all'interno del model.
+     * @param d dado della riservs da tenere in sospeso
+     */
+
     public void setHoldingResDie(Dice d){
         holdingResDie=d;
     }
+    /**
+     * Metodo che ritorna il dado della riserva tenuto in sospeso.
+     * @return reference del dado tenuto in sospeso.
+     */
+
     public Dice getHoldingResDie(){
         return holdingResDie;
     }
+    /**
+     * Metodo che resetta referece del dado della riserva tenuto in sospeso.
+     */
+
     public void cleanHoldingResDie(){
         holdingResDie=null;
     }
+    /**
+     * Metodo che tiene in sospeso un dado della roundgrid all'interno del model.
+     * @param d dado della roundgrid da tenere in sospeso
+     */
     public void setHoldingRoundGDie(Dice d){
         holdingRoundGDie=d;
     }
+    /**
+     * Metodo che ritorna il dado della roundgrid tenuto in sospeso.
+     * @return reference del dado tenuto in sospeso.
+     */
     public Dice getHoldingRoundGDie(){
         return holdingRoundGDie;
     }
+    /**
+     * Metodo che resetta referece del dado della roundgrid tenuto in sospeso.
+     */
     public void cleanHoldingRoundGDie(){
         holdingRoundGDie=null;
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Metodo utilizzato per risettare la lista di utensili presenti nel gioco utile per un possibile modifica
+     * e reprogettazione del sistema con cui vengono impostate le carte utensile.
+     * @param newDeck lista di carte utensile.
+     */
     public void resetUtensilsDeck(List<Utensils> newDeck){
         utensilsDeck= new ArrayList<>(newDeck);
     }
 /////////////////////////////////////////////////////////////////////////////////////////////
-    private void setStartMexObjs(){
+
+    /**
+     * Metodo che crea il contenuto del messaggio di aggiornamento che diverrà un messaggio di start contente
+     * le carte obiettivo pubbliche.
+     * Il metodo è da considerarsi un toString del deck obiettivi pubblici e segue la convenzione del protocollo
+     * di gioco.
+     */
+    private String startMexObjs(){
         String message ="";
         for (int i = 0; i < 3; i++) {
             if (i == 0)
@@ -401,9 +580,15 @@ public class Table {
         }
         message= message.concat("\n");
 
-        launchCommunication(new UpdateM(null,"public_objective",message));
+        return message;
     }
-    private void setStartMexUtensils(){
+    /**
+     * Metodo che crea il contenuto del messaggio di aggiornamento che diverrà un messaggio di start contente
+     * le carte utensile.
+     * Il metodo è da considerarsi un toString del deck utensili e segue la convenzione del protocollo
+     * di gioco.
+     */
+    private String startMexUtensils(){
         String message ="";
         for (int i = 0; i < 3; i++) {
             if (i == 0){
@@ -417,11 +602,13 @@ public class Table {
                 message = message.concat(String.valueOf(utensilsDeck.get(i).getNumber()));
             }
         }
-        message= message.concat("\n");
-
-        launchCommunication(new UpdateM(null,"utensils",message));
+        return message.concat("\n");
     }
-    public void showEnemiesChoice(){
+    /**
+     * Metodo che crea il contenuto del messaggio di aggiornamento che diverrà un messaggio di start contente
+     * le carte schema scelte da tutti i giocatori.
+     */
+    private String showEnemiesChoice(){
         String content= "";
         for(int i=0;i<playersList.size();i++){
             content=content.concat(playersList.get(i).getName());
@@ -430,21 +617,44 @@ public class Table {
             if(i!=playersList.size()-1) content = content.concat("&");
             else content = content.concat("\n");
         }
-        launchCommunication(new UpdateM(null,"side_list",content));
+        return content;
     }
-    public void showPrivate(String turner) throws InvalidValueException {
+    /**
+     * Metodo che crea il contenuto del messaggio di aggiornamento che diverrà un messaggio di start contente
+     * le carta obiettivo privata.
+     */
+    private String showPrivate(String turner) throws InvalidValueException {
         if(turner!=null){
-            launchCommunication(new UpdateM(
-                    turner,"private_objective",callPlayerByName(turner).getMyObjective().getName()));
+            return callPlayerByName(turner).getMyObjective().getName();
         }
+        return null;
     }
 
+    /**
+     * Metodo che crea il contenuto del messaggio di aggiornamento che diverrà un messaggio contente
+     * i dadi rismasti e aggiunti alla roundgrid.
+     */
+    private String updateDiceToRoundGrid() {
+        roundGrid.putAtFinishedRound(reserve.getDices());
+        return reserve.toString();
+    }
+    /**
+     * Metodo che fa scattare l'aggiornamento dei costi delle utensili.
+     */
+    private String updateCostUtensils(){
+        String message="";
+        for(int i=0;i<utensilsDeck.size();i++){
+            message=message.concat(String.valueOf(utensilsDeck.get(i).getCost()));
+            if(i!=utensilsDeck.size()-1) message= message.concat("&");
+        }
+        return message.concat("\n");
+    }
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Metodo che crea una nuova riserva allo scattare di un nuovo round.
+     */
     public void newRiserva4Game() {
         setReserve(createReserve());
-    }
-
-    public void setUpdateDiceToRoundGrid() {
-        roundGrid.putAtFinishedRound(reserve.getDices());
-        launchCommunication(new UpdateM(null,"round",reserve.toString()));
     }
 }

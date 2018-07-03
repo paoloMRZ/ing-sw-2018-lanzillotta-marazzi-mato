@@ -62,7 +62,7 @@ public class ControllerTurnTest{
         sides.add(chosenOne);
 
         fake=new FakeView();
-        controller= new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
+        controller= new Controller(new ArrayList<>(Arrays.asList("primo","secondo")),60);
         fake.register(controller);
 
         controller.START();
@@ -101,6 +101,14 @@ public class ControllerTurnTest{
         fake.messageIncoming("/###/###/network/unfreeze/secondo");
         fake.messageIncoming("/primo/###/update/turn/?");
         assertEquals("/###/!/update/turn/secondo\n",fake.getMessage());
+    }
+    @Test
+    public void unfreezeMessagesAfterReconnection(){
+        fake.messageIncoming("/###/###/network/freeze/secondo");
+        fake.messageIncoming("/primo/###/update/turn/?");
+        assertEquals("/###/!/update/turn/primo\n",fake.getMessage());
+        fake.messageIncoming("/###/###/network/unfreeze/secondo");
+        assertEquals("/###/secondo/update/turn/primo\n",fake.getMessage());
     }
     @Test
     public void alreadyDonepiazzamento(){

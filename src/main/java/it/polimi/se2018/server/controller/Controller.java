@@ -45,20 +45,22 @@ public class Controller{
      * Costruttore della classe. Riceve in ingresso la lista di "nickname" fornitagli dal server per creare le istanze della classe Player.
      *
      * @param nameOfPlayers riferimento ad un array di stringhe contenente i nickname dei giocatori partecipanti alla partita
+     * @param secondi secondi per un singolo turno.
      */
 
-    public Controller(List<String> nameOfPlayers) {
+    public Controller(List<String> nameOfPlayers, int secondi) {
         if (!nameOfPlayers.isEmpty()) {
             NotifyModel notifier= new NotifyModel();
             this.lobby = new Table(setListOfUtensils(), setListOfObjectivePublic(), setListOfPlayers(nameOfPlayers,notifier),notifier);
             this.cCard = new ControllerCard(this);
             this.cAction = new ControllerAction(lobby,this);
             this.cPoints = new ControllerPoints(lobby, this);
-            this.cTurn = new ControllerTurn(lobby,this);
+            this.cTurn = new ControllerTurn(lobby,this,secondi);
             this.cChat= new ControllerChat(this);
         }
         else throw new NullPointerException();
     }
+
 
     /**
      *
@@ -380,11 +382,13 @@ public class Controller{
 
     /**
      * Metdo che scongela un giocatore a richiest della Lobby.
+     * E gli invia tutti i messaggi necessari alla riconessione.
      * @param m messaggio contenente il nome del giocatore richiesto.
      */
     public void unfreeze(Unfreeze m){
         try {
             lobby.callPlayerByName(m.getPlayer()).remember();
+            lobby.setReconnect(m.getPlayer());
         } catch (InvalidValueException e) {
             cChat.notifyObserver(new ErrorSomethingNotGood(e));
         }

@@ -6,5 +6,4 @@ public class InvalidCellException extends SagradaException{
     //in una cella della griglia di un giocatore.
 
     public InvalidCellException(){super();}
-    public InvalidCellException(String msg){super(msg);}
 }

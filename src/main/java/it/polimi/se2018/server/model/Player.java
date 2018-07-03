@@ -43,13 +43,13 @@ public class Player {
 
 
     /**
-     * Costruttore della classe Player. Si noti che che Player non è completamente identificato al momento della creazione, infatti
+     *      * Costruttore della classe Player. Si noti che che Player non è completamente identificato al momento della creazione, infatti
      * l'associazione della carta Side viene demandata in un secondo momento tramite il metodo setMySide.
      *
      * @param objective riferimento alla carta Obbietivo (privato) associata al Player
      * @param nomine  riferimento al nome del giocatore
+     * @param notifier riferimento del comunicatore del model.
      */
-
     public Player(Objective objective, String nomine,NotifyModel notifier) {
         this.notifier=notifier;
         this.myObjective = objective;
@@ -108,10 +108,10 @@ public class Player {
      * @param row riferimento alla riga di selezione per la Cella interessata
      * @param col rierimento alla colonna di selezione per la Cella interessata
      * @return restrizione di colore della cella individuata tramite le coordinate (row,col)
-     * @throws Exception viene lanciata le coordinate passate non sono valide
+     * @throws InvalidCoordinatesException viene lanciata le coordinate passate non sono valide
      */
 
-    public Color getColorCell(int row, int col) throws Exception{
+    public Color getColorCell(int row, int col) throws InvalidCoordinatesException {
         return mySide.getColor(row,col);
     }
 
@@ -122,10 +122,10 @@ public class Player {
      * @param row riferimento alla riga di selezione per la Cella interessata
      * @param col rierimento alla colonna di selezione per la Cella interessata
      * @return restrizione di sfumatura della cella individuata tramite le coordinate (row,col)
-     * @throws Exception viene lanciata le coordinate passate non sono valide
+     * @throws InvalidCoordinatesException viene lanciata le coordinate passate non sono valide
      */
 
-    public int getNumberCell(int row, int col)  throws Exception{
+    public int getNumberCell(int row, int col) throws InvalidCoordinatesException {
         return mySide.getNumber(row,col);
     }
 
@@ -178,7 +178,7 @@ public class Player {
     public void resetFavours(int cost){favours= favours-cost;}
 
     /**
-     * Metodo di aggiornamento del parametro didPlayCard
+     * Metodo di aggiornamento del parametro didPlayCard, se ha giocato una carta utensile.
      *@param price prezzo della carta che ha appena attivato
      */
 
@@ -189,7 +189,7 @@ public class Player {
 
 
     /**
-     * Metodo di aggiornamento del parametro didPlayDie
+     * Metodo di aggiornamento del parametro didPlayDie, cioè se ha già giocato un piazzamento.
      *
      */
 
@@ -233,7 +233,7 @@ public class Player {
 
 
     /**
-     * Metodo di gggiornamento del paramentro howManyTurns
+     * Metodo di aggiornamento del paramentro howManyTurns, cioè numero di turni in un round.
      *
      * @throws InvalidHowManyTimes viene lanciata quando il parametro howManyTurns assume un valore negativo
      */
@@ -246,9 +246,18 @@ public class Player {
         }
         else throw new InvalidHowManyTimes();
     }
+
+    /**
+     * Metodo che toogla l'attributo di turno attivo del giocatore, grazie al quale l'istanza sa se le è èermesso giocare.
+     */
     public void setIsMyTurner(){
         isMyTurn= !isMyTurn;
     }
+
+    /**
+     * Metodo che ritorna se è possbile giocatore al giocatore
+     * @return true se può giocare, false altrimenti.
+     */
     public boolean getIsMyTurn(){
         return isMyTurn;
     }
@@ -282,9 +291,9 @@ public class Player {
      */
 
     public void putDiceIgnoreColor(int oldRow, int oldCol,int newRow, int newCol) throws InvalidValueException, NoDicesNearException, NotEmptyCellException, InvalidShadeException, NearDiceInvalidException {
-        Dice D=mySide.pick(oldRow,oldCol);
-        if(D==null) throw new InvalidValueException();
-        mySide.putIgnoringColor(newRow,  newCol,  D  );
+        Dice d=mySide.pick(oldRow,oldCol);
+        if(d==null) throw new InvalidValueException();
+        mySide.putIgnoringColor(newRow,  newCol,  d  );
         launchCommunication(mySide.setUpdate());
     }
 
@@ -304,9 +313,9 @@ public class Player {
      */
 
     public void putDiceIgnoreValue(int oldRow, int oldCol,int newRow, int newCol) throws InvalidValueException, NoDicesNearException, NotEmptyCellException, InvalidColorException, NearDiceInvalidException {
-        Dice D=mySide.pick(oldRow,oldCol);
-        if(D==null) throw  new InvalidValueException();
-        mySide.putIgnoringShade(newRow,  newCol,  D  );
+        Dice d=mySide.pick(oldRow,oldCol);
+        if(d==null) throw  new InvalidValueException();
+        mySide.putIgnoringShade(newRow,  newCol,  d  );
         launchCommunication(mySide.setUpdate());
     }
 
@@ -361,40 +370,68 @@ public class Player {
 //////////////////////////////////////////////////////////
 ///////////////////////////Comunicazione//////////////////
 //////////////////////////////////////////////////////////
-public void refresh(UpdateReq m){
-    launchCommunication(mySide.updateForcer(m));
-}
+    /**
+     * Metodo che lancia un evento di aggiornamento della sezione di model visibile dall'utente.
+     * @param m messaggio contenente i nuovi dati.
+     */
     private void launchCommunication(UpdateM m){
         if(m!=null) notifier.notifyObserver(m);
     }
 
+    /**
+     * Metodo che permette di forzare il lancio di un messaggio aggiornamento della side.
+     */
     public void setUpdateSide(){
         launchCommunication(mySide.setUpdate());
     }
 
-    //metodo per dcisconnettere il giocatore se non ha fatto la sua giocata
-
+    /**
+     * Metodo che setta l'attributo canIPlay a false e così il giocatore viene virtualmente
+     * congelato saltando il turno fino al suo scongelamento.
+     */
     public void forget(){
         canIPlay=false;
     }
 
+    /**
+     * Metodo per cui un giocatore viene disconnesso virtualmente dalla partita, settando l'attributo canIRenter
+     * e viene congelato
+     */
     public void forgetForever(){
         canIRenter=false;
         forget();
     }
-    //metodo per reinsisre il giocatore nel gioco
+
+    /**
+     * Metodo per lo scongelamento del giocatore.
+     */
     public void remember(){
         if(!canIPlay && canIRenter) canIPlay =true;
     }
+
+    /**
+     * Metodo che ritorna se è possibile per un giocatore giocare il suo turno.
+     * @return true se può esehire il suo turno, false altrimenti.
+     */
     public boolean canYouPlay(){
         return canIPlay;
     }
+
+    /**
+     * Metodo che lancia il messaggio di start con tutte le side da cui il giocatore può scegliere.
+     */
     public void ask(){
-        // veniva fatto già setUpdateObj();
         notifier.notifyObserver(askingMessage());
     }
 
 
+     /**
+     * Metodo che crea il contenuto del messaggio di aggiornamento che diverrà un messaggio di start contente
+     * le carte schema da cui il player può scgeliere.
+     * Il metodo è da considerarsi un toString del deck di sides e segue la convenzione del protocollo
+     * di gioco.
+     * @return messaggio contenente le carte schema del giocatore.
+     */
     private AskPlayer askingMessage(){
         ArrayList<String> ret=new ArrayList<>(4);
         for(Side s: mySideSelection){

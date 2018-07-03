@@ -126,6 +126,8 @@ public class FakeView{
 
 
     public void messageOutBox(String mex){
+        //todo da rimuovere
+        System.out.println(mex);
         if(toOut!=null) toOut.notifyFromFakeView(mex);
         message=mex;
     }

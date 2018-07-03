@@ -7,5 +7,4 @@ public class InvalidCoordinatesException extends InvalidValueException {
     //OVERVIEW: viene lanciata quando si rileva una coppia di coordinate (relative alla griglia di un gioactore) non valide.
 
     public InvalidCoordinatesException(){super();}
-    public InvalidCoordinatesException(String msg){super(msg);}
 }

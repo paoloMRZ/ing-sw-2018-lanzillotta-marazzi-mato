@@ -62,7 +62,7 @@ public class MVCErrorTest{
             sides.add(chosenOne);
 
             fake=new FakeView();
-            controller= new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
+            controller= new Controller(new ArrayList<>(Arrays.asList("primo","secondo")),50);
             fake.register(controller);
 
             controller.START();

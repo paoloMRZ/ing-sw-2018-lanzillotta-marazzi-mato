@@ -6,5 +6,4 @@ public class InvalidValueException extends SagradaException{
     //tramite parametri di costruttori e funzioni.
 
     public InvalidValueException(){super();}
-    public InvalidValueException(String msg){super(msg);}
 }

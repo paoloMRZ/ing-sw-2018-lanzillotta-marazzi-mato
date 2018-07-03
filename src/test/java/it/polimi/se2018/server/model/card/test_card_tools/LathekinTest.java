@@ -69,7 +69,7 @@ public class LathekinTest{
         this.chosenOne = new Side("toTEST", 5, this.sideContent);
         sides.add(chosenOne);
         FakeView fake = new FakeView();
-        controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
+        controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")),10);
         fake.register(controller);
 
         player1 = controller.getPlayerByName("primo");

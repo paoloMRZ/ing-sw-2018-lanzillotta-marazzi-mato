@@ -81,7 +81,7 @@ public class TenagliaARotelleTest {
         sides.add(chosenOne);
 
         fake=new FakeView();
-        controller= new Controller(new ArrayList<String>(Arrays.asList("primo","secondo")));
+        controller= new Controller(new ArrayList<String>(Arrays.asList("primo","secondo")),60);
         fake.register(controller);
 
 

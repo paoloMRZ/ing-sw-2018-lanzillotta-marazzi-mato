@@ -46,15 +46,16 @@ public class ControllerTurn implements ObserverTimer {
      * Costruttore della Classe.
      * @param table Tavolo o classe principale del model.
      * @param controller una delle classi controller definita principale per convenzione.
+     * @param secondi tempo per un singolo turno.
      */
 
-    public ControllerTurn(Table table,Controller controller){
+    public ControllerTurn(Table table,Controller controller,int secondi){
         this.lobby=table;
         this.controller=controller;
         this.numbOfPlayers=lobby.peopleCounter();
         this.indexAmongPs=numbOfPlayers;
         this.counterCMod=numbOfPlayers;
-        this.sagradaTimer=new SagradaTimer((100));
+        this.sagradaTimer=new SagradaTimer(secondi);
         sagradaTimer.add(this);
     }
 
@@ -217,7 +218,7 @@ public class ControllerTurn implements ObserverTimer {
      */
     private void anotherPlayer() throws InvalidValueException{
             turnOf = lobby.callPlayerByNumber(caller).getName();
-            lobby.showPrivate(turnOf);
+            lobby.setShowPrivate(turnOf);
             getTurn().ask();
             rotation();
     }
@@ -238,7 +239,7 @@ public class ControllerTurn implements ObserverTimer {
             else{
 
                 if(caller == numbOfPlayers-1 ){
-                    lobby.showEnemiesChoice();
+                    lobby.setShowEnemiesChoice();
                     resetQualities();
                     setRound();
                 }

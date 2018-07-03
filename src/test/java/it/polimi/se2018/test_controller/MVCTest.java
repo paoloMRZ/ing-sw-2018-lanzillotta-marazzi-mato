@@ -1,6 +1,7 @@
 package it.polimi.se2018.test_controller;
 
 import it.polimi.se2018.server.controller.Controller;
+import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
@@ -59,7 +60,7 @@ public class MVCTest {
         sides.add(chosenOne);
 
         fake=new FakeView();
-        controller= new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
+        controller= new Controller(new ArrayList<>(Arrays.asList("primo","secondo")),60);
         fake.register(controller);
 
         controller.START();
@@ -406,7 +407,31 @@ public class MVCTest {
         assertEquals("/###/primo/utensil/end/2&12&2&4\n",fake.getMessage());
     }
 
+    @Test
+    public void roundgridupdate() throws InvalidValueException {
 
+        Dice d1 = new Dice(Color.BLUE, 1);
+        Dice d2 = new Dice(Color.GREEN, 2);
+        Dice d3 = new Dice(Color.BLUE, 5);
+        Dice d4 = new Dice(Color.BLUE, 1);
+        Dice d5 = new Dice(Color.BLUE, 1);
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
+        controller.getcAction().resettingReserve(supportReserve);
+
+
+        controller.getcAction().putOnGrid(0, new Dice(Color.BLUE, 4));
+        controller.getcAction().putOnGrid(0, new Dice(Color.BLUE, 5));
+        controller.getcAction().putOnGrid(1, new Dice(Color.GREEN, 6));
+        controller.getcAction().putOnGrid(1, new Dice(Color.YELLOW, 6));
+        controller.getcAction().putOnGrid(2, new Dice(Color.YELLOW, 1));
+
+        fake.messageIncoming("/###/###/network/freeze/secondo");
+        fake.messageIncoming("/primo/###/update/turn/?");
+        assertEquals("/###/!/update/turn/primo\n",fake.getMessage());
+        fake.messageIncoming("/###/###/network/unfreeze/secondo");
+        assertEquals("/###/secondo/update/turn/primo\n",fake.getMessage());
+
+    }
 
 
 }

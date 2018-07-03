@@ -4,6 +4,12 @@ import it.polimi.se2018.server.events.ModelObservable;
 import it.polimi.se2018.server.events.ViewAsObserver;
 import it.polimi.se2018.server.events.responses.*;
 
+/**
+ * Classe del model che si occupa dell'istradamento dei messagi di risposta verso la fake view.
+ * Implementa l'intergaccia del model come osservabile.
+ * Il metodo notifyObserver è il metodo tipico del pattern observer, insieme a register
+ * e un register.
+ */
 public class NotifyModel implements ModelObservable {
 
     private ViewAsObserver view;

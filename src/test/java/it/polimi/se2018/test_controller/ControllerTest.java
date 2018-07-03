@@ -14,7 +14,7 @@ public class ControllerTest {
     public Controller controller;
 
     @Before
-    public void setup(){ controller = new Controller(new ArrayList<>(Arrays.asList("1","2","3","4"))); }
+    public void setup(){ controller = new Controller(new ArrayList<>(Arrays.asList("1","2","3","4")),10); }
 
 
     @Test

@@ -30,7 +30,7 @@ public class TamponeDiamantatoTest {
 
         this.tampone=new TamponeDiamantato();
         FakeView fake = new FakeView();
-        controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")));
+        controller = new Controller(new ArrayList<>(Arrays.asList("primo","secondo")),10);
         fake.register(controller);
 
     }

@@ -6,5 +6,4 @@ public class SagradaException extends Exception {
     //una generica eccezione del gioco Sagrada.
 
     public SagradaException(){ super();}
-    public SagradaException(String msg){super(msg);}
 }

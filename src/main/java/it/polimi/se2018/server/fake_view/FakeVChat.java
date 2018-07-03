@@ -97,42 +97,69 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
         //todo
     }
     public void update(UpdateM mex){
-        switch(mex.getWhat()){
-            case "round":
-                fake.messageOutBox(ServerMessageCreator.getUpdateRoundMessage(mex.getContent()));
-                break;
-            case "RoundGrid":
-                fake.messageOutBox(ServerMessageCreator.getUpdeteRoundgridMessage(mex.getContent()));
-                break;
-            case "ScoreGrid":
-                fake.messageOutBox(ServerMessageCreator.getEndGameMessage(mex.getContent()));
-                break;
-            case "Side":
-                fake.messageOutBox(ServerMessageCreator.getUpdateSideMessage(mex.getContent()));
-                break;
-            case "reserve":
-                fake.messageOutBox(ServerMessageCreator.getUpdateReserveMessage(mex.getContent()));
-                break;
-            case "turn":
-                fake.messageOutBox(ServerMessageCreator.getUpdateTurnMessage(mex.getContent()));
-                break;
-            case "side_list":
-                fake.messageOutBox(ServerMessageCreator.getSideListMessage(mex.getContent()));
-                break;
-            case "public_objective":
-                fake.messageOutBox(ServerMessageCreator.getPublicObjectiveMessage(mex.getContent()));
-                break;
-            case "utensils":
-                fake.messageOutBox(ServerMessageCreator.getSendUtensilsMessage(mex.getContent()));
-                break;
-            case "private_objective":
-                fake.messageOutBox(ServerMessageCreator.getPrivateObjectiveMesage(mex.getPlayer(),mex.getContent()));
-                break;
-            case "price":
-                fake.messageOutBox( ServerMessageCreator.getUpdatePriceMessage(mex.getContent()));
-                break;
-            default:
-                break;
+        if(mex.getIsbroadcast()) {
+            switch (mex.getWhat()) {
+                case "round":
+                    fake.messageOutBox(ServerMessageCreator.getUpdateRoundMessage(mex.getContent()));
+                    break;
+                case "RoundGrid":
+                    fake.messageOutBox(ServerMessageCreator.getUpdeteRoundgridMessage(mex.getContent()));
+                    break;
+                case "ScoreGrid":
+                    fake.messageOutBox(ServerMessageCreator.getEndGameMessage(mex.getContent()));
+                    break;
+                case "Side":
+                    fake.messageOutBox(ServerMessageCreator.getUpdateSideMessage(mex.getContent()));
+                    break;
+                case "reserve":
+                    fake.messageOutBox(ServerMessageCreator.getUpdateReserveMessage(mex.getContent()));
+                    break;
+                case "turn":
+                    fake.messageOutBox(ServerMessageCreator.getUpdateTurnMessage(mex.getContent()));
+                    break;
+                case "side_list":
+                    fake.messageOutBox(ServerMessageCreator.getSideListMessage(mex.getContent()));
+                    break;
+                case "public_objective":
+                    fake.messageOutBox(ServerMessageCreator.getPublicObjectiveMessage(mex.getContent()));
+                    break;
+                case "utensils":
+                    fake.messageOutBox(ServerMessageCreator.getSendUtensilsMessage(mex.getContent()));
+                    break;
+                case "private_objective":
+                    fake.messageOutBox(ServerMessageCreator.getPrivateObjectiveMesage(mex.getPlayer(), mex.getContent()));
+                    break;
+                case "price":
+                    fake.messageOutBox(ServerMessageCreator.getUpdatePriceMessage(mex.getContent()));
+                    break;
+                default:
+                    break;
+            }
+        }
+        else{
+            switch (mex.getWhat()) {
+                case "side_list":
+                    fake.messageOutBox(ServerMessageCreator.getSideListMessage(mex.getContent(),mex.getPlayer()));
+                    break;
+                case "public_objective":
+                    fake.messageOutBox(ServerMessageCreator.getPublicObjectiveMessage(mex.getContent(),mex.getPlayer()));
+                    break;
+                case "utensils":
+                    fake.messageOutBox(ServerMessageCreator.getSendUtensilsMessage(mex.getContent(),mex.getPlayer()));
+                    break;
+                case "reserve":
+                    fake.messageOutBox(ServerMessageCreator.getUpdateReserveMessage(mex.getContent(),mex.getPlayer()));
+                    break;
+                case "RoundGrid":
+                    fake.messageOutBox(ServerMessageCreator.getUpdeteRoundgridMessage(mex.getContent(),mex.getPlayer()));
+                    break;
+                case "turn":
+                    fake.messageOutBox(ServerMessageCreator.getUpdateTurnMessage(mex.getContent(),mex.getPlayer()));
+                    break;
+                default:
+                    break;
+            }
+
         }
     }
     public void update( TimeIsUp mex){

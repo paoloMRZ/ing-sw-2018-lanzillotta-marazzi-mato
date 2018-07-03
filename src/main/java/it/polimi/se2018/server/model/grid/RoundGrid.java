@@ -13,32 +13,48 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Classe che si occupa della raccolta dei dadi alla fine del round.
+ * Si può fare una immisione e un prevelievo.
+ * L'immisione può essere singola o multipla.
+ * Se si tenta di prelevare un Dice dall'ArrayList, le eccezioni che potrebbero insorgere riguardano
+ *una posizione p tale che p>10 or p<1 (ovvero si richiede un dado in una posizione che non esiste)
+ *oppure quando si sceglie una posizione in cui non c'è un Dice
+ *
+ *Pertanto la prima eccezione riguarda il range dell'Array -> ArrayOutOfBoundsException
+ *La seconda eccezione se la cella dell'array selezionata sia null -> NullPointerException
+ *le gestisco lanciando una eccezione InvalidValue.
+ * @author Kevin Mato
+ */
 public class RoundGrid {
     private ArrayList<ArrayList<Dice>> roundDices;
     private int actualRound;
 
-
+    /**
+     * Costruttore della classe che inizializza le celle di memoria del'arraylist principale.
+     * Inizializza anche il numero del round.
+     */
 
     public RoundGrid() {
 
-        //metto valori di default
-        this.roundDices =   new ArrayList<>(Arrays.asList(null,null,null,null,null,null,null,null,null,null));
+        this.roundDices =   new ArrayList<ArrayList<Dice>>(Arrays.asList(
+                new ArrayList<>(),new ArrayList<>(),
+                new ArrayList<>(),new ArrayList<>(),
+                new ArrayList<>(),new ArrayList<>(),
+                new ArrayList<>(),new ArrayList<>(),
+                new ArrayList<>(),new ArrayList<>()));
+
         this.actualRound = 1;
     }
 
-    /*
-        Tenta di prelevare un Dice dall'ArrayList, le eccezioni che potrebbero insorgere riguardano
-        una posizione p tale che p>10 or p<1 (ovvero si richiede un dado in una posizione che non esiste)
-        oppure quando si sceglie una posizione in cui non c'è un Dice
 
-        Pertanto la prima eccezione riguarda il range dell'Array -> ArrayOutOfBoundsException
-        La seconda eccezione se la cella dell'array selezionata sia null -> NullPointerException
 
-        Sono entrambe di tipo unchecked, quindi posso semplicemente inserire una generica Exception nel catch
-
-    */
-    //metodo dediacto al singolo dado
-
+    /**
+     *Metodo che permette l'immisione di un dado nella collezione dispondendo dell'indice della cella.
+     * @param posOnGrid indice della cella dove si vuole immettere un dado.
+     * @param d reference del dado da inserire.
+     * @throws InvalidValueException eccezione lanciata oer gestire eccezioni unchecked.
+     */
     public void put(int posOnGrid,Dice d) throws InvalidValueException{
         //ricopro il dado in ArrayList nel caso nella posizoine non ci siano già dati
         if(d!=null) {
@@ -46,15 +62,7 @@ public class RoundGrid {
                 if (posOnGrid > 9 || posOnGrid < 0) throw new InvalidValueException();
                 else {
                     Dice tmp = new Dice(d.getColor(), d.getNumber());
-
-                    //SE LA POSIZIONE NON HA ELEMENTI
-                    if (roundDices.get(posOnGrid) == null) {
-                        ArrayList<Dice> toSave = new ArrayList<>();
-                        toSave.add(tmp);
-                        roundDices.add(posOnGrid, toSave);
-                    } else {
-                        roundDices.get(posOnGrid).add(tmp);
-                    }
+                    roundDices.get(posOnGrid).add(tmp);
                 }
                 setUpdate();
             } catch (IndexOutOfBoundsException e) {
@@ -63,6 +71,13 @@ public class RoundGrid {
         }
     }
 
+    /**
+     * Metodo che permette il prelievo di un dado nella collezione dispondendo dell'indice della cella e di un indice nella cella.
+     * @param posOnGrid indice della cella della roundgrid.
+     * @param posOnLilGroup indice nella cella
+     * @return refrence della copia del dado che viene passato per copia.
+     * @throws InvalidValueException eccezione lanciata oer gestire eccezioni unchecked.
+     */
     public Dice pick(int posOnGrid,int posOnLilGroup)throws InvalidValueException{
 
         if(posOnGrid>9 || posOnGrid <0) throw new InvalidValueException();
@@ -72,7 +87,7 @@ public class RoundGrid {
            Dice ret = new Dice(tmp.getColor(),tmp.getNumber());
            roundDices.get(posOnGrid).remove(posOnLilGroup);
            //se non ci sono più elementi mi garantisco che sia posto a null, utile alla put
-           if(roundDices.get(posOnGrid).isEmpty()) roundDices.set(posOnGrid,null);
+           if(roundDices.get(posOnGrid).isEmpty()) roundDices.set(posOnGrid,new ArrayList<>());
            setUpdate();
            return ret;}
            catch (NullPointerException | IndexOutOfBoundsException e){
@@ -81,14 +96,21 @@ public class RoundGrid {
         }
 
     }
+
+    /**
+     * Metodo che mostra una copia del dado in una determinata cella.
+     * @param posOnGrid
+     * @param posOnLilGroup
+     * @return
+     * @throws InvalidValueException
+     */
     public Dice show(int posOnGrid,int posOnLilGroup)throws InvalidValueException{
         try {
             if (posOnGrid > 9 || posOnGrid < 0) throw new InvalidValueException();
             else {
                 Dice tmp = roundDices.get(posOnGrid).get(posOnLilGroup);
                 if (tmp == null) throw new InvalidValueException();
-                Dice ret = new Dice(tmp.getColor(), tmp.getNumber());
-                return ret;
+                return  new Dice(tmp.getColor(), tmp.getNumber());
             }
         }
         catch (NullPointerException| IndexOutOfBoundsException e){
@@ -105,13 +127,14 @@ public class RoundGrid {
             ArrayList<Dice> save = new ArrayList<>();
             Iterator<Dice> el = lastD.iterator();
 
-            while (el.hasNext()) {
+            while(el.hasNext()) {
                 Dice tmp = el.next();
                 Dice toSave = new Dice(tmp.getColor(), tmp.getNumber());
                 save.add(toSave);
             }
             roundDices.add(save);
             setUpdate();
+            actualRound=actualRound+1;
         }
         else roundDices.add(new ArrayList<>());
     }
@@ -130,21 +153,22 @@ public class RoundGrid {
     public String toString(){
 
             String message = "";
+            Dice die=null;
+            for (int i=0;i<roundDices.size();i++) {
 
-            for (List<Dice> diceList : roundDices) {
-
-                if(diceList==null){
-                    if (roundDices.indexOf(diceList) != 0){
-                        message = message.concat("&white0");
+                if(roundDices.get(i).isEmpty()){
+                    if (i == 0){
+                        message = message.concat("white0");
                     }
-                    else message = message.concat("white0");
+                    else message = message.concat("&white0");
                 }
                 else{
-                    if (roundDices.indexOf(diceList) != 0){
+                    if (i != 0){
                         message = message.concat("&");
                     }
-                    for (Dice die : diceList) {
-                        if (diceList.indexOf(die) == 0)
+                    for (int j = 0; j < roundDices.get(i).size(); j++) {
+                        die = roundDices.get(i).get(j);
+                        if (j == 0)
                             message = message.concat(die.getColor().toString().toLowerCase() + die.getNumber());
                         else
                             message = message.concat(":" + die.getColor().toString().toLowerCase() + die.getNumber());

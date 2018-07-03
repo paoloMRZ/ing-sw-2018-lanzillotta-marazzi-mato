@@ -15,10 +15,19 @@ import it.polimi.se2018.server.model.Player;
 import it.polimi.se2018.server.model.Table;
 import it.polimi.se2018.server.model.card.card_utensils.*;
 
+/**
+ * Classe che si occupa dell'esecuzione delle funzionalità delle carte utensile.
+ * Qui non troviamo deìirettamente l'esecuzione della funzionalità ma c'è l'avvio dell'algoritmo della carta e la gestione dell'esito che questa
+ * esecuzione può dare. Da qui partiranno messaggi di successo o errore di svariato tipo.
+ */
 public class ControllerCard implements Visitor {
 
     private final Controller controller;
 
+    /**
+     * Costruttore della classe.
+     * @param controller
+     */
     public ControllerCard(Controller controller){
         this.controller=controller;
     }

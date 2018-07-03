@@ -61,7 +61,7 @@ public class PlayerTest {
         casualSide = new Side("test", 4, casualList);
         sides.add(casualSide);
         FakeView fake = new FakeView();
-        Controller controller = new Controller(new ArrayList<>(Arrays.asList("Tester","secondo")));
+        Controller controller = new Controller(new ArrayList<>(Arrays.asList("Tester","secondo")),120);
         fake.register(controller);
         ColorDiagonals testerCard = new ColorDiagonals();
         obj = new Objective("TestName", "TestDescription", 4, testerCard, false);

@@ -82,7 +82,7 @@ public class MartellettoTest {
         sides.add(chosenOne);
 
         fake=new FakeView();
-        controller= new Controller(new ArrayList<String>(Arrays.asList("primo","secondo")));
+        controller= new Controller(new ArrayList<String>(Arrays.asList("primo","secondo")),10);
         fake.register(controller);
 
         countingBefore=new ArrayList<>();

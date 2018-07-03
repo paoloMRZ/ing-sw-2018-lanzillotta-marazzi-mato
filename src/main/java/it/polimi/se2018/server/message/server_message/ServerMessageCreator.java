@@ -161,11 +161,29 @@ public class ServerMessageCreator {
      * Attenzione: l'elenco dei nickname e l'elenco dei nomi devono essere ordinati. Il nome della carta scleta dal nickname
      * in posizione zero si deve trovare anch'essa in posizione zero nella lista dei nomi delle carte, e così via.
      *
-     * @param list  stringa elenco dei nickname dei giocatori.
+     * @param list  stringa elenco dei nickname dei giocatori con le relative side.
      * @return messaggio.
      */
     public static String getSideListMessage(String list) {
         String message = "/###/!/start/side_list/";
+        message = message.concat(list);
+        message = message.concat("\n");
+        return message;
+
+    }
+
+    /**
+     * Il metodo restiruisce il messaggio da mendare ai client per aggiornarli riguardo la carta schema scelta da ogni giocatore.
+     *
+     * Attenzione: l'elenco dei nickname e l'elenco dei nomi devono essere ordinati. Il nome della carta scleta dal nickname
+     * in posizione zero si deve trovare anch'essa in posizione zero nella lista dei nomi delle carte, e così via.
+     *
+     * @param list stringa elenco dei nickname dei giocatori con le relative side.
+     * @param address destibatario del messaggio.
+     * @return messaggio.
+     */
+    public static String getSideListMessage(String list,String address) {
+        String message = "/###/"+address+"/start/side_list/";
         message = message.concat(list);
         message = message.concat("\n");
         return message;
@@ -185,6 +203,20 @@ public class ServerMessageCreator {
         message = message.concat("\n");
         return message;
     }
+    /**
+     * Il metodo restituisce il messaggio da mandare ai client ad inizio partita per informarli su quali obiettivi pubblici
+     * sono stati estratti.
+     *
+     * @param list stringa lista dei nomi degli obiettivi pubblici.
+     * @param address destinatario.
+     * @return messaggio.
+     */
+    public static String getPublicObjectiveMessage(String list,String address) {
+        String message = "/###/"+address+"/start/public_objective/";
+        message = message.concat(list);
+        message = message.concat("\n");
+        return message;
+    }
 
     /**
      * Il metodo restituisce il messaggio da mandare ai client ad inizio partita per informarli su quali carte utensili
@@ -195,6 +227,21 @@ public class ServerMessageCreator {
      */
     public static String getSendUtensilsMessage(String list) {
         String message = "/###/!/start/utensil/";
+        message = message.concat(list);
+        message = message.concat("\n");
+        return message;
+
+    }
+    /**
+     * Il metodo restituisce il messaggio da mandare ai client ad inizio partita per informarli su quali carte utensili
+     * sono state estratte.
+     *
+     * @param list stringa lista dei nomi deelle carte utensili.
+     * @param dest destinatario
+     * @return messaggio.
+     */
+    public static String getSendUtensilsMessage(String list,String dest) {
+        String message = "/###/"+dest+"/start/utensil/";
         message = message.concat(list);
         message = message.concat("\n");
         return message;
@@ -236,6 +283,16 @@ public class ServerMessageCreator {
     public static String getUpdateTurnMessage(String nickname) {
         return "/###/!/update/turn/" + nickname + "\n";
     }
+    /**
+     * Il metodo restiuisce il messaggio da mandare ai client per informarli dell'inizio di un nuovo turno.
+     *
+     * @param nickname nickaname del giocatore che deve giocare il turno.
+     * @param dest destinatario.
+     * @return messaggio.
+     */
+    public static String getUpdateTurnMessage(String nickname,String dest) {
+        return "/###/"+dest+"/update/turn/" + nickname + "\n";
+    }
 
     /**
      * Il metodo restituisce il messaggio da inviare ai client per aggiornarli sullo stato della riserva.
@@ -245,8 +302,16 @@ public class ServerMessageCreator {
      */
     public static String getUpdateReserveMessage(String infoReserve) {
         return "/###/!/update/reserve/" + infoReserve + "\n";
-
-
+    }
+    /**
+     * Il metodo restituisce il messaggio da inviare ai client per aggiornarli sullo stato della riserva.
+     *
+     * @param infoReserve rappresentazione in stringa della riserva.
+     * @param dest destinatario.
+     * @return messaggio.
+     */
+    public static String getUpdateReserveMessage(String infoReserve,String dest) {
+        return "/###/"+dest+"/update/reserve/" + infoReserve + "\n";
     }
 
     /**
@@ -257,6 +322,16 @@ public class ServerMessageCreator {
      */
     public static String getUpdeteRoundgridMessage(String infoRoundgrid) {
         return "/###/!/update/roundgrid/" + infoRoundgrid + "\n";
+    }
+    /**
+     * Il metodo restituisce il messaggio da inviare ai client per aggiornarli sullo stato della roundgrid.
+     *
+     * @param infoRoundgrid rappresentazione della roundgrid.
+     * @param dest destinatario.
+     * @return messaggio.
+     */
+    public static String getUpdeteRoundgridMessage(String infoRoundgrid,String dest) {
+        return "/###/"+dest+"/update/roundgrid/" + infoRoundgrid + "\n";
     }
 
     /**

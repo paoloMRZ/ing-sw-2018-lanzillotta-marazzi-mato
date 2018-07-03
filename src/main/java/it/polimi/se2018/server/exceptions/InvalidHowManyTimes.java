@@ -7,5 +7,4 @@ public class InvalidHowManyTimes extends SagradaException {
     //tramite parametri di costruttori e funzioni. Questa eccezione è costruita ad hoc per la classe player.
 
     public InvalidHowManyTimes(){super();}
-    public InvalidHowManyTimes(String msg){super(msg);}
 }
