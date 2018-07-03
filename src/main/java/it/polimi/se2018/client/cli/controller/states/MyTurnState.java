@@ -9,6 +9,12 @@ import it.polimi.se2018.client.cli.print.scenes.ShowRoundGridScene;
 import it.polimi.se2018.client.message.ClientMessageCreator;
 import it.polimi.se2018.client.message.ClientMessageParser;
 
+/**
+ * La clsee implemeta lo stato che gestisce gli input della rete e dell'utente nel suo turno di gioco.
+ *
+ * @author Marazzi Paolo
+ */
+
 public class MyTurnState  implements StateInterface{
 
     private static final String DEFAULT_MESSAGE = "NONE";
@@ -37,6 +43,10 @@ public class MyTurnState  implements StateInterface{
     private boolean selectionUtensil;
     private int utensilSelected;
 
+    /**
+     * Costruttore della classe.
+     * Stampa delle scena.
+     */
     public MyTurnState(){
         game = Game.factoryGame();
 
@@ -50,7 +60,11 @@ public class MyTurnState  implements StateInterface{
         selectionUtensil = false;
     }
 
-
+    /**
+     * Verifica se il numero corrisponde ad un utensile attivo per questa partita.
+     * @param number numero da controllare.
+     * @return true se il numero è valido.
+     */
     private boolean isValidUtensilNumber(int number){
 
         for(UtensilCard card: game.getUtensils()){
@@ -61,18 +75,38 @@ public class MyTurnState  implements StateInterface{
         return false;
     }
 
+    /**
+     * Varifica se il numero identifica un dado della riserva.
+     * @param index indice da controllare.
+     * @return true se il valore identifica un dado
+     */
     private boolean isValidReserveDieIndex(int index){
         return index >= 0 && index < game.getReserve().size();
     }
 
+    /**
+     * Verifica se il valore identifica una riga della carta di gioco.
+     * @param index valore da controllare.
+     * @return true se il valore è valido.
+     */
     private boolean isValidRowIndex(int index){
         return index >= 0 && index <= 3;
     }
 
+    /**
+     * Verifica se il valore identifica una colonna della carta di gioco.
+     * @param index valore da controllare.
+     * @return true se il valore è valido.
+     */
     private boolean isValidColIndex(int index){
         return index >= 0 && index <= 4;
     }
 
+    /**
+     * Il metodo gestisce l'input immesso dal giocatore per posizionare un dado sulla carta.
+     * @param request input immesso dal giocatore.
+     * @return step da eseguire nel "metodo principale"
+     */
     private int managePutInput(int request){
 
         if(request == INPUT_INT_BACK_MENU)
@@ -101,6 +135,11 @@ public class MyTurnState  implements StateInterface{
     }
 
 
+    /**
+     * Il metodo gestisce l'input immesso dal giocatore per selezionare una carta utensile.
+     * @param request input immesso dal giocatore.
+     * @return step da eseguire nel "metodo principale"
+     */
     private int manageSelectionUtensilInput(int request){
 
         if(request == INPUT_INT_BACK_MENU)
@@ -114,27 +153,44 @@ public class MyTurnState  implements StateInterface{
             return INPUT_ERROR;
     }
 
+    /**
+     * Il metodo mostra schermo le carte utensili.
+     */
     private void showUtensils(){
         gameScene.setShowUtensils();
         gameScene.printScene();
     }
 
+    /**
+     * Il metodo mostra schermo le carte obiettivo.
+     */
     private void showObjective(){
         gameScene.setShowObjective();
         gameScene.printScene();
     }
 
+    /**
+     * Il metodo mostra schermo le carte degli avversari.
+     */
     private void showEnemyCards(){
         EnemyCardScene enemyCardScene = new EnemyCardScene(game.getEnemyCards(), game.getEnemyNicknames(), game.getDiceOnEnemysCards());
         enemyCardScene.setMyTurnMenu();
         enemyCardScene.printScene();
     }
 
+    /**
+     * Il metodo mostra schermo la roundgrid completa.
+     */
+
     private void showRoundgrid(){
         ShowRoundGridScene showRoundGridScene = new ShowRoundGridScene(game.getRoundgrid());
         showRoundGridScene.setMyTurnMenu();
         showRoundGridScene.printScene();
     }
+
+    /**
+     * Il metodo gestisce la richiesta dell'utente di annullare un'operazione e tornare al menù principale.
+     */
 
     private void backToMainMenu(){
         puttingDie = false;
@@ -146,11 +202,21 @@ public class MyTurnState  implements StateInterface{
         gameScene.printScene();
     }
 
+    /**
+     * Il metodo mostra a schermo un messaggio di errore.
+     */
     private void showErrorMessage(){
         gameScene.addMessage(ERROR_MESSAGE);
         gameScene.printScene();
     }
 
+
+    /**
+     * Il metodo gestisce l'input immesso dall'utente.
+     * I valori immessi possiedono un significato diverso in base allo step in cui ci si trova.
+     * @param request input immesso dall'utente.
+     * @return eventuale messaggio da inviare al server.
+     */
     @Override
     public String handleInput(int request) {
 
@@ -230,6 +296,12 @@ public class MyTurnState  implements StateInterface{
         return DEFAULT_MESSAGE;
     }
 
+
+    /**
+     * Il metodo gestisce i messaggi provenienti dal server.
+     * Ad ogni messaggio corrisponde "una stampa" a schermo.
+     * @param request messaggio inviato dal server.
+     */
     @Override
     public void handleNetwork(String request) {
         if(ClientMessageParser.isClientDisconnectedMessage(request)){

@@ -596,7 +596,7 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
      */
 
     @Override
-    public void InputRequest(int request) {
+    public void inputRequest(int request) {
         if (!fatalError) {
 
             String response = state.handleInput(request); //Passo allo stato attivo l'input immesso dall'utente.

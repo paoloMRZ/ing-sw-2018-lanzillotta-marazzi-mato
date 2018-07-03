@@ -11,10 +11,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * La classe traduce informazioni di testo (stringhe) nelle corrispondenti informazioni "stampabili a schermo".
+ */
+
 public class Translater {
 
     private Translater(){}
 
+    /**
+     * Restituisce il colore in codifica ansi associato al colore passato come stringa.
+     * @param textColor colore da tradurre
+     * @return colore in codifica ansi.
+     */
     public static Ansi.Color getColorFromText(String textColor){
 
         switch (textColor){ //Faccio il parsing del colore.
@@ -35,7 +44,12 @@ public class Translater {
         }
     }
 
-
+    /**
+     * Il metodo traduce una lista di dadi descritti come stringa in una lista di dadi in codifica ansi e numero.
+     * @param infoFromMessage stringhe da tradurre.
+     * @param acceptWhite indica se il colore bianco è accettabile o se deve generare una lista vuota.
+     * @return lista di dadi (ansi + numero)
+     */
     public static List<DieInfo> fromMessageToDieInfo(List<String> infoFromMessage, boolean acceptWhite){
         ArrayList<DieInfo> diceList = new ArrayList<>();
 
@@ -66,6 +80,13 @@ public class Translater {
         return diceList;
     }
 
+    /**
+     * Il metodo restituisce una lista di oggetti che descrivono le carte finestra.
+     * @param cardNames nomi delle carte di cui si vogliono ottenere le informazioni
+     * @return lista delle carte.
+     * @throws IOException sollevata in caso di errore di lettura da file.
+     * @throws ClassNotFoundException sollevata se la classe deserializzata non è presente nel jar.
+     */
     public static List<SideCard> getSideCardFromName(List<String> cardNames) throws IOException, ClassNotFoundException {
         ArrayList<SideCard> cards = new ArrayList<>();
 

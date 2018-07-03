@@ -3,6 +3,13 @@ package it.polimi.se2018.client.cli.controller.stdin_controller;
 import java.security.InvalidParameterException;
 import java.util.Scanner;
 
+/**
+ * La classe iplementa un lettore di standard input.
+ * In pratica rimane il ascolto sullo stdin e notifica al suo osservatore ogni valore che riceve.
+ *
+ * NB-> La classe fornisce all'osservatore solo valori interi.
+ */
+
 public class Input implements Runnable {
 
     private static final int INPUT_ERROR = 999; //Indica che è stato inserito un input non corretto.
@@ -16,7 +23,10 @@ public class Input implements Runnable {
     private InputObserver observer;
     private boolean loop;
 
-
+    /**
+     * Costruttore della classe.
+     * @param observer osservatore della classe.
+     */
     public Input(InputObserver observer) {
         if (observer != null) {
             this.observer = observer;
@@ -26,7 +36,8 @@ public class Input implements Runnable {
     }
 
     /**
-     * Il seguente metodo va lanciato su un thread dedicato in modo che sia in ascolto sullo stdin senza bloccare il programma.
+     * Il seguente metodo (che va lanciato su un thread dedicato) è in ascolto sullo standard input ed ogni volta che riceve
+     * un valore (eventualmente lo converte in un intero) lo passa all'osservatore.
      */
     @Override
     public void run() {
@@ -40,19 +51,19 @@ public class Input implements Runnable {
 
             if (input.hasNextInt()) { //Controllo se ho un intero da leggere, se si lo lego e lo invio al gestore di input (cioè l'osservatore).
                 numberRequest = input.nextInt();
-                observer.InputRequest(numberRequest);
+                observer.inputRequest(numberRequest);
             } else { //Se non ho un intero da leggere controllo se ho qualcosa sul buffer di ingresso.
                 if (input.hasNext()) { //Se ho qualcosa (che per forza non sarà un intero) lo leggo come stringa.
 
                     stringRequest = input.next();
 
                     if(stringRequest.equals(INPUT_STR_EXIT)) //Controllo se è stata immessa una richiesta di chiusura.
-                        observer.InputRequest(EXIT_REQUEST);
+                        observer.inputRequest(EXIT_REQUEST);
 
                     if(stringRequest.equals(INPUT_STR_BACK_MENU)) //Se la stringa letta è il carattere 'q' invio al gestore il numero di richiesta del menù principale.
-                        observer.InputRequest(INPUT_INT_BACK_MENU);
+                        observer.inputRequest(INPUT_INT_BACK_MENU);
                     else
-                        observer.InputRequest(INPUT_ERROR);
+                        observer.inputRequest(INPUT_ERROR);
                 }
             }
 
