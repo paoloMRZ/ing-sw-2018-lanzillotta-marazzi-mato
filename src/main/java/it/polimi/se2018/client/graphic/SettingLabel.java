@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
-import static it.polimi.se2018.client.graphic.Utility.*;
+import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 import static java.lang.Integer.parseInt;
 
 
@@ -106,8 +106,8 @@ public class SettingLabel implements ChangeListener<String> {
         changed(this.turnOf.textProperty(),this.turnOf.getText(),turnOf);
     }
 
-    public void updateAction(){
-        changed(action.textProperty(),this.action.getText(),String.valueOf(parseInt(this.action.getText())-1));
+    public void updateAction(String actionUpdate){
+        changed(action.textProperty(),this.action.getText(),actionUpdate);
     }
 
     public void updateFavours(String updateFavours){

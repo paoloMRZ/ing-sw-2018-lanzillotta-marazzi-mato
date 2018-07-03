@@ -16,8 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import static it.polimi.se2018.client.graphic.Utility.setFocusStyle;
-import static it.polimi.se2018.client.graphic.Utility.shadowEffect;
+import static it.polimi.se2018.client.graphic.graphic_element.Utility.setFocusStyle;
+import static it.polimi.se2018.client.graphic.graphic_element.Utility.shadowEffect;
 
 
 /**

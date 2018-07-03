@@ -14,7 +14,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import static it.polimi.se2018.client.graphic.Utility.*;
+import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,8 +1,8 @@
 package it.polimi.se2018.client.graphic.alert_box;
 
-import it.polimi.se2018.client.graphic.Utility;
+import it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator;
+import it.polimi.se2018.client.graphic.graphic_element.Utility;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -13,15 +13,35 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.awt.*;
+import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 
-import static it.polimi.se2018.client.graphic.Utility.*;
+
+/**
+ * Classe AlertValidation utilizzata per mostrare tramite PoPup messaggi informativi durante la sessione di gioco. In particolare per visualizzare a monitor
+ * i seguenti contenuti:
+ *
+ *  -> Notifiche Successo/Errore relativi al gioco (Piazzamenti errati, utilizzi invalidi di carte Utensili ecc.
+ *
+ * @author Simone Lanzillotta
+ */
+
+
 
 public class AlertValidation{
+
+
+    private AlertValidation(){}
+
+
+    /**
+     * Metodo statico utilizzato per configurare il contenuto del PoPup sollevato durante la sessione di gioco.
+     *
+     * @param title Titolo del PoPup
+     * @param message Contenuto informativo
+     */
 
 
     public static void display(String title,String message){
@@ -41,28 +61,23 @@ public class AlertValidation{
         //Formattazione Body
         StackPane stackValidation = new StackPane();
         stackValidation.setPrefSize(500,300);
-        //stackValidation.setStyle("-fx-background-image: url(back-init-close.png); -fx-background-size: auto; -fx-background-position: center; -fx-background-repeat: no-repeat;");
+
 
         Label label = Utility.setFontStyle(new Label(), 25);
         label.setText(message);
         label.setTextAlignment(TextAlignment.CENTER);
 
-        ImageView backButton = shadowEffect(configureImageView("","button-back", ".png",128,70));
-        backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> window.close());
+        //Configurazione backButton
+        ButtonLabelCreator buttonLabelCreator = new ButtonLabelCreator(128,70);
+        buttonLabelCreator.getBackButton().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> window.close());
 
 
-        //Formattazione cornice
-        Rectangle rect = new Rectangle();
-        rect.setFill(javafx.scene.paint.Color.TRANSPARENT);
-        rect.setStroke(Color.BLACK);
-        rect.setStrokeWidth(10d);
-        rect.widthProperty().bind(stackValidation.widthProperty());
-        rect.heightProperty().bind(stackValidation.heightProperty());
-        stackValidation.getChildren().add(rect);
+        //Configurazione Cornice della finestra
+        stackValidation.getChildren().add(setFrameWindow(stackValidation));
 
 
         VBox layout = new VBox(10);
-        layout.getChildren().addAll(label, backButton);
+        layout.getChildren().addAll(label, buttonLabelCreator.getBackButton());
         layout.setAlignment(Pos.CENTER);
         stackValidation.getChildren().add(layout);
         Scene scene = new Scene(stackValidation);

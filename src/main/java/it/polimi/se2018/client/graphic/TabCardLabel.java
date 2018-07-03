@@ -13,7 +13,7 @@ import javafx.scene.text.TextAlignment;
 
 import java.util.ArrayList;
 
-import static it.polimi.se2018.client.graphic.Utility.*;
+import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 
 /**
  * Classe TabCardLabel rappresenta l'elemento grafico che permette la visualizzazione delle carte Utensili e carte Obbiettivo pubbliche estratte per la sessione di gioco

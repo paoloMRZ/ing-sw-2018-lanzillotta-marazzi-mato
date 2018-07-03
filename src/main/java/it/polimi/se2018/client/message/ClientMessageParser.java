@@ -305,7 +305,7 @@ public class ClientMessageParser {
      * @return lista dei dati estratti.
      */
     public static List<String> getInformationsFromMessage(String message){
-        return Arrays.asList((message.replace("\n", "").split("/")[5]).split("&"));
+        return new ArrayList<>(Arrays.asList((message.replace("\n", "").split("/")[5]).split("&")));
     }
 
     /**
