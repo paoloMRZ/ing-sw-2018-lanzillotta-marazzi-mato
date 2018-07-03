@@ -292,7 +292,7 @@ public class Controller{
 
 
     /**
-     *  Metodo che Il player turnante
+     *  Metodo che ritorna il player turnante
      *
      * @return riferimento a player turnanate
      */
@@ -309,7 +309,7 @@ public class Controller{
 
     /**
      * Metodo che si occupa di indicare il vincitore della partota e di comunicarlo ai giocatori.
-     * @throws Exception
+     * @throws Exception eccezione lanciata in caso di errore nella ricerca del vincitore.
      */
     protected void finalizeTheGame() throws Exception{
         cPoints.updateScoreOfPlayer();
@@ -319,7 +319,7 @@ public class Controller{
 
     /**
      *Metodo tunnel per l'attuazione di un piazzamento.
-     *  Controlla inoltre che le mosse a disposizione nel turno siano state fatte tutte.
+     * Controlla inoltre che le mosse a disposizione nel turno siano state fatte tutte, dopo aver piazzato.
      * @param mex messaggio di piazzamento
      */
     public void simpleMove(SimpleMove mex) throws InvalidValueException {
@@ -332,7 +332,7 @@ public class Controller{
 
     /**
      * Metodo che ritorna il riferimento del comunicatore del controller.
-     * @return
+     * @return attributo dell'istanza della classe comunicatore
      */
     public ControllerChat getcChat() {
         return cChat;
@@ -340,7 +340,7 @@ public class Controller{
 
     /**
      * Metodo che ritorna il controller adibito agli algoritmi delle carte
-     * @return
+     * @return attributo dell'istanza della classe adibita all'uso delle carte utensile
      */
     public ControllerCard getcCard() {
         return cCard;
@@ -350,7 +350,8 @@ public class Controller{
     /**
      * Metodo che setta la scelta del giocatore della side.
      * @param m messaggio contenente il nome del giocatore e l'indice della side scelta.
-     * @throws InvalidValueException
+     * @throws InvalidValueException eccezione lanciata nel caso si cerchi di settare la scelta di un giocatore inesistente
+     * o si scelga qualcosa di non valido.
      */
     public void chosen(Choice m) throws InvalidValueException {
         lobby.callPlayerByName(m.getPlayer()).setMySide(m.getIndex());
@@ -359,7 +360,7 @@ public class Controller{
 
     /**
      * Metodo che segnala il volere di passare il turno del giocatore.
-     * @param m
+     * @param m evento con il nome del giocatore che vuole passare il turno.
      */
     public void passTurn(PassTurn m){
         cTurn.passTurn(m);
@@ -406,29 +407,57 @@ public class Controller{
         return lobby.getHoldingADiceMoveInProgress();
     }
 
-    /**Metodo che pulisce il riferimento
+    /**Metodo che pulisce il riferimento del dado tenuto in sospeso nel model
      */
     public void cleanHoldingADiceMoveInProgress(){
        lobby.cleanHoldingADiceMoveInProgress();
     }
+
+    /**
+     * Metodo che tiene in sospeso un dado della riserva all'interno del model.
+     * @param d dado della riservs da tenere in sospeso
+     */
     public void setHoldingResDie(Dice d){
         lobby.setHoldingResDie(d);
     }
+
+    /**
+     * Metodo che ritorna il dado della riserva tenuto in sospeso.
+     * @return reference del dado tenuto in sospeso.
+     */
     public Dice getHoldingResDie(){
         return lobby.getHoldingResDie();
     }
+
+    /**
+     * Metodo che resetta referece del dado della riserva tenuto in sospeso.
+     */
     public void cleanHoldingResDie(){
        lobby.cleanHoldingResDie();
     }
+    /**
+     * Metodo che tiene in sospeso un dado della roundgrid all'interno del model.
+     * @param d dado della roundgrid da tenere in sospeso
+     */
     public void setHoldingRoundGDie(Dice d){
         lobby.setHoldingRoundGDie(d);
     }
+    /**
+     * Metodo che ritorna il dado della roundgrid tenuto in sospeso.
+     * @return reference del dado tenuto in sospeso.
+     */
     public Dice getHoldingRoundGDie(){
         return lobby.getHoldingRoundGDie();
     }
-    public void cleanHoldingRoundGDie(){
+    /**
+     * Metodo che resetta referece del dado della roundgrid tenuto in sospeso.
+     */
+    protected void cleanHoldingRoundGDie(){
         lobby.cleanHoldingRoundGDie();
     }
+    /**
+     * Metodo che resetta referece dei dadi della tenuti sospeso.
+     */
     public void cleanAll(){
         cleanHoldingADiceMoveInProgress();
         cleanHoldingResDie();
@@ -436,6 +465,12 @@ public class Controller{
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Metodo utilizzato per risettare la lista di utensili presenti nel gioco utile per un possibile modifica
+     * e reprogettazione del sistema con cui vengono impostate le carte utensile.
+     * @param newDeck lista di carte utensile.
+     */
     public void resetUtensils(List<Utensils> newDeck){
         lobby.resetUtensilsDeck(newDeck);
     }
@@ -445,7 +480,7 @@ public class Controller{
     /**
      * Metodo che controlla la validità del messaggio in ingresso.
      * @param m messaggio da controllare.
-     * @return
+     * @return esito del controllo.
      */
     public boolean messageComingChecking(EventMVC m){
         return cTurn.messageComingChecking(m);
@@ -454,13 +489,25 @@ public class Controller{
 
     /**
      * Metodo che fa partire l'intero gioco.
-     * @throws Exception
+     * @throws Exception lanciata all'interno del gioco e risalente fino a questo metodo.
      */
     public void START() throws Exception {
         cTurn.setThePlayers();
     }
 
+    /**
+     * Metodo che ritorna una carta utensile dal suo deck in base al suo indice all'interno della collezione.
+     * @param card indice della carta nel deck di utensili.
+     * @return reference della carta utensile richiesta.
+     */
     public Utensils getUtensils(int card) {
         return lobby.getUtensils(card);
+    }
+
+    /**
+     * Metodo che lancia un aggiornamento sul costo delle utensili.
+     */
+    public void updateUtensilsCost(){
+        lobby.setUpdateCostUtensils();
     }
 }

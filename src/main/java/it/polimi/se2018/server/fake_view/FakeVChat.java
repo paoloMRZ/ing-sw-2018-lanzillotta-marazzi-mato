@@ -40,11 +40,6 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
     public void notifyObserver(Freeze mex){controller.update(mex);}
     public void notifyObserver(Unfreeze mex){controller.update(mex);}
 
-
-    public void notifyObserver(UpdateReq mex){
-        controller.update(mex);
-    }
-
     public void update(SuccessSimpleMove mex){
         String out= ServerMessageCreator.getPutDieSuccesMessage(
                 mex.getPlayer(),
@@ -62,15 +57,12 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
         fake.messageOutBox(out);
     }
     public void update(ErrorSelectionUtensil mex){
-        //todo
         fake.messageOutBox(ServerMessageCreator.getUseUtensilErrorMessage(mex.getPlayer(),String.valueOf(mex.getCard())));
     }
     public void update(SuccessColor mex){
-        //todo discutere
         fake.messageOutBox(ServerMessageCreator.getUseUtensilSuccessMessage(mex.getPlayer(),String.valueOf(mex.getCard()),"Color",mex.getValue()));
     }
     public void update(SuccessValue mex) {
-        //todo discutere
         fake.messageOutBox(ServerMessageCreator.getUseUtensilSuccessMessage(mex.getPlayer(),String.valueOf(mex.getCard()),"Value",String.valueOf(mex.getValue())));
     }
     public void update(SuccessActivation mex) {
@@ -135,6 +127,9 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
                 break;
             case "private_objective":
                 fake.messageOutBox(ServerMessageCreator.getPrivateObjectiveMesage(mex.getPlayer(),mex.getContent()));
+                break;
+            case "price":
+                fake.messageOutBox( ServerMessageCreator.getUpdatePriceMessage(mex.getContent()));
                 break;
             default:
                 break;
