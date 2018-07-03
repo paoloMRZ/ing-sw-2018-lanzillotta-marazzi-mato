@@ -7,6 +7,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static it.polimi.se2018.client.graphic.Utility.configureAnchorPane;
@@ -38,10 +39,10 @@ public class MediumAdapter implements AdapterResolution {
         sizeSidePlayer.add(new ArrayList<>(Arrays.asList(65d, 65d)));
 
         //Dimensioni del dado da inserire nella mainSide
-        sizeSidePlayer.add(new ArrayList<>(Arrays.asList(55)));
+        sizeSidePlayer.add(new ArrayList<>(Collections.singletonList(55)));
 
         //Dimensioni del dado da inserire nelle Side avversarie
-        sizeSidePlayer.add(new ArrayList<>(Arrays.asList(33)));
+        sizeSidePlayer.add(new ArrayList<>(Collections.singletonList(33)));
 
 
 
@@ -57,12 +58,12 @@ public class MediumAdapter implements AdapterResolution {
 
     @Override
     public List<Integer> getReserveLabelSize() {
-        return new ArrayList<>(Arrays.asList(48));
+        return new ArrayList<>(Collections.singletonList(48));
     }
 
     @Override
     public List<Integer> getReserveLabelUtensilSize() {
-        return new ArrayList<>(Arrays.asList(60));
+        return new ArrayList<>(Collections.singletonList(60));
     }
 
     @Override
@@ -79,7 +80,7 @@ public class MediumAdapter implements AdapterResolution {
         sizeSideEnemy.add(new ArrayList<>(Arrays.asList(0d,0d,4d,12d)));
 
         //Dimensioni dell'intestazione con il nome dell'avversario
-        sizeSideEnemy.add(new ArrayList<>(Arrays.asList(18)));
+        sizeSideEnemy.add(new ArrayList<>(Collections.singletonList(18)));
 
         //Dimensioni dell'immagine Segna-Posto in assenza di giocatori
         sizeSideEnemy.add(new ArrayList<>(Arrays.asList(250,220)));

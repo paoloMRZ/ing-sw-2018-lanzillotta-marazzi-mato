@@ -101,12 +101,19 @@ public class SceneNickName {
 
             try {
                 if (connectionType.equals("Socket")) {
-                    init.setConnectionHandler(new ConnectionHandlerSocket(input, init, iP, port));
-                    if(interfaceType.equals("Cli")) init.setInitCli(new Cli(init.getConnectionHandler().getNickname()));
+
+                    if(interfaceType.equals("Cli")) {
+                        Cli cli = new Cli(input);
+                        cli.setConnectionHandler(new ConnectionHandlerSocket(input, cli, iP, port));
+                    }
+                    else init.setConnectionHandler(new ConnectionHandlerSocket(input, init, iP, port));
                 }
                 else if (connectionType.equals("Rmi")) {
-                    init.setConnectionHandler(new ConnectionHandlerRMI(input, init, iP));
-                    if (interfaceType.equals("Cli")) init.setInitCli(new Cli(init.getConnectionHandler().getNickname()));
+                    if (interfaceType.equals("Cli")) {
+                        Cli cli = new Cli(input);
+                        cli.setConnectionHandler(new ConnectionHandlerRMI(input, cli, iP));
+                    }
+                    else init.setConnectionHandler(new ConnectionHandlerRMI(input, init, iP));
                 }
                 value = true;
             } catch (InvalidNicknameException e) {
