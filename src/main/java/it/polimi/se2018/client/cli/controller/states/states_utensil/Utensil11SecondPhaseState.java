@@ -10,6 +10,12 @@ import it.polimi.se2018.client.message.ClientMessageCreator;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
+/**
+ * La classe implementa lo stato che gestisce la seconda fase dell'utensile 11.
+ *
+ * @author Marazzi Paolo
+ */
+
 public class Utensil11SecondPhaseState implements StateInterface {
 
 
@@ -27,6 +33,12 @@ public class Utensil11SecondPhaseState implements StateInterface {
     private int stepCounter;
 
     private ArrayList<String> paramList;
+
+    /**
+     * Costruttore della classe.
+     *
+     * @param cardIndex indice dell'utensile 11 nella collezione di carte utensili di questa partita.
+     */
 
     public Utensil11SecondPhaseState (int cardIndex){
 
@@ -50,15 +62,30 @@ public class Utensil11SecondPhaseState implements StateInterface {
 
     }
 
-
+    /**
+     * Il metodo verifica se il valore inserito è un indice di riga valido.
+     *
+     * @param row indice di riga da controllare
+     * @return true se l'indice è valido.
+     */
     private boolean isValidRow(int row){
         return row >= 0 && row <= 3;
     }
 
+    /**
+     * Il metodo verifica se il valore inserito è un indice di colonna valido.
+     *
+     * @param col indice di colonna da controllare
+     * @return true se l'indice è valido.
+     */
     private boolean isValidCol(int col){
         return col >= 0 && col <= 4;
     }
 
+    /**
+     * Il metodo gestisce l'input immesso dal giocatore per decidere se posizionare il dado estratto.
+     * @param request input immesso dal giocatore.
+     */
     private void placeDie(int request){
 
         if(request == 0 || request == 1){
@@ -77,6 +104,10 @@ public class Utensil11SecondPhaseState implements StateInterface {
             sideColorScene.printScene(); //Pulisco lo schermo.
     }
 
+    /**
+     * Il metodo gestisce l'input immesso dal giocatore per selezionare il valore del dado estratto.
+     * @param value input immesso dal giocatore.
+     */
     private void selectValue(int value){
 
         if(value >= 1 && value <= 6){
@@ -93,6 +124,10 @@ public class Utensil11SecondPhaseState implements StateInterface {
             sideColorScene.printScene();
     }
 
+    /**
+     * Il metodo gestisce l'input immesso  dall'utente per selezionare la riga.
+     * @param row riga immessa dall'utente.
+     */
     private void selectRow(int row){
 
         if(isValidRow(row)){
@@ -109,6 +144,10 @@ public class Utensil11SecondPhaseState implements StateInterface {
             sideColorScene.printScene();
     }
 
+    /**
+     * Il metodo gestisce l'input immesso  dall'utente per selezionare la colonna.
+     * @param col riga immessa dall'utente.
+     */
     private void selectCol(int col){
 
         if(isValidCol(col)){
@@ -124,6 +163,14 @@ public class Utensil11SecondPhaseState implements StateInterface {
         }else
             sideColorScene.printScene();
     }
+
+    /**
+     * Il metodo gestisce l'input immesso dall'utente.
+     * In base allo "step" in cui ci si trova l'input assume un significato differente.
+     *
+     * @param request input immesso dal giocatore
+     * @return eventuale messaggio da mandare al server.
+     */
 
     @Override
     public String handleInput(int request) {
@@ -147,6 +194,12 @@ public class Utensil11SecondPhaseState implements StateInterface {
             return DEFAULT_MESSAGE;
     }
 
+    /**
+     * Metodo che gestisce i messaggi provenienti dalla rete.
+     * In questo stato vengono ignorati tutti i messaggi inviati dal server.
+     *
+     * @param request messaggio inviato dal server.
+     */
     @Override
     public void handleNetwork(String request) {
         //Non bisogna gestire nessun messaggio proveniente dalla rete.

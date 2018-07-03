@@ -9,6 +9,12 @@ import it.polimi.se2018.client.message.ClientMessageCreator;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
+/**
+ * La classe implementa lo stato che gestisce la carta utensile 1.
+ *
+ * @author Marazzi Paolo
+ */
+
 public class Utensil1State implements StateInterface {
 
     private static final String DEFAULT_MESSAGE = "NONE";
@@ -25,6 +31,11 @@ public class Utensil1State implements StateInterface {
 
     private int indexOfCard;
 
+    /**
+     * Costruttore della classe.
+     *
+     * @param cardIndex indice dell'utensile 1 nella collezione di carte utensili di questa partita.
+     */
     public Utensil1State(int cardIndex){
 
         if(cardIndex >= 0 && cardIndex <= 2) {
@@ -45,6 +56,12 @@ public class Utensil1State implements StateInterface {
             throw new InvalidParameterException();
     }
 
+    /**
+     * Il metodo gestisce l'input immesso dal giocatore per selezionare il dado dalla riserva.
+     *
+     * @param request input immesso dal giocatore.
+     * @return eventuale messaggio da mandare al server.
+     */
 
     private String dieSelection(int request){
 
@@ -61,6 +78,12 @@ public class Utensil1State implements StateInterface {
         return DEFAULT_MESSAGE;
     }
 
+    /**
+     * Il metodo gestisce l'input immesso dall'utente per selezionare se incrementare o decrementare il valore del dado.
+     *
+     * @param request input immesso dal giocatore.
+     * @return eventuale messaggio da mandare al server.
+     */
     private String upOrDown(int request){
 
         if(request == 0 || request == 1){ //Controllo se il parametro è accettabile.
@@ -78,6 +101,13 @@ public class Utensil1State implements StateInterface {
         }
     }
 
+    /**
+     * Questo metodo viene richiamato dalla classe Cli per gestire un valore immesso su stdin.
+     *
+     * @param request valore immesso su stdin.
+     * @return eventuale messaggio da inviare al server.
+     */
+
     @Override
     public String handleInput(int request) {
 
@@ -86,6 +116,13 @@ public class Utensil1State implements StateInterface {
         else
             return upOrDown(request);
     }
+
+    /**
+     * Metodo che gestisce i messaggi provenienti dalla rete.
+     * In questo stato vengono ignorati tutti i messaggi inviati dal server.
+     *
+     * @param request messaggio inviato dal server.
+     */
 
     @Override
     public void handleNetwork(String request) {

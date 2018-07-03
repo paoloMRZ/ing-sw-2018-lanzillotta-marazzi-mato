@@ -10,6 +10,12 @@ import it.polimi.se2018.client.message.ClientMessageCreator;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
+/**
+ * La classe implementa lo stato che gestisce gli utensili 8 e 9.
+ *
+ * @author Marazzi Paolo
+ */
+
 public class Utensil89State implements StateInterface {
 
     private static final String TEXT1 = "Seleziona dado (riserva)";
@@ -27,6 +33,11 @@ public class Utensil89State implements StateInterface {
 
     private ArrayList<String> paramList;
 
+    /**
+     * Costruttore della classe.
+     *
+     * @param cardIndex indice dell'utensile 8 o 9 nella collezione di carte utensili di questa partita.
+     */
     public Utensil89State(int cardIndex){
 
         if(cardIndex >= 0 && cardIndex <= 3){
@@ -47,16 +58,38 @@ public class Utensil89State implements StateInterface {
 
     }
 
-
+    /**
+     * Il metodo verifica se il valore inserito è un indice di riga valido.
+     *
+     * @param row indice di riga da controllare
+     * @return true se l'indice è valido.
+     */
     private boolean isValidRow(int row){
         return row >= 0 && row <= 3;
     }
 
+    /**
+     * Il metodo verifica se il valore inserito è un indice di colonna valido.
+     *
+     * @param col indice di colonna da controllare
+     * @return true se l'indice è valido.
+     */
     private boolean isValidCol(int col){
         return col >= 0 && col <= 4;
     }
 
+    /**
+     * Il metodo verifica se l'indice immesso rientra nei limiti della riserva.
+     * @param index indice da controllare.
+     * @return true se l'indice rientra nei limiti.
+     */
     private boolean isValidReserveIndex(int index){ return index >= 0 && index < game.getReserve().size(); }
+
+    /**
+     * Il metodo gestisce l'input immesso dal giocatore per selezionare un dado dalla riserva.
+     * @param index input del giocatore.
+     * @return eventuale messaggio da inviare la server.
+     */
 
     private String selectDie(int index){
 
@@ -72,6 +105,11 @@ public class Utensil89State implements StateInterface {
         return DEFAULT_MESSAGE;
     }
 
+    /**
+     * Il metodo gestisce l'input immesso dal giocatore per selezionare una riga dalla carta di gioco.
+     * @param row input del giocatore.
+     * @return eventuale messaggio da inviare la server.
+     */
     private String selectRow(int row){
 
         if(isValidRow(row)){
@@ -85,6 +123,12 @@ public class Utensil89State implements StateInterface {
 
         return DEFAULT_MESSAGE;
     }
+
+    /**
+     * Il metodo gestisce l'input immesso dal giocatore per selezionare una colonna dalla carta di gioco.
+     * @param col input del giocatore.
+     * @return eventuale messaggio da inviare la server.
+     */
 
     private String selectCol(int col) {
         if (isValidCol(col)) {
@@ -102,6 +146,14 @@ public class Utensil89State implements StateInterface {
         }
     }
 
+
+    /**
+     * Il metodo gestisce l'input immesso dall'utente.
+     * In base allo "step" in cui ci si trova l'input assume un significato differente.
+     *
+     * @param request input immesso dal giocatore
+     * @return eventuale messaggio da mandare al server.
+     */
     @Override
     public String handleInput(int request) {
 
@@ -120,6 +172,12 @@ public class Utensil89State implements StateInterface {
 
     }
 
+    /**
+     * Metodo che gestisce i messaggi provenienti dalla rete.
+     * In questo stato vengono ignorati tutti i messaggi inviati dal server.
+     *
+     * @param request messaggio inviato dal server.
+     */
     @Override
     public void handleNetwork(String request) {
         //In questo stato non devo gestire nessun messaggio di rete.

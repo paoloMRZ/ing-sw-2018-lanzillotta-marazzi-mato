@@ -10,6 +10,12 @@ import it.polimi.se2018.client.message.ClientMessageCreator;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
+/**
+ * La classe implementa lo stato che gestisce gli utensili 2 e 3.
+ *
+ * @author Marazzi Paolo
+ */
+
 public class Utensil23State implements StateInterface {
 
     private static final String DEFAULT_MESSAGE = "NONE";
@@ -30,6 +36,12 @@ public class Utensil23State implements StateInterface {
     private boolean rowSelected;
 
     private ArrayList<String> paramList;
+
+    /**
+     * Costruttore della classe.
+     *
+     * @param cardIndex indice dell'utensile 2 o 3 nella collezione di carte utensili di questa partita.
+     */
 
     public Utensil23State(int cardIndex){
 
@@ -54,14 +66,32 @@ public class Utensil23State implements StateInterface {
             throw new InvalidParameterException();
     }
 
+    /**
+     * Il metodo verifica se il valore inserito è un indice di riga valido.
+     *
+     * @param request indice di riga da controllare
+     * @return true se l'indice è valido.
+     */
     private boolean isValidRow(int request){
         return request >= 0 && request <= 3;
     }
 
+    /**
+     * Il metodo verifica se il valore inserito è un indice di colonna valido.
+     *
+     * @param request indice di colonna da controllare
+     * @return true se l'indice è valido.
+     */
     private boolean isValidCol(int request){
         return request >= 0 && request <= 4;
     }
 
+    /**
+     * Il metodo gestisce l'input immesso dal giocatore per selezionare un dado dalla sua carta di gioco.
+     *
+     * @param request input immesso dall'utente.
+     * @return eventuale messaggio da inviare al server.
+     */
     private String selectDie(int request){
 
         //Selezione del dado da spostare.
@@ -93,6 +123,12 @@ public class Utensil23State implements StateInterface {
         return DEFAULT_MESSAGE;
     }
 
+    /**
+     * Il metodo gestisce l'input immesso dal giocatore per selezionare una cella dalla sua carta di gioco.
+     *
+     * @param request input immesso dall'utente.
+     * @return eventuale messaggio da inviare al server.
+     */
     private String selectCell(int request){
 
         //Selezione del punto d'arrivo.
@@ -122,6 +158,13 @@ public class Utensil23State implements StateInterface {
         return DEFAULT_MESSAGE;
     }
 
+    /**
+     * Il metodo gestisce l'input immesso dall'utente.
+     * In base allo "step" in cui ci si trova l'input assume un significato differente.
+     *
+     * @param request input immesso dal giocatore
+     * @return eventuale messaggio da mandare al server.
+     */
     @Override
     public String handleInput(int request) {
 
@@ -131,6 +174,12 @@ public class Utensil23State implements StateInterface {
             return selectCell(request);
     }
 
+    /**
+     * Metodo che gestisce i messaggi provenienti dalla rete.
+     * In questo stato vengono ignorati tutti i messaggi inviati dal server.
+     *
+     * @param request messaggio inviato dal server.
+     */
     @Override
     public void handleNetwork(String request) {
         //In questo stato non bisogna gestire nessun messaggio della rete.

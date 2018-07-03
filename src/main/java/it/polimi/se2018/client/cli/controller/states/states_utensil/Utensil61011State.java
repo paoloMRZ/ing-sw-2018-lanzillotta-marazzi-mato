@@ -10,6 +10,12 @@ import it.polimi.se2018.client.message.ClientMessageCreator;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
+/**
+ * La classe implementa lo stato che gestisce gli utensili 6, 10 e 11.
+ *
+ * @author Marazzi Paolo
+ */
+
 public class Utensil61011State implements StateInterface {
 
     private static final String DEFAULT_MESSAGE = "NONE";
@@ -22,6 +28,11 @@ public class Utensil61011State implements StateInterface {
 
     private int indexOfCard;
 
+    /**
+     * Costruttore della classe.
+     *
+     * @param cardIndex indice dell'utensile 6, 10 o 11 nella collezione di carte utensili di questa partita.
+     */
     public Utensil61011State(int cardIndex){
 
         if(cardIndex >= 0 && cardIndex <= 2) {
@@ -40,6 +51,12 @@ public class Utensil61011State implements StateInterface {
 
     }
 
+
+    /**
+     * Il metodo gestisce l'input immesso dall'utente per selesionare un dado dalla riserva.
+     * @param request input immesso dall'utente.
+     * @return eventuale messaggio da inviare la server.
+     */
     @Override
     public String handleInput(int request) {
 
@@ -59,6 +76,12 @@ public class Utensil61011State implements StateInterface {
         }
     }
 
+    /**
+     * Metodo che gestisce i messaggi provenienti dalla rete.
+     * In questo stato vengono ignorati tutti i messaggi inviati dal server.
+     *
+     * @param request messaggio inviato dal server.
+     */
     @Override
     public void handleNetwork(String request) {
         //In questo stato non deve gestire nessun tipo di messaggio proveniente dalla rete.

@@ -21,6 +21,16 @@ import java.util.List;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * La classe, che implementa uno state pattern, si occupa di gestire i messaggi provenienti dalla rete e dallo standard input.
+ * I messaggi alcuni messaggi di rete cambiano lo stato della classe (attributo 'state') mentre altri agiscono sullo
+ * stato della classe 'Game'.
+ *
+ * In base allo stato in cui si trova la classe i dati forniti dall'utente su standard input acquisiscono uno specifico significato.
+ *
+ * @author Marazzi Paolo
+ */
+
 public class Cli implements InputObserver, ConnectionHandlerObserver  {
 
     private static final String DEFAULT_MESSAGE = "NONE";
@@ -33,11 +43,19 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
     private boolean fatalError;
     private boolean endGame;
 
+    /**
+     * Costruttore della classe.
+     *
+     * Viene avviato il thread che si occupa della lettura su sdtin.
+     * Si imposta lo "stato di attesa" come stato attivo.
+     *
+     * @param myNickname Nickname del giocatore
+     */
     public Cli(String myNickname){
 
         if(myNickname != null) {
             Thread inputListner = new Thread(new Input(this));
-            inputListner.start(); //Avvio il thread dedicato all'ascolto.
+            inputListner.start(); //Avvio il thread dedicato all'ascolto dello stdin.
 
             game = Game.factoryGame();
             game.setMyNickname(myNickname);
@@ -45,13 +63,19 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
             this.fatalError = false;
             this.endGame = false;
 
-            this.state = new WaitState("In attesa di altri giocatori!");
+            this.state = new WaitState("In attesa di altri giocatori!"); //Imposto lo stato d'attesa.
 
         }else
             throw new InvalidParameterException();
 
     }
 
+    /**
+     * Il metodo imposta lo stato della classe in base all'utensile che è stato selezionato.
+     *
+     * @param utensilNumber numero della carta utensile.
+     * @param utensilIndex indice dell'utensile nella raccolta delle carte.
+     */
 
     private void utensilActivation(int utensilNumber, int utensilIndex){
 
@@ -81,9 +105,22 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
 
             case 12: state = new Utensil12State(utensilIndex); break;
 
-            default: //Non è possibile arrivare in questo stato.
+            default: //Non è possibile arrivare in questo stato, salvo che per un passaggio errato di parametri. In questo caso non viene eseguita nessuna operazione e lo stato della classe rimane immutato.
         }
     }
+
+    /**
+     * Il metodo imposta lo stato della classe per permettere al giocatore di giocare
+     * la "seconda fase" della carta utensile da lui scelta.
+     * Solo le carta 6 e 11 prevedono una seconda fase.
+     * Per seconda fase si intende che il giocatore ha attivato l'utensile e inviato la giocata
+     * al server, quest'ultimo risponderà al giocatore fornendogli dei dati sulla base dei quali
+     * l'utente effettuerà una seconda azione per terminare la giocata della carta scelta.
+     *
+     * @param utensilNumber numero dell'utensile da attivare.
+     * @param utensilIndex indice dell'utensile nella raccolta delle carte.
+     * @param message messaggio inviato dal server che contiene i dati generati dalle azioni fatte in prima fase.
+     */
 
     private void utensilSecondPhaseActivation(int utensilNumber, int utensilIndex, String message){
 
@@ -100,6 +137,15 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
         }
     }
 
+
+    /**
+     * La classe gestisce i messaggi di update ricevuti dal server richiamando i
+     * metodi che implementano una gestione più specifica.
+     *
+     * I messaggi di update sono quei messaggi che aggiornano lo stato del gioco (es: aggiornano lo stato della riserva).
+     *
+     * @param message messaggio di update da gestire.
+     */
 
     private void manageUpdateMessage(String message){
 
@@ -124,6 +170,13 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
 
     }
 
+    /**
+     * Gestione del messaggio di aggiornamento del costo delle carte utensile.
+     * Il metodo modifica i costi delle carte contenute nella classe Game.
+     *
+     * @param message messaggio da gestire.
+     */
+
     private void manageUpdatePriceMessage(String message){
 
         int i = 0;
@@ -135,6 +188,15 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
         }
     }
 
+
+    /**
+     * Metodo che gestisce il messaggio di aggiornamento della carta finestra di un giocatore.
+     * Vengono estratte dal messaggio le informazioni che descrivono i dadi posizionati sulla carta.
+     * Queste informazioni vengono salvate nella classe Game.
+     * Notifico lo stato attivo dell'aggiornamento appena avvenuto solo se il messaggio di aggiornamento è relativo
+     * alla carta del giocatore e non di un avversario.
+     * @param message messaggio di aggiornamento della carta.
+     */
 
     private void manageUpdateSideMessage(String message){
 
@@ -160,6 +222,15 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
         }
     }
 
+    /**
+     * Viene gestito il messaggio che notifica la fine di un round.
+     * Questo messaggio descrive i dadi aggiunti sulla roundgrid per il round appena concluso.
+     * Nel metodo vengono estratte le informazioni dal messaggio e salvate nella classe Game.
+     * Notifico lo stato attivo dell'aggiornamento appena avvenuto.
+     *
+     * @param message messaggio di aggiornamento del round.
+     */
+
     private void manageUpdateRoundMessage(String message){
 
         ArrayList<DieInfo> newRound = new ArrayList<>(Translater.fromMessageToDieInfo(ClientMessageParser.getInformationsFromMessage(message),false)); //Estraggo dal messaggio il nuovo round da aggiungere alla roundrid.
@@ -170,7 +241,18 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
         state.handleNetwork(message); //Notifico lo stato dell'aggiornamento.
     }
 
+    /**
+     * Viene gestito il messaggio di aggiornamento dell'intera roundgrid.
+     * Questo messaggio descrive lo stato dell'intera roungri.
+     * Nel metodo vengono estratte le informazioni dal messaggio e salvate nella classe Game.
+     * Notifico lo stato attivo dell'aggiornamento appena avvenuto.
+     *
+     * @param message messaggio di aggiornamento della roundgrid.
+     */
     private void manageUpdateRoundGridMessage(String message){
+
+        //TODO gestire il caso in cui mi vengono inviati solo white0
+        //TODO implementare qualcosa che tolga i white0 dopo l'ultima cella significativa.
 
         ArrayList<ArrayList<DieInfo>> newRoundGrid = new ArrayList<>();
 
@@ -184,6 +266,15 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
         state.handleNetwork(message); //Notifico lo stato attuale dell'aggiornamento, il quale provvederà a stampare a schermo.
     }
 
+    /**
+     * Viene gestito il messaggio di aggiornemento della riserva.
+     * Questo messaggio descrive lo stato della riserva.
+     * Vengono estratte le informazioni dal messaggio e viene salvato il nuovo stato della roundgrid nella classe Game.
+     * Notifico lo stato attivo dell'aggiornamento appena avvenuto.
+     *
+     * @param message messaggio di aggiornamento della riserva.
+     */
+
     private void manageUpdateReserveMessage(String message){
 
         //estraggo una lista di dieInfo dal campo informazioni e aggiorno game.
@@ -191,6 +282,14 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
         game.setReserve(Translater.fromMessageToDieInfo(ClientMessageParser.getInformationsFromMessage(message), false));
         state.handleNetwork(message); //Notifico lo stato della modifica appena avvenuta.
     }
+
+    /**
+     * Il metodo gestisce il messaggio di aggiornamento del turno.
+     * Viene estratto il nickname del giocatore che deve giocare il turno e viene salvato nella classe Game.
+     * In base al giocatore che deve giocare il turno ("io" o un avversario) imposto lo stato della classe.
+     *
+     * @param message messaggio di aggiornamento del turno.
+     */
 
     private void manageUpdateTurnMessage(String message){
 
@@ -205,6 +304,15 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
             state = new NotMyTurnState();
     }
 
+
+    /**
+     * Il metodo gestisce il messaggio che notifica a tutti i gicatori quali sono le carta utensili utilizzabili nella partita.
+     * Vengono estratte le informazioni dal messaggio e vengono salvate nella classe Game.
+     *
+     * @param message messaggio da gestire.
+     * @throws IOException viene sollevata dal metodo che si occupa della lettura da file delle descrizioni delle carte utensili contenute nel messaggio.
+     * @throws ClassNotFoundException viene sollevata dal metodo di deserializzazione se la classe letta da file non è contenuta nel jar.
+     */
 
     private void manageStartUtensilMessage(String message) throws IOException, ClassNotFoundException {
 
@@ -224,6 +332,15 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
 
     }
 
+    /**
+     * Il metodo si occupa di gestire tutti i messaggi di "start" richiamando metodo che eseguono operazioni più specifiche.
+     * I messaggi di "start" vengono mandati dal server per inizializzare lo stato della partita.
+     *
+     * @param message messaggio da gestire.
+     * @throws IOException sollevata dai metodi che leggono da file le informzioni su una carta.
+     * @throws ClassNotFoundException viene sollevata se la classe deserializzata non è contenuta nel jar.
+     */
+
     private void manageStartMessage(String message) throws IOException, ClassNotFoundException {
 
         if (ClientMessageParser.isStartChoseSideMessage(message))
@@ -242,6 +359,14 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
             manageStartUtensilMessage(message);
     }
 
+    /**
+     * Il metodo gestisce il messaggio che notifica al giocatore che deve segliere con quale carta giocare la parita.
+     * Viene settato uno stato specifico per la scelta della carta.
+     *
+     * @param message messaggio da gestire.
+     * @throws IOException sollevata dal metodo che legge da file le caratteristiche della carta.
+     * @throws ClassNotFoundException viene sollevata se la classe deserializzata non è contenuta nel jar.
+     */
     private void manageChooseSideMessage(String message) throws IOException, ClassNotFoundException {
 
         //Recupero le informazioni dal messaggio e rimuovo i segnalini favore associati ad ogni carta (tengo solo i nomi delle carte).
@@ -257,6 +382,14 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
         //Attivo lo stato che permette al giocatore di scegliere con quale carata giocare.
         state = new ChoseSideState(game.getMyNickname(), cards);
     }
+
+    /**
+     * Viene gestito il messaggio che assiocia ad ogni giocatore la carta da lui scelta.
+     *
+     * @param message messaggio da gestire.
+     * @throws IOException sollevata dal metodo che legge da file le caratteristiche della carta.
+     * @throws ClassNotFoundException viene sollevata se la classe deserializzata non è contenuta nel jar.
+     */
 
     private void manageSideListMessage(String message) throws IOException, ClassNotFoundException {
 
@@ -294,6 +427,10 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
         game.setEnemyNicknames(enemyNicknames);
     }
 
+    /**
+     * Metodo che gestisce tutti i messaggi relativi alle connessioni e disconnessioni dei giocatori.
+     * @param message messaggio da gestire.
+     */
 
     private void manageNetworkMessage(String message){
 
@@ -309,6 +446,12 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
         }
     }
 
+    /**
+     * Vengono gestiti tutti i messaggi che notificano che un'azione è andata a buon fine.
+     *
+     * @param message messaggio da gestire.
+     */
+
     private void manageSuccessMessage(String message){
 
         if (ClientMessageParser.isSuccessPutMessage(message))
@@ -321,6 +464,13 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
             manageSuccessUseUtensil(message);
     }
 
+    /**
+     * Viene gestito il messaggio che notifica che la carta utensile richiesta può essere giocata.
+     * Il metodo setta lo stato dedicato alla carta utensile attivata.
+     *
+     * @param message messaggio.
+     */
+
     private void manageActivateUtensil(String message){
 
         int utensilNumber = Integer.parseInt(ClientMessageParser.getInformationsFromMessage(message).get(1)); //Recupero il numero della carta utensile.
@@ -328,6 +478,13 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
 
         utensilActivation(utensilNumber,utensilIndex); //Richiamo il metodo che si occupa di impostare lo stato in base all'utensile che è stato attivato.
     }
+
+    /**
+     * Il metodo gestisce il messaggio che indica che l'utilizzo della carta utensile da parte dell'utente è andato a buon fine
+     * e che bisogna passare alla seconda fase.
+     *
+     * @param message messaggio da gestire.
+     */
 
     private void manageSuccessUseUtensil(String message){
 
@@ -338,6 +495,12 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
 
     }
 
+
+    /**
+     * Il metodo gestisce il messaggio che indica che l'utilizzo di un utensile si è concluso.
+     *
+     * @param message messaggio da gestire.
+     */
 
     private void manageEndUtensilMessage(String message){
 
@@ -357,6 +520,12 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
         state = new MyTurnState(); //Cambio lo stato --> Mi ripoto nello stato "MyTurn".
 
     }
+
+    /**
+     * Il metodo gestisce i possibili messaggi che segnalano errori di gioco.
+     *
+     * @param message messaggio da gestire.
+     */
 
     private void manageErrorMessage(String message){
 
@@ -387,6 +556,13 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
             state.handleNetwork(message);
     }
 
+    /**
+     * Metodo che gestisce il messaggio che notifica la fine della partita.
+     * Viene settato uno stato dedicato.
+     *
+     * @param message messaggio da gestire.
+     */
+
     private void manageWinnerMessage(String message){
 
         ArrayList<String> nicknames = new ArrayList<>();
@@ -411,20 +587,28 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
         state = new EndGameState(nicknames,scores);
     }
 
+
+    /**
+     * Il metodo gestisce i valori immessi su stdin dall'utente.
+     * In pratica l'input viene passato allo stato attivo che si occupa di interpretarlo.
+     *
+     * @param request input immesso dall'utente.
+     */
+
     @Override
     public void InputRequest(int request) {
         if (!fatalError) {
 
-            String response = state.handleInput(request);
+            String response = state.handleInput(request); //Passo allo stato attivo l'input immesso dall'utente.
 
-            if (!response.equals(DEFAULT_MESSAGE)){
+            if (!response.equals(DEFAULT_MESSAGE)){ //Se l'utente mi restituisce un messaggio diverso dal quellod i default lo invio al server.
 
-                if(response.split("/")[4].equals("side_reply"))
+                if(response.split("/")[4].equals("side_reply")) //Se l'utente ha appena selezionato la carta con cui giocare la partita lo metto in attesa.
                     state = new WaitState("In attesa della scelta degli altri giocatori!");
 
-                this.connectionHandler.sendToServer(response);
+                this.connectionHandler.sendToServer(response); //Invio al server.
 
-                if(ClientMessageParser.isClientDisconnectedMessage(response)) {
+                if(ClientMessageParser.isClientDisconnectedMessage(response)) { //Se ho appena inviato un messaggio di disconnessione termino il gioco.
                     System.out.print(ansi().eraseScreen());
                     System.exit(0);
                 }
@@ -433,6 +617,13 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
 
         }
     }
+
+    /**
+     * Il metodo gestisce i messaggi provenienti dal server riconoscendone la tipologia e richiamando metodi privati che
+     * implementano azioni più specifiche.
+     *
+     * @param message messaggio da gestire.
+     */
 
     @Override
     public void NetworkRequest(String message) {
@@ -468,6 +659,12 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
             }
         }
     }
+
+    /**
+     * Tramite questo metodo viene settato il connection handler che si deve utilizzare per comunicare col server.
+     *
+     * @param connectionHandler gestore della connessione da utilizzare.
+     */
 
     public void setConnectionHandler(ConnectionHandler connectionHandler) {
         if(connectionHandler != null)
