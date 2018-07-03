@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import static it.polimi.se2018.client.graphic.Utility.*;
+import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 
 
 /**
@@ -135,7 +135,7 @@ public class RoundLabel{
 
                 String lowerDieInfo = aDieInfo.toLowerCase(Locale.ENGLISH);
                 ImageView imageDie;
-                if (!aDieInfo.equals("white0")) imageDie = configureImageView("/diePack/die-", lowerDieInfo, ".bmp", sizeProceed.get(2), sizeProceed.get(2));
+                if (!lowerDieInfo.equals("white0")) imageDie = configureImageView("/diePack/die-", lowerDieInfo, ".bmp", sizeProceed.get(2), sizeProceed.get(2));
                 else imageDie = configureImageView("/iconPack/", "icon-empty", ".png", sizeProceed.get(2), sizeProceed.get(2));
                 imageDie.setFitWidth(sizeProceed.get(2));
                 imageDie.setFitHeight(sizeProceed.get(2));

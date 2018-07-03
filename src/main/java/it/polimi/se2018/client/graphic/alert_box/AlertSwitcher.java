@@ -1,6 +1,7 @@
 package it.polimi.se2018.client.graphic.alert_box;
 
 import it.polimi.se2018.client.graphic.InitWindow;
+import it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.geometry.Pos;
@@ -8,14 +9,13 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import static it.polimi.se2018.client.graphic.Utility.*;
+import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 
 
 /**
@@ -78,9 +78,6 @@ public class AlertSwitcher{
         window.setTitle(title);
         window.setMaxWidth(550);
         window.setMaxHeight(500);
-        window.setMinWidth(550);
-        window.setMinHeight(500);
-
 
         //Label "SCEGLI CONNESSIONE"
         Label labelChooseConnection = setFontStyle(new Label(messagge),22);
@@ -121,9 +118,8 @@ public class AlertSwitcher{
 
 
         //Label "CONTINUE BUTTON" * "BACK BUTTON"
-        ImageView continueButton = shadowEffect(configureImageView("","button-continue",".png",140,65));
-        ImageView backButton = shadowEffect(configureImageView("","button-back", ".png",110,65));
-        continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+        ButtonLabelCreator buttonLabelCreator = new ButtonLabelCreator(140,65,110,65);
+        buttonLabelCreator.getContinueButton().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             Platform.runLater(() -> {
                 if(isValidInput(connectionType,interfaceType, textPort.getText(), textIP.getText())) {
                     int portValue = 0;
@@ -136,8 +132,7 @@ public class AlertSwitcher{
 
         });
 
-
-        backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> window.close());
+        buttonLabelCreator.getBackButton().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> window.close());
 
 
         //Composizione degli elementi
@@ -145,15 +140,13 @@ public class AlertSwitcher{
         HBox labelConnection = new HBox(20);
         HBox labelModality = new HBox(20);
         HBox labelCoordinate = new HBox(20);
-        HBox labelButton = new HBox(15);
+        HBox labelButton = buttonLabelCreator.setInteractLabel(15);
         labelConnection.getChildren().addAll(socketButton, rmiButton);
         labelConnection.setAlignment(Pos.CENTER);
         labelModality.getChildren().addAll(guiButton, cliButton);
         labelModality.setAlignment(Pos.CENTER);
         labelCoordinate.getChildren().addAll(portConfiguration,iPConfiguration);
         labelCoordinate.setAlignment(Pos.CENTER);
-        labelButton.getChildren().addAll(continueButton,backButton);
-        labelButton.setAlignment(Pos.CENTER);
 
         layuot.getChildren().addAll(configureVBox(labelChooseConnection, labelConnection,5),
                 configureVBox(labelChooseModality, labelModality, 5),

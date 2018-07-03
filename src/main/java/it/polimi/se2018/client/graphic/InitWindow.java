@@ -1,6 +1,5 @@
 package it.polimi.se2018.client.graphic;
 
-import it.polimi.se2018.client.cli.Cli;
 import it.polimi.se2018.client.connection_handler.ConnectionHandler;
 import it.polimi.se2018.client.connection_handler.ConnectionHandlerObserver;
 import it.polimi.se2018.client.graphic.alert_box.*;
@@ -33,7 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static it.polimi.se2018.client.graphic.Utility.*;
+import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 
 
 /**
@@ -90,6 +89,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
     private ArrayList<String> costUtensilHistory;
     private List<String> nameOfEnemies;
     private List<String> sideOfEnemies;
+    private String action;
 
     //Costanti di intestazione delle varie finestra
     private static final String SAGRADA = "Sagrada";
@@ -118,7 +118,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
         //Configurazione della Schermata di Login
         primaryStage.setTitle(SAGRADA);
         primaryStage.getIcons().add(new Image("iconPack/icon-sagrada.png", 10, 10, false, true));
-        primaryStage.setOnCloseRequest(e -> closeWindow(primaryStage, e));
+        primaryStage.setOnCloseRequest(e -> closeWindow(primaryStage, e,false));
 
         ImageView startButton = shadowEffect(configureImageView("", "button-start-game", ".png", 190, 90));
         ComboBox comboBox = setChoiceResolution();
@@ -239,6 +239,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                             //Posiziono la griglia con le informazioni sul giocatore
                             settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(message.getText()).get(0), adapterResolution);
                             nodeSetting = settingLabel.getSettingLabel();
+                            action = "2";
                             adapterResolution.putSettingLabel(anchorGame, nodeSetting);
 
                             //Posiziono la carta Side del giocatore
@@ -261,6 +262,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                             Platform.runLater(() -> {
                                 AlertLoadingGame.closeAlert();
                                 primaryStage.centerOnScreen();
+                                primaryStage.setOnCloseRequest(e -> closeWindow(primaryStage, e,true));
                                 primaryStage.setMaxWidth(adapterResolution.getPrimaryStageSize().get(0));
                                 primaryStage.setMaxHeight(adapterResolution.getPrimaryStageSize().get(1));
                                 primaryStage.setMinWidth(adapterResolution.getPrimaryStageSize().get(0));
@@ -312,6 +314,9 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                     //Aggiornamento della Griglia dei bottoni Azione
                     resetButtonLabel();
 
+                    //Reset campo Azione
+                    action = "2";
+
                     //Abilitazione/Disabilitazione dei bottoni Azione
                     anchorGame.getChildren().remove(nodeButton);
                     buttonGameLabel.checkPermission(connectionHandler.getNickname(),ClientMessageParser.getInformationsFromMessage(newValue).get(0));
@@ -326,6 +331,9 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
                     //Inserimento dei dadi residui della Riserva nella RoundGrid
                     roundLabel.proceedRound(roundInfo);
+
+                    //Reset campo Azione
+                    action = "2";
 
                     //Aggiornamento della Griglia dei Bottoni
                     anchorGame.getChildren().remove(nodeButton);
@@ -405,6 +413,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
                 //MESSAGGIO SUCCESSO PER IL PIAZZAMENTO DEI DADI
                 if (ClientMessageParser.isSuccessPutMessage(newValue)) {
+                    action = String.valueOf(Integer.parseInt(action)-1);
                     resetSettingLabel(PUT,newValue);
                     AlertValidation.display(SAGRADA, "La tua azione è andata\n a buon fine!");
                 }
@@ -437,6 +446,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
             if (ClientMessageParser.isUseUtensilEndMessage(newValue)) {
 
                 //Aggiornamento della griglia Informazioni del giocatore
+                action = String.valueOf(Integer.parseInt(action)-1);
                 resetSettingLabel(UTENSIL,newValue);
 
                 //Chiusura della finestra dedicata alle carte utensili
@@ -498,15 +508,16 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                 break;
 
             case PUT:
-                settingLabel.updateAction();
+                settingLabel.updateAction(action);
                 break;
 
             case TURN:
+                settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", favours, ClientMessageParser.getInformationsFromMessage(infoUpdate).get(0),adapterResolution);
                 settingLabel.updateTurn(ClientMessageParser.getInformationsFromMessage(infoUpdate).get(0));
                 break;
 
             case UTENSIL:
-                settingLabel.updateAction();
+                settingLabel.updateAction(action);
                 settingLabel.updateFavours(ClientMessageParser.getInformationsFromMessage(infoUpdate).get(3));
 
         }
@@ -569,22 +580,25 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
     }
 
 
-
     /**
      * Metodo utilizzato per modificare l'azione relativa al bottone "Chiude finestra". Permette la visualizzazione di un checker di riconferma o annullamento
      * dell'azione eseguita
      *
      * @param primaryStage Riferimento alla finestra che si intende chiudere
+     * @param e Evento di Close Window
+     * @param disconnectionRequest booleano con valore TRUE se l'evento è generato durante la partita (quindi interpretato comunque come una disconessione),
+     *                             altrimenti FALSE
      */
 
-    private void closeWindow(Stage primaryStage, WindowEvent e) {
+    private void closeWindow(Stage primaryStage, WindowEvent e, Boolean disconnectionRequest) {
         boolean answer = AlertCloseButton.display(SAGRADA, "Vuoi davvero uscire da Sagrada?");
         if (answer) {
-            connectionHandler.sendToServer(ClientMessageCreator.getDisconnectMessage(connectionHandler.getNickname()));
+            if(disconnectionRequest) connectionHandler.sendToServer(ClientMessageCreator.getDisconnectMessage(connectionHandler.getNickname()));
             primaryStage.close();
         }
         else e.consume();
     }
+
 
 
 
