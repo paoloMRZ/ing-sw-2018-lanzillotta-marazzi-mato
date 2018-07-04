@@ -496,9 +496,7 @@ public class Table {
     private void sendOthersSideStatus(String player){
         if(player!=null) {
             for (Player p : playersList) {
-                if(!player.equals(p.getName())){
-                    launchCommunication(new UpdateM(player,"Side",p.getMySide().toString(),false));
-                }
+                launchCommunication(new UpdateM(player,"Side",p.getMySide().toString(),false));
             }
         }
     }
