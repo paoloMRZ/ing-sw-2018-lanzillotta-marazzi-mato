@@ -5,6 +5,10 @@ import it.polimi.se2018.server.events.EventMVC;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Evento che si occupa del logging delle eccezioni inasepttate.
+ * @author Kevin Mato
+ */
 public class ErrorSomethingNotGood extends EventMVC {
     ArrayList<String> stacktrace;
     public ErrorSomethingNotGood(Exception e){

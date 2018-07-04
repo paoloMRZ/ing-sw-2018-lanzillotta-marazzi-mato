@@ -1,12 +1,10 @@
 package it.polimi.se2018.server.events.tool_mex;
-
-import it.polimi.se2018.server.events.SimpleMove;
-
-import javax.tools.Tool;
 import java.util.ArrayList;
-
-
-//qui riutilizzo semplicemente il codice sebbene il significato degli attributi sia diverso
+/**
+ * Evento specializzato nell'uso della toolcard numero 9.
+ * Costruttore ereditato dalla multiparam
+ * @author Kevin Mato
+ */
 public class ToolCard9 extends ToolMultiParam{
 
     public ToolCard9(String player,int card, ArrayList<Integer> inputs){

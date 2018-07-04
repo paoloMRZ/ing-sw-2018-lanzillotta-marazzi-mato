@@ -4,6 +4,11 @@ package it.polimi.se2018.server.events;
 import java.util.Arrays;
 import java.util.ArrayList;
 
+/**
+ * Evento che si occupa di gestire le richieste di piazzamento di un giocatore. Contiene tutte le informazioni necessarie
+ * a piazzare un dado della riserva nella sidedi un giocatore.
+ * @author Kevin Mato
+ */
 public class SimpleMove extends EventMVC {
     private int dieIndex;
     private int row;

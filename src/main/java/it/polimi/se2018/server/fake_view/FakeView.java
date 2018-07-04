@@ -31,19 +31,38 @@ public class FakeView{
     private FakeVChat chat;
     private String message;
 
+    /**
+     * Costruttore della classe che non solo si collega alla lobby ma instanzia anche la sua classe comunicatore.
+     * @param blob lobby del gioco.
+     */
     public FakeView(Lobby blob){
         this.chat=new FakeVChat(this);
         this.toOut= blob;
     }
+
+    /**
+     * Costruttore che non prede parametri per il testing del solo mvc, o per metodi di connessione alternativi,
+     * da implemtare in seguito.
+     */
     public FakeView(){
         this.chat=new FakeVChat(this);
         this.toOut= null;
     }
-    //directed to out
+
+    /**
+     * Sebbene la classe non sia osservabile è l'interfaccia tra ciò che le è sotto e la rete quindi, la usiamo
+     * per registrare gli osservatori del gioco.
+     * @param controller controller del gioco istanziato dalla lobby.
+     */
     public void register(Controller controller){
         if(controller!=null) chat.register( controller.getcChat());
     }
-
+/**
+ * Metodo che si occupa del riconoscimento del tipo di messaggio in base ad un parser dedicato, per
+ * poi creare gli eventi relativi ai messaggi.
+ * Viene letto il sender. Riconosciuto il tipo grazie ad un parametro alfanumerico per identificare se di tipo utensile.
+ *
+ */
     public void messageIncoming(String m){
         String sender= ServerMessageParser.getSender(m);
 
@@ -134,7 +153,10 @@ public class FakeView{
 
     }
 
-
+    /**
+     * Metodo di connessione fra la fakeview e la lobby oer l'uscota dei messaggi.
+     * @param mex stringa messaggio del protocollo.
+     */
     public void messageOutBox(String mex){
         //todo da rimuovere
         //System.out.println(mex);
@@ -142,6 +164,12 @@ public class FakeView{
         message=mex;
     }
 
+    /**
+     * Metodo privato che traduce un arraylist di stringhe in una struttura dati numerica.
+     * @param ins lista di stringhe.
+     * @param dadove da quale punto analizzare la lista.
+     * @return la lista numerica.
+     */
     private ArrayList<Integer> transformer(List<String> ins,int dadove){
         ArrayList<Integer> ret = new ArrayList<>();
         if(ins!=null){

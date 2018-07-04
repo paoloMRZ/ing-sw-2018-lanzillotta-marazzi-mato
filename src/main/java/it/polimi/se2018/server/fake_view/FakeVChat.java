@@ -21,13 +21,14 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
     private ControllerAsObserver controller;
     private FakeView fake;
 
-
-
-
     public FakeVChat(FakeView f){
         this.fake=f;
     }
 
+    /**
+     * Metodo dell'interfaccai view as observable.
+     * @param o osservatore da registare.
+     */
     public void register(ControllerAsObserver o){
         this.controller=o;
         notifyObserver(new HookMessage(this));
@@ -49,7 +50,14 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
     public void notifyObserver(Choice mex){controller.update(mex);}
     public void notifyObserver(Freeze mex){controller.update(mex);}
     public void notifyObserver(Unfreeze mex){controller.update(mex);}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * I metodi update in questa classe trasformano eventi in messaggi del protocollo grazie metodi costruttori statici ad hoc.
+     *
+     * @param mex evento da analizzare.
+     */
     public void update(SuccessSimpleMove mex){
         String out= ServerMessageCreator.getPutDieSuccesMessage(
                 mex.getPlayer(),
@@ -103,6 +111,11 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
                 String.valueOf(mex.getFavs())
         ));
     }
+
+    /**
+     * Metodo endpoint del logging deglle eccezioni del gioco.
+     * @param mex evento eccezione.
+     */
     public void update(ErrorSomethingNotGood mex){
         //todo
     }

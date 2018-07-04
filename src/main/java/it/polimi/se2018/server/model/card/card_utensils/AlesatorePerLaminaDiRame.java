@@ -11,6 +11,11 @@ import it.polimi.se2018.server.model.card.Visitable;
 
 import java.util.ArrayList;
 
+/**
+ * Classe che si occupa dell'esecuzione dell'effetto contrattuato dalla carta utensile numero 3.
+ * Possiede un costruttore in cui sono contenuti i parametri di base della carta, hardcodati per un motivi di tempo.
+ * Implementa l'interfaccia visitable, implementando così il metodo accep
+ */
 public class AlesatorePerLaminaDiRame extends Utensils implements Visitable{
 
         public AlesatorePerLaminaDiRame(){

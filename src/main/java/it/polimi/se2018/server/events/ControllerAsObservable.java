@@ -2,6 +2,10 @@ package it.polimi.se2018.server.events;
 
 import it.polimi.se2018.server.events.responses.*;
 
+/**
+ * Interfaccia che il contoller deve implementare per essere osservato.
+ * @author Kevin Mato
+ */
  public interface ControllerAsObservable {
 
      void register(ViewAsObserver o);

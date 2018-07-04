@@ -1,6 +1,13 @@
 package it.polimi.se2018.server.events;
 
+
+
 import it.polimi.se2018.server.events.responses.*;
+
+/**
+ * Interfaccia implementata dalla view come osservatore per implentare i metodi di update.
+ * @author Kevin mato
+ */
 
   public  interface ViewAsObserver {
 

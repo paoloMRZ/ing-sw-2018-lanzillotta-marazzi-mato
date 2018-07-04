@@ -2,6 +2,10 @@ package it.polimi.se2018.server.events;
 
 import it.polimi.se2018.server.events.responses.*;
 
+/**
+ * Interfaccia del patern observable istaurato tra la fakeview e la classe cominucatore  del model.
+ * @author Kevin Mato
+ */
  public interface ModelObservable {
 
      void register(ViewAsObserver o);

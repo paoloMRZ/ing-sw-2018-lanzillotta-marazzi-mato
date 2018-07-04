@@ -3,6 +3,12 @@ package it.polimi.se2018.server.events.tool_mex;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+
+/**
+ * Evento specializzato nell'uso della toolcard numero 4. All'interno viene fatto uno spacchettamento dei parametri.
+ * Costruttore erediatato dalla multiparam
+ * @author Kevin Mato
+ */
 public class ToolCard4 extends ToolMultiParam{
     private int row2;
     private int col2;

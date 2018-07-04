@@ -1,7 +1,11 @@
 package it.polimi.se2018.server.events;
 
-import it.polimi.se2018.server.events.EventMVC;
-
+/**
+ * Evento che si occupa delle richieste di risposta con aggiornamento dello stato di alcuni elemnti del model.
+ * L'evento era stato usato inizialmente per rispondere a richieste da cli di aggiornamento, ora non più utile rimane padre
+ * per alcuni tipi di eventi che gli assomiglino.
+ * @author Kevin Mato
+ */
 public class UpdateReq extends EventMVC {
     protected String what;
 

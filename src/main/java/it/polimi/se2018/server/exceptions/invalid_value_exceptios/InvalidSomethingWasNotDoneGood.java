@@ -2,11 +2,13 @@ package it.polimi.se2018.server.exceptions.invalid_value_exceptios;
 
 import it.polimi.se2018.server.exceptions.SagradaException;
 
+/**
+ * Il lancio di questa eccezione presuppone che ci sia stata una negligenza nella progettazione.
+ * Eccezione il cui lancio avviene nel momento in cui ci siamo eccezioni inaspettate o per attuare il
+ * e gestione degli errori attraverso il relativo logger evento chamato similimente.
+ * @author Kevin Mato
+ */
 public class InvalidSomethingWasNotDoneGood extends SagradaException {
-    //OVERVIEW: La classe è la radice del sottoalbero che raccoglie
-    // le eccezioni riguardanti il passaggio di valori errati
-    //questa eccezione viene lanciata  al posto di eccezioni che davvero non dovrebbero mai essere lanciate. In teoria.
-    //Così se esce questa allora abbiamo sbagliato qualcosa di grave, ma molto.
 
     public InvalidSomethingWasNotDoneGood(){super();}
 
