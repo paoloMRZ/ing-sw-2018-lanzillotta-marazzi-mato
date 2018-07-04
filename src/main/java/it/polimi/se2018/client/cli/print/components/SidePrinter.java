@@ -12,6 +12,12 @@ import java.util.List;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * La classe consente di stampare a schermo una carta finestra.
+ *
+ * @author Marazzi Paolo
+ */
+
 public class SidePrinter {
 
     private static final String DOT = "O";
@@ -32,11 +38,24 @@ public class SidePrinter {
     private SidePrinter() {
     }
 
+    /**
+     * Il metodo controlla se la coppia di cordinate è valida.
+     * @param row riga.
+     * @param col colonna.
+     * @return true se la coppia di coordinate è valida.
+     */
     private static boolean areValidCoordinates(int row, int col) {
         return row >= 1 && col >= 1;
     }
 
     //------------------------ Metodi di appoggio per stampare le celle. ----------------------------------------------
+
+    /**
+     * Il metodo stampa una celle con restrizione di valore 1 nella posizione indicata.
+     *
+     * @param startRow riga su cui si trova l'angolo superiore sinistro della cella.
+     * @param startCol colonna su cui si trova l'angolo superiore sinistro della cella.
+     */
 
     private static void printOne(int startRow, int startCol) {
         System.out.print(ansi().bgBright(Ansi.Color.BLACK).cursor(startRow, startCol).bold().a(FIVE_SPACES)
@@ -44,11 +63,26 @@ public class SidePrinter {
                 .cursorToColumn(startCol).a(FIVE_SPACES).boldOff().bgDefault());
     }
 
+
+    /**
+     * Il metodo stampa una celle con restrizione di valore 2 nella posizione indicata.
+     *
+     * @param startRow riga su cui si trova l'angolo superiore sinistro della cella.
+     * @param startCol colonna su cui si trova l'angolo superiore sinistro della cella.
+     */
+
     private static void printTwo(int startRow, int startCol) {
         System.out.print(ansi().bgBright(Ansi.Color.BLACK).cursor(startRow, startCol).bold().a(DOT + "    \n")
                 .cursorToColumn(startCol).a(FIVE_SPACES)
                 .cursorToColumn(startCol).a("    " + DOT + "\n").boldOff().bgDefault());
     }
+
+    /**
+     * Il metodo stampa una celle con restrizione di valore 3 nella posizione indicata.
+     *
+     * @param startRow riga su cui si trova l'angolo superiore sinistro della cella.
+     * @param startCol colonna su cui si trova l'angolo superiore sinistro della cella.
+     */
 
     private static void printThree(int startRow, int startCol) {
         System.out.print(ansi().bgBright(Ansi.Color.BLACK).cursor(startRow, startCol).bold().a(DOT + "    \n")
@@ -56,18 +90,36 @@ public class SidePrinter {
                 .cursorToColumn(startCol).a("    " + DOT + "\n").boldOff().bgDefault());
     }
 
+    /**
+     * Il metodo stampa una celle con restrizione di valore 4 nella posizione indicata.
+     *
+     * @param startRow riga su cui si trova l'angolo superiore sinistro della cella.
+     * @param startCol colonna su cui si trova l'angolo superiore sinistro della cella.
+     */
     private static void printFour(int startRow, int startCol) {
         System.out.print(ansi().bgBright(Ansi.Color.BLACK).cursor(startRow, startCol).bold().a(DOT + "   " + DOT + "\n")
                 .cursorToColumn(startCol).a(FIVE_SPACES)
                 .cursorToColumn(startCol).a(DOT + "   " + DOT + "\n").boldOff().bgDefault());
     }
 
+    /**
+     * Il metodo stampa una celle con restrizione di valore 5 nella posizione indicata.
+     *
+     * @param startRow riga su cui si trova l'angolo superiore sinistro della cella.
+     * @param startCol colonna su cui si trova l'angolo superiore sinistro della cella.
+     */
     private static void printFive(int startRow, int startCol) {
         System.out.print(ansi().bgBright(Ansi.Color.BLACK).cursor(startRow, startCol).bold().a(DOT + "   " + DOT + "\n")
                 .cursorToColumn(startCol).a("  " + DOT + "  \n")
                 .cursorToColumn(startCol).a(DOT + "   " + DOT + "\n").boldOff().bgDefault());
     }
 
+    /**
+     * Il metodo stampa una celle con restrizione di valore 6 nella posizione indicata.
+     *
+     * @param startRow riga su cui si trova l'angolo superiore sinistro della cella.
+     * @param startCol colonna su cui si trova l'angolo superiore sinistro della cella.
+     */
     private static void printSix(int startRow, int startCol) {
         System.out.print(ansi().bgBright(Ansi.Color.BLACK).cursor(startRow, startCol).bold().a(DOT + "   " + DOT + "\n")
                 .cursorToColumn(startCol).a(DOT + "   " + DOT + "\n")
@@ -76,12 +128,25 @@ public class SidePrinter {
 
     //----------------------- Metodi che stampano i tre tipi possibili di celle ---------------------------------------
 
+    /**
+     * Il metodo permette di stampare a schermo una cella senza nessuna restrizione.
+     *
+     * @param startRow riga su cui si trova l'angolo superiore sinistro della cella.
+     * @param startCol colonna su cui si trova l'angolo superiore sinistro della cella.
+     */
     private static void printCell(int startRow, int startCol) {
         System.out.print(ansi().bgBright(Ansi.Color.WHITE).cursor(startRow, startCol).a(FIVE_SPACES)
                 .cursorToColumn(startCol).a(FIVE_SPACES)
                 .cursorToColumn(startCol).a(FIVE_SPACES).bgDefault());
     }
 
+    /**
+     * Il metodo permette di stampare a schermo una cella con restrizione di colore.
+     *
+     * @param startRow riga su cui si trova l'angolo superiore sinistro della cella.
+     * @param startCol colonna su cui si trova l'angolo superiore sinistro della cella.
+     * @param color colore della restrizione.
+     */
     private static void printCell(int startRow, int startCol, Ansi.Color color) {
         System.out.print(ansi().cursor(startRow, startCol).fg(color)
                 .cursorToColumn(startCol).a(TEXTURE + TEXTURE + TEXTURE + TEXTURE + TEXTURE + "\n")
@@ -90,6 +155,13 @@ public class SidePrinter {
                 .fgDefault());
     }
 
+    /**
+     * Il metodo permette di stampare a schermo una cella con restrizione di valore.
+     *
+     * @param startRow riga su cui si trova l'angolo superiore sinistro della cella.
+     * @param startCol colonna su cui si trova l'angolo superiore sinistro della cella.
+     * @param number valore della restrizione.
+     */
     private static void printCell(int startRow, int startCol, int number) {
 
         switch (number) {
@@ -121,6 +193,16 @@ public class SidePrinter {
         }
     }
 
+    /**
+     * Il metodo permette di stampare una singola cella nella posizione indicata.
+     * In base alla combinazione di colore/numero passata viene stampato un determinato tipo di cella.
+     *
+     * @param startRow riga su cui si trova l'angolo superiore sinistro della cella.
+     * @param startCol colonna su cui si trova l'angolo superiore sinistro della cella.
+     * @param color colore della cella.
+     * @param number valore della cella.
+     */
+
     private static void printSingleCell(int startRow, int startCol, Ansi.Color color, int number){
         //Controllo che tipo di cella stampare.
 
@@ -137,6 +219,14 @@ public class SidePrinter {
 
     //----------------------- Metodi di appoggio per stampare la carta ------------------------------------------------
 
+    /**
+     * Il metodo stampa tutte le celle e gli eventuali dadi posizionati su di esse.
+     *
+     * @param startRow riga su cui si trova l'angolo superiore sinistro della carta.
+     * @param startCol colonna su cui si trova l'angolo superiore sinistro della carta.
+     * @param cells lista che contiene le descrizioni delle celle che compongono la carta.
+     * @param dice lista che contiene le descrizioni dei dadi posizionati sulla carta.
+     */
     private static void printAllCells(int startRow, int startCol, List<CellInfo> cells, List<DieInfo> dice){
 
         //La prima riga e la prima colonna sono occupati dai numeri che indicano le coordinate.
@@ -178,6 +268,14 @@ public class SidePrinter {
         }
     }
 
+
+    /**
+     * Il metodo stampa tutte le celle della carta.
+     *
+     * @param startRow riga su cui si trova l'angolo superiore sinistro della carta.
+     * @param startCol colonna su cui si trova l'angolo superiore sinistro della carta.
+     * @param cells lista che contiene le descrizioni delle celle che compongono la carta.
+     */
     private static void printAllCells(int startRow, int startCol, List<CellInfo> cells){
 
         //La prima riga e la prima colonna sono occupati dai numeri che indicano le coordinate.
@@ -187,7 +285,6 @@ public class SidePrinter {
         int col = startCol + 2;
 
         int counter = 0; //contatore delle celle/dadi stampati su una riga.
-        int cellNumber = 0;
 
         //Ciclo che stampa le caselle/dadi.
 
@@ -198,7 +295,6 @@ public class SidePrinter {
 
 
             counter++;
-            cellNumber++;
 
             if(counter < 5){ //Controllo se la riga è ancora da completare.
                 col += NEXT_COL; //Mi sposto lateralmente.
@@ -215,7 +311,12 @@ public class SidePrinter {
     }
 
 
-
+    /**
+     * Il metodo stampa tutti i margini verticali della carta.
+     *
+     * @param startRow riga su cui si trova l'angolo superiore sinistro della carta.
+     * @param startCol colonna su cui si trova l'angolo superiore sinistro della carta.
+     */
     private static void printAllVerticalMargin(int startRow, int startCol){
 
         //Ciclo che stampa i margini verticali.
@@ -230,6 +331,12 @@ public class SidePrinter {
 
     }
 
+    /**
+     * Il metodo stampa tutti i margini orizzontali della carta.
+     *
+     * @param startRow riga su cui si trova l'angolo superiore sinistro della carta.
+     * @param startCol colonna su cui si trova l'angolo superiore sinistro della carta.
+     */
     private static void printAllOrizzontalMargin(int startRow, int startCol){
 
         //Cliclo che stampa i margini orizzontali.
@@ -243,6 +350,12 @@ public class SidePrinter {
         }
     }
 
+    /**
+     * Il metodo stampa le coordinate di riga e colonna che aiutano il giocatore nell'individuazione di una cella.
+     *
+     * @param startRow riga su cui si trova l'angolo superiore sinistro della carta.
+     * @param startCol colonna su cui si trova l'angolo superiore sinistro della carta.
+     */
     private static void printCoordinates(int startRow, int startCol){
 
         int row = startRow;
@@ -272,6 +385,15 @@ public class SidePrinter {
 
     //---------------------- Metodo di stampa -------------------------------------------------------------------------
 
+    /**
+     * Il metodo permette di stampare, nella posizione indicata, una carta finestra e i dadi posizionati su di essa.
+     *
+     * @param startRow riga su cui si trova l'angolo superiore sinistro della carta.
+     * @param startCol colonna su cui si trova l'angolo superiore sinistro della carta.
+     * @param card carta da stamapre.
+     * @param dice lista che contiene le descrizioni dei dadi posizionati sulla carta.
+     */
+
     public static void printSide(int startRow, int startCol, SideCard card, List<DieInfo> dice) {
 
         if (areValidCoordinates(startRow, startCol) && dice.size() == NUMBER_OF_CELLS) {
@@ -293,6 +415,13 @@ public class SidePrinter {
             throw new InvalidParameterException();
     }
 
+    /**
+     * Il metodo permette di stampare, nella posizione indicata, una carta finestra senza gli eventuali dadi posizionati su di essa.
+     *
+     * @param startRow riga su cui si trova l'angolo superiore sinistro della carta.
+     * @param startCol colonna su cui si trova l'angolo superiore sinistro della carta.
+     * @param card carta da stampare.
+     */
     public static void printSide(int startRow, int startCol, SideCard card) {
 
         if (areValidCoordinates(startRow, startCol)) {
