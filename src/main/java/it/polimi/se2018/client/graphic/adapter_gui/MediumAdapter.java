@@ -177,7 +177,7 @@ public class MediumAdapter implements AdapterResolution {
     public List<Double> getSidePlayerUtensilSize() {
 
         //Posizone Grid della Side visualizzata nelle schermate dedicate alle carte Utensile (Right, Top, Left, Bottom)
-        return new ArrayList<>(Arrays.asList(0d, 0d, 10d, 21d));
+        return new ArrayList<>(Arrays.asList(0d, 0d, 5d, 21d));
     }
 
     @Override
