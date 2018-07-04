@@ -11,6 +11,13 @@ import java.security.InvalidParameterException;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * La classe gestisce la stampa di una schermata dove vengono mostrate la carta finestra, la riserva
+ * e la carta utensile che necessita di questi due elementi.
+ *
+ * @author Marazzi Paolo
+ */
+
 public class SideReserverScene {
 
     private static final String TEXT_HEAD = "[] ";
@@ -33,6 +40,11 @@ public class SideReserverScene {
 
     private String text;
 
+    /**
+     * Costruttore della classe.
+     *
+     * @param utensilCard utensile da mostrare a schermo.
+     */
     public SideReserverScene(UtensilCard utensilCard){
         if(utensilCard != null)
         {
@@ -42,10 +54,17 @@ public class SideReserverScene {
             throw new InvalidParameterException();
     }
 
+    /**
+     * Il metodo stampa un messaggio di testo.
+     */
     private void printText(){
         System.out.print(ansi().cursor(TEXT_ROW,TEXT_COL).a(TEXT_HEAD + text + TEXT_TAIL));
     }
 
+    /**
+     * Il metodo salva il messaggio di testo che deve essere mostrato a schermo.
+     * @param text messaggio di testo.
+     */
     public void setText(String text){
         if(text != null)
             this.text = text;
@@ -53,6 +72,9 @@ public class SideReserverScene {
             throw new InvalidParameterException();
     }
 
+    /**
+     * Il metodo stampa a schermo la scena.
+     */
     public void printScene(){
         System.out.print(ansi().eraseScreen());
 

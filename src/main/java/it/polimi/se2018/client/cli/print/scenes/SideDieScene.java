@@ -12,6 +12,12 @@ import java.security.InvalidParameterException;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * La classe gestisce la stampa di una schermata dove vengono mostrate la carta finestra, un dado
+ * e la carta utensile che necessita di questi due elementi.
+ *
+ * @author Marazzi Paolo
+ */
 public class SideDieScene {
 
     private static final String TEXT_HEAD = "[] ";
@@ -41,6 +47,12 @@ public class SideDieScene {
 
     private String text;
 
+    /**
+     * Costruttore della classe.
+     *
+     * @param utensilCard carta da mostrare a schermo.
+     * @param dieInfo dado da mostrare a schermo.
+     */
     public SideDieScene(UtensilCard utensilCard, DieInfo dieInfo){
         if(utensilCard != null)
         {
@@ -52,12 +64,19 @@ public class SideDieScene {
             throw new InvalidParameterException();
     }
 
+    /**
+     * Il metodo stampa un messaggio di testo.
+     */
     private void printText(){
 
         System.out.print(ansi().cursor(TITLE_ROW,TITLE_COL).bold().a(TITLE).boldOff());
         System.out.print(ansi().cursor(TEXT_ROW,TEXT_COL).a(TEXT_HEAD + text + TEXT_TAIL));
     }
 
+    /**
+     * Il metodo salva il messaggio di testo che deve essere mostrato a schermo.
+     * @param text messaggio di testo.
+     */
     public void setText(String text){
         if(text != null)
             this.text = text;
@@ -65,7 +84,9 @@ public class SideDieScene {
             throw new InvalidParameterException();
     }
 
-
+    /**
+     * Il metodo stampa a schermo la scena.
+     */
     public void printScene(){
         System.out.print(ansi().eraseScreen());
 

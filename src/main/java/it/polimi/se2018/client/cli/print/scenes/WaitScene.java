@@ -5,10 +5,13 @@ import java.util.ArrayList;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
-public class WaitScene {
+/**
+ * La classe gestisce la stampa di una schermata che invita l'utente ad attendere il verificarsi di un determinato evento.
+ *
+ * @author Marazzi Paolo
+ */
 
-    private static final int HIGH = 10;
-    private static final int LEN =  40;
+public class WaitScene {
 
     private static final int MESSAGES_ROW =  5;
     private static final int MESSAGES_COL =  5;
@@ -20,6 +23,11 @@ public class WaitScene {
     private ArrayList<String> messages;
     private String text;
 
+    /**
+     * Costruttore della classe.
+     *
+     * @param message messaggio da mostrare a schermo per dare istruzioni all'utente.
+     */
     public WaitScene(String message){
         if(message != null) {
             this.text = message;
@@ -29,9 +37,9 @@ public class WaitScene {
             throw new InvalidParameterException();
     }
 
-    //TODO Sarebbe carino aggiungere la stampa del logo di sagrada.
-
-
+    /**
+     * Il metodo stampa tutti i messaggi contenuti nella lista dei messaggi.
+     */
     private void printMessages(){
 
         int row = MESSAGES_ROW +1;
@@ -43,6 +51,9 @@ public class WaitScene {
         }
     }
 
+    /**
+     * Il metodo stampa a schermo la scena.
+     */
     public void printScene(){
         System.out.print(ansi().eraseScreen());
 
@@ -51,6 +62,12 @@ public class WaitScene {
         printMessages();
     }
 
+    /**
+     * Il metodo permette di aggiungere un messaggio alla lista dei messaggi.
+     * I messaggi contenuti nella lista vengono stampati a schermo ogni volta che si richiama la funzione 'printScene'.
+     *
+     * @param message messaggio da aggiungere alla lista.
+     */
     public void addMessage(String message){
 
         if(messages.size() == 10){

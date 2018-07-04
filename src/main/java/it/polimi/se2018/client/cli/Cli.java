@@ -653,7 +653,7 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
                 if(ClientMessageParser.isWinnerMessage(message))
                     manageWinnerMessage(message);
 
-            } catch (IOException | ClassNotFoundException e) { //TODO aggiungere nullPointer alle eccezioni gestiste!
+            } catch (IOException | NullPointerException | ClassNotFoundException e) {
                 this.fatalError = true;
                 state = new FatalErrorState(e);
             }
