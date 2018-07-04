@@ -4,6 +4,7 @@ import it.polimi.se2018.client.cli.Cli;
 import it.polimi.se2018.client.connection_handler.ConnectionHandlerRMI;
 import it.polimi.se2018.client.connection_handler.ConnectionHandlerSocket;
 import it.polimi.se2018.client.graphic.InitWindow;
+import it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator;
 import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 import javafx.application.Platform;
@@ -12,7 +13,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -24,20 +24,46 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.rmi.NotBoundException;
 
-import static it.polimi.se2018.client.graphic.Utility.*;
+import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
+
+
+/**
+ * Classe SceneNickName che gestisce la creazione della scena relativa alla scelta del NickName da parte dell'utente. Sulla campo immissione somo stati aggiunti dei controlli
+ * prettamente collegati all'inserimento, quindi niente a che vedere con il controllo eseguito dal server sulla validità del NickName scelto (ovvero se sia disponibile o
+ * esista già un altro giocatore con lo stesso NickName).
+ * Il controllo eseguito consiste nell'obbligare il giocatore ad inserire un NickName che conta almeno un carattere (ovvero non può connettersi lasciando vuoto il
+ * campo immissione)
+ *
+ * @author Simone Lanzillotta
+ */
+
+
 
 public class SceneNickName {
 
-    private static final String EXTENSION = ".png";
-    private static final String SUBDIRECTORY = "";
-    private Scene sceneNickName;
+    private static final String ERROR = "Errore";
+    private Scene sceneNickname;
+
+
+    /**
+     * Costruttore della classa utilizzato direttamente per la configurazione della scena SceneNickName.
+     *
+     * @param window Riferimento alla Primary Stage dell'interfaccia Utente
+     * @param connectionType Informazioni riguardo la preferenza di connessione scelta dall'Utente
+     * @param interfaceType Informazioni riguardo la preferenza di interfaccia scelta dall'Utente
+     * @param init Riferimento all'oggetto InitWindow rappresentante dell'interfaccia Utente
+     * @param port Informazioni riguardo la preferenza di porta su cui connettersi scelta dall'Utente
+     * @param iP Informazioni riguardo l'indirizzo IP di connessione scelta dall'Utente
+     * @param sceneLoading Riferimento alla scena SceneLoading per l'effetto Switcher
+     * @param sceneConnection Riferimento alla scena SceneConnection per l'effetto Switcher
+     */
 
     public SceneNickName(Stage window, String connectionType, String interfaceType, InitWindow init, int port, String iP, Scene sceneLoading, Scene sceneConnection){
 
-        //Label per accogliere il titolo della finestra
+        //Configurazione intestazione per il campo Inserimento del Nickname
         Label labelTitle = setFontStyle(new Label("Scegli il tuo nickName"),25);
 
-        //Label per l'inserimento del nickname
+        //Configurazione campo Immissione del Nickname
         VBox layout = new VBox(10);
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
@@ -53,27 +79,18 @@ public class SceneNickName {
         grid.setAlignment(Pos.CENTER);
         grid.getChildren().add(textNick);
 
-        //Label button continue/back e check validation
-        HBox labelButton = new HBox(20);
-        labelButton.setAlignment(Pos.CENTER);
-
-        ImageView backButton = shadowEffect(configureImageView(SUBDIRECTORY,"button-back",EXTENSION,138,71));
-        ImageView continueButton = shadowEffect(configureImageView(SUBDIRECTORY,"button-continue",EXTENSION,168,71));
-
-        labelButton.getChildren().addAll(continueButton, backButton);
+        //Configurazione griglia bottoni continue/back e check validation
+        ButtonLabelCreator buttonLabelCreator = new ButtonLabelCreator(168,71,138,71);
+        HBox labelButton = buttonLabelCreator.setInteractLabel(20);
 
         layout.getChildren().addAll(labelTitle, grid, labelButton);
         layout.setAlignment(Pos.CENTER);
 
-        //Bach to connection
-        backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
-            Platform.runLater(() -> {
-                window.setScene(sceneConnection);
-            });
-        });
+        //Configurazione dell'effetto "Switch Back" per ritornare alla schermata di connessione
+        buttonLabelCreator.getBackButton().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> Platform.runLater(() -> window.setScene(sceneConnection)));
 
-        //Validation of input
-        continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+        //fase di Controllo per la valiodità dell'inserimento del NickName
+        buttonLabelCreator.getContinueButton().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             Platform.runLater(() -> {
                 if(isValidInput(textNick.getText(), connectionType, interfaceType, init, port, iP)) {
                     if(interfaceType.equals("Gui")) window.setScene(sceneLoading);
@@ -85,20 +102,32 @@ public class SceneNickName {
             });
         });
 
+
         //Formattazione finale della Finestra
         layout.setBackground(configureBackground("back-init-close", 550,480));
-
-        sceneNickName = new Scene(layout,550,480);
+        sceneNickname = new Scene(layout,550,480);
 }
 
+
+
+    /**
+     * Metodo utilizzato per controllare la validità di inserimento da parte dell'Utente del NickName scelto. obbliga quindi l'Utente a inserire un Nick almeno di un
+     * carattere (non convalida la connessione fino a quando il campo Inserimento rimane vuoto).
+     *
+     * @param input NickName inserito dall'utente
+     * @param connectionType Informazioni riguardo la preferenza di connessione scelta dall'Utente
+     * @param interfaceType Informazioni riguardo la preferenza di interfaccia scelta dall'Utente
+     * @param init Riferimento all'oggetto InitWindow rappresentante dell'interfaccia Utente
+     * @param port Informazioni riguardo la preferenza di porta su cui connettersi scelta dall'Utente
+     * @param iP Informazioni riguardo l'indirizzo IP di connessione scelta dall'Utente
+     * @return Booleano del valore TRUE se l'inserimento è valido, altrimenti FALSE
+     */
 
     private static boolean isValidInput(String input, String connectionType, String interfaceType, InitWindow init, int port, String iP) {
 
         boolean value = false;
-        if (input.trim().isEmpty()) {
-            AlertValidation.display("Sagrada", "Attenzione! Nickname non valido.");
-        } else {
-
+        if (input.trim().isEmpty()) AlertValidation.display(ERROR, "Attenzione! Nickname non valido.");
+        else {
             try {
                 if (connectionType.equals("Socket")) {
 
@@ -117,18 +146,26 @@ public class SceneNickName {
                 }
                 value = true;
             } catch (InvalidNicknameException e) {
-                AlertValidation.display("Sagrada", "Attenzione! Nickname già utilizzato!.");
+                AlertValidation.display(ERROR, "Attenzione! Nickname già utilizzato!.");
             } catch (GameStartedException e) {
-                AlertValidation.display("Sagrada", "Attenzione! Partita già in corso!");
+                AlertValidation.display(ERROR, "Attenzione! Partita già in corso!");
             } catch (NotBoundException | IOException e) {
-                AlertValidation.display("Sagrada", "Attenzione! Errore di rete, riprova!");
+                AlertValidation.display(ERROR, "Attenzione! Errore di rete, riprova!");
             }
         }
 
         return value;
     }
 
+
+
+    /**
+     * Metodo Getter per restituire la scena configurata, utiilizzato per l'effetto Switcher
+     *
+     * @return Riferimento alla scena sceneNickname
+     */
+
     public Scene getSceneNickName() {
-        return sceneNickName;
+        return sceneNickname;
     }
 }

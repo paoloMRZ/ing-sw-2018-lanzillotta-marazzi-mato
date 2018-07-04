@@ -11,6 +11,11 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * La classe implementa lo stato che gestisce la gestione della selezione della carta di gioco da parte dell'utente.
+ *
+ *@author Marazzi Paolo
+ */
 public class ChoseSideState implements StateInterface {
 
     //La segunte stringa viene restituita quando la gestione di una richiesta non genera messaggi da mandare al server.
@@ -25,6 +30,12 @@ public class ChoseSideState implements StateInterface {
     private ChoseSideScene choseSideScene;
     private String myNickanme;
 
+    /**
+     * Costruttore della classe.
+     *
+     * @param myNickname nickname del giocatore.
+     * @param cards carte tra cui il giocatore può scegliere.
+     */
     public ChoseSideState(String myNickname, List<SideCard> cards){
 
         if(myNickname != null && cards.size() == 4){
@@ -42,6 +53,11 @@ public class ChoseSideState implements StateInterface {
             throw new InvalidParameterException();
     }
 
+    /**
+     * Il metodo gestisce l'input immesso dal giocatore per selezionare la carta con cui giocare.
+     * @param request input immesso dal giocatore.
+     * @return messaggio da inviare al server per notificarlo della scelta fatta.
+     */
     @Override
     public String handleInput(int request) { //Gestione delle richieste da stdin.
 
@@ -60,6 +76,11 @@ public class ChoseSideState implements StateInterface {
         }
     }
 
+    /**
+     * Il metodo gestisce solo eventuali messaggi che indicano connessioni/disconnessioni di altri giocatori.
+     * Ogni altro tipo di messaggio viene ignorato.
+     * @param request messaggio inviato dal server.
+     */
     @Override
     public void handleNetwork(String request) { //In questo stato gestisco solo i messaggi di disconnessione degli altri giocatori.
 

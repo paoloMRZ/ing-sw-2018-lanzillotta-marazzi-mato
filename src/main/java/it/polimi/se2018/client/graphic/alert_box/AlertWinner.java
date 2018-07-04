@@ -1,6 +1,6 @@
 package it.polimi.se2018.client.graphic.alert_box;
 
-import it.polimi.se2018.client.graphic.Utility;
+import it.polimi.se2018.client.graphic.graphic_element.Utility;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,12 +16,10 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static it.polimi.se2018.client.graphic.Utility.*;
+import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 
 
 /**
@@ -57,7 +55,7 @@ public class AlertWinner {
         //Configurazione Header
         Label headerTitle = Utility.setFontStyle(new Label("Complimenti,"), 40);
         headerTitle.setTextAlignment(TextAlignment.CENTER);
-        Label headerName = Utility.setFontStyle(new Label("Simone!"), 50);
+        Label headerName = Utility.setFontStyle(new Label(namePlayer.get(namePlayer.size()-1)), 50);
         headerName.setTextAlignment(TextAlignment.CENTER);
         Label headerInfo = Utility.setFontStyle(new Label("Per la tua coloratissima vittoria  al gioco Sagrada!"), 32);
         headerName.setTextAlignment(TextAlignment.CENTER);

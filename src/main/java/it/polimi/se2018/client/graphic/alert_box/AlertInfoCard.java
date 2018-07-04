@@ -3,6 +3,7 @@ package it.polimi.se2018.client.graphic.alert_box;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -16,12 +17,18 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import static it.polimi.se2018.client.graphic.Utility.*;
+import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+
+
+/**
+ * Classe AlertInfoCard utilizzata per configurare la finestra dedicata alla consultazione delle carte utensili e Obbiettivo Pubblico disponibili per la partita.
+ * La finestra viene mostrata non appena si clicca su qualsiasi carta all'interno dell'elemento grafico TabCardLabel.
+ *
+ * @author Simone Lanzillotta
+ */
+
 
 
 public class AlertInfoCard {
@@ -31,31 +38,36 @@ public class AlertInfoCard {
     private static ArrayList<String> nameCard = new ArrayList<>();
     private static String infoData;
 
+    private AlertInfoCard(){}
+
+
+
+    /**
+     * Metodo utilizzato per richiamare e configurare la schermata di consultazione per le carte Pubbliche.
+     *
+     * @param cardSelection Lista delle carte disponibili per il turno (Utensili o Obbiettivo Pubbliche)
+     * @param path Percorso per l'importazione delle risorse
+     */
+
     public static void display(List<String> cardSelection, String path){
 
+        //Configurazione della finestra
         Stage window = new Stage();
         window.setWidth(650);
         window.setHeight(770);
         window.initModality(Modality.APPLICATION_MODAL);
+        window.setOnCloseRequest(Event::consume);
         ImageView back = configureImageView(path, "retro", EXTENSION,700,850);
         back.setOpacity(0.2);
+        StackPane root = new StackPane(back);
 
+        //Configuro la collezione riguardo nome della carta Formattato e immagine associata
         ArrayList<ImageView> imageCard = new ArrayList<>();
         ArrayList<Label> labelName = new ArrayList<>();
 
         for (String card: cardSelection) {
             imageCard.add(configureImageView(path, card, EXTENSION,300,450));
-            ArrayList<String> stretchSplit;
-            if(card.indexOf('-')!= -1) stretchSplit = new ArrayList<>(Arrays.asList(card.split("-")));
-            else {
-                stretchSplit = new ArrayList<>(Collections.singletonList(card));
-            }
-
-            String name = stretchSplit.get(0).substring(0,1).toUpperCase().concat(stretchSplit.get(0).substring(1));
-            stretchSplit.remove(0);
-            for (String subWord: stretchSplit) {
-                name = name.concat(" ".concat(subWord.substring(0,1).toUpperCase().concat(subWord.substring(1))));
-            }
+            String name = setUpperWord(card);
             Label item = setFontStyle(new Label(name), 40);
             item.setAlignment(Pos.CENTER);
             nameCard.add(name);
@@ -63,26 +75,20 @@ public class AlertInfoCard {
         }
 
 
+        //Inizializzo le schermate
         HBox view1 = new HBox(30);
         HBox view2 = new HBox(30);
         HBox view3 = new HBox(30);
 
+        //Configurazione del contenuto delle schermate
+        VBox labelView1 = setLabelView(labelName.get(0),view1,window);
+        VBox labelView2 = setLabelView(labelName.get(1),view2,window);
+        VBox labelView3 = setLabelView(labelName.get(2),view3,window);
 
-        VBox labelView1 = new VBox(25);
-        labelView1.setAlignment(Pos.CENTER);
-        labelView1.getChildren().addAll(labelName.get(0),view1,setActionOnBack(window,180,100));
-        VBox labelView2 = new VBox(25);
-        labelView2.setAlignment(Pos.CENTER);
-        labelView2.getChildren().addAll(labelName.get(1),view2,setActionOnBack(window,180,100));
-        VBox labelView3 = new VBox(25);
-        labelView3.setAlignment(Pos.CENTER);
-        labelView3.getChildren().addAll(labelName.get(2),view3,setActionOnBack(window,180,100));
-        StackPane root = new StackPane(back);
-
+        //Inizializzo la root Window con una delel schermate create
         root.getChildren().add(labelView1);
 
-
-
+        //Configurazione delle schermate
         view1.getChildren().addAll(setOpacity(setRotation(180d),0.6),imageCard.get(0),shadowEffect(setActionOnImage(labelView2,labelView1,root,0d,false,null)));
         view1.setAlignment(Pos.CENTER);
 
@@ -98,6 +104,40 @@ public class AlertInfoCard {
 
     }
 
+
+
+    /**
+     * Metodo di supporto per la configurazione del contenuto delle schermate che riportano le informazioni sulle carte Pubbliche
+     *
+     * @param label Intestazione del contenuto della finestra
+     * @param view Elemento grafico di contenimento
+     * @param window Riferimento alla PrimaryStage della schermata
+     * @return Elemento grafico configurato per essere inserito nella schermata
+     */
+
+    private static VBox setLabelView(Label label, HBox view, Stage window){
+        VBox labelView = new VBox(25);
+        labelView.setAlignment(Pos.CENTER);
+        labelView.getChildren().addAll(label,view,setActionOnBack(window,180,100));
+        return labelView;
+    }
+
+
+
+    /**
+     * Metodo utilizzato per configurare l'effetto di transazione tra le varie schermate dell'infoAlert. La schermata infatti è composta da un'immagine (la carta stessa)
+     * e da un pulsante posto su ambo i lati dell'immagine: cliccando sul bottone si attiva la transazione che porta nella nuova schermata, rendendo l'effetto scorrimento
+     * desiderato.
+     * Il metodo prevede lo stesso utilizzo anche nel caso di attivazione della carta Utensile 1, per cui sono stati opportunatamente inseriti due parametri di gestione.
+     *
+     * @param switchWindow Riferimento alla schermata di destinazione della transazione
+     * @param actualWindow Riferimento all'attuale schermata
+     * @param root Riferimento al Parent root che ospita gli elementi dinamici della schermata
+     * @param rotate Valore di rotazione per l'immagine utilizzata come bottone
+     * @param accessUtensil Booleano dal valore TRUE se il metodo viene acceduto per l'attivazione della carta Utensile 1, altrimenti FALSE
+     * @param dieUtensil Riferimento all'immagine del dado visualizzato nella schermata
+     * @return Riferimento all'elemento grafico Button
+     */
 
     public static ImageView setActionOnImage(Node switchWindow, Node actualWindow, StackPane root, Double rotate, Boolean accessUtensil, ImageView dieUtensil){
         ImageView button = new ImageView(new Image("iconPack/icon-next.png",80,80,false,true));
@@ -120,10 +160,29 @@ public class AlertInfoCard {
         return button;
     }
 
+
+
+    /**
+     * Metodo utilizzato per applicare l'effetto Opacity su una determinata immagine.
+     *
+     * @param node Riferimento all'elemento grafico contenente l'immagine a cui applicare l'effetto
+     * @param opacity Valore di intensità dell'effetto
+     * @return Riferimento all'elemento grafico contenente l'immagine modificata
+     */
+
     public static ImageView setOpacity(ImageView node, Double opacity){
         node.setOpacity(opacity);
         return node;
     }
+
+
+
+    /**
+     * Metodo utilizzato per applicare una rotazione su una determinata immagine.
+     *
+     * @param grade Valore di rotazione
+     * @return Riferimento all'elemento grafico contenente l'immagine modificata
+     */
 
     public static ImageView setRotation(Double grade){
         ImageView button = new ImageView(new Image("iconPack/icon-next.png",80,80,false,true));
@@ -131,12 +190,28 @@ public class AlertInfoCard {
         return button;
     }
 
+
+    /**
+     * Metodo di configuraione dellázione associata al BackButton
+     *
+     * @param window Riferimento alal finestra a cui è destinata l'azione del BackButton
+     * @param requestWidth Larghezza del bottone "Back"
+     * @param requestHeight Altezza del bottone "Back"
+     * @return Immagine relativa al BackButton opportunamente configurato
+     */
+
     private static ImageView setActionOnBack(Stage window,int requestWidth, int requestHeight){
         ImageView backButton = shadowEffect(configureImageView("","button-back", EXTENSION,requestWidth,requestHeight));
         backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> window.close());
         return backButton;
     }
 
+
+    /**
+     * Metodo utilizzato per prelevare l'informazione del dado scelto a seguito dell'utilizzo della carta Utensile 1
+     *
+     * @return Riferimento all'attributo infoData
+     */
 
     public static String getInfoData() {
         return infoData;

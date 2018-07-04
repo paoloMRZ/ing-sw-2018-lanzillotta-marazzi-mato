@@ -16,7 +16,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
 
 
 import java.io.IOException;
@@ -25,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static it.polimi.se2018.client.graphic.Utility.*;
+import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 
 
 /**
@@ -46,12 +45,6 @@ public class ActionUtensils {
 
     private StackPane window = new StackPane();
     private ReserveLabel reserveLabel;
-
-
-
-
-
-
 
 
 
@@ -136,26 +129,5 @@ public class ActionUtensils {
         return window;
     }
 
-
-
-
-
-
-    /**
-     * Metodo di supporto per formattare il nome della carta Utensile selezionata per l'inseriemnto nell'header della finestra
-     *
-     * @param pathCard Percorso della carta Utensile
-     * @return Stringa formattata per l'header della finestra
-     */
-
-    private String setUpperWord(String pathCard){
-        String[] stretchSplit = pathCard.split("-");
-        String name = stretchSplit[0].substring(0, 1).toUpperCase().concat(stretchSplit[0].substring(1));
-        for (int i = 1; i < stretchSplit.length; i++) {
-            name = name.concat(" ".concat(stretchSplit[i].substring(0, 1).toUpperCase().concat(stretchSplit[i].substring(1))));
-        }
-
-        return name;
-    }
 
 }

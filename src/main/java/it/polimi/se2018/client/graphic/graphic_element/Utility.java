@@ -1,4 +1,4 @@
-package it.polimi.se2018.client.graphic;
+package it.polimi.se2018.client.graphic.graphic_element;
 
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -9,6 +9,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
 import java.util.HashMap;
@@ -30,6 +32,8 @@ public class Utility {
     private static DropShadow shadow = new DropShadow();
     private static final String FONT = "Matura MT Script Capitals";
 
+
+    private Utility(){}
 
     /**
      * Metodo che applica l'effetto shadow al nodo in ingresso
@@ -167,4 +171,42 @@ public class Utility {
 
         return  dictionary;
     }
+
+
+    /**
+     * Metodo utilizzato per impostare la cornice nelle finestre Alert aperte durante la sessione di gioco
+     *
+     * @param stackValidation Riferimento al Parent della finestra
+     * @return Elemento Grafico da porre come cornice della finestra
+     */
+
+    public static Rectangle setFrameWindow(StackPane stackValidation){
+        Rectangle rect = new Rectangle();
+        rect.setFill(javafx.scene.paint.Color.TRANSPARENT);
+        rect.setStroke(Color.BLACK);
+        rect.setStrokeWidth(10d);
+        rect.widthProperty().bind(stackValidation.widthProperty());
+        rect.heightProperty().bind(stackValidation.heightProperty());
+        return rect;
+    }
+
+
+
+    /**
+     * Metodo di supporto per formattare il nome della carta Utensile selezionata per l'inserimento nell'header della finestra
+     *
+     * @param pathCard Percorso della carta Utensile
+     * @return Stringa formattata per l'header della finestra
+     */
+
+    public static String setUpperWord(String pathCard){
+        String[] stretchSplit = pathCard.split("-");
+        String name = stretchSplit[0].substring(0, 1).toUpperCase().concat(stretchSplit[0].substring(1));
+        for (int i = 1; i < stretchSplit.length; i++) {
+            name = name.concat(" ".concat(stretchSplit[i].substring(0, 1).toUpperCase().concat(stretchSplit[i].substring(1))));
+        }
+
+        return name;
+    }
+
 }

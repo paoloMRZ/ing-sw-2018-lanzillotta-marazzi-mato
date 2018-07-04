@@ -24,7 +24,7 @@ import javafx.scene.shape.Rectangle;
 import java.util.*;
 
 import static it.polimi.se2018.client.graphic.RoundLabel.*;
-import static it.polimi.se2018.client.graphic.Utility.*;
+import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 import static it.polimi.se2018.client.graphic.alert_box.AlertInfoCard.*;
 
 public class SelectorContent {
@@ -187,14 +187,15 @@ public class SelectorContent {
         switch (cardName) {
             case DILUENTEPERPASTASALDA:
 
-                connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Collections.singletonList(dieChoose))));
+                if((toolSide.getPosX()!=null) && (toolSide.getPosY()!=null)) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard) + "bis", new ArrayList<>(Arrays.asList("1",dieChoose,toolSide.getPosX(),toolSide.getPosY()))));
+                else connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard)+ "bis", new ArrayList<>(Arrays.asList("0",dieChoose,toolSide.getPosX(),toolSide.getPosY()))));
                 break;
 
 
             case PENNELLOPERPASTASALDA:
 
-                if(!posX.getText().trim().isEmpty() && !posY.getText().trim().isEmpty()) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList("1",posX.getText(),posY.getText()))));
-                else connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList("0",posX.getText(),posY.getText()))));
+                if(!posX.getText().trim().isEmpty() && !posY.getText().trim().isEmpty()) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard)+ "bis", new ArrayList<>(Arrays.asList("0",posX.getText(),posY.getText()))));
+                else connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard)+ "bis", new ArrayList<>(Arrays.asList("1",posX.getText(),posY.getText()))));
                 break;
 
 
@@ -343,11 +344,9 @@ public class SelectorContent {
 
 
             case DILUENTEPERPASTASALDA:
-                node = new VBox(25);
+                node = new VBox(20);
                 node.setAlignment(Pos.TOP_CENTER);
                 String lowerCase = bisContent.toLowerCase(Locale.ENGLISH);
-                ImageView dieExtractItem = configureImageView("/diePack/die-",lowerCase + String.valueOf(1),".bmp" ,70, 70);
-                node.getChildren().addAll(setFontStyle(new Label("Hai estratto il dado:"), 25), dieExtractItem);
 
                 VBox selectionLabel = new VBox(15);
                 HBox optionDie = new HBox(10);
@@ -376,9 +375,17 @@ public class SelectorContent {
                     optionDie.getChildren().add(button);
                 }
 
-                selectionLabel.getChildren().addAll(setFontStyle(new Label("Scegli il valore:"), 25), optionDie);
+                selectionLabel.getChildren().addAll(setFontStyle(new Label("Scegli il valore del dado estratto e posizionalo:"), 23), optionDie);
                 selectionLabel.setAlignment(Pos.CENTER);
-                node.getChildren().add(selectionLabel);
+
+                VBox coordinateLabel = new VBox(15);
+                coordinateLabel.setAlignment(Pos.CENTER);
+                newXFirstDie.setPrefSize(100,20);
+                newYFirstDie.setPrefSize(100,20);
+                coordinateLabel.getChildren().addAll(newXFirstDie,newYFirstDie);
+
+
+                node.getChildren().addAll(setFontStyle(new Label("La tua carta Side:"), 18),toolSide.getAnchorPane(),selectionLabel,coordinateLabel);
                 break;
 
         }

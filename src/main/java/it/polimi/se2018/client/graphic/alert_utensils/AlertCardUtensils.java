@@ -1,21 +1,18 @@
 package it.polimi.se2018.client.graphic.alert_utensils;
 
 import it.polimi.se2018.client.connection_handler.ConnectionHandler;
+import it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator;
 import it.polimi.se2018.client.message.ClientMessageCreator;
 import it.polimi.se2018.client.graphic.CardCreatorLabel;
 import it.polimi.se2018.client.graphic.ReserveLabel;
 import it.polimi.se2018.client.graphic.SideCardLabel;
 import it.polimi.se2018.client.graphic.adapter_gui.AdapterResolution;
 import javafx.application.Platform;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -28,11 +25,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import static it.polimi.se2018.client.graphic.Utility.*;
+import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 import static java.lang.Integer.parseInt;
 
 
@@ -122,13 +118,10 @@ public class AlertCardUtensils{
 
 
         //Layout Button
-        ImageView backButton = shadowEffect(configureImageView(SUBDIRECTORY,"button-back",EXTENSION,160,80));
-        ImageView continueButton = shadowEffect(configureImageView(SUBDIRECTORY,"button-continue",EXTENSION,180,80));
-        backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> window.close());
-        continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> connectionHandler.sendToServer(ClientMessageCreator.getActivateUtensilMessage(connectionHandler.getNickname(), selection)));
-        HBox layoutButton = new HBox(25);
-        layoutButton.getChildren().addAll(backButton, continueButton);
-        layoutButton.setAlignment(Pos.CENTER);
+        ButtonLabelCreator buttonLabelCreator = new ButtonLabelCreator(180,80,160,80);
+        buttonLabelCreator.getBackButton().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> window.close());
+        buttonLabelCreator.getContinueButton().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> connectionHandler.sendToServer(ClientMessageCreator.getActivateUtensilMessage(connectionHandler.getNickname(), selection)));
+        HBox layoutButton = buttonLabelCreator.setInteractLabel(25);
 
 
         //Layout card

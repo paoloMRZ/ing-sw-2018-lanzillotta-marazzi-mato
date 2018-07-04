@@ -7,7 +7,11 @@ import it.polimi.se2018.client.cli.print.scenes.GameScene;
 import it.polimi.se2018.client.cli.print.scenes.ShowRoundGridScene;
 import it.polimi.se2018.client.message.ClientMessageCreator;
 import it.polimi.se2018.client.message.ClientMessageParser;
-
+/**
+ * La clsee implemeta lo stato che gestisce gli input della rete e dell'utente nel turno di gioco di un avversario..
+ *
+ * @author Marazzi Paolo
+ */
 public class NotMyTurnState implements StateInterface {
 
     private static final String DEFAULT_MESSAGE = "NONE";
@@ -22,6 +26,10 @@ public class NotMyTurnState implements StateInterface {
 
     private GameScene gameScene;
 
+    /**
+     * Costruttore della classe
+     * Stampa della schermata.
+     */
     public NotMyTurnState (){
         this.game = Game.factoryGame(); //Prendo il riferimento del modello del gioco (Game) contenuto nel gestore degli stati.
 
@@ -32,36 +40,55 @@ public class NotMyTurnState implements StateInterface {
         this.gameScene.printScene();
     }
 
-
+    /**
+     * Il metodo mostra schermo le carte utensili.
+     */
     private void showUtensils(){
         gameScene.setShowUtensils();
         gameScene.setIsNotMyturnMenu();
         gameScene.printScene();
     }
 
+    /**
+     * Il metodo mostra schermo le carte obiettivo.
+     */
     private void showObjective(){
         gameScene.setShowObjective();
         gameScene.setIsNotMyturnMenu();
         gameScene.printScene();
     }
 
+    /**
+     * Il metodo mostra schermo le carte degli avversari.
+     */
     private void showEnemyCards(){
         EnemyCardScene enemyCardScene = new EnemyCardScene(game.getEnemyCards(), game.getEnemyNicknames(), game.getDiceOnEnemysCards());
         enemyCardScene.setNotMyTurnMenu();
         enemyCardScene.printScene();
     }
 
+    /**
+     * Il metodo mostra schermo la roundgrid completa.
+     */
     private void showRoundgrid(){
         ShowRoundGridScene showRoundGridScene = new ShowRoundGridScene(game.getRoundgrid());
         showRoundGridScene.setNotMyTurnMenu();
         showRoundGridScene.printScene();
     }
 
+    /**
+     * Il metodo mostra a schermo un messaggio di errore.
+     */
     private void showErrorMessage(){
         gameScene.addMessage(ERROR_MESSAGE);
         gameScene.printScene();
     }
 
+    /**
+     * Il metodo effettua un'azione specifica in base all'input immesso dall'utente.
+     * @param request input immesso dall'utente.
+     * @return eventuale messaggio da inviare al server.
+     */
     @Override
     public String handleInput(int request) {
         switch (request){
@@ -86,6 +113,11 @@ public class NotMyTurnState implements StateInterface {
         return DEFAULT_MESSAGE;
     }
 
+    /**
+     * Il metodo gestisce i messaggi provenienti dal server.
+     * Ad ogni messaggio corrisponde "una stampa" a schermo.
+     * @param request messaggio inviato dal server.
+     */
     @Override
     public void handleNetwork(String request) {
 

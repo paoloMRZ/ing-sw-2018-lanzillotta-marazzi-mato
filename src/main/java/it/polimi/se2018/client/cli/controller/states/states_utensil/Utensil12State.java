@@ -10,6 +10,12 @@ import it.polimi.se2018.client.message.ClientMessageCreator;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
+/**
+ * La classe implementa lo stato che gestisce l'utensile 12.
+ *
+ * @author Marazzi Paolo
+ */
+
 public class Utensil12State implements StateInterface {
 
     private static final String DEFAULT_MESSAGE = "NONE";
@@ -35,6 +41,11 @@ public class Utensil12State implements StateInterface {
 
     private ArrayList<String> paramList;
 
+    /**
+     * Costruttore della classe.
+     *
+     * @param cardIndex indice dell'utensile 12 nella collezione di carte utensili di questa partita.
+     */
     public Utensil12State(int cardIndex){
 
         if(cardIndex >= 0 && cardIndex <= 2){
@@ -55,31 +66,68 @@ public class Utensil12State implements StateInterface {
 
     }
 
-
+    /**
+     * Il metodo controlla se il valore identifica un round che sulla roungrid contiene dei dadi.
+     *
+     * @param round round da controllare.
+     * @return true se il round selezionato contiene dadi.
+     */
     private boolean isRound(int round){ return round >= 0 && round < game.getRoundgrid().size() && !(game.getRoundgrid().get(round)).isEmpty(); }
 
+    /**
+     * Il metodo controlla se l'indice identifica un dado sul round identificato dalla variabile (privata) omonima.
+     *
+     * @param index indice da controllare,
+     * @return true se l'indice identifica un dado.
+     */
     private boolean isRoundDie(int index){
         return index >= 0 && index < (game.getRoundgrid().get(round)).size();
     }
 
+    /**
+     * Il metodo verifica se il valore inserito è un indice di riga valido.
+     *
+     * @param row indice di riga da controllare
+     * @return true se l'indice è valido.
+     */
     private boolean isValidRow(int row){
         return row >= 0 && row <= 3;
     }
 
+    /**
+     * Il metodo verifica se il valore inserito è un indice di colonna valido.
+     *
+     * @param col indice di colonna da controllare
+     * @return true se l'indice è valido.
+     */
     private boolean isValidCol(int col){
         return col >= 0 && col <= 4;
     }
 
+    /**
+     * Il metodo aggiunge un valore alla lista di valori che andranno a comporre il campo "informazioni" del messaggio da mandare al server,
+     * poi passa allo step successivo.
+     * @param value valore da aggiungere.
+     */
     private void addValueAndNextStep(int value){
         paramList.add(String.valueOf(value));
         stepCounter++;
     }
 
+    /**
+     * Il metodo stampa a schemo il messaggio passato come parametro.
+     * @param text messaggio da stampare.
+     */
     private void printText(String text){
         sideRoundgridScene.setText(text);
         sideRoundgridScene.printScene();
     }
 
+    /**
+     * Il metodo gestisce l'input immesso dall'utente per selezionare un round sulla roundgrid.
+     *
+     * @param round indice di selezione del round.
+     */
     private void selectRound(int round){
 
         this.round = round-1;
@@ -91,6 +139,11 @@ public class Utensil12State implements StateInterface {
             sideRoundgridScene.printScene();
     }
 
+    /**
+     * Il metodo gestisce l'input immesso dall'utente per selezionare un dado all'interno di un rund.
+     *
+     * @param index indice di selezione del dado.
+     */
     private void selectDieFromRound(int index){
 
         if(isRoundDie(index)){
@@ -100,6 +153,10 @@ public class Utensil12State implements StateInterface {
             sideRoundgridScene.printScene();
     }
 
+    /**
+     * Il metodo gestisce l'input immesso  dall'utente per selezionare la riga.
+     * @param row riga immessa dall'utente.
+     */
     private void selectRow(int row, String nextText){
 
         if(isValidRow(row)){
@@ -109,6 +166,10 @@ public class Utensil12State implements StateInterface {
             sideRoundgridScene.printScene();
     }
 
+    /**
+     * Il metodo gestisce l'input immesso  dall'utente per selezionare la colonna.
+     * @param col riga immessa dall'utente.
+     */
     private void selectCol(int col, String nextText){
 
         if(isValidCol(col)){
@@ -118,6 +179,10 @@ public class Utensil12State implements StateInterface {
             sideRoundgridScene.printScene();
     }
 
+    /**
+     * Il metodo gestisce l'input immesso dal giocatore indicare se muovere o no un altro dado.
+     * @param request input immesso dal giocatore.
+     */
     private void anotherDie(int request){
 
         if(request == 0 || request == 1) { //Controllo se è stata inserita una risosta valida.
@@ -132,6 +197,13 @@ public class Utensil12State implements StateInterface {
             sideRoundgridScene.printScene();
     }
 
+    /**
+     * Il metodo gestisce l'input immesso dall'utente.
+     * In base allo "step" in cui ci si trova l'input assume un significato differente.
+     *
+     * @param request input immesso dal giocatore
+     * @return eventuale messaggio da mandare al server.
+     */
     @Override
     public String handleInput(int request) {
         switch (stepCounter){
@@ -170,6 +242,12 @@ public class Utensil12State implements StateInterface {
             return DEFAULT_MESSAGE;
     }
 
+    /**
+     * Metodo che gestisce i messaggi provenienti dalla rete.
+     * In questo stato vengono ignorati tutti i messaggi inviati dal server.
+     *
+     * @param request messaggio inviato dal server.
+     */
     @Override
     public void handleNetwork(String request) {
         //In questo stato non bisogna gestire nessun messaggio di rete.

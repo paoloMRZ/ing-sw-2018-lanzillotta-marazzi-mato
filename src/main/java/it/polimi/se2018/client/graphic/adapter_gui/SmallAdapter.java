@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static it.polimi.se2018.client.graphic.Utility.configureAnchorPane;
+import static it.polimi.se2018.client.graphic.graphic_element.Utility.configureAnchorPane;
 
 public class SmallAdapter implements  AdapterResolution {
 

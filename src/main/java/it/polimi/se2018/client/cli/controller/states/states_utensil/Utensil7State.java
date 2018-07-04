@@ -10,6 +10,12 @@ import it.polimi.se2018.client.message.ClientMessageCreator;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
+/**
+ * La classe implementa lo stato che gestisce l'utensile 7.
+ *
+ * @author Marazzi Paolo
+ */
+
 public class Utensil7State implements StateInterface {
 
     private static final String DEFAULT_MESSAGE = "NONE";
@@ -20,6 +26,12 @@ public class Utensil7State implements StateInterface {
     private UtensilCard utensilCard;
     private UtensilReserveScene utensilReserveScene;
 
+
+    /**
+     * Costruttore della classe.
+     *
+     * @param cardIndex indice dell'utensile 7 nella collezione di carte utensili di questa partita.
+     */
     public Utensil7State(int cardIndex) {
 
         if (cardIndex >= 0 && cardIndex <= 2) {
@@ -36,6 +48,13 @@ public class Utensil7State implements StateInterface {
             throw new InvalidParameterException();
     }
 
+    /**
+     * Il metodo gestisce l'input immesso dall'utente.
+     * In questo stato il giocatore può immettere solo il numero '0', come conferma dell'azione scelta in precedenza.
+     *
+     * @param request input immesso dall'utente.
+     * @return eventuale messaggio da mandare al server.
+     */
     @Override
     public String handleInput(int request) {
 
@@ -47,7 +66,12 @@ public class Utensil7State implements StateInterface {
         }
     }
 
-
+    /**
+     * Metodo che gestisce i messaggi provenienti dalla rete.
+     * In questo stato vengono ignorati tutti i messaggi inviati dal server.
+     *
+     * @param request messaggio inviato dal server.
+     */
     @Override
     public void handleNetwork(String request) {
         //Questo stato non deve gestire nessun messaggio di rete.
