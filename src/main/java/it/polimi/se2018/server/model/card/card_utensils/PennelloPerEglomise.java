@@ -11,6 +11,13 @@ import it.polimi.se2018.server.model.card.Visitable;
 
 import java.util.ArrayList;
 
+/**
+ * Classe che si occupa dell'esecuzione dell'effetto contrattuato dalla carta utensile numero 2.
+ * Possiede un costruttore in cui sono contenuti i parametri di base della carta, hardcodati per un motivi di tempo.
+ * Implementa l'interfaccia visitable, implementando così il metodo accept che permetterà l'attivazine della funzione,
+ * passando per il suo visitor cioè il controller delle carte.
+ * -------------------------------------------------------------------------------------------------------------------
+ */
 public class PennelloPerEglomise extends Utensils implements Visitable {
 
     public PennelloPerEglomise(){
@@ -19,11 +26,27 @@ public class PennelloPerEglomise extends Utensils implements Visitable {
                 "Devi rispettare tutte le altre restrizioni di piazzamento");
     }
 
+    /**
+     * Metodo dell'interfaccia visitable che viene overridato.
+     * @param c reference del visitatore.
+     * @param m evento che richiede l'uso di una carta.
+     */
     public void accept(Visitor c, Activate m){
         c.visit(this,m);
     }
+
+    /**
+     * Metodo che attua lo spostamento di un dado nella carta schema,
+     * ignorando restrizioni di colore. Prende un evento tool2.
+     * -------------------------------------------------------------------------------------
+     * Si prendono le coordinate vecchie e quelle nuove che si vogliono assegnare al dado.
+     * Il tutto avviene secondo le metodologie di workOnSideIgnoreColor, nel controllerAction.
+     * @param controller controller del gioco
+     * @param myMessage evento contenente i parametri utili alla giocata
+     * @throws InvalidValueException lanciato nel caso in cui i parametri siano scorretti.
+     * @throws InvalidCellException lanciato nel caso in cui la cella richiesta per il piazzamento sia occupata o non buona.
+     */
     public void function(Controller controller,ToolCard2 myMessage)throws InvalidValueException, InvalidCellException {
-        //unwrapping message
 
         ArrayList<Integer> messageCont= new ArrayList<>(myMessage.getAttributes());
         String name= myMessage.getPlayer();
@@ -35,8 +58,6 @@ public class PennelloPerEglomise extends Utensils implements Visitable {
 
         controller.getcAction()
                 .workOnSideIgnoreColor(name,oldRow,oldCol,newRow,newCol);
-
-        //controller.getcAction().playerActivatedCard(controller.getTurn().getName(),this.getPreviousCost());
     }
 
 }

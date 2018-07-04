@@ -205,11 +205,11 @@ public class Utensils implements Visitable{
      * il metodo è vuoto poichè la classe utensils generica
      * definische solo le caratteristiche principlai che deve avere un utensile, e i
      * suoi metodi principali ma non ha un algoritmo specifico da eseguire
-     * @param visitor reference del visitatore.
+     * @param c reference del visitatore.
      * @param m evento che richiede l'uso di una carta.
      */
     @Override
-    public void accept(Visitor visitor, Activate m) {
+    public void accept(Visitor c, Activate m) {
         /*il metodo è vuoto poichè la classe utensils generica
         definische solo le caratteristiche principlai che deve avere un utensile, e i
         suoi metodi principali ma non ha un algoritmo specifico da eseguire*/
