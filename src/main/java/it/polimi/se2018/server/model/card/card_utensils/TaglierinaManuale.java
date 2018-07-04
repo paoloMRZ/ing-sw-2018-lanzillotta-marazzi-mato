@@ -12,7 +12,7 @@ import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 import java.util.ArrayList;
 
-public class TaglierinaManuale extends Utensils {
+public class TaglierinaManuale extends Utensils implements Visitable {
 
     public TaglierinaManuale(){
         super(12,"taglierina-manuale", Color.BLUE,"Muovi fino a due dadi dello stesso colore di un solo dado sul" +

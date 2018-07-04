@@ -132,10 +132,12 @@ public class RoundGrid {
                 save.add(toSave);
             }
             roundDices.add(save);
-            setUpdate();
-            actualRound=actualRound+1;
+
         }
         else roundDices.add(new ArrayList<>());
+
+        actualRound=actualRound+1;
+        setUpdate();
     }
 
     /**
@@ -165,7 +167,7 @@ public class RoundGrid {
 
             String message = "";
             Dice die;
-            for (int i=0;i<roundDices.size();i++) {
+            for (int i=0;i<roundDices.size()&&i<actualRound;i++) {
 
                 if(roundDices.get(i).isEmpty()){
                     if (i == 0){

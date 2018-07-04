@@ -179,6 +179,9 @@ public class FakeVChat implements ViewAsObserver,ViewAsObservable {
                 case "turn":
                     fake.messageOutBox(ServerMessageCreator.getUpdateTurnMessage(mex.getContent(),mex.getPlayer()));
                     break;
+                case "Side":
+                    fake.messageOutBox(ServerMessageCreator.getUpdateSideMessage(mex.getContent(),mex.getPlayer()));
+                    break;
                 default:
                     break;
             }

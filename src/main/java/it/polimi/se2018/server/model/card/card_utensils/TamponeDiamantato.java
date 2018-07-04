@@ -10,7 +10,7 @@ import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.card.Visitable;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
-public class TamponeDiamantato extends Utensils {
+public class TamponeDiamantato extends Utensils implements Visitable {
 
     public TamponeDiamantato(){
         super(10,"tampone-diamantato", Color.GREEN,"Dopo aver scelto un dado," +

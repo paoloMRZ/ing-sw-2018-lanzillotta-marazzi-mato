@@ -481,10 +481,26 @@ public class Table {
         setShowPrivate(player);
         String message = showEnemiesChoice();
         launchCommunication(new UpdateM(player,"side_list",message,false));
+        sendOthersSideStatus(player);
         launchCommunication(new UpdateM(player,"reserve",reserve.toString(),false));
         launchCommunication(new UpdateM(player,"RoundGrid",roundGrid.toString(),false));
         launchCommunication(new UpdateM(player,"turn",playerTurnante(),false));
 
+    }
+
+    /**
+     * Metodo che si occupa di aggiornare il player il cui nome viene passato, dello status delle side di tutti gli
+     * altri giocatori.
+     * @param player nome del giocatore riconnesso.
+     */
+    private void sendOthersSideStatus(String player){
+        if(player!=null) {
+            for (Player p : playersList) {
+                if(!player.equals(p.getName())){
+                    launchCommunication(new UpdateM(player,"Side",p.getMySide().toString(),false));
+                }
+            }
+        }
     }
     /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////

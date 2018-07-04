@@ -18,6 +18,7 @@ import java.util.List;
  * suo nome ed il numero di segnalini favore ad essa associati.
  *
  * @author Marazzi Paolo
+ * @author Kevin Mato (adattamenti per la comunicazione)
  */
 public class Side {
     private String owner;
@@ -408,15 +409,28 @@ public class Side {
 //////////////////////////////////////////////////////////
 ///////////////////////////Comunicazione//////////////////
 //////////////////////////////////////////////////////////
+
+    /**
+     * Metodo che assegna un proprietario alla carta schema
+     * @param name nome del proprietario.
+     */
     public void setOwner(String name){
         owner=name;
     }
+    /**
+     * Metodo che crea l'evento di aggiornamento della carta schema.
+     * @return evento contenete la rappresentazione.
+     */
     private UpdateM createResponse(){
         String content = this.toString();
 
         return new UpdateM(null,"Side", content);
     }
-
+    /**
+     * override del toString di Object, serve a creare una rappresentazione customizzata secondo protocollo
+     * della classe.
+     * @return stringa di rappresentazione della classe.
+     */
     public String toString() {
         String message = owner;
         for (int riga=0;riga<4;riga++)
@@ -432,13 +446,11 @@ public class Side {
 
             return message;
     }
-
-    public UpdateM updateForcer(UpdateReq m){
-        if(m.getWhat().contains(this.getClass().getName())){
-            return createResponse();}
-        return null;
-    }
-
+    /**
+     * Metodo designato dalla classe tavolo che triggera la generazione di un aggiornamento della classe.
+     * Il tavolo recuperare gli eventi di update grazie questi metodi.
+     * @return l'evento di aggiornamento.
+     */
     public UpdateM setUpdate(){
         return createResponse();
     }

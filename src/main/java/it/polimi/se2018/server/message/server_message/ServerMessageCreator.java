@@ -344,6 +344,17 @@ public class ServerMessageCreator {
         return "/###/!/update/side/" +  infoSide + "\n";
     }
 
+    /**
+     * Il metodo restituisce il messaggio da mandare ai client per aggiornarli sullo stato di una carta schema.
+     *
+     * @param infoSide rapressentazione della side.
+     * @param dest destinatario
+     * @return messaggio.
+     */
+    public static String getUpdateSideMessage(String infoSide,String dest) {
+        return "/###/"+dest+"/update/side/" +  infoSide + "\n";
+    }
+
 
     //Messaggio relativo alla rete.
 

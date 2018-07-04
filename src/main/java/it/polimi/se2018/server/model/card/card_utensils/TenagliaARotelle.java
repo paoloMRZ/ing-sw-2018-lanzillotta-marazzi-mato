@@ -15,7 +15,7 @@ import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 import java.util.ArrayList;
 
-public class TenagliaARotelle extends Utensils {
+public class TenagliaARotelle extends Utensils implements Visitable{
 
     public TenagliaARotelle(){
         super(8,"tenaglia-a-rotelle", Color.RED,"Dopo il tuo primo turno scegli immediatamente" +

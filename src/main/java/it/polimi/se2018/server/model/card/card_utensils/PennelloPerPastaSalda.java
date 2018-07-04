@@ -15,7 +15,7 @@ import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 import java.util.ArrayList;
 
-public class PennelloPerPastaSalda extends Utensils  {
+public class PennelloPerPastaSalda extends Utensils implements Visitable  {
 
    public PennelloPerPastaSalda(){
        super(6,"pennello-per-pasta-salda", Color.PURPLE,"Dopo aver scelto un dado, " +
