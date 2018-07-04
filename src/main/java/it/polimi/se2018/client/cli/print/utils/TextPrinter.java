@@ -2,10 +2,26 @@ package it.polimi.se2018.client.cli.print.utils;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * La classe gestisce la stampa di un testo.
+ *
+ * @author Marazzi Paolo
+ */
 public class TextPrinter {
 
     private TextPrinter(){}
 
+    /**
+     * Il metodo stampa il testo dato seguendo le seguenti regole:
+     *  - su una riga devono essere presenti al massimo un numero di caratterei pari a quelli indicati dal parametro rowLen.
+     *  - le parole che compongono il testo non devono mai essere spezzate su più righe.
+     *  - se non c'è abbastanza spazio per stampare una parola sulla ruga corrente si passa alla riga successiva.
+     *
+     * @param startRow riga su cui iniziare a stampare.
+     * @param startCol colonna su cui iniziare a stampare.
+     * @param text testo da stampare.
+     * @param rowLen numero massimo di caratteri per riga (compresi gli spazi).
+     */
     public static void printText(int startRow, int startCol, String text, int rowLen){
         String[] words = text.split(" "); //Estraggo le parole.
         int counter = 0; //Contatore dei caratteri già stampati.

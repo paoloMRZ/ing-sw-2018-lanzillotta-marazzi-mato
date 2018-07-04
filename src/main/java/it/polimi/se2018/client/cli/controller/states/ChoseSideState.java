@@ -46,7 +46,7 @@ public class ChoseSideState implements StateInterface {
 
             this.game = Game.factoryGame();
 
-            choseSideScene = new ChoseSideScene(cards.get(0),cards.get(1),cards.get(2),cards.get(3));
+            choseSideScene = new ChoseSideScene(cards);
             choseSideScene.printScene(); //Stampo la scena.
 
         }else

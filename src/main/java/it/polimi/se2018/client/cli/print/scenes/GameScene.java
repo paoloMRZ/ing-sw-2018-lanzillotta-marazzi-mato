@@ -14,6 +14,12 @@ import java.util.List;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * La classe gestisce la stampa della schermata di principale gioco.
+ *
+ * @author Marazzi Paolo
+ */
+
 public class GameScene {
 
     private static final int CARD_SCHEMA1_ROW = 12; //Posizione per quando si printano gli obiettivi.
@@ -102,6 +108,17 @@ public class GameScene {
 
     private boolean printObjective;
 
+    /**
+     * Costruttore della classe.
+     *
+     * @param card carta finestra del giocatore.
+     * @param diceOnCard lista dei dadi sulla carta finestra.
+     * @param reserve lista dei dadi nella riserva.
+     * @param roundGrid lista dei round.
+     * @param objectiveCards lista delle carte obiettivo.
+     * @param utensilCards lista delle carte utensile.
+     * @param favours segnalini favore disponibili al giocatore.
+     */
     public GameScene(SideCard card, List<DieInfo> diceOnCard ,List<DieInfo> reserve, List<ArrayList<DieInfo>> roundGrid, List<ObjectiveCard> objectiveCards, List<UtensilCard> utensilCards, int favours){
         if(card != null && reserve != null && roundGrid!=null && objectiveCards != null && utensilCards != null && favours>=0) {
 
@@ -128,6 +145,9 @@ public class GameScene {
             throw new InvalidParameterException();
     }
 
+    /**
+     * Il metodo stampa a schermo le carte obiettivo.
+     */
     private void printObjectiveCard(){
 
         ObjectivePrinter.printObjective(CARD_OBJECTIVE1_ROW, CARD_OBJECTIVE1_COL, objectiveCards.get(0));
@@ -136,12 +156,19 @@ public class GameScene {
         ObjectivePrinter.printObjective(CARD_OBJECTIVE4_ROW, CARD_OBJECTIVE4_COL, objectiveCards.get(3));
     }
 
+    /**
+     * Il metodo stampa a schermo le carte utensile.
+     */
     private void printUtensil(){
         UtensilPrinter.printUtensil(CARD_UTENSIL1_ROW,CARD_UTENSIL1_COL,utensilCards.get(0));
         UtensilPrinter.printUtensil(CARD_UTENSIL2_ROW,CARD_UTENSIL2_COL,utensilCards.get(1));
         UtensilPrinter.printUtensil(CARD_UTENSIL3_ROW,CARD_UTENSIL3_COL,utensilCards.get(2));
     }
 
+    /**
+     * Il metodo gestisce la stampa del menù visibile durante il nostro turno di gioco.
+     * La posizione del menù varia a seconda di quale carte sono mostrate a schermo (obiettivi o utensili).
+     */
     private void printMyTurnMenu(){
         int row = MENU_ROW;
         int col;
@@ -171,6 +198,10 @@ public class GameScene {
         System.out.print(ansi().cursor(row,col).a(TEXT8_MENU));
     }
 
+    /**
+     * Il metodo gestisce la stampa del menù visibile durante turno di gioco degli avversari.
+     * La posizione del menù varia a seconda di quale carte sono mostrate a schermo (obiettivi o utensili).
+     */
     private void printIsNotMyTurnMenu(){
         int row = MENU_ROW;
         int col;
@@ -194,6 +225,9 @@ public class GameScene {
         System.out.print(ansi().cursor(row,col).a(TEXT8_MENU));
     }
 
+    /**
+     * Il metodo stampa il menù che permette di selezionare un dado dalla riserva.
+     */
     private void printSelectReserveDieMenu(){
         int row = MENU_ROW;
         int col;
@@ -209,6 +243,9 @@ public class GameScene {
 
     }
 
+    /**
+     * Il metodo stampa il menù che permette di selezionare una riga della carta finestra.
+     */
     private void printSelectRowMenu(){
         int row = MENU_ROW;
         int col;
@@ -224,6 +261,9 @@ public class GameScene {
 
     }
 
+    /**
+     * Il metodo stampa il menù che permette di selezionare una colonna.
+     */
     private void printSelectColMenu(){
         int row = MENU_ROW;
         int col;
@@ -239,6 +279,9 @@ public class GameScene {
 
     }
 
+    /**
+     * Il metodo stampa il menù che permette di selezionare una carta utensile.
+     */
     private void printSelectUtensilMenu(){
         int row = MENU_ROW;
         int col;
@@ -254,10 +297,16 @@ public class GameScene {
 
     }
 
+    /**
+     * Il metodo stampa a schermo i segnlini favore in possesso del giocatore e i nickname del giocatore che sta giocando il turno.
+     */
     private void printTurnAndFavours(){
         System.out.print(ansi().cursor(INFO_ROW, INFO_COL).bold().a( " | " + TEXT_TURN + turnOf + " | " + TEXT_FAVOURS + favours).boldOff());
     }
 
+    /**
+     * Il metodo stampa a schermo i messaggi che notificano gli eventi di gioco.
+     */
     private void printMessages(){
 
         System.out.print(ansi().cursor(MESSAGES_ROW,MESSAGES_COL+1).bold().a(MESSAGE_TEXT).boldOff());
@@ -280,6 +329,10 @@ public class GameScene {
 
     }
 
+
+    /**
+     * Il metodo stampa il menù che è stato selezionato tramite gli appositi metodi pubblici.
+     */
     private void printMenu(){
 
         switch (this.menu){
@@ -294,11 +347,15 @@ public class GameScene {
             case 4: printSelectColMenu(); break;
 
             case 5: printSelectUtensilMenu(); break;
+
+            default: //Non esiste nessun'azione per il caso di default.
         }
 
     }
 
-
+    /**
+     * Il metodo stampa s schermo l'intera scena di gioco.
+     */
     public void printScene(){
         System.out.print(ansi().eraseScreen());
 
@@ -319,6 +376,10 @@ public class GameScene {
     }
 
 
+    /**
+     * Il metodo aggiorna la riserva.
+     * @param reserve lista di dadi che rappresentano la riserva aggiornata.
+     */
     public void updateReserve(List<DieInfo> reserve){
         if(reserve != null) {
             this.reserve = new ArrayList<>();
@@ -327,6 +388,10 @@ public class GameScene {
             throw new InvalidParameterException();
     }
 
+    /**
+     * Il metodo aggiorna la roundgrid.
+     * @param roundGrid lista di round che rappresentano il nuovo stato della roundgrid..
+     */
     public void updateRoundGrid(List<ArrayList<DieInfo>> roundGrid){
         if(roundGrid != null) {
             this.roundGrid = new ArrayList<>();
@@ -335,6 +400,10 @@ public class GameScene {
             throw new InvalidParameterException();
     }
 
+    /**
+     * Il metodo aggiorna i dadi posizionati sulla carta finestra del giocatore.
+     * @param diceOnCard lista dei dadi posizionati sulla carta.
+     */
     public void updateCard(List<DieInfo> diceOnCard){
         if(diceOnCard != null){
             this.diceOnCard = new ArrayList<>();
@@ -343,21 +412,28 @@ public class GameScene {
             throw new InvalidParameterException();
     }
 
+
+    /**
+     * Il metodo permette di mostrare a schermo le carte utensili la prossima volta che si richiama il metodo 'printScene'
+     */
     public void setShowUtensils(){
         this.printObjective = false;
     }
 
+    /**
+     * Il metodo permette di mostrare a schermo le carte obiettivo la prossima volta che si richiama il metodo 'printScene'
+     */
     public void setShowObjective(){
         this.printObjective = true;
     }
 
-    public void updateFavours(int favours){
-        if(favours >= 0){
-            this.favours = favours;
-        }else
-            throw new InvalidParameterException();
-    }
 
+    /**
+     * Il metodo aggiona il nickname del giocatore che sta giocando il turno.
+     * Per far apparire a schermo la modifica è necessario richiamare la il metodo 'printScene'.
+     *
+     * @param turnOf nickname del giocatore che sta giocando il turno.
+     */
     public void updateTurn(String turnOf){
         if(turnOf != null){
             this.turnOf = turnOf;
@@ -365,30 +441,64 @@ public class GameScene {
             throw new InvalidParameterException();
     }
 
+    /**
+     * Il metodo permette di mostrare a schermo il menù delle azioni fattibili dal giocatore durante il turno di un avversario
+     * la prossima volta che si richiama il metodo 'printScene'
+     */
     public void setIsNotMyturnMenu(){
         this.menu = 0;
     }
 
+    /**
+     * Il metodo permette di mostrare a schermo il menù delle azioni fattibili dal giocatore durante il proprio turno
+     * la prossima volta che si richiama il metodo 'printScene'
+     */
     public void setMyTurnMenu(){
         this.menu = 1;
     }
+
+    /**
+     * Il metodo permette di mostrare a schermo il menù che consente di scegliere un dado dalla riserva
+     * la prossima volta che si richiama il metodo 'printScene'
+     */
 
     public void setSelectDieMenu(){
         this.menu = 2;
     }
 
+    /**
+     * Il metodo permette di mostrare a schermo il menù che consente di selezionare una riga della carta finestra
+     * la prossima volta che si richiama il metodo 'printScene'
+     */
     public void setSelectRowMenu(){
         this.menu = 3;
     }
 
+
+    /**
+     * Il metodo permette di mostrare a schermo il menù che consente di selezionare una colonna della carta finestra
+     * la prossima volta che si richiama il metodo 'printScene'
+     */
     public void setSelectColMenu(){
         this.menu = 4;
     }
 
+
+    /**
+     * Il metodo permette di mostrare a schermo il menù che consente di selezionare una carta utensile
+     * la prossima volta che si richiama il metodo 'printScene'
+     */
     public void setSelectUtensilMenu(){
         this.menu = 5;
     }
 
+
+    /**
+     * Il metodo consente di aggiungere un messaggio alla lista dei messaggi che notificano degli eventi.
+     * Il nuovo messaggio verrà mostrato all successiva chiamata del metodo 'printScene'.
+     *
+     * @param message messaggio da aggiungere.
+     */
     public void addMessage(String message){
         if(messages.size() < 5) //La casella contiene al massimo sette messaggi.
             messages.add(message);

@@ -24,7 +24,6 @@ import java.util.List;
  */
 public class Lobby implements ObserverTimer, FakeClientObserver {
     private FakeView fakeView;
-    private Controller controller;
     private int numberOfClient;
     private ArrayList<FakeClient> connections;
     private SagradaTimer timer;
@@ -32,18 +31,18 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
 
     private static Lobby instance = null;
 
+    private int turnTime;
 
-
-    public static Lobby factoryLobby(int lifeTime){
+    public static Lobby factoryLobby(int lifeTime, int turnTime){
         if(instance == null)
-            instance = new Lobby(lifeTime);
+            instance = new Lobby(lifeTime, turnTime);
 
         return instance;
     }
 
     public static Lobby factoryLobby(){
         if(instance == null)
-            instance = new Lobby(60); //Default = 60 sec.
+            instance = new Lobby(30, 180); //Default = 30 sec.
 
         return instance;
     }
@@ -51,11 +50,10 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
     /**
      * Costruttore della classe.
      */
-    private Lobby(int lifeTime) {
-        if (lifeTime > 0)
-            timer = new SagradaTimer(lifeTime);
-        else
-            timer = new SagradaTimer(120);
+    private Lobby(int lifeTime, int turnTime) {
+
+        timer = new SagradaTimer(lifeTime);
+        this.turnTime = turnTime;
 
         timer.add(this); //Mi aggiungo alla lista degli osservatori del timer.
         isOpen = true;
@@ -71,12 +69,15 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
         this.isOpen = false; //Come prima cosa chiudo la lobby.
         this.timer.stop(); //Fermo il timer.
         fakeView = new FakeView(this); //Creo MVC.
-        controller = new Controller(getNicknames(), 120);//todo collegare con tempo deisderato
+        Controller controller = new Controller(getNicknames(), this.turnTime);
         fakeView.register(controller);
         try {
             controller.START();
         } catch (Exception e) {
-            e.printStackTrace(); //TODO Da sistemare!!!!!
+            clearLobby(); //Disconnetto tutti i giocatori.
+            System.out.println("[*]ERRORE: Impossibile avviare la partita."); //Notifico a schermo.
+            System.out.print(e.getMessage());
+            System.exit(0); //Termino il processo.
         }
 
     }
@@ -120,10 +121,11 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
 
         FakeClient fakeClient = serachByNickname(nickname); //Ricerco il client tramite il suo nickname.
         if (fakeClient != null) { //Se l'ho trovato lo congelo, cioè chiudo la sua connessione ma non lo rimuovo dalla lobby.
+
+            sendBroadcast(NetworkMessageCreator.getDisconnectMessage(nickname)); //Notifico tutti i giocatori della disconnessione del client.
             fakeClient.closeConnection();
             numberOfClient--;
 
-            sendBroadcast(NetworkMessageCreator.getDisconnectMessage(nickname)); //Notifico tutti gli altri giocatori della disconnessione del client.
         }
 
     }
@@ -164,7 +166,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
 
     /**
      * Il metodo invia un messaggio in broadcast, cioè invia lo stesso messaggio a tutti i client connessi.
-     * Se si trova un fakeClient con la connessione chiusa lo si congela o lo si rimuove in base allo stato della partita,
+     * Se trova un fakeClient con la connessione chiusa lo si congela o lo si rimuove in base allo stato della partita,
      * se la partita è iniziata(lobby chiusa) lo si congela, in caso contrario lo si rimuove.
      *
      * @param message mesaggio da inviare.

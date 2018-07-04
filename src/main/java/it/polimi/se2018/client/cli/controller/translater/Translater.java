@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * La classe traduce informazioni di testo (stringhe) nelle corrispondenti informazioni "stampabili a schermo".
+ * La classe traduce informazioni sotto forma di testo nelle corrispondenti informazioni "stampabili a schermo".
+ *
+ * @author Marazzi Paolo
  */
 
 public class Translater {
@@ -90,17 +92,20 @@ public class Translater {
     public static List<SideCard> getSideCardFromName(List<String> cardNames) throws IOException, ClassNotFoundException {
         ArrayList<SideCard> cards = new ArrayList<>();
 
-        CardFileReader reader;
-
         for(String name : cardNames){
-            reader = new CardFileReader(name);
-            cards.add(reader.readSideCard());
-            reader.close();
+            cards.add(getSideCardFromName(name));
         }
 
         return  cards;
     }
 
+    /**
+     * Il metodo restituisce l'oggetto che descrive la carta finestra idicata dal nome.
+     * @param cardName nome della carta di cui si vogliono ottenere le informzioni.
+     * @return oggetto che descrive una carta finestra.
+     * @throws IOException sollevata in caso di errore di lettura da file.
+     * @throws ClassNotFoundException sollevata se la classe deserializzata non è presente nel jar.
+     */
     public static SideCard getSideCardFromName(String cardName) throws IOException, ClassNotFoundException {
 
         SideCard card;
@@ -114,21 +119,32 @@ public class Translater {
         return card;
     }
 
+    /**
+     * Il metodo restituisce la drescrizione delle carte assoviate ai nomi passati tramite il parametro del metodo.
+     * @param cardNames nomi delle carte per cui si vogliono ottenere informazioni.
+     * @return lista composta dall'oggetto descrittore di una carta.
+     * @throws IOException sollevata in caso di errore di lettura da file.
+     * @throws ClassNotFoundException sollevata se la classe deserializzata non è presente nel jar.
+     */
+
     public static List<ObjectiveCard> getObjectiveCardFromName(List<String> cardNames) throws IOException, ClassNotFoundException {
 
         ArrayList<ObjectiveCard> cards = new ArrayList<>();
 
-        CardFileReader reader;
-
         for(String name : cardNames){
-            reader = new CardFileReader(name);
-            cards.add(reader.readObjectiveCard());
-            reader.close();
+            cards.add(getObjectiveCardFromName(name));
         }
 
         return  cards;
     }
 
+    /**
+     * Il metodo restituisce la descrizione della carta obiettivo sulla base del nome.
+     * @param cardName nome della carta di cui si vuole ottenere una descrizione.
+     * @return oggetto che contiene la descrizione di una carta obiettivo.
+     * @throws IOException sollevata in caso di errore di lettura da file.
+     * @throws ClassNotFoundException sollevata se la classe deserializzata non è presente nel jar.
+     */
     public static ObjectiveCard getObjectiveCardFromName(String cardName)  throws IOException, ClassNotFoundException {
 
         ObjectiveCard card;
@@ -143,6 +159,13 @@ public class Translater {
     }
 
 
+    /**
+     * Il metodo restituisce le informazioni delle carte utensili specificate.
+     * @param cardNames lista dei nomi delle carte di cui si vuole ottenre una descrizione.
+     * @return lista di oggetti che descrivono una carta utensile.
+     * @throws IOException sollevata in caso di errore di lettura da file.
+     * @throws ClassNotFoundException sollevata se la classe deserializzata non è presente nel jar.
+     */
     public static List<UtensilCard> getUtensilCardFromName(List<String> cardNames) throws IOException, ClassNotFoundException {
 
         ArrayList<UtensilCard> cards = new ArrayList<>();

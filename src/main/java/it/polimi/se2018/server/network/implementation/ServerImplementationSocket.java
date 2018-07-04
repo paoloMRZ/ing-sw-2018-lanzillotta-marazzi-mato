@@ -2,6 +2,7 @@ package it.polimi.se2018.server.network.implementation;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.security.InvalidParameterException;
 
 /**
  * La classe gestisce tutte le richieste di connessione che avvengono sulla socket aperta dal server.
@@ -10,9 +11,6 @@ import java.net.ServerSocket;
  */
 public class ServerImplementationSocket implements Runnable {
 
-    //TODO gestione della scelta della porta.
-    private static final int PORT = 1234; //Porta della socket.
-
     private boolean isOpen = true;
     private ServerSocket serverSocket;
 
@@ -20,8 +18,12 @@ public class ServerImplementationSocket implements Runnable {
     /**
      * Costruttore della classe. Ha il compito di aprire la socket.
      */
-    public ServerImplementationSocket() throws IOException {
-        serverSocket = new ServerSocket(PORT);
+    public ServerImplementationSocket(int port) throws IOException {
+
+        if(port > 0) {
+            serverSocket = new ServerSocket(port);
+        }else
+            throw new InvalidParameterException();
     }
 
 
@@ -41,7 +43,7 @@ public class ServerImplementationSocket implements Runnable {
                 new Thread(new SocketLoginRoutine(serverSocket.accept())).start(); //Appena si connette un client avvio una routine di connessione su un thread dedicato.
             } catch (IOException e) {
                 isOpen = false;
-                System.out.println("[*] ERRORE Socket chiusa, il server non può più accettare connessioni."); //TODO Stampare un messaggio più decente.
+                System.out.println("[*] ERRORE di IO, chiusura della socket");
             }
 
         }
