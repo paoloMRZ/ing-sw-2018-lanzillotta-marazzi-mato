@@ -6,6 +6,11 @@ import java.util.List;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * La classe gestisce la stampa della schermata che mostra i punteggi finali di tutti i giocatori.
+ *
+ * @author Marazzi Paolo
+ */
 public class EndGameScene {
 
     private static final String TITLE = "*** Punteggi ***";
@@ -13,6 +18,12 @@ public class EndGameScene {
     private ArrayList<String> nicknames;
     private ArrayList<Integer> scores;
 
+    /**
+     * Costruttore della classe.
+     *
+     * @param nicknames lista che contiene i nickname di tutti i giocatori.
+     * @param scores lista che contiene i punteggi di tutti i giocatori.
+     */
     public EndGameScene(List<String> nicknames, List<Integer> scores ){
 
         if(nicknames != null && scores != null && scores.size() == nicknames.size()){
@@ -23,7 +34,9 @@ public class EndGameScene {
             throw new InvalidParameterException();
     }
 
-
+    /**
+     * Il metodo stampa a schermo la scena che mostra i punteggi di fine partita.
+     */
     public void printScene(){
 
         System.out.print(ansi().eraseScreen());

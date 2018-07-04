@@ -9,6 +9,12 @@ import java.util.List;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * La classe gestisce la stampa a schermo della scena che mostra la roundgrid completa (non solo il primo dado di ogni round).
+ *
+ * @author Marazzi Paolo
+ */
+
 public class ShowRoundGridScene {
 
 
@@ -43,6 +49,9 @@ public class ShowRoundGridScene {
             throw new InvalidParameterException();
     }
 
+    /**
+     * Il metodo gestisce la stampa del menù visibile durante il nostro turno di gioco.
+     */
 
     private void printMyTurnMenu(){
         int row = MENU_ROW;
@@ -65,7 +74,9 @@ public class ShowRoundGridScene {
         row++;
         System.out.print(ansi().cursor(row,MENU_COL).a(TEXT8_MENU));
     }
-
+    /**
+     * Il metodo gestisce la stampa del menù visibile durante turno di gioco degli avversari.
+     */
     private void printIsNotMyTurnMenu(){
         int row = MENU_ROW;
 
@@ -82,6 +93,9 @@ public class ShowRoundGridScene {
         System.out.print(ansi().cursor(row,MENU_COL).a(TEXT8_MENU));
     }
 
+    /**
+     * Il metodo stampa il menù che è stato selezionato tramite gli appositi metodi pubblici.
+     */
     private void printMenu(){
         if(this.menu == 0)
             this.printIsNotMyTurnMenu();
@@ -89,11 +103,22 @@ public class ShowRoundGridScene {
             this.printMyTurnMenu();
     }
 
-
+    /**
+     * Il metodo permette di mostrare a schermo il menù delle azioni fattibili dal giocatore durante il turno di un avversario
+     * la prossima volta che si richiama il metodo 'printScene'
+     */
     public void setNotMyTurnMenu(){menu = 0;}
 
+
+    /**
+     * Il metodo permette di mostrare a schermo il menù delle azioni fattibili dal giocatore durante il proprio turno
+     * la prossima volta che si richiama il metodo 'printScene'
+     */
     public void setMyTurnMenu(){menu = 1;}
 
+    /**
+     * Il metodo stampa a schermo la scena.
+     */
     public void printScene(){
         System.out.print(ansi().eraseScreen());
         RoundGrindPrinter.printRoundGrid(ROW_ROUNDGRID,COL_ROUNDGRID,rounds);

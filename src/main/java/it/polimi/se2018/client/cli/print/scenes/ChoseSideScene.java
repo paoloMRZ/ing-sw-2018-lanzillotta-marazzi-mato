@@ -7,8 +7,15 @@ import it.polimi.se2018.client.cli.print.utils.MarginPrinter;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.fusesource.jansi.Ansi.ansi;
+
+/**
+ * La classe gestisce la stampa della schermata che permette al giocatore di scegliere la carta finestra con cui giocare.
+ *
+ * @author Marazzi Paolo
+ */
 
 public class ChoseSideScene {
 
@@ -42,29 +49,42 @@ public class ChoseSideScene {
 
     private ArrayList<String> messages;
 
-    private SideCard card1;
-    private SideCard card2;
-    private SideCard card3;
-    private SideCard card4;
+   private ArrayList<SideCard> cards;
 
 
-    public ChoseSideScene(SideCard card1, SideCard card2, SideCard card3, SideCard card4) {
-        if (card1 != null && card2 != null && card3 != null && card4 != null) {
+    /**
+     * Costruttore della classe.
+     *
+     * @param cards carte finestra tra cui il giocatore può scegliere.
+     */
+
+    public ChoseSideScene(List<SideCard> cards) {
+        if (cards != null && cards.size() == 4) {
             messages = new ArrayList<>();
-
-            this.card1 = card1;
-            this.card2 = card2;
-            this.card3 = card3;
-            this.card4 = card4;
+            cards = new ArrayList<>(cards);
 
         }else
             throw new InvalidParameterException();
     }
 
+    /**
+     * Il metodo stampo il numero identificativo sotto alla relativa carta.
+     * Il giocatore selezionerà la carta tramite questo numero.
+     *
+     * @param starRow riga su cui stampare il numero.
+     * @param startCol colonna su cui stampare il numero.
+     * @param number numero da stampare.
+     */
     private void printNumber(int starRow, int startCol, int number){
         System.out.print(ansi().cursor(starRow,startCol).bold().a("[" + number + "]").boldOff());
     }
 
+    /**
+     * Il metodo stampa i numeri identificativi delle quattro carte.
+     *
+     * @param starRow riga su cui si trova il primo numero.
+     * @param startCol colonna su cui si trova il primo numero.
+     */
     private void printNumbers(int starRow, int startCol){
         int col = startCol;
 
@@ -73,6 +93,10 @@ public class ChoseSideScene {
             col += NUMBER_NEXT_COL;
         }
     }
+
+    /**
+     * Il metodo stampa la box e i messaggi che notificano il giocatore.
+     */
 
     private void printMessages(){
 
@@ -96,6 +120,9 @@ public class ChoseSideScene {
 
     }
 
+    /**
+     * Il metodo stampa a schermo la scena che permette al giocatore di scegliere la carta finestra con cui giocare.
+     */
     public void printScene() {
 
 
@@ -104,10 +131,10 @@ public class ChoseSideScene {
         System.out.print(ansi().cursor(TEXT_ROW, TEXT_COL).a(TEXT)); //Stampo il testo.
 
         //Stampo le carte.
-        SidePrinter.printSide(ROW_CARD1, COL_CARD1, card1);
-        SidePrinter.printSide(ROW_CARD2, COL_CARD2, card2);
-        SidePrinter.printSide(ROW_CARD3, COL_CARD3, card3);
-        SidePrinter.printSide(ROW_CARD4, COL_CARD4, card4);
+        SidePrinter.printSide(ROW_CARD1, COL_CARD1, cards.get(0));
+        SidePrinter.printSide(ROW_CARD2, COL_CARD2, cards.get(1));
+        SidePrinter.printSide(ROW_CARD3, COL_CARD3, cards.get(2));
+        SidePrinter.printSide(ROW_CARD4, COL_CARD4, cards.get(3));
 
         printNumbers(NUMBER_ROW, NUMBER_COL); //Stampo i numeri per la scelta delle carte.
 
@@ -118,6 +145,12 @@ public class ChoseSideScene {
 
     }
 
+    /**
+     * Il metodo permette di aggiungere un nuovo messaggio tra i messaggi da mostrare a schermo, dopo di che aggiorna
+     * la schermata.
+     *
+     * @param message messaggio da aggiungere alla lista.
+     */
     public void addMessage(String message){
         if(messages.size() < 7) //La casella contiene al massimo sette messaggi.
             messages.add(message);

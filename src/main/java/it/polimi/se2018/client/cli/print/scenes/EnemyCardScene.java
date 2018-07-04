@@ -11,6 +11,12 @@ import java.util.List;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * La classe gestisce la stampa della schermata che mostra le carte degli avversari con i dadi posizionati su di esse.
+ *
+ * @author Marazzi Paolo
+ */
+
 public class EnemyCardScene {
 
 
@@ -47,6 +53,13 @@ public class EnemyCardScene {
 
     private int menu;
 
+    /**
+     * Costruttore della classe.
+     *
+     * @param cards lista che contiene le carte degli avversari.
+     * @param nicknames nickname degli avversari.
+     * @param diceOnCards lista che contiene i dadi posizionati su ogni carta.
+     */
     public EnemyCardScene(List<SideCard> cards, List<String> nicknames, List<ArrayList<DieInfo>> diceOnCards){
         if(cards != null && nicknames != null && diceOnCards != null)
         {
@@ -58,7 +71,9 @@ public class EnemyCardScene {
             throw new InvalidParameterException();
     }
 
-
+    /**
+     * Il segunete metodo stampa a schermo il menù di gioco con le azioni fattibli dal giocatore nel suo turno.
+     */
     private void printMyTurnMenu(){
         int row = MENU_ROW;
 
@@ -81,6 +96,9 @@ public class EnemyCardScene {
         System.out.print(ansi().cursor(row,MENU_COL).a(TEXT8_MENU));
     }
 
+    /**
+     * Il segunete metodo stampa a schermo il menù di gioco con le azioni fattibli dal giocatore quando non è il suo turno.
+     */
     private void printIsNotMyTurnMenu(){
         int row = MENU_ROW;
 
@@ -97,6 +115,9 @@ public class EnemyCardScene {
         System.out.print(ansi().cursor(row,MENU_COL).a(TEXT8_MENU));
     }
 
+    /**
+     * Il metodo stampa il menù corretto sulla base dei settaggi fatti dal giocatore tramite i metodi dedicati.
+     */
     private void printMenu(){
         if(this.menu == 0)
             this.printIsNotMyTurnMenu();
@@ -104,11 +125,21 @@ public class EnemyCardScene {
             this.printMyTurnMenu();
     }
 
-
+    /**
+     * Il metodo imposta che alla prossima stampa della schermata verrà mostrato il menù che ci mostra le azioni che possiamo fare
+     * nel turno di un avversario.
+     */
     public void setNotMyTurnMenu(){menu = 0;}
 
+    /**
+     * Il metodo imposta che alla prossima stampa della schermata verrà mostrato il menù che ci mostra le azioni che possiamo fare
+     * nel nostro turno.
+     */
     public void setMyTurnMenu(){menu = 1;}
 
+    /**
+     * Il metodo stampa il nickname di ogni avversario sotto la sua carta.
+     */
     private void printNicknames(){
 
         int col = COL_NICKNAME;
@@ -119,6 +150,9 @@ public class EnemyCardScene {
         }
     }
 
+    /**
+     * Il metodo stampa le carte degli avversari.
+     */
     private void printCards(){
         int col = COL_CARD;
         int i = 0;
