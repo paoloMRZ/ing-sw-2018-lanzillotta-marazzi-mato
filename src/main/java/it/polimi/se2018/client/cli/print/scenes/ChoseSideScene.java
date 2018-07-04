@@ -61,7 +61,7 @@ public class ChoseSideScene {
     public ChoseSideScene(List<SideCard> cards) {
         if (cards != null && cards.size() == 4) {
             messages = new ArrayList<>();
-            cards = new ArrayList<>(cards);
+            this.cards = new ArrayList<>(cards);
 
         }else
             throw new InvalidParameterException();
