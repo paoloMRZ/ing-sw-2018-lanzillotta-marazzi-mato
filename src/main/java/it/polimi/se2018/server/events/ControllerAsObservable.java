@@ -2,21 +2,21 @@ package it.polimi.se2018.server.events;
 
 import it.polimi.se2018.server.events.responses.*;
 
-public interface ControllerAsObservable {
+ public interface ControllerAsObservable {
 
-    public void register(ViewAsObserver o);
+     void register(ViewAsObserver o);
 
-    public void notifyObserver(ErrorSomethingNotGood mex);
-    public void notifyObserver(SuccessColor mex);
-    public void notifyObserver(SuccessValue mex);
-    public void notifyObserver(SuccessActivation mex);
-    public void notifyObserver(SuccessActivationFinalized mex);
-    public void notifyObserver(ErrorSelection mex);
-    public void notifyObserver(ErrorActivation mex);
-    public void notifyObserver(ErrorSelectionUtensil mex);
-    public void notifyObserver(DisconnectPlayer mex);
+     void notifyObserver(ErrorSomethingNotGood mex);
+     void notifyObserver(SuccessColor mex);
+     void notifyObserver(SuccessValue mex);
+     void notifyObserver(SuccessActivation mex);
+     void notifyObserver(SuccessActivationFinalized mex);
+     void notifyObserver(ErrorSelection mex);
+     void notifyObserver(ErrorActivation mex);
+     void notifyObserver(ErrorSelectionUtensil mex);
+     void notifyObserver(DisconnectPlayer mex);
 
-    public void notifyObserver(Freeze mex);
+     void notifyObserver(Freeze mex);
 
-    public void notifyObserver(IgnoreMex mex);
+     void notifyObserver(IgnoreMex mex);
 }

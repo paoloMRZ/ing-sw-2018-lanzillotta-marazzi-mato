@@ -55,7 +55,7 @@ public class Reserve {
 
     /**
      * Metodo che ritorna tutti i dadi della riserva
-     * @return
+     * @return copia dei dadi cintenuti nella riserva.
      */
     public ArrayList<Dice> getDices(){
         ArrayList<Dice> ritorno = new ArrayList<>();
@@ -70,11 +70,21 @@ public class Reserve {
         return ritorno;
     }
     /////////////Comunicazione/////
+
+    /**
+     * Metodo che crea l'evento di aggiornament della riserva.
+     * @return evento contenete la rappresentazione.
+     */
     private UpdateM createResponse(){
         String content = this.toString();
         return new UpdateM(null,"reserve", content);
     }
 
+    /**
+     * override del toString di Object, serve a creare una rappresentazione customizzata secondo protocollo
+     * della classe.
+     * @return stringa di rappresentazione della classe.
+     */
     public String toString(){
         String message = "";
         if(dices.isEmpty()){
@@ -93,6 +103,11 @@ public class Reserve {
         return message;
     }
 
+    /**
+     * Metodo designato dalla classe tavolo che triggera la generazione di un aggiornamento della classe.
+     * Il tavolo recuperare gli eventi di update grazie questi metodi.
+     * @return l'evento di aggiornamento.
+     */
     public UpdateM setUpdate(){
         return createResponse();
     }

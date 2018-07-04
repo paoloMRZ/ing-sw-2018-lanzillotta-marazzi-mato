@@ -1,17 +1,13 @@
 package it.polimi.se2018.server.model.grid;
 
-import it.polimi.se2018.server.events.UpdateReq;
 import it.polimi.se2018.server.events.responses.UpdateM;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
-//todo studiare meglio la possibilità di usare le celle per definire le posizioni nella grid
-//import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.NotEmptyCellException;
-import it.polimi.se2018.server.model.Table;
 import it.polimi.se2018.server.model.dice_sachet.Dice;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
+
 
 /**
  * Classe che si occupa della raccolta dei dadi alla fine del round.
@@ -75,7 +71,7 @@ public class RoundGrid {
      * Metodo che permette il prelievo di un dado nella collezione dispondendo dell'indice della cella e di un indice nella cella.
      * @param posOnGrid indice della cella della roundgrid.
      * @param posOnLilGroup indice nella cella
-     * @return refrence della copia del dado che viene passato per copia.
+     * @return reference della copia del dado che viene passato in copia, in seguito viene rimosso.
      * @throws InvalidValueException eccezione lanciata oer gestire eccezioni unchecked.
      */
     public Dice pick(int posOnGrid,int posOnLilGroup)throws InvalidValueException{
@@ -99,10 +95,10 @@ public class RoundGrid {
 
     /**
      * Metodo che mostra una copia del dado in una determinata cella.
-     * @param posOnGrid
-     * @param posOnLilGroup
-     * @return
-     * @throws InvalidValueException
+     * @param posOnGrid indice della cella della roundgrid.
+     * @param posOnLilGroup indice nella cella
+     * @return reference della copia del dado che viene passato in copia.
+     * @throws InvalidValueException eccezione lanciata oer gestire eccezioni unchecked.
      */
     public Dice show(int posOnGrid,int posOnLilGroup)throws InvalidValueException{
         try {
@@ -119,8 +115,11 @@ public class RoundGrid {
     }
 
 
-    //metodo dedicato alle rimanenze della riserva che finiscono sulla griglia, viene appeso perchè è l'ultimo
-    //round appena giocato
+    /**
+     * Metodo che permette l'immissione simulatanea di un gruppo di dadi,solitamente quelli rimasti a fine round.
+     * Vengono copiati all'interno e salvati nella prima cella libera.
+     * @param lastD arraylist di dadi.
+     */
     public void putAtFinishedRound(ArrayList<Dice> lastD){
         if(lastD!=null && !lastD.isEmpty()) {
 
@@ -139,21 +138,33 @@ public class RoundGrid {
         else roundDices.add(new ArrayList<>());
     }
 
-
+    /**
+     * getter del numero del round attuale.
+     * @return numero intero che indica round attuale.
+     */
     public int getRound(){
         return actualRound;
     }
     /////////////Comunicazione/////
+    /**
+     * Metodo che crea l'evento di aggiornamento della roundgrid.
+     * @return evento contenete la rappresentazione.
+     */
     private UpdateM createResponse(){
 
             String content = this.toString();
 
             return new UpdateM(null,"RoundGrid", content);
     }
+    /**
+     * override del toString di Object, serve a creare una rappresentazione customizzata secondo protocollo
+     * della classe.
+     * @return stringa di rappresentazione della classe.
+     */
     public String toString(){
 
             String message = "";
-            Dice die=null;
+            Dice die;
             for (int i=0;i<roundDices.size();i++) {
 
                 if(roundDices.get(i).isEmpty()){
@@ -181,14 +192,13 @@ public class RoundGrid {
 
             return message;
     }
-    //todo toString da fare
 
-    public UpdateM updateForcer(UpdateReq m){
-        if(m.getWhat().contains(this.getClass().getName())){
-            return createResponse();}
-        return null;
-    }
 
+    /**
+     * Metodo designato dalla classe tavolo che triggera la generazione di un aggiornamento della classe.
+     * Il tavolo recuperare gli eventi di update grazie questi metodi.
+     * @return l'evento di aggiornamento.
+     */
     public UpdateM setUpdate(){
         return createResponse();
     }

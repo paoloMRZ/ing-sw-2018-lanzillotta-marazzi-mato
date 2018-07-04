@@ -9,6 +9,7 @@ import it.polimi.se2018.server.events.responses.*;
  * Implementa l'intergaccia del model come osservabile.
  * Il metodo notifyObserver è il metodo tipico del pattern observer, insieme a register
  * e un register.
+ * @author Kevin Mato
  */
 public class NotifyModel implements ModelObservable {
 

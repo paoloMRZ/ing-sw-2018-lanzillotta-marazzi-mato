@@ -6,7 +6,17 @@ import it.polimi.se2018.server.events.responses.*;
 import it.polimi.se2018.server.events.tool_mex.*;
 import it.polimi.se2018.server.message.server_message.ServerMessageCreator;
 
-
+/**
+ * Classe che si occupa della comunicazione fra l'mvc e la fakeView, ultimo elemento a seprazione dalla rete.
+ * Inoltra gli eventi in ingresso verso l'mvc, preparati nella fakeView attraverso il metodo notifyObserver
+ * metodo della interfaccia ViewAsObservable.
+ * Gestisce gli eventi in uscita dall'mvc, traformandoli in stringhe messaggio secondo il protocollo del server
+ * con degli appositi creator statici, arrivati fin lì grazie al metodo update dell'interfaccia ViewAsObserver
+ * per cui questa classe cominucatore osserva il model per ricevere notifiche sui cambiamenti.
+ * Questa classe ha l'utilità principale di suddividere il carico di metodi dell'interfaccia tra rete e gioco.
+ * Si può dire che sia la valvola di uscita degli eventi.
+ * @author Kevin Mato
+ */
 public class FakeVChat implements ViewAsObserver,ViewAsObservable {
     private ControllerAsObserver controller;
     private FakeView fake;

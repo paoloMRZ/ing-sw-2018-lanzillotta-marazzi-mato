@@ -217,7 +217,7 @@ public class ControllerPoints {
                 lobby.getScoreGrid().add(finalPoint.get(i).getNameOfPlayer());
                 lobby.getScoreGrid().addi(finalPoint.get(i).getScoreOfPlayer());
             }
-
+            //dentro il for si è fatto in modo di salvare nella scoregrid i risultati dei giocatori
 
             //Create tutte le collezioni del caso, procedo con la scelta del vincitore
 

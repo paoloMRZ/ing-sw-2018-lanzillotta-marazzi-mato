@@ -3,18 +3,28 @@ package it.polimi.se2018.server.fake_view;
 
 
 import it.polimi.se2018.server.controller.Controller;
-import it.polimi.se2018.server.events.ControllerAsObserver;
 import it.polimi.se2018.server.events.Freeze;
 import it.polimi.se2018.server.events.SimpleMove;
 import it.polimi.se2018.server.events.Unfreeze;
 import it.polimi.se2018.server.events.responses.*;
 import it.polimi.se2018.server.events.tool_mex.*;
-import it.polimi.se2018.server.message.server_message.ServerMessageCreator;
 import it.polimi.se2018.server.message.server_message.ServerMessageParser;
 import it.polimi.se2018.server.network.Lobby;
 
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * Classe che ha il compito di ricevere i messaggi dal Server,
+ * decodificarne il significato in base a determinati parser,
+ * creare i loro relativi eventi ed inoltrarli all'mvc tramite fakeViewChat.
+ * La classe si occupa anche dell'istradamento delle stringhe di messaggi, per il client provenienti dall'mvc.
+ * Tutti i messaggi scambiati seguono la convenzione, in ordine:
+ * extra/DiePerIndexDie/Box Round Grid/In Box RoundGrid/Row1 Vecchia/Col1 Vecchia/Row1New/Col1New/Row2 vecchia/Col2 Vecchia
+ * dove extra 1 o 0 in base a che booleano si voglia esprimere, oppure è un altro parametro non numerico.
+ * Se si hanno due extra, quello meno comune viene prima.
+ * @author Kevin Mato
+ */
 
 public class FakeView{
     private Lobby toOut;
@@ -127,7 +137,7 @@ public class FakeView{
 
     public void messageOutBox(String mex){
         //todo da rimuovere
-        System.out.println(mex);
+        //System.out.println(mex);
         if(toOut!=null) toOut.notifyFromFakeView(mex);
         message=mex;
     }

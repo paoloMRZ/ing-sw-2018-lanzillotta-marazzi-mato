@@ -2,25 +2,25 @@ package it.polimi.se2018.server.events;
 
 import it.polimi.se2018.server.events.responses.*;
 
-public interface ViewAsObserver {
+  public  interface ViewAsObserver {
 
-    public void update(SuccessSimpleMove mex);
-    public void update(SuccessColor mex);
-    public void update(SuccessValue mex);
-    public void update(SuccessActivation mex);
-    public void update(SuccessActivationFinalized mex);
-    public void update(ErrorSelection mex);
-    public void update(ErrorActivation mex);
-    public void update(ErrorSomethingNotGood mex);
-    public void update(UpdateM mex);
-    public void update(AskPlayer mex);
+        void update(SuccessSimpleMove mex);
+        void update(SuccessColor mex);
+        void update(SuccessValue mex);
+        void update(SuccessActivation mex);
+        void update(SuccessActivationFinalized mex);
+        void update(ErrorSelection mex);
+        void update(ErrorActivation mex);
+        void update(ErrorSomethingNotGood mex);
+        void update(UpdateM mex);
+        void update(AskPlayer mex);
 
-    public void update(TimeIsUp mex);
+        void update(TimeIsUp mex);
 
-    public void update(ErrorSelectionUtensil mex);
+        void update(ErrorSelectionUtensil mex);
 
-    public void update(Freeze mex);
-    public void update(DisconnectPlayer mex);
+        void update(Freeze mex);
+        void update(DisconnectPlayer mex);
 
-    public void update(IgnoreMex mex);
+        void update(IgnoreMex mex);
 }

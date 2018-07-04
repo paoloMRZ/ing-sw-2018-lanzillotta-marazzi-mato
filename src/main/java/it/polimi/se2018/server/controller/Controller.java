@@ -4,8 +4,6 @@ import it.polimi.se2018.server.events.*;
 import it.polimi.se2018.server.events.responses.Choice;
 import it.polimi.se2018.server.events.responses.ErrorSomethingNotGood;
 import it.polimi.se2018.server.events.responses.PassTurn;
-import it.polimi.se2018.server.events.responses.UpdateM;
-import it.polimi.se2018.server.events.tool_mex.Activate;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.NotifyModel;
@@ -493,9 +491,9 @@ public class Controller{
 
     /**
      * Metodo che fa partire l'intero gioco.
-     * @throws Exception lanciata all'interno del gioco e risalente fino a questo metodo.
+     * @throws InvalidValueException lanciata all'interno del gioco e risalente fino a questo metodo.
      */
-    public void START() throws Exception {
+    public void START() throws InvalidValueException {
         cTurn.setThePlayers();
     }
 

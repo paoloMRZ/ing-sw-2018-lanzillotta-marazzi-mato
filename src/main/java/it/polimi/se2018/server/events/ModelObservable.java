@@ -2,17 +2,17 @@ package it.polimi.se2018.server.events;
 
 import it.polimi.se2018.server.events.responses.*;
 
-public interface ModelObservable {
+ public interface ModelObservable {
 
-    public void register(ViewAsObserver o);
+     void register(ViewAsObserver o);
 
-    public void unregister();
+     void unregister();
 
-    public void notifyObserver(SuccessSimpleMove mex);
-    public void notifyObserver(ErrorSomethingNotGood mex);
-    public void notifyObserver(UpdateM mex);
-    public void notifyObserver(ErrorSelection mex);
-    public void notifyObserver(AskPlayer mex);
+     void notifyObserver(SuccessSimpleMove mex);
+     void notifyObserver(ErrorSomethingNotGood mex);
+     void notifyObserver(UpdateM mex);
+     void notifyObserver(ErrorSelection mex);
+     void notifyObserver(AskPlayer mex);
         
     
 

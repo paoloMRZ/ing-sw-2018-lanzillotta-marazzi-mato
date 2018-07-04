@@ -20,9 +20,9 @@ public class ControllerTest {
     @Test
     public void checkUtensilsCreation() {
 
-        assertTrue(!controller.getTableUtensils().get(0).getDesciption().equals(controller.getTableUtensils().get(1).getDesciption()));
-        assertTrue(!controller.getTableUtensils().get(1).getDesciption().equals(controller.getTableUtensils().get(2).getDesciption()));
-        assertTrue(!controller.getTableUtensils().get(2).getDesciption().equals(controller.getTableUtensils().get(0).getDesciption()));
+        assertTrue(!controller.getTableUtensils().get(0).getDescription().equals(controller.getTableUtensils().get(1).getDescription()));
+        assertTrue(!controller.getTableUtensils().get(1).getDescription().equals(controller.getTableUtensils().get(2).getDescription()));
+        assertTrue(!controller.getTableUtensils().get(2).getDescription().equals(controller.getTableUtensils().get(0).getDescription()));
     }
 
     @Test
