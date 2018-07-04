@@ -255,9 +255,11 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
         //TODO implementare qualcosa che tolga i white0 dopo l'ultima cella significativa.
 
         ArrayList<ArrayList<DieInfo>> newRoundGrid = new ArrayList<>();
+        ArrayList<List<String>> oldRoundGrid = new ArrayList<>(ClientMessageParser.getInformationsFromUpdateRoundgridMessage(message));
+        oldRoundGrid.remove(oldRoundGrid.size()-1); //L'ultima posizione sarà sempre white0 che indica il round corrente. Non sono interessato a questa informazione.
 
-        //Trasformo ogni round in una lista di info stampabili e l'aggiungo in alla nuova roundgrid.
-        for (List<String> round : ClientMessageParser.getInformationsFromUpdateRoundgridMessage(message)) {
+        //Trasformo ogni round in una lista di info stampabili e l'aggiungo alla nuova roundgrid.
+        for (List<String> round : oldRoundGrid) {
             newRoundGrid.add(new ArrayList<>(Translater.fromMessageToDieInfo(round,false)));
         }
 

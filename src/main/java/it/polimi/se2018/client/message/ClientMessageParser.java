@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * La classe raccoglie dei metodi che facilitano l'interpretazioe dei messaggi ricevuti dal client.
+ *
+ * @author Marazzi Paolo
+ */
+
 public class ClientMessageParser {
 
     private static final String SUCCESS = "success";

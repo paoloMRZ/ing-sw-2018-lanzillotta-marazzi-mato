@@ -11,6 +11,8 @@ import java.util.List;
 
 public class ServerMessageCreator {
 
+    private static final String SERVER_ID = "###";
+
     private ServerMessageCreator() {
     }
 
@@ -24,7 +26,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getPutDieSuccesMessage(String addressee, String index, String row, String col) {
-        return "/###/" + addressee + "/success/put/" + index + "&" + row + "&" + col + "\n";
+        return "/"+ SERVER_ID  +"/" + addressee + "/success/put/" + index + "&" + row + "&" + col + "\n";
     }
 
 
@@ -38,7 +40,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getPutDieErrorMessage(String addressee, String index, String row, String col) {
-        return "/###/" + addressee + "/error/put/" + index + "&" + row + "&" + col + "\n";
+        return "/"+ SERVER_ID  +"/"  + addressee + "/error/put/" + index + "&" + row + "&" + col + "\n";
     }
 
     /**
@@ -49,7 +51,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getUnauthorizedMessage(String addressee){
-        return "/###/" + addressee + "/error/unauthorized" + "\n";
+        return "/"+ SERVER_ID  +"/"  + addressee + "/error/unauthorized" + "\n";
     }
 
     //Messaggi relativi all'uso degli utensili.
@@ -66,7 +68,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getActivateUtensilSuccessMessage(String addressee, String cardIndex, String cardNumber, String price, String favours) {
-        return "/###/" + addressee + "/success/activate/" + cardIndex + "&" + cardNumber + "&" + price + "&" + favours+"\n";
+        return "/"+ SERVER_ID  +"/"  + addressee + "/success/activate/" + cardIndex + "&" + cardNumber + "&" + price + "&" + favours+"\n";
     }
 
     /**
@@ -81,7 +83,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getUseUtensilSuccessMessage(String addressee, String index, String param1, String param2) {
-        return "/###/" + addressee + "/success/use/" + index + "&" + param1 + "&" + param2 + "\n";
+        return "/"+ SERVER_ID  +"/"  + addressee + "/success/use/" + index + "&" + param1 + "&" + param2 + "\n";
     }
 
     /**
@@ -93,7 +95,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getUseUtensilErrorMessage(String addressee, String index) {
-        return "/###/" + addressee + "/error/use/" + index +"\n";
+        return "/"+ SERVER_ID  +"/"  + addressee + "/error/use/" + index +"\n";
     }
 
     /**
@@ -108,7 +110,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getActivateUtensilErrorMessage(String addressee, String index, String cardNumber, String cardPrice, String favours ) {
-        return "/###/" + addressee + "/error/activate/" + index + "&"+ cardNumber + "&"+ cardPrice + "&"+ favours+  "\n";
+        return "/"+ SERVER_ID  +"/"  + addressee + "/error/activate/" + index + "&"+ cardNumber + "&"+ cardPrice + "&"+ favours+  "\n";
     }
     //Messaggi relativi all'avvio della partita.
 
@@ -124,7 +126,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getChoseSideMessage(String addressee, List<String> cardList) {
-        String message = "/###/" + addressee + "/start/chose_side/";
+        String message = "/"+ SERVER_ID  +"/"  + addressee + "/start/chose_side/";
 
         for (int i = 0; i < cardList.size(); i = i + 2) {
             if (i == 0)
@@ -152,7 +154,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getUseUtensilEndMessage(String addressee, String index, String cardNumber, String cardPrice, String favours ){
-        return "/###/" + addressee + "/utensil/end/" + index + "&"+ cardNumber + "&"+ cardPrice + "&"+ favours+  "\n";
+        return "/"+ SERVER_ID  +"/"  + addressee + "/utensil/end/" + index + "&"+ cardNumber + "&"+ cardPrice + "&"+ favours+  "\n";
     }
 
     /**
@@ -165,7 +167,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getSideListMessage(String list) {
-        String message = "/###/!/start/side_list/";
+        String message = "/"+ SERVER_ID  +"/!/start/side_list/";
         message = message.concat(list);
         message = message.concat("\n");
         return message;
@@ -183,7 +185,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getSideListMessage(String list,String address) {
-        String message = "/###/"+address+"/start/side_list/";
+        String message = "/"+ SERVER_ID  +"/" +address+"/start/side_list/";
         message = message.concat(list);
         message = message.concat("\n");
         return message;
@@ -198,7 +200,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getPublicObjectiveMessage(String list) {
-        String message = "/###/!/start/public_objective/";
+        String message = "/"+ SERVER_ID  +"/!/start/public_objective/";
         message = message.concat(list);
         message = message.concat("\n");
         return message;
@@ -212,7 +214,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getPublicObjectiveMessage(String list,String address) {
-        String message = "/###/"+address+"/start/public_objective/";
+        String message = "/"+ SERVER_ID  +"/" +address+"/start/public_objective/";
         message = message.concat(list);
         message = message.concat("\n");
         return message;
@@ -226,7 +228,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getSendUtensilsMessage(String list) {
-        String message = "/###/!/start/utensil/";
+        String message = "/"+ SERVER_ID  +"/!/start/utensil/";
         message = message.concat(list);
         message = message.concat("\n");
         return message;
@@ -241,7 +243,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getSendUtensilsMessage(String list,String dest) {
-        String message = "/###/"+dest+"/start/utensil/";
+        String message = "/"+ SERVER_ID  +"/" +dest+"/start/utensil/";
         message = message.concat(list);
         message = message.concat("\n");
         return message;
@@ -256,7 +258,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getPrivateObjectiveMesage(String addressee, String cardName) {
-        return "/###/"+ addressee + "/start/private_objective/" + cardName + "\n";
+        return "/"+ SERVER_ID  +"/" + addressee + "/start/private_objective/" + cardName + "\n";
     }
 
 
@@ -270,7 +272,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getUpdateRoundMessage(String infoReserve) {
-        return "/###/!/update/round/" + infoReserve + "\n";
+        return "/"+ SERVER_ID  +"/!/update/round/" + infoReserve + "\n";
     }
 
 
@@ -291,7 +293,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getUpdateTurnMessage(String nickname,String dest) {
-        return "/###/"+dest+"/update/turn/" + nickname + "\n";
+        return "/"+ SERVER_ID  +"/" +dest+"/update/turn/" + nickname + "\n";
     }
 
     /**
@@ -301,7 +303,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getUpdateReserveMessage(String infoReserve) {
-        return "/###/!/update/reserve/" + infoReserve + "\n";
+        return "/"+ SERVER_ID  +"/!/update/reserve/" + infoReserve + "\n";
     }
     /**
      * Il metodo restituisce il messaggio da inviare ai client per aggiornarli sullo stato della riserva.
@@ -311,7 +313,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getUpdateReserveMessage(String infoReserve,String dest) {
-        return "/###/"+dest+"/update/reserve/" + infoReserve + "\n";
+        return "/"+ SERVER_ID  +"/" +dest+"/update/reserve/" + infoReserve + "\n";
     }
 
     /**
@@ -331,7 +333,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getUpdeteRoundgridMessage(String infoRoundgrid,String dest) {
-        return "/###/"+dest+"/update/roundgrid/" + infoRoundgrid + "\n";
+        return "/"+ SERVER_ID  +"/" +dest+"/update/roundgrid/" + infoRoundgrid + "\n";
     }
 
     /**
@@ -352,7 +354,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getUpdateSideMessage(String infoSide,String dest) {
-        return "/###/"+dest+"/update/side/" +  infoSide + "\n";
+        return "/"+ SERVER_ID  +"/" +dest+"/update/side/" +  infoSide + "\n";
     }
 
 
@@ -365,7 +367,7 @@ public class ServerMessageCreator {
      * @return messaggio.
      */
     public static String getTimeoutMessage(String addressee) {
-        return "/###/" + addressee + "/network_message/timeout/?\n";
+        return "/"+ SERVER_ID  +"/"  + addressee + "/network_message/timeout/?\n";
     }
 
     /**

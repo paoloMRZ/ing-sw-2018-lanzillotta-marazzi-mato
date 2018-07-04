@@ -4,8 +4,6 @@ package it.polimi.se2018.server.exceptions;
  * @author Marazzi Paolo
  */
 public class InvalidNicknameException extends SagradaException{
-    /**
-     * Costruttore della classe.
-     */
+
     public InvalidNicknameException(){super();}
 }

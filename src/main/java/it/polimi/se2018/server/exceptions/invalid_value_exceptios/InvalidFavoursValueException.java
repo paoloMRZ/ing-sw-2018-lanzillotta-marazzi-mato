@@ -4,6 +4,7 @@ import it.polimi.se2018.server.exceptions.InvalidValueException;
 
 /**
  * Viene lanciata quando si rileva un valore imossibile per un parametro che rappresenta il numero di segnalini favore associati ad una carta.
+ * @author Marazzi Paolo
  */
 public class InvalidFavoursValueException extends InvalidValueException {
     public InvalidFavoursValueException(){super();}

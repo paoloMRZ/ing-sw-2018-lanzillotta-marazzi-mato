@@ -2,6 +2,7 @@ package it.polimi.se2018.server.network.fake_client;
 
 import it.polimi.se2018.server.exceptions.ConnectionCloseException;
 import it.polimi.se2018.server.message.network_message.NetworkMessageCreator;
+import it.polimi.se2018.server.message.network_message.NetworkMessageParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -61,13 +62,22 @@ public class FakeClientSocket extends FakeClient implements Runnable {
                 if (message != null)
                     lobby.notifyFromFakeClient(message); //Notifico la lobby del messaggio ricevuto.
 
+                if(message != null && NetworkMessageParser.isDisconnectMessage(message))
+                    isOpen = false;
 
             } catch (IOException e) {
                 isOpen = false;
+                lobby.notifyFromFakeClient(NetworkMessageCreator.getClientDisconnectMessage(super.getNickname()));
             }
         }
 
-        lobby.notifyFromFakeClient(NetworkMessageCreator.getClientDisconnectMessage(super.getNickname()));
+        try {
+            reader.close();
+            out.close();
+            socket.close();
+        } catch (IOException e) {
+            //ignoro
+        }
     }
 
     /**
@@ -88,15 +98,16 @@ public class FakeClientSocket extends FakeClient implements Runnable {
     }
 
     /**
-     * Il metodo chiude la connessione col client inviandogli un messaggio di notifyFromFakeView e chiudendo la socket.
+     * Il metodo chiude la connessione col client inviandogli un messaggio di notifica e chiudendo la socket.
      */
     @Override
     public void closeConnection() {
         try {
+            isOpen = false; //Interrompo il loop di lettura.
+            
             out.close(); //Chiudo il buffer di scrittura.
             reader.close(); //Chiudo il buffer di lettura.
             socket.close(); //Chiudo la socket.
-            isOpen = false; //Interrompo il loop di lettura.
         } catch (IOException e) {
             // Il server si disinteressa se la chiusura della connessione non è andata a buon fine perchè da questo momento
             // in poi non comunicherà più tramite questa socket.

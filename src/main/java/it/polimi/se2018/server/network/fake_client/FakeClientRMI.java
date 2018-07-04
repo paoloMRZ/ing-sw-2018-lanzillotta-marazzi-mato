@@ -57,7 +57,7 @@ public class FakeClientRMI extends FakeClient implements FakeClientRMIInterface 
     }
 
     /**
-     * Il metodo chiude la connessione col client inviandogli un messaggio di notifyFromFakeView.
+     * Il metodo chiude la connessione col client inviandogli un messaggio di notifica.
      */
     @Override
     public void closeConnection() {
@@ -83,7 +83,7 @@ public class FakeClientRMI extends FakeClient implements FakeClientRMIInterface 
      * Metodo esposto tramite RMI (attraverso l'interfaccia FakeClientRMIInterface) al vero client per permettergli di mandare messaggi direttamente
      * al suo corrispettivo fake client sul server.
      *
-     * Appene viene ricevuto un messaggio sulla socket la classe lo notifyFromFakeView alla lobby che si occuperà di
+     * Appene viene ricevuto un messaggio sulla socket la classe lo notifica alla lobby che si occuperà di
      * passare l'informazione ai destinatari.
      *
      * @param message messaggio da inviare.

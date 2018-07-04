@@ -20,6 +20,9 @@ import java.util.List;
  * Questa classe rappresenta una stanza di gioco ed ha il compito di raccogliere tutti i fake client che gestiscono le connessioni dei client connessi
  * al server.
  * Oltre a questo fa da tramite tra view (client) e fake view (server).
+ *
+ * La classe è singleton perchè il server gestisce una partita alla volta.
+ *
  * @author Marazzi Paolo
  */
 public class Lobby implements ObserverTimer, FakeClientObserver {
@@ -33,6 +36,13 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
 
     private int turnTime;
 
+    /**
+     * Metodo di costruzione della classe.
+     *
+     * @param lifeTime intervallo di tempo per cui la lobby accetta connessioni per una nuova partita.
+     * @param turnTime durata massima di un turno di gioco.
+     * @return istanza della classe.
+     */
     public static Lobby factoryLobby(int lifeTime, int turnTime){
         if(instance == null)
             instance = new Lobby(lifeTime, turnTime);
@@ -40,6 +50,10 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
         return instance;
     }
 
+    /**
+     * Metodo di costruzione della lobby.
+     * @return istanza della classe.
+     */
     public static Lobby factoryLobby(){
         if(instance == null)
             instance = new Lobby(30, 180); //Default = 30 sec.
@@ -63,7 +77,11 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
     }
 
     /**
-     * Questa classe crea il "triangolo MVC" richiamando il costruttore della fake view.
+     * Questo metodo avvia la partita esegunedo le seguenti operazioni:
+     * - chiude la lobby.
+     * - ferma il timer.
+     * - crea una fake view.
+     * - lancia il metodo start del controller per creare l'MVC.
      */
     private void createGame() {
         this.isOpen = false; //Come prima cosa chiudo la lobby.
@@ -76,7 +94,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
         } catch (Exception e) {
             clearLobby(); //Disconnetto tutti i giocatori.
             System.out.println("[*]ERRORE: Impossibile avviare la partita."); //Notifico a schermo.
-            System.out.print(e.getMessage());
+            System.out.print(e);
             System.exit(0); //Termino il processo.
         }
 
@@ -114,12 +132,13 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
 
     /**
      * Il metodo congela un fake client.
-     *
+     * Congelare un client significa chiudere la sua connessione senza toglierlo dalla lobby.
      * @param nickname nickname del fake client che si vuole congelare.
      */
-    private void freezeFakeClient(String nickname) { //Congelare un client significa chiudere la sua connessione senza toglierlo dalla lobby.
+    private void freezeFakeClient(String nickname) {
 
         FakeClient fakeClient = serachByNickname(nickname); //Ricerco il client tramite il suo nickname.
+
         if (fakeClient != null) { //Se l'ho trovato lo congelo, cioè chiudo la sua connessione ma non lo rimuovo dalla lobby.
 
             sendBroadcast(NetworkMessageCreator.getDisconnectMessage(nickname)); //Notifico tutti i giocatori della disconnessione del client.
@@ -138,7 +157,9 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
      * @param newConnection nuova connessione da sostituire a quella vecchia.
      */
     private void unfreezeFakeClient(FakeClient newConnection) { //Scongelare un client significa togliere dalla lobby il fake client congelato e sostituirlo con quello nuovo.
+
         FakeClient fakeClient = serachByNickname(newConnection.getNickname());//Individuo il vecchio client tramite il nickname.
+
         if (fakeClient != null) {
             this.connections.set(connections.indexOf(fakeClient), newConnection); //Sostituisco il client congelato con quello nuovo.
             numberOfClient++;
@@ -166,7 +187,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
 
     /**
      * Il metodo invia un messaggio in broadcast, cioè invia lo stesso messaggio a tutti i client connessi.
-     * Se trova un fakeClient con la connessione chiusa lo si congela o lo si rimuove in base allo stato della partita,
+     * Se trova un fakeClient con la connessione chiusa lo congela o lo  rimuove in base allo stato della partita,
      * se la partita è iniziata(lobby chiusa) lo si congela, in caso contrario lo si rimuove.
      *
      * @param message mesaggio da inviare.
@@ -257,7 +278,6 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
         this.numberOfClient = 0; //Metto a zero il numero di giocatori presenti nella stanza.
     }
 
-    //TODO Aggiornare il commento.
     /**
      * Il metodo aggiunge un fake client alla lobby solo se:
      *  - il suo nickname non è già utilizzato da un'altro fake client già inserito.
@@ -268,6 +288,8 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
      * In caso negativo il client che ha fatto richiesta non viene inserito nella lobby.
      *
      * @param connection fake client da inserire.
+     * @throws InvalidNicknameException viene sollevata se il nickname del nuovo fake client è già utilizzato da un fake client attivo.
+     * @throws GameStartedException viene sollevata se il nuovo fake client tenta di connettersi a partita già iniziata.
      */
     public synchronized void add (FakeClient connection) throws InvalidNicknameException, GameStartedException {
 
@@ -302,7 +324,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
 
 
     /**
-     * Richiamato da un fake client qundo riceve un messaggio.
+     * Il metodo viene richiamato da un fake client qundo riceve un messaggio.
      * @param message messaggio ricevuto dal fake client.
      */
     @Override
@@ -324,8 +346,10 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
     }
 
     /**
-     * Il metodo richiama il metodo update di tutti o alcuni fake client contenuti nella lobby.
-     * @param message messaggio da passare al vero client tramite il metodo update.
+     * Il metodo viene richiamato dalla fake view quando  deve mandare un messaggio a uno o più client, oppure quando deve
+     * fare richiesta alla lobby di congelare un giocatore.
+     *
+     * @param message messaggio da inviare.
      */
 
     public void notifyFromFakeView(String message){
@@ -355,6 +379,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
 
     /**
      * Il metodo viene richiamato allo scadere del tempo dall'oggetto 'SagradaTimer' che si sta osservando.
+     * Quando il tempo scade la lobby viene chiusa e se ci sono abbastanza giocatori si avvia la partita.
      */
     @Override
     public void timerUpdate() {

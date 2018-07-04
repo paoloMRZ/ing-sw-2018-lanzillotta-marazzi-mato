@@ -4,6 +4,7 @@ import it.polimi.se2018.server.exceptions.InvalidValueException;
 
 /**
  * viene lanciata quando si rileva una coppia di coordinate (relative alla griglia di un gioactore) non valide.
+ * @author Marazzi Paolo
  */
 public class InvalidCoordinatesException extends InvalidValueException {
 
