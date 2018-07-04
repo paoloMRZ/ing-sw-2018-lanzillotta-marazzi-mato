@@ -54,7 +54,7 @@ public class SideCardLabel{
         setInitDicePutHistory();
 
         //Creo e dimensiono la cella della griglia posta sulla carta Side
-        setGridSide(includeShadowGrid);
+        setGridSide(includeShadowGrid, isCallUtensil);
 
         //Creo l'immagine di background e Aggiungo la gridPane all'anchorPane
         setAnchorSide(sideCard,includeShadowGrid);
@@ -62,7 +62,9 @@ public class SideCardLabel{
         //Posiziono la griglia sull'anchorPane creato
         setPositionGrid(includeShadowGrid,isCallUtensil);
 
-        ArrayList<Double> sizeRect = (ArrayList<Double>) adapter.getSidePlayerSize().get(3);
+        ArrayList<Double> sizeRect;
+        if(!isCallUtensil) sizeRect = (ArrayList<Double>) adapter.getSidePlayerSize().get(3);
+        else sizeRect = (ArrayList<Double>) adapter.getSidePlayerUtensilSize().get(2);
         if(includeShadowGrid) {
             group = new Group();
             Rectangle rect = new Rectangle(20, 20, sizeRect.get(0), sizeRect.get(1));
@@ -82,10 +84,13 @@ public class SideCardLabel{
      */
 
     @SuppressWarnings("unchecked")
-    private void setGridSide(boolean includeShadowGrid){
+    private void setGridSide(boolean includeShadowGrid, boolean isCallUtensil){
         gridPane = new GridPane();
         ArrayList<Integer> gridSize;
-        if(includeShadowGrid) gridSize = (ArrayList<Integer>) adapter.getSidePlayerSize().get(0);
+        if(includeShadowGrid) {
+            if(!isCallUtensil) gridSize = (ArrayList<Integer>) adapter.getSidePlayerSize().get(0);
+            else gridSize = (ArrayList<Integer>) adapter.getSidePlayerUtensilSize().get(1);
+        }
         else gridSize = (ArrayList<Integer>) adapter.getSideEnemyLabelSize().get(0);
         for(int i=0; i<4; i++){
             for(int j=0;j<5;j++){
@@ -147,7 +152,7 @@ public class SideCardLabel{
         ArrayList<Double> positionGrid;
         if(includeShadowGrid){
             if(!isCallUtensil) positionGrid = (ArrayList<Double>) adapter.getSidePlayerSize().get(2);
-            else positionGrid = (ArrayList<Double>) adapter.getSidePlayerUtensilSize();
+            else positionGrid = (ArrayList<Double>) adapter.getSidePlayerUtensilSize().get(0);
             configureAnchorPane(anchorPane,gridPane,positionGrid.get(0),positionGrid.get(1),positionGrid.get(2),positionGrid.get(3));
         }
         else{
@@ -203,7 +208,9 @@ public class SideCardLabel{
         for(int i=0; i<4; i++) {
             for (int j=0; j<5; j++) {
                 if (!dicePutHistory.get(k).equals(EMPTYCELL)) {
-                    gridPane.add(configureImageView("/diePack/die-", dicePutHistory.get(k),".bmp",imageSize,imageSize),j,i);
+                    ImageView passed = configureImageView("/diePack/die-", dicePutHistory.get(k),".bmp",imageSize,imageSize);
+                    gridPane.add(passed,j,i);
+                    GridPane.setHalignment(passed,HPos.CENTER);
                 }
                 k++;
             }
@@ -225,12 +232,16 @@ public class SideCardLabel{
 
     public SideCardLabel callPlayerSide(String sideCard, String nickName, boolean includeShadowGrid, boolean isCallUtensil, AdapterResolution adapterResolution){
         SideCardLabel callPlayerSide = new SideCardLabel(sideCard, nickName, includeShadowGrid, isCallUtensil,adapterResolution);
-        int imageSize = (Integer)adapter.getSidePlayerSize().get(4).get(0);
+        int imageSize = (Integer)adapter.getSidePlayerUtensilSize().get(3).get(0);
         callPlayerSide.setDicePutHistory(dicePutHistory);
         int k=0;
         for(int i=0; i<4; i++) {
             for (int j = 0; j < 5; j++) {
-                if(!dicePutHistory.get(k).equals(EMPTYCELL)) callPlayerSide.getGridPane().add(configureImageView("/diePack/die-", dicePutHistory.get(k),".bmp" ,imageSize, imageSize), j, i);
+                if(!dicePutHistory.get(k).equals(EMPTYCELL)) {
+                    ImageView passed = configureImageView("/diePack/die-", dicePutHistory.get(k),".bmp" ,imageSize, imageSize);
+                    callPlayerSide.getGridPane().add(passed, j, i);
+                    GridPane.setHalignment(passed,HPos.CENTER);
+                }
                 k++;
             }
         }

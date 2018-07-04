@@ -174,10 +174,23 @@ public class MediumAdapter implements AdapterResolution {
     }
 
     @Override
-    public List<Double> getSidePlayerUtensilSize() {
+    public List<List<? extends Number>> getSidePlayerUtensilSize() {
+
+        List<List<? extends Number>>  sizeUtensilSide = new ArrayList<>();
 
         //Posizone Grid della Side visualizzata nelle schermate dedicate alle carte Utensile (Right, Top, Left, Bottom)
-        return new ArrayList<>(Arrays.asList(0d, 0d, 5d, 21d));
+        sizeUtensilSide.add(new ArrayList<>(Arrays.asList(0d, 0d, 1d, 22d)));
+
+        //Dimensioni della Griglia posta sopra la Side
+        sizeUtensilSide.add(new ArrayList<>(Arrays.asList(67, 65)));
+
+        //Dimensioni della cornice per l'effetto Focused
+        sizeUtensilSide.add(new ArrayList<>(Arrays.asList(64d, 64d)));
+
+        //Dimensioni del dado da inserire nella mainSide
+        sizeUtensilSide.add(new ArrayList<>(Collections.singletonList(57)));
+
+        return  sizeUtensilSide;
     }
 
     @Override

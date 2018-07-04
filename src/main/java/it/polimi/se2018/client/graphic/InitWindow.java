@@ -422,9 +422,6 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                 //MESSAGGIO SUCCESSO RICHIESTA DI ATTIVAZIONE DI UNA CARTA UTENSILE
                 if (ClientMessageParser.isSuccessActivateUtensilMessage(newValue)) {
 
-                    //Prelevo le informazioni sulla Utensile Attivata
-                    List<String> updateInfoUtensil = ClientMessageParser.getInformationsFromMessage(newValue);
-
                     //Blocco gli aggiornamenti relativi a carta Side e Riserva fino alla ricezione del messaggio di End
                     isUseUtensil = true;
 
@@ -518,7 +515,8 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
             case UTENSIL:
                 settingLabel.updateAction(action);
-                settingLabel.updateFavours(ClientMessageParser.getInformationsFromMessage(infoUpdate).get(3));
+                favours = ClientMessageParser.getInformationsFromMessage(infoUpdate).get(3);
+                settingLabel.updateFavours(favours);
 
         }
 

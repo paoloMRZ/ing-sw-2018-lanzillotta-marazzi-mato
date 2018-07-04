@@ -47,7 +47,7 @@ public interface AdapterResolution {
     List<List<? extends Number>> getRoundLabelSize();
     List<List<Integer>> getSideChoiceLabelSize();
     List<Integer> getPrimaryStageSize();
-    List<Double> getSidePlayerUtensilSize();
+    List<List<? extends Number>> getSidePlayerUtensilSize();
 
     void putSettingLabel(AnchorPane root, HBox settingLabel);
     void putSideLabel(AnchorPane root, AnchorPane sidePlayer);
