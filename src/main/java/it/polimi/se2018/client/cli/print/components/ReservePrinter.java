@@ -10,6 +10,11 @@ import java.util.List;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * La classe permetti di stampare a schermo la riserva dei dadi.
+ *
+ * @author Marazzi Paolo
+ */
 
 public class ReservePrinter {
 
@@ -26,10 +31,22 @@ public class ReservePrinter {
 
     private ReservePrinter(){}
 
+
+    /**
+     * Il metodo controlla se la coppia di cordinate è valida.
+     * @param row riga.
+     * @param col colonna.
+     * @return true se la coppia di coordinate è valida.
+     */
     private static boolean areValidCoordinates(int row, int col){
         return row >= 1 && col >= 1;
     }
 
+    /**
+     * Il metodo controlla se le coppie di valori (colore, numero) che descrivono i dadi sono accettabili.
+     * @param dice lista che contiene le descrizioni dei dadi.
+     * @return true se le descrizioni sono accettabili.
+     */
     private static boolean arePrintableInfo(List<DieInfo> dice){
         for(Info info: dice){
             if(info.getColor() == Ansi.Color.WHITE && info.getNumber() == 0)
@@ -38,6 +55,12 @@ public class ReservePrinter {
         return true;
     }
 
+    /**
+     * Il metodo stampa a schermo gli indici di riferimento della riserva.
+     * @param startRow riga su è posizionato l'angolo superiore sinistro della riserva.
+     * @param startCol colonna su è posizionato l'angolo superiore sinistro della riserva.
+     * @param numberOfDice numero dei dadi presenti nella riserva.
+     */
     private static void printNumbers(int startRow, int startCol, int numberOfDice){
         int col = startCol + NUMBER_COL;
 
@@ -47,6 +70,12 @@ public class ReservePrinter {
         }
     }
 
+    /**
+     * Il metodo stamapa a schermo la riserva indicata nella posizione specificata.
+     * @param startRow riga su è posizionato l'angolo superiore sinistro della riserva.
+     * @param startCol colonna su è posizionato l'angolo superiore sinistro della riserva.
+     * @param dice descrizione della riserva.
+     */
     public static void printReserve(int startRow, int startCol, List<DieInfo> dice){
 
 

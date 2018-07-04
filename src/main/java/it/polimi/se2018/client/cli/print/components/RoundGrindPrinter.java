@@ -9,6 +9,12 @@ import java.util.List;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * La classe permette di stampare a schermo la roundgrid.
+ *
+ * @author Marazzi Paolo
+ */
+
 public class RoundGrindPrinter {
 
     private static final String TEXT_NAME = "ROUND";
@@ -18,6 +24,15 @@ public class RoundGrindPrinter {
 
     private RoundGrindPrinter(){}
 
+    /**
+     * Il metodo stampa i round vuoti della roundgrid.
+     * In pratica si occupa solo della costruzione dei margini mancnti, creando così dei quadrati vuoti in corrispondenza
+     * dei round vuoti.
+     *
+     * @param startRow riga su è posizionato l'angolo superiore sinistro della roundgrid.
+     * @param startCol colonna su è posizionato l'angolo superiore sinistro della roundgrid.
+     * @param numberOfRoundPlayed numero dei round già giocatai.
+     */
     private static void printEmptyRound(int startRow, int startCol, int numberOfRoundPlayed){
 
         //Stampo le caselle vuote dei round mancanti.
@@ -46,6 +61,13 @@ public class RoundGrindPrinter {
 
     }
 
+    /**
+     *
+     * Il metodo stampa a schermo la roundgrid nella posizione specificata.
+     * @param startRow riga su è posizionato l'angolo superiore sinistro della roundgrid.
+     * @param startCol colonna su è posizionato l'angolo superiore sinistro della roundgrid.
+     * @param rounds round già giocati. Un round è descritto come una lista che contiene le descrizioni dei dadi che lo compongono.
+     */
     public static void printRoundGrid(int startRow, int startCol, List<ArrayList<DieInfo>> rounds){
 
         int row = startRow + 2;
@@ -82,6 +104,15 @@ public class RoundGrindPrinter {
         printEmptyRound(startRow, col, rounds.size() );
 
     }
+
+    /**
+     * Il metodo stampa a schermo la roundgrid di dimesioni ridotte nella posizione specificata.
+     * Con "dimensioni ridotte" si intende che viene stampato solo il primo dado di ogni round (e possibile che su un round ci siano più dadi).
+     *
+     * @param startRow riga su è posizionato l'angolo superiore sinistro della roundgrid.
+     * @param startCol colonna su è posizionato l'angolo superiore sinistro della roundgrid.
+     * @param rounds round già giocati. Un round è descritto come una lista che contiene le descrizioni dei dadi che lo compongono.
+     */
 
     public static void printSmallRoundGrid(int startRow, int startCol, List<ArrayList<DieInfo>> rounds){
         int row = startRow + 2;
