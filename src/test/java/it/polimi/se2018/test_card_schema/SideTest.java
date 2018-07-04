@@ -18,12 +18,21 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+/**
+ * Classe di test per la classe Side.
+ *
+ * @author Paolo Marazzi.
+ */
 public class SideTest {
 
     private Side lato = null;
     private ArrayList<Side> lati = new ArrayList<>();
     private ArrayList<Cell> celle = new ArrayList<>();
 
+    /**
+     * Metodo di inizializzazione dell'ambiente.
+     * Creazione di una carta finestra.
+     */
     @Before
     public void buildSide() {
 
@@ -83,6 +92,9 @@ public class SideTest {
     //Testo le combinazioni di coordinate che danno false.
     //Provo a fare delle put passando coordinate non valide.
 
+    /**
+     * Test che verifica il corretto funzionamento del metodo privato di controllo delle coordiate.
+     */
     @Test
     public void areValidCoordinatesTest() {
 
@@ -105,6 +117,9 @@ public class SideTest {
 
     }
 
+    /**
+     * Test che verifica il corretto riconoscimento delle coordinate corrette per il primo piazzamento.
+     */
     @Test
     public void edgeCoordinatesTest() {
 
@@ -124,6 +139,9 @@ public class SideTest {
 
     }
 
+    /**
+     * Test che verifica l'impossibilità di posizionare un dado al di fuori delle celle più esterne per il primo piazzamento.
+     */
     @Test
     public void fisrtWrongPutTest(){
         Dice dado = new Dice(Color.YELLOW, 3);
@@ -168,6 +186,9 @@ public class SideTest {
         }
     }
 
+    /**
+     * Test che verifica l'impossibilità di piazzare un dado in una cella non confinante con almeno un dado (tranne che per il metodo dedicato).
+     */
     @Test
     public void secondPutWithoutDicesNear(){
         Dice dado = new Dice(Color.YELLOW, 3);
@@ -220,6 +241,9 @@ public class SideTest {
         }
     }
 
+    /**
+     * Test che verifica che non avviene nessun piazzamento se vengono passate coordinate non valide.
+     */
     @Test
     public void invalidCoordinatesPut() {
         Dice dado = new Dice(Color.YELLOW, 3);
@@ -261,6 +285,9 @@ public class SideTest {
 
     }
 
+    /**
+     * Test che verifica che è impossibile piazzare un dado ignorando le restrizioni imposte dai dadi ortogonalmente confinanti.
+     */
     @Test
     public void putOrtogonalErrorTest(){
         Dice dado = new Dice(Color.YELLOW, 3);
@@ -321,6 +348,9 @@ public class SideTest {
         }
     }
 
+    /**
+     * Il test effettua due piazzamenti (consecutivi) corretti.
+     */
     @Test
     public void firstAndSecondCorrectPutTest(){
         Dice dado = new Dice(Color.YELLOW, 3);
@@ -403,6 +433,9 @@ public class SideTest {
         }
     }
 
+    /**
+     * Il test verifica il corretto funzionamento del metodo che consente di prelevare un dado dalla cella.
+     */
     @Test
     public void pickTest() {
         Dice dadoA = new Dice(Color.GREEN, 3);
@@ -429,6 +462,10 @@ public class SideTest {
         }
     }
 
+    /**
+     * Test del metodo che restituisce il colore della cella.
+     */
+
     @Test
     public void getColorTest(){
 
@@ -446,6 +483,9 @@ public class SideTest {
         }
     }
 
+    /**
+     * Test del metodo che restituisce il valore della cella.
+     */
     @Test
     public void getNumberTest(){
 
@@ -463,6 +503,9 @@ public class SideTest {
         }
     }
 
+    /**
+     * Test del metodo che restituisce una copia della cella.
+     */
     @Test
     public void showCellTest(){
 
@@ -483,6 +526,9 @@ public class SideTest {
         }
     }
 
+    /**
+     * Test del metodo che controlla se due dadi sono simili (uguali per colore o numero o entrambi).
+     */
     @Test
     public void areSimilarDiceTest(){
 

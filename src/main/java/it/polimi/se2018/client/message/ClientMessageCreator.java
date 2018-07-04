@@ -2,6 +2,12 @@ package it.polimi.se2018.client.message;
 
 import java.util.List;
 
+/**
+ * La classe raccoglie i metodi che permettono di creare i messaggi che devono essere inviati dal client.
+ *
+ * @author Marazzi Paolo
+ */
+
 public class ClientMessageCreator {
 
     private ClientMessageCreator(){}
@@ -44,19 +50,44 @@ public class ClientMessageCreator {
     }
 
 
+    /**
+     * Il metodo restituisce il messaggio che notifica la volontà di utilizzare una carta utensile.
+     * @param sender mittente del messaggio.
+     * @param cardIndex indice della carta.
+     * @return messaggio.
+     */
     public static String getActivateUtensilMessage(String sender, String cardIndex){
         return "/" + sender + "/###/utensil/activate/" + cardIndex + "\n";
     }
 
 
-    public static String getSideReplyMessage(String addressee, String cardIndex){
-        return "/" + addressee + "/###/start/side_reply/" + cardIndex + "\n";
+    /**
+     * Il metodo restituisce il messaggio che indica la carta schema scelta dall'utente per giocare la partita.
+     * @param sender mittente
+     * @param cardIndex indice della carta scelta
+     * @return messagio
+     */
+    public static String getSideReplyMessage(String sender, String cardIndex){
+        return "/" + sender + "/###/start/side_reply/" + cardIndex + "\n";
     }
 
+    /**
+     * Il metodo restituisce il messaggio che notifica il passaggio del turno da parte del giocatore.
+     * @param sender mittente
+     * @return messaggio.
+     */
     public static String getPassTurnMessage(String sender){
         return "/" + sender + "/###/update/turn/?\n";
     }
 
+    /**
+     * Il metodo restituisce il messaggio che specifica l'uso di un utensile da parte di un giocatore.
+     * @param sender mittente.
+     * @param cardIndex indice della carta utensile.
+     * @param numberCard numero della carta utensile.
+     * @param paramList lista dei parametri generati dall'uso della carta.
+     * @return messaggio.
+     */
     public static String getUseUtensilMessage(String sender, String cardIndex, String numberCard, List<String> paramList){
         String message = "/" + sender + "/###/utensil/use/" + cardIndex + "&" + numberCard;
 

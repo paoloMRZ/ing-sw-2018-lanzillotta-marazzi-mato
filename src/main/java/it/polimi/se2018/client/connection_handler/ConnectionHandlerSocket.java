@@ -29,7 +29,10 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
      * Il server rifuta la connessione si il nickanme scelto è già utilizzato da un'altro utente, in questo caso
      * manda al cliet un messaggio di "chiusura della connessione" che a sua volta solleva un'eccezione InvalidNicknameException.
      *
-     * Invece se il nickaname non è già utilizzato al creazione dell'oggetto viene completata e il client risulta connesso al server.
+     * Se il client tenta di connetersi a partita già iniziata con un nickname che non corrisponde ad un giocatore congelato
+     * il server risponde con un messaggio di errore appropiato e viene sollevata l'eccezione GameStartedException.
+     *
+     * Invece se il nickaname non è già utilizzato la creazione dell'oggetto viene completata e il client risulta connesso al server.
      * @param nickname nickname con cui collegarsi al server.
      * @throws InvalidNicknameException viene sollevata quando il nickanme scelto è già utilizzato da un'altro client connesso al server.
      */
@@ -78,7 +81,7 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
     }
 
     /**
-     * Loop di lettura della socket. Appena arriva un messaggio dal server lo notifyFromFakeView alla view tramite il metodo contenuto nel padre "ConnectionHandler".
+     * Loop di lettura della socket. Appena arriva un messaggio dal server lo notifica alla view tramite il metodo contenuto nel padre "ConnectionHandler".
      * Se riceve un messaggio di chiusura della connessione oltre a notificarlo alla view interrompe il loop di lettura.
      */
     @Override
@@ -95,11 +98,21 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
                 if (tmp != null)
                     super.notifica(tmp);
 
+                if(tmp != null && ClientMessageParser.isClientDisconnectedMessage(tmp))
+                    isOpen = false;
+
             } catch (IOException e) {
                 isOpen = false;
+                super.notifica(ClientMessageCreator.getServerDisconnectMessage(getNickname()));
             }
         }
 
-        super.notifica(ClientMessageCreator.getServerDisconnectMessage(getNickname()));
+        try {
+            reader.close();
+            out.close();
+            socket.close();
+        } catch (IOException e) {
+            //ignoro.
+        }
     }
 }

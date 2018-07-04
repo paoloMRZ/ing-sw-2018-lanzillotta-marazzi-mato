@@ -17,14 +17,21 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+/**
+ * Classe di testing della classe Cell.
+ *
+ * @author Marazzi Paolo
+ */
 
 public class CellTest {
 
     private Cell cellaLibera;
-    private Cell cellaOccupata;
     private ArrayList<Dice> dadi;
 
-    //Il metodo testa il costruttore che non accetta dice come parametro.
+    /**
+     * Il metodo crea una cella senza un dado posizionato su di essa.
+     */
+
     @Before
     public void createCellWithoutDice() {
 
@@ -53,6 +60,9 @@ public class CellTest {
         }
     }
 
+    /**
+     * Il metodo crea una cella con un dado posizionato su di essa.
+     */
     @Before
     public void createCellWithDice() {
 
@@ -60,7 +70,7 @@ public class CellTest {
         //Testo passando parametri accettabili.
         try {
 
-            cellaOccupata = new Cell(Color.WHITE, 0, dado);
+            Cell cellaOccupata = new Cell(Color.WHITE, 0, dado);
             assertTrue(cellaOccupata.getColor() == Color.WHITE &&
                     cellaOccupata.getNumber() == 0 &&
                     cellaOccupata.showDice() != null &&
@@ -99,6 +109,9 @@ public class CellTest {
 
     }
 
+    /**
+     * Creazione di tre dadi.
+     */
     @Before
     public void buildDice(){
         dadi = new ArrayList<>();
@@ -107,6 +120,9 @@ public class CellTest {
         dadi.add(new Dice(Color.RED, 3)); //Dado che viola le restrizioni di sfumatura della cella vuota.
     }
 
+    /**
+     * Il metodo effettua una serie di posizionamenti su una cella e verifica la validità del risultato.
+     */
     @Test
     public void putDiceTest() {
 
@@ -154,6 +170,9 @@ public class CellTest {
         }
     }
 
+    /**
+     * Questo metodo testa il posizionamento di un dado sulla cella ignorando le resriozioni di colore.
+     */
     @Test
     public void putDiceIgnoringColorTest(){
 
@@ -198,6 +217,9 @@ public class CellTest {
         }
     }
 
+    /**
+     * Questo metodo testa il posizionamento di un dado sulla cella ignorando le resriozioni di valore.
+     */
     @Test
     public void putDiceIgnoringShadeTest(){
 
