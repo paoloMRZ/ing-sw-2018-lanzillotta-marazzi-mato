@@ -16,7 +16,7 @@ public class ServerMessageParser {
      *         contrario.
      */
     public static boolean isPutMessage(String message){
-        return message.split("/")[3].equals("put");
+        return message.replace("\n", "").split("/")[3].equals("put");
     }
 
 
@@ -27,7 +27,7 @@ public class ServerMessageParser {
      * @return true se il messaggio è un messaggio di attivazione di una carta utensile.
      */
     public static boolean isActivateUtensilMessage(String message){
-        return message.split("/")[3].equals("utensil") && message.split("/")[4].equals("activate");
+        return message.replace("\n", "").split("/")[3].equals("utensil") && message.split("/")[4].equals("activate");
     }
 
 
@@ -39,7 +39,7 @@ public class ServerMessageParser {
      * @return true se il messaggio è un messaggio che trasporta i parametri necessari per l'uso di una carta utensile.
      */
     public static boolean isUseUtensilMessage(String message){
-        return message.split("/")[3].equals("utensil") && message.split("/")[4].equals("use");
+        return message.replace("\n", "").split("/")[3].equals("utensil") && message.split("/")[4].equals("use");
     }
 
 
@@ -51,7 +51,7 @@ public class ServerMessageParser {
      * @return true se il messaggio è un messaggio che specifica con quale carta schema un giocatore ha scelto di giocare.
      */
     public static boolean isSideReplyMessage(String message){
-        return message.split("/")[3].equals("start") && message.split("/")[4].equals("side_reply");
+        return message.replace("\n", "").split("/")[3].equals("start") && message.split("/")[4].equals("side_reply");
     }
 
     /**
@@ -61,7 +61,7 @@ public class ServerMessageParser {
      * @return true se il messaggio notifica il passaggio del turno da parte di un giocatore.
      */
     public static boolean isPassTurnMessage(String message){
-        return message.split("/")[3].equals("update") && message.split("/")[4].equals("turn");
+        return message.replace("\n", "").split("/")[3].equals("update") && message.split("/")[4].equals("turn");
     }
 
     /**
@@ -71,7 +71,7 @@ public class ServerMessageParser {
      * @return nickname del mittente.
      */
     public static String getSender(String message){
-        return message.split("/")[1];
+        return message.replace("\n", "").split("/")[1];
     }
 
     /**
@@ -91,7 +91,7 @@ public class ServerMessageParser {
      * @return true se il messaggio indica il congelamento di un giocatore.
      */
     public static boolean isFreezeMessage(String message){
-        return message.split("/")[4].equals("freeze");
+        return message.replace("\n", "").split("/")[4].equals("freeze");
     }
 
     /**
@@ -100,6 +100,6 @@ public class ServerMessageParser {
      * @return true se il messaggio indica lo scongelamento di un giocatore.
      */
     public static boolean isUnfreezeMessage(String message){
-        return message.split("/")[4].equals("unfreeze");
+        return message.replace("\n", "").split("/")[4].equals("unfreeze");
     }
 }
