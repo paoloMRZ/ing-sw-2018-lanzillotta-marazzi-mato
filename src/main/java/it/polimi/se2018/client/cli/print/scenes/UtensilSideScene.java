@@ -5,6 +5,7 @@ import it.polimi.se2018.client.cli.game.Game;
 import it.polimi.se2018.client.cli.game.utensil.UtensilCard;
 import it.polimi.se2018.client.cli.print.components.SidePrinter;
 import it.polimi.se2018.client.cli.print.components.UtensilPrinter;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.security.InvalidParameterException;
 
@@ -53,7 +54,7 @@ public class UtensilSideScene {
      * Il metodo stampa a schermo la scena.
      */
     public void printScene(){
-        System.out.print(ansi().eraseScreen());
+        AnsiConsole.out.print(ansi().eraseScreen());
 
         UtensilPrinter.printUtensil(CARD_ROW, CARD_COL, utensilCard);
         SidePrinter.printSide(SIDE_ROW, SIDE_COL, game.getMyCard(), game.getDiceOnMyCard());
@@ -75,6 +76,6 @@ public class UtensilSideScene {
      * Il metodo stampa un messaggio di testo.
      */
     private void printText(){
-        System.out.print(ansi().cursor(TEXT_ROW,TEXT_COL).a(TEXT_HEAD + text + TEXT_TAIL));
+        AnsiConsole.out.print(ansi().cursor(TEXT_ROW,TEXT_COL).a(TEXT_HEAD + text + TEXT_TAIL));
     }
 }

@@ -112,7 +112,9 @@ public class Utensil11SecondPhaseState implements StateInterface {
 
         if(value >= 1 && value <= 6){
 
+            String tmp = paramList.remove(0);
             paramList.add(String.valueOf(value)); //Aggiungo la scelta fatta alla lista dei parametri da includere nel messagio.
+            paramList.add(tmp);
 
             stepCounter ++; //Passo allo step successivo.
 
@@ -187,6 +189,8 @@ public class Utensil11SecondPhaseState implements StateInterface {
 
             default: sideColorScene.printScene(); // Pulisco lo schermo.
         }
+
+        //TODO sistemare il messaggio nel caso non si piazzi il dado.
 
         if(stepCounter == 4)
             return ClientMessageCreator.getUseUtensilMessage(game.getMyNickname(),String.valueOf(indexOfUtensil), String.valueOf(utensilCard.getNumber())+"bis",paramList);

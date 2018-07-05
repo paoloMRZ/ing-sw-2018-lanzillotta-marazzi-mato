@@ -351,4 +351,16 @@ public class ClientMessageParser {
     public static boolean isUpdatePriceMessage(String message){
         return message.split("/")[3].equals(UPDATE) && message.split("/")[4].equals("price");
     }
+
+
+    /**
+     * Metodo che ritorna il destinatario del mesaggio
+     *
+     * @param message messaggio da controllare
+     * @return destinarario del messaggio
+     */
+
+    public static String extractReceiver(String message){
+        return message.split("/")[2];
+    }
 }

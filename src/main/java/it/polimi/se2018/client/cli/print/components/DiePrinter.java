@@ -1,6 +1,7 @@
 package it.polimi.se2018.client.cli.print.components;
 
 import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.security.InvalidParameterException;
 
@@ -60,7 +61,7 @@ public class DiePrinter {
      */
 
     private static void printOne(Ansi.Color color, int startRow ,int startCol){
-        System.out.print(ansi().bg(color).cursor(startRow, startCol).bold().a(FIVE_SPACES)
+        AnsiConsole.out.print(ansi().bg(color).cursor(startRow, startCol).bold().a(FIVE_SPACES)
                 .cursorToColumn(startCol).a("  " + DOT + "  \n")
                 .cursorToColumn(startCol).a(FIVE_SPACES).boldOff().bgDefault());
     }
@@ -72,7 +73,7 @@ public class DiePrinter {
      * @param startCol colonna su cui stampare il dado.
      */
     private static void printTwo(Ansi.Color color, int startRow ,int startCol){
-        System.out.print(ansi().bg(color).cursor(startRow, startCol).bold().a(DOT +"    \n")
+        AnsiConsole.out.print(ansi().bg(color).cursor(startRow, startCol).bold().a(DOT +"    \n")
                 .cursorToColumn(startCol).a(FIVE_SPACES)
                 .cursorToColumn(startCol).a("    " + DOT + "\n").boldOff().bgDefault());
     }
@@ -84,7 +85,7 @@ public class DiePrinter {
      * @param startCol colonna su cui stampare il dado.
      */
     private static void printThree(Ansi.Color color, int startRow ,int startCol){
-        System.out.print(ansi().bg(color).cursor(startRow, startCol).bold().a(DOT + "    \n")
+        AnsiConsole.out.print(ansi().bg(color).cursor(startRow, startCol).bold().a(DOT + "    \n")
                 .cursorToColumn(startCol).a("  " + DOT + "  \n")
                 .cursorToColumn(startCol).a("    " + DOT + "\n").boldOff().bgDefault());
     }
@@ -96,7 +97,7 @@ public class DiePrinter {
      * @param startCol colonna su cui stampare il dado.
      */
     private static void printFour(Ansi.Color color, int startRow ,int startCol){
-        System.out.print(ansi().bg(color).cursor(startRow, startCol).bold().a(DOT + "   " + DOT + "\n")
+        AnsiConsole.out.print(ansi().bg(color).cursor(startRow, startCol).bold().a(DOT + "   " + DOT + "\n")
                 .cursorToColumn(startCol).a(FIVE_SPACES)
                 .cursorToColumn(startCol).a(DOT + "   " + DOT + "\n").boldOff().bgDefault());
     }
@@ -107,7 +108,7 @@ public class DiePrinter {
      * @param startCol colonna su cui stampare il dado.
      */
     private static void printFive(Ansi.Color color, int startRow ,int startCol){
-        System.out.print(ansi().bg(color).cursor(startRow, startCol).bold().a(DOT + "   " + DOT + "\n")
+        AnsiConsole.out.print(ansi().bg(color).cursor(startRow, startCol).bold().a(DOT + "   " + DOT + "\n")
                 .cursorToColumn(startCol).a("  " + DOT + "  \n")
                 .cursorToColumn(startCol).a(DOT + "   " + DOT + "\n").boldOff().bgDefault());
     }
@@ -119,7 +120,7 @@ public class DiePrinter {
      * @param startCol colonna su cui stampare il dado.
      */
     private static void printSix(Ansi.Color color, int startRow ,int startCol){
-        System.out.print(ansi().bg(color).cursor(startRow, startCol).bold().a(DOT + "   " + DOT + "\n")
+        AnsiConsole.out.print(ansi().bg(color).cursor(startRow, startCol).bold().a(DOT + "   " + DOT + "\n")
                 .cursorToColumn(startCol).a(DOT + "   " + DOT + "\n")
                 .cursorToColumn(startCol).a(DOT + "   " + DOT + "\n").boldOff().bgDefault());
     }

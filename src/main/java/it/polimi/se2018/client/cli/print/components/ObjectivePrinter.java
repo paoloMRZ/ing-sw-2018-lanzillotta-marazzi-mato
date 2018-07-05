@@ -3,6 +3,7 @@ package it.polimi.se2018.client.cli.print.components;
 import it.polimi.se2018.client.cli.game.objective.ObjectiveCard;
 import it.polimi.se2018.client.cli.print.utils.MarginPrinter;
 import it.polimi.se2018.client.cli.print.utils.TextPrinter;
+import org.fusesource.jansi.AnsiConsole;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -59,9 +60,9 @@ public class ObjectivePrinter {
      */
     private static void printReward(int startRow, int startCol, int reward) {
         if (reward == 0)
-            System.out.print(ansi().cursor(startRow + REWARD_ROW, startCol + REWARD_COL).bold().a("#").boldOff()); //Stampo la ricompensa.
+            AnsiConsole.out.print(ansi().cursor(startRow + REWARD_ROW, startCol + REWARD_COL).bold().a("#").boldOff()); //Stampo la ricompensa.
         else
-            System.out.print(ansi().cursor(startRow + REWARD_ROW, startCol + REWARD_COL).bold().a(reward).boldOff()); //Stampo la ricompensa.
+            AnsiConsole.out.print(ansi().cursor(startRow + REWARD_ROW, startCol + REWARD_COL).bold().a(reward).boldOff()); //Stampo la ricompensa.
     }
 
     /**
@@ -76,7 +77,7 @@ public class ObjectivePrinter {
         printMargin(startRow,startCol);
         printReward(startRow,startCol,objectiveCard.getReward());
 
-        System.out.print(ansi().cursor(startRow+TITLE_ROW,startCol+( (LEN + 4 - objectiveCard.getName().length() ) / 2)).bold().a(objectiveCard.getName()).boldOff()); //Stampo il titolo della carta.
+        AnsiConsole.out.print(ansi().cursor(startRow+TITLE_ROW,startCol+( (LEN + 4 - objectiveCard.getName().length() ) / 2)).bold().a(objectiveCard.getName()).boldOff()); //Stampo il titolo della carta.
         TextPrinter.printText(startRow+DESCRIPTION_ROW, startCol+DESCRIPTION_COL, objectiveCard.getDescription(), TEXT_SPACE);
 
     }

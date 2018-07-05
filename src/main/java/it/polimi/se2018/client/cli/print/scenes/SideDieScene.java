@@ -7,6 +7,7 @@ import it.polimi.se2018.client.cli.game.utensil.UtensilCard;
 import it.polimi.se2018.client.cli.print.components.DiePrinter;
 import it.polimi.se2018.client.cli.print.components.SidePrinter;
 import it.polimi.se2018.client.cli.print.components.UtensilPrinter;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.security.InvalidParameterException;
 
@@ -69,8 +70,8 @@ public class SideDieScene {
      */
     private void printText(){
 
-        System.out.print(ansi().cursor(TITLE_ROW,TITLE_COL).bold().a(TITLE).boldOff());
-        System.out.print(ansi().cursor(TEXT_ROW,TEXT_COL).a(TEXT_HEAD + text + TEXT_TAIL));
+        AnsiConsole.out.print(ansi().cursor(TITLE_ROW,TITLE_COL).bold().a(TITLE).boldOff());
+        AnsiConsole.out.print(ansi().cursor(TEXT_ROW,TEXT_COL).a(TEXT_HEAD + text + TEXT_TAIL));
     }
 
     /**
@@ -88,7 +89,7 @@ public class SideDieScene {
      * Il metodo stampa a schermo la scena.
      */
     public void printScene(){
-        System.out.print(ansi().eraseScreen());
+        AnsiConsole.out.print(ansi().eraseScreen());
 
         SidePrinter.printSide(SIDE_ROW,SIDE_COL,game.getMyCard(),game.getDiceOnMyCard());
         DiePrinter.printDie(this.dieInfo.getColor(), this.dieInfo.getNumber(), DIE_ROW,DIE_COL);

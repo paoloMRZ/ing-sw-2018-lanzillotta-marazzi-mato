@@ -1,5 +1,7 @@
 package it.polimi.se2018.client.cli.print.utils;
 
+import org.fusesource.jansi.AnsiConsole;
+
 import static org.fusesource.jansi.Ansi.ansi;
 
 /**
@@ -24,7 +26,7 @@ public class MarginPrinter {
      */
     public static void printRowMargin(int startRow, int startCol, int len){
         for(int col = startCol; col < startCol + len; col++)
-            System.out.print(ansi().cursor(startRow, col).a(TEXTURE_ORIZZONTAL_MARGIN));
+            AnsiConsole.out.print(ansi().cursor(startRow, col).a(TEXTURE_ORIZZONTAL_MARGIN));
     }
 
     /**
@@ -36,7 +38,7 @@ public class MarginPrinter {
      */
     public static  void printColMargin(int startRow, int startCol, int high){
         for(int row = startRow; row < startRow + high; row++)
-            System.out.print(ansi().cursor(row,startCol).a(TEXTURE_VERTICAL_MARGIN));
+            AnsiConsole.out.print(ansi().cursor(row,startCol).a(TEXTURE_VERTICAL_MARGIN));
     }
 
 }

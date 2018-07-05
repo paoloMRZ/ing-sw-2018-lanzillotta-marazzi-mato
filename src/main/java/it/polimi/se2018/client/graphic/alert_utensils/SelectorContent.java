@@ -194,7 +194,7 @@ public class SelectorContent {
         switch (cardName) {
             case DILUENTEPERPASTASALDA:
 
-                if((toolSide.getPosX()!=null) && (toolSide.getPosY()!=null)) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard) + "bis", new ArrayList<>(Arrays.asList(chosen,dieChoose,toolSide.getPosX(),toolSide.getPosY()))));
+                if((toolSide.getPosX()!=null) && (toolSide.getPosY()!=null)) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard) + "bis", new ArrayList<>(Arrays.asList(dieChoose,chosen,toolSide.getPosX(),toolSide.getPosY()))));
                 else AlertValidation.display(ERROR, "Seleziona la cella sulla carta!");
                 break;
 

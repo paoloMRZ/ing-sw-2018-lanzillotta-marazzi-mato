@@ -7,6 +7,7 @@ import it.polimi.se2018.client.cli.game.schema.SideCard;
 import it.polimi.se2018.client.cli.game.utensil.UtensilCard;
 import it.polimi.se2018.client.cli.print.components.*;
 import it.polimi.se2018.client.cli.print.utils.MarginPrinter;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -179,23 +180,23 @@ public class GameScene {
             col = MENU2_COL;
 
 
-        System.out.print(ansi().cursor(row,col).bold().a(TEXT0_MENU).boldOff());
+        AnsiConsole.out.print(ansi().cursor(row,col).bold().a(TEXT0_MENU).boldOff());
         row++;
-        System.out.print(ansi().cursor(row,col).a(TEXT1_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,col).a(TEXT1_MENU));
         row++;
-        System.out.print(ansi().cursor(row,col).a(TEXT2_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,col).a(TEXT2_MENU));
         row++;
-        System.out.print(ansi().cursor(row,col).a(TEXT3_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,col).a(TEXT3_MENU));
         row++;
-        System.out.print(ansi().cursor(row,col).a(TEXT4_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,col).a(TEXT4_MENU));
         row++;
-        System.out.print(ansi().cursor(row,col).a(TEXT5_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,col).a(TEXT5_MENU));
         row++;
-        System.out.print(ansi().cursor(row,col).a(TEXT6_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,col).a(TEXT6_MENU));
         row++;
-        System.out.print(ansi().cursor(row,col).a(TEXT7_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,col).a(TEXT7_MENU));
         row++;
-        System.out.print(ansi().cursor(row,col).a(TEXT8_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,col).a(TEXT8_MENU));
     }
 
     /**
@@ -212,17 +213,17 @@ public class GameScene {
             col = MENU2_COL;
 
 
-        System.out.print(ansi().cursor(row,col).bold().a(TEXT0_MENU).boldOff());
+        AnsiConsole.out.print(ansi().cursor(row,col).bold().a(TEXT0_MENU).boldOff());
         row++;
-        System.out.print(ansi().cursor(row,col).a(TEXT1_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,col).a(TEXT1_MENU));
         row++;
-        System.out.print(ansi().cursor(row,col).a(TEXT2_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,col).a(TEXT2_MENU));
         row++;
-        System.out.print(ansi().cursor(row,col).a(TEXT3_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,col).a(TEXT3_MENU));
         row++;
-        System.out.print(ansi().cursor(row,col).a(TEXT4_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,col).a(TEXT4_MENU));
         row++;
-        System.out.print(ansi().cursor(row,col).a(TEXT8_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,col).a(TEXT8_MENU));
     }
 
     /**
@@ -237,9 +238,9 @@ public class GameScene {
         else
             col = MENU2_COL;
 
-        System.out.print(ansi().cursor(row,col).bold().a(TEXT0_MENU).boldOff());
+        AnsiConsole.out.print(ansi().cursor(row,col).bold().a(TEXT0_MENU).boldOff());
         row++;
-        System.out.print(ansi().cursor(row,col).a(TEXT1_SELECTDICE));
+        AnsiConsole.out.print(ansi().cursor(row,col).a(TEXT1_SELECTDICE));
 
     }
 
@@ -255,9 +256,9 @@ public class GameScene {
         else
             col = MENU2_COL;
 
-        System.out.print(ansi().cursor(row,col).bold().a(TEXT0_MENU).boldOff());
+        AnsiConsole.out.print(ansi().cursor(row,col).bold().a(TEXT0_MENU).boldOff());
         row++;
-        System.out.print(ansi().cursor(row,col).a(TEXT2_SELECTDICE));
+        AnsiConsole.out.print(ansi().cursor(row,col).a(TEXT2_SELECTDICE));
 
     }
 
@@ -273,9 +274,9 @@ public class GameScene {
         else
             col = MENU2_COL;
 
-        System.out.print(ansi().cursor(row,col).bold().a(TEXT0_MENU).boldOff());
+        AnsiConsole.out.print(ansi().cursor(row,col).bold().a(TEXT0_MENU).boldOff());
         row++;
-        System.out.print(ansi().cursor(row,col).a(TEXT3_SELECTDICE));
+        AnsiConsole.out.print(ansi().cursor(row,col).a(TEXT3_SELECTDICE));
 
     }
 
@@ -291,9 +292,9 @@ public class GameScene {
         else
             col = MENU2_COL;
 
-        System.out.print(ansi().cursor(row,col).bold().a(TEXT0_MENU).boldOff());
+        AnsiConsole.out.print(ansi().cursor(row,col).bold().a(TEXT0_MENU).boldOff());
         row++;
-        System.out.print(ansi().cursor(row,col).a(TEXT_SELECTUTENSIL));
+        AnsiConsole.out.print(ansi().cursor(row,col).a(TEXT_SELECTUTENSIL));
 
     }
 
@@ -301,7 +302,7 @@ public class GameScene {
      * Il metodo stampa a schermo i segnlini favore in possesso del giocatore e i nickname del giocatore che sta giocando il turno.
      */
     private void printTurnAndFavours(){
-        System.out.print(ansi().cursor(INFO_ROW, INFO_COL).bold().a( " | " + TEXT_TURN + turnOf + " | " + TEXT_FAVOURS + favours).boldOff());
+        AnsiConsole.out.print(ansi().cursor(INFO_ROW, INFO_COL).bold().a( " | " + TEXT_TURN + turnOf + " | " + TEXT_FAVOURS + favours).boldOff());
     }
 
     /**
@@ -309,7 +310,7 @@ public class GameScene {
      */
     private void printMessages(){
 
-        System.out.print(ansi().cursor(MESSAGES_ROW,MESSAGES_COL+1).bold().a(MESSAGE_TEXT).boldOff());
+        AnsiConsole.out.print(ansi().cursor(MESSAGES_ROW,MESSAGES_COL+1).bold().a(MESSAGE_TEXT).boldOff());
 
         //Stampo i margini verticali.
         MarginPrinter.printColMargin(MESSAGES_ROW+1, MESSAGES_COL, MESSAGES_HIGH);
@@ -323,7 +324,7 @@ public class GameScene {
         int offset = 2;
 
         for(String message : messages){
-            System.out.print(ansi().cursor(MESSAGES_ROW+offset, MESSAGES_COL+1).a(MESSAGE_HEAD + message));
+            AnsiConsole.out.print(ansi().cursor(MESSAGES_ROW+offset, MESSAGES_COL+1).a(MESSAGE_HEAD + message));
             offset++;
         }
 
@@ -357,7 +358,7 @@ public class GameScene {
      * Il metodo stampa s schermo l'intera scena di gioco.
      */
     public void printScene(){
-        System.out.print(ansi().eraseScreen());
+        AnsiConsole.out.print(ansi().eraseScreen());
 
         ReservePrinter.printReserve(RESERVE_ROW, RESERVE_COL, reserve);
         RoundGrindPrinter.printSmallRoundGrid(ROUNDGRID_SMALL_ROW, ROUNDGRID_SMALL_COL,roundGrid);

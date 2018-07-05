@@ -87,9 +87,14 @@ public class Utensil1State implements StateInterface {
     private String upOrDown(int request){
 
         if(request == 0 || request == 1){ //Controllo se il parametro è accettabile.
+
+            String tmp = paramList.remove(0);
             paramList.add(String.valueOf(request)); //Aggiungo il parametro alla lista dei parametri.
+            paramList.add(tmp);
 
             dieSelected = false; //Mi riporto nello stato iniziale.
+
+
 
             //Restiruisco il messaggio da mandare al server.
             return ClientMessageCreator.getUseUtensilMessage(game.getMyNickname(), String.valueOf(indexOfCard), String.valueOf(utensilCard.getNumber()), paramList);

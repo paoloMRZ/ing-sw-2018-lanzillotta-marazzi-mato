@@ -175,6 +175,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                             alertSwitcher.closeAlert();
                             setDecoration(primaryStage,SAGRADA,adapterResolution.getSideChoiceLabelSize().get(2).get(0),adapterResolution.getSideChoiceLabelSize().get(2).get(1),15,15);
                             primaryStage.setScene(sceneChoice);
+                            favours = sideChoiceLabel.getFavours();
                         });
                     }
 
@@ -229,7 +230,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                             adapterResolution.putRoundGridLabel(anchorGame,nodeRoundGame);
 
                             //Posiziono la griglia con le informazioni sul giocatore
-                            settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", sideChoiceLabel.getFavours(), ClientMessageParser.getInformationsFromMessage(message.getText()).get(0), adapterResolution);
+                            settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", favours, ClientMessageParser.getInformationsFromMessage(message.getText()).get(0), adapterResolution);
                             nodeSetting = settingLabel.getSettingLabel();
                             action = "2";
                             adapterResolution.putSettingLabel(anchorGame, nodeSetting);
@@ -237,7 +238,6 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                             //Posiziono la carta Side del giocatore
                             playerSide = new SideCardLabel(sideSelectedByPlayer, connectionHandler.getNickname(), true, false, adapterResolution);
                             nodeSidePlayer = playerSide.getAnchorPane();
-                            favours = sideChoiceLabel.getFavours();
                             adapterResolution.putSideLabel(anchorGame, nodeSidePlayer);
 
                             //Posiziono la griglia dei pulsanti
@@ -252,7 +252,8 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                             Scene sceneGame = new Scene(anchorGame, 1880, 1073);
                             startGame = false;
                             Platform.runLater(() -> {
-                                AlertLoadingGame.closeAlert();
+                                if(!connectionHandler.getNickname().equals(ClientMessageParser.extractReceiver(message.getText()))) AlertLoadingGame.closeAlert();
+                                else alertSwitcher.closeAlert();
                                 setDecoration(primaryStage,SAGRADA,adapterResolution.getPrimaryStageSize().get(0),adapterResolution.getPrimaryStageSize().get(1),15,15);
                                 primaryStage.setOnCloseRequest(e -> closeWindow(primaryStage, e,true));
                                 primaryStage.setScene(sceneGame);
@@ -354,7 +355,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                     List<String> infoSide = ClientMessageParser.getInformationsFromMessage(newValue);
                     if(infoSide.get(0).equals(connectionHandler.getNickname())) {
                         anchorGame.getChildren().remove(nodeSidePlayer);
-                        playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), true, false,adapterResolution);
+                        playerSide = new SideCardLabel(sideSelectedByPlayer, connectionHandler.getNickname(), true, false,adapterResolution);
                         playerSide.updateSideAfterPut(ClientMessageParser.getInformationsFromMessage(newValue));
                         nodeSidePlayer = playerSide.getAnchorPane();
                         adapterResolution.putSideLabel(anchorGame,nodeSidePlayer);
