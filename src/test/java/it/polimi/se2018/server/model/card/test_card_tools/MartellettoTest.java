@@ -153,7 +153,16 @@ public class MartellettoTest {
         Dice d3 = new Dice(Color.PURPLE, 4);
         Dice d4 = new Dice(Color.YELLOW, 4);
         Dice d5 = new Dice(Color.YELLOW, 1);
-        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5)));
+        Dice d6 = new Dice(Color.BLUE, 1);
+        Dice d7 = new Dice(Color.GREEN, 4);
+        Dice d8 = new Dice(Color.PURPLE, 4);
+        Dice d9 = new Dice(Color.YELLOW, 4);
+        Dice d10 = new Dice(Color.YELLOW, 1);
+        Dice d11 = new Dice(Color.BLUE, 1);
+        Dice d12 = new Dice(Color.GREEN, 4);
+        Dice d13 = new Dice(Color.PURPLE, 4);
+
+        this.supportReserve = new Reserve(new ArrayList<Dice>(Arrays.asList(d1, d2, d3, d4, d5, d6, d7 ,d8, d9,d10,d11,d12,d13)));
         controller.getcAction().resettingReserve(supportReserve);
         String prima =supportReserve.toString();
         fake.messageIncoming("/primo/###/update/turn/?");
@@ -166,7 +175,7 @@ public class MartellettoTest {
         counter(false);
         comparing();
         String dopo = controller.getcAction().getReserve().toString();
-        System.out.println(prima+"!!!!!"+dopo);
+        System.out.println(prima+"!"+dopo);
         assertTrue(!prima.equals(dopo));
         //todo può essere utile come tipo di testing? ci sono probabilità, basse, che sia uguale a prima
     }

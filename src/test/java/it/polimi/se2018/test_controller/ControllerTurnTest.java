@@ -1,6 +1,7 @@
 package it.polimi.se2018.test_controller;
 
 import it.polimi.se2018.server.controller.Controller;
+import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ControllerTurnTest{
 
@@ -88,19 +90,53 @@ public class ControllerTurnTest{
         assertEquals("/###/!/update/turn/primo\n",fake.getMessage());
     }
     @Test
-    public void freeze(){
+    public void freezeFromServer(){
         fake.messageIncoming("/###/###/network/freeze/secondo");
         fake.messageIncoming("/primo/###/update/turn/?");
         assertEquals("/###/!/update/turn/primo\n",fake.getMessage());
     }
     @Test
-    public void unfreeze(){
+    public void unfreezeFromServer(){
         fake.messageIncoming("/###/###/network/freeze/secondo");
         fake.messageIncoming("/primo/###/update/turn/?");
         assertEquals("/###/!/update/turn/primo\n",fake.getMessage());
         fake.messageIncoming("/###/###/network/unfreeze/secondo");
         fake.messageIncoming("/primo/###/update/turn/?");
         assertEquals("/###/!/update/turn/secondo\n",fake.getMessage());
+    }
+    @Test
+    public void freezeFromGame() throws InvalidValueException, InterruptedException {
+        fake=new FakeView();
+        controller= new Controller(new ArrayList<>(Arrays.asList("primo","secondo")),1);
+        fake.register(controller);
+
+        controller.START();
+        fake.messageIncoming("/primo/###/start/side_reply/0");
+        fake.messageIncoming("/secondo/###/start/side_reply/0");
+
+        Player player1 = controller.getPlayerByName("primo");
+        Player player2 = controller.getPlayerByName("secondo");
+        player1.setSideSelection(sides);
+        player1.setMySide(0);
+        player1.setFavours();
+        player2.setSideSelection(sides);
+        player2.setMySide(0);
+        player2.setFavours();
+        Dice d1 = new Dice(Color.RED, 5);
+        Dice d2 = new Dice(Color.BLUE, 5);
+        Dice d3 = new Dice(Color.BLUE, 6);
+        Dice d4 = new Dice(Color.BLUE, 6);
+        Dice d5 = new Dice(Color.BLUE, 6);
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
+        controller.getcAction().resettingReserve(supportReserve);
+
+        fake.messageIncoming("/primo/###/put/?/0&0&0");
+        fake.messageIncoming("/primo/###/update/turn/?");
+
+        System.out.println("---TEST---TEST---TEST---TEST---TEST---TEST---TEST---TEST---TEST---TEST");
+        Thread.sleep(2000);
+        //leggere i risultati stampati ed interpretare
+        assertTrue(true);
     }
     @Test
     public void unfreezeMessagesAfterReconnection(){
@@ -149,6 +185,19 @@ public class ControllerTurnTest{
 
         fake.messageIncoming("/primo/###/utensil/activate/0");
         assertEquals("/###/primo/error/unauthorized\n",fake.getMessage());
+    }
+
+    @Test
+    public void disconnecthim() throws InvalidValueException, InterruptedException {
+        fake=new FakeView();
+        controller= new Controller(new ArrayList<>(Arrays.asList("primo","secondo")),1);
+        fake.register(controller);
+
+        controller.START();
+        fake.messageIncoming("/primo/###/start/side_reply/0");
+        Thread.sleep(2000);
+        assertEquals("/###/###/network_message/disconnected/secondo\n",fake.getMessage());
+
     }
 
 }
