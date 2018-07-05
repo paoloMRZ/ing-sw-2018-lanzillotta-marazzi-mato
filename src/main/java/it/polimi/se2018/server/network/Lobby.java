@@ -94,7 +94,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
         } catch (Exception e) {
             clearLobby(); //Disconnetto tutti i giocatori.
             System.out.println("[*]ERRORE: Impossibile avviare la partita."); //Notifico a schermo.
-            System.out.print(e);
+            System.out.print(e.toString());
             System.exit(0); //Termino il processo.
         }
 
@@ -139,7 +139,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
 
         FakeClient fakeClient = serachByNickname(nickname); //Ricerco il client tramite il suo nickname.
 
-        if (fakeClient != null) { //Se l'ho trovato lo congelo, cioè chiudo la sua connessione ma non lo rimuovo dalla lobby.
+        if (fakeClient != null && !fakeClient.isFreezed()) { //Se l'ho trovato lo congelo, cioè chiudo la sua connessione ma non lo rimuovo dalla lobby.
 
             sendBroadcast(NetworkMessageCreator.getDisconnectMessage(nickname)); //Notifico tutti i giocatori della disconnessione del client.
             fakeClient.closeConnection();
@@ -164,10 +164,16 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
             this.connections.set(connections.indexOf(fakeClient), newConnection); //Sostituisco il client congelato con quello nuovo.
             numberOfClient++;
 
+
+            sendBroadcast(NetworkMessageCreator.getConnectMessage(newConnection.getNickname())); //Notifico tutti i giocatori (compreso quello appena connesso) della connessione appena avvenuta.
+
+            //NB --> Se un client si riconnette con connessione socket è importante mandare prima il messaggio in broadcat che notifica a tutti (anche al client appena connesso)
+            // la connessione appena avvenuta e poi i messaggi che inizializzano la partita.
+            // Se l'ordine fosse invertito il client non leggerebbe i messaggi di inizializzazione della partita perchè il ciclo di lettura non è ancora stato avviato in quanto
+            // il messaggio di conferma della avvenuta connessione non è ancora stato ricevuto.
+
             if(fakeView != null) //Notifico la fake view  dello scongelamento di un giocatore.
                 fakeView.messageIncoming(NetworkMessageCreator.getUnfreezeMessage(newConnection.getNickname()));
-
-            sendBroadcast(NetworkMessageCreator.getConnectMessage(newConnection.getNickname())); //Notifico tutti i giocatori della connessione appena avvenuta.
         }
 
     }
@@ -295,8 +301,9 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
 
         if (getNicknames().contains(connection.getNickname())) { //Controlle se esiste un client congelato con lo stesso nick.
 
-            if(isFreezedFakeClient(connection.getNickname())) //Controllo se il fake client che usa questo nick è congelato, se si lo scongelo.
+            if(isFreezedFakeClient(connection.getNickname())) { //Controllo se il fake client che usa questo nick è congelato, se si lo scongelo.
                 this.unfreezeFakeClient(connection); //Richiamo il metodo privato per scongelare il client.
+            }
             else
                 throw new InvalidNicknameException(); //Se il nickname è utilizzato da un utente attivo sollevo un'eccezinoe.
 
@@ -330,6 +337,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
     @Override
     public synchronized void notifyFromFakeClient (String message){
         System.out.println(message); //TODO è da rimuovere!
+
         if(NetworkMessageParser.isDisconnectMessage(message)){ //Controllo se il messaggio ricevuto è una richiesta di disconnessione.
             if(isOpen)// Se la lobby è ancora aperta (quindi la partita non è stata avviata) rimuovo il giocatore
                 remove(NetworkMessageParser.getMessageSender(message));

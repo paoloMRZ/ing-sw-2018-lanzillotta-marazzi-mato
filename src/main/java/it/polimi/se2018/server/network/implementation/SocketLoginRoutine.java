@@ -12,6 +12,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+/**
+ * La classe gestisce la procedura di login per una nuova connessione socket.
+ *
+ * @author Marazzi Paolo.
+ */
 public class SocketLoginRoutine implements Runnable {
 
 
@@ -21,11 +26,21 @@ public class SocketLoginRoutine implements Runnable {
     private BufferedReader reader;
     private OutputStreamWriter out;
 
+    /**
+     * Costruttore della classe.
+     *
+     * @param socket socket del client di cui gestire il login.
+     */
     SocketLoginRoutine(Socket socket) {
         this.socket = socket;
     }
 
-
+    /**
+     * Il metodo invia un messaggio sulla socket dopo di che chiude la connessione.
+     *
+     * @param message messaggio da inviare.
+     * @throws IOException sollevata in caso di errori di scrittura sulla socket.
+     */
     private void sendMessageAndCloseConnection(String message) throws IOException {
 
         out.write(message);
@@ -36,6 +51,17 @@ public class SocketLoginRoutine implements Runnable {
         socket.close();
     }
 
+    /**
+     * Si tenta di aggiungere alla lobby il client appena connesso (o meglio, il suo relativo fake client).
+     * Se non vengono sollevate eccezioni, cioè se il client si è connesso correttamente, viene avviato un thread che si occupa di stare in ascolto sulla
+     * socket del client appena connesso.
+     *
+     * Se viene sollevata un'eccezione che notifica che la connessione non è andata abuon fine viene inviato al client il relativo messaggio di errore
+     * e viene chiusa la socket.
+     *
+     * @param fakeClientSocket fake client da inserire nella lobby.
+     * @throws IOException viene sollevata in caso di errori di scrittura/lettura sulla socket.
+     */
     private void addToLobby(FakeClientSocket fakeClientSocket) throws IOException {
 
         try {
@@ -49,6 +75,15 @@ public class SocketLoginRoutine implements Runnable {
             sendMessageAndCloseConnection(NetworkMessageCreator.getConnectionErrorGameStartedMessage(fakeClientSocket.getNickname()));
         }
     }
+
+    /**
+     * Routine di login da avviare su un thread dedicato.
+     *
+     * Si riceve il nickname scelto dal giocatore, viene creato il relativo fake client e si tenta di aggiungerlo alla lobby.
+     *
+     * Se l'inserimento va a buon fine si lancia il thread di lettura della socket del client appena connesso.
+     * In caso contrario si notifica l'errore al client tramite un messaggio dedicato e si chiude la socket.
+     */
 
     @Override
     public void run() {

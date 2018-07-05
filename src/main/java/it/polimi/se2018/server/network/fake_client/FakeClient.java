@@ -12,7 +12,6 @@ public abstract class FakeClient {
 
     private String nickname; //Nickname del client.
     protected FakeClientObserver lobby; //Stanza che raccoglie i giocatori.
-    private boolean isFreezed;
 
     /**
      * Costruttore della classe.
@@ -23,7 +22,6 @@ public abstract class FakeClient {
         if (nickname != null) {
             this.lobby = Lobby.factoryLobby();
             this.nickname = nickname;
-            this.isFreezed = false;
         }
     }
 

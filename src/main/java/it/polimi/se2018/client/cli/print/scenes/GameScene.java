@@ -87,7 +87,7 @@ public class GameScene {
     private static final String TEXT2_SELECTDICE = "Seleziona riga ('q' per annullare): ";
     private static final String TEXT3_SELECTDICE = "Seleziona colonna ('q' per annullare): ";
 
-    private static final String TEXT_SELECTUTENSIL = "Numero carta ('q' per annullare): ";
+    private static final String TEXT_SELECTUTENSIL = "Num. carta ('q' per annullare): ";
 
     private static final String MESSAGE_TEXT = "MESSAGGI";
     private static final String MESSAGE_HEAD = " [*] ";

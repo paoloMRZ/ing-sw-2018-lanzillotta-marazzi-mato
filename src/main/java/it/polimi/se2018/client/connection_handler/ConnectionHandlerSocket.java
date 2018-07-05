@@ -98,7 +98,7 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
                 if (tmp != null)
                     super.notifica(tmp);
 
-                if(tmp != null && ClientMessageParser.isClientDisconnectedMessage(tmp))
+                if(tmp != null && !tmp.equals("") && ClientMessageParser.isClientDisconnectedMessage(tmp))
                     isOpen = false;
 
             } catch (IOException e) {
