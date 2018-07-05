@@ -5,6 +5,12 @@ import java.util.List;
 
 public class ServerMessageParser {
 
+    /**
+     * La classe raccoglie dei metodi che facilitano l'interpretazioe dei messaggi ricevuti dal server.
+     *
+     * @author Marazzi Paolo
+     */
+
     private ServerMessageParser(){}
 
     /**

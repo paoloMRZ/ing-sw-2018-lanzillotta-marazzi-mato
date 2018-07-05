@@ -22,7 +22,7 @@ public class FakeClientSocket extends FakeClient implements Runnable {
     private OutputStreamWriter out;
     private BufferedReader reader;
 
-    private boolean isOpen; //Indica se la connessione è aperta, quindi se il loop di lettura "sta girando".
+    private boolean isFreezed; //Indica se il fake client è congelato.
 
     /**
      * Costruttore della classe.
@@ -34,7 +34,7 @@ public class FakeClientSocket extends FakeClient implements Runnable {
         super(nickname); //Richiamo il costruttore padre.
 
         if(socket != null){
-            this.isOpen = true;
+            this.isFreezed = false;
             this.socket = socket;
             this.out = new OutputStreamWriter(socket.getOutputStream());
             this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -51,7 +51,7 @@ public class FakeClientSocket extends FakeClient implements Runnable {
     @Override
     public void run() {
 
-        while (isOpen) {
+        while (!isFreezed) {
             try {
 
                 String message;
@@ -61,13 +61,20 @@ public class FakeClientSocket extends FakeClient implements Runnable {
                 if (message != null)
                     lobby.notifyFromFakeClient(message); //Notifico la lobby del messaggio ricevuto.
 
-
             } catch (IOException e) {
-                isOpen = false;
+                isFreezed = true;
+                lobby.notifyFromFakeClient(NetworkMessageCreator.getClientDisconnectMessage(super.getNickname()));
             }
         }
 
-        lobby.notifyFromFakeClient(NetworkMessageCreator.getClientDisconnectMessage(super.getNickname()));
+        //Se il loop si interrompe chiudo la socket.
+        try {
+            reader.close();
+            out.close();
+            socket.close();
+        } catch (IOException e) {
+            //ignoro
+        }
     }
 
     /**
@@ -77,7 +84,7 @@ public class FakeClientSocket extends FakeClient implements Runnable {
      */
     @Override
     public void update(String message) throws ConnectionCloseException {
-        if(isOpen) {
+        if(!isFreezed) {
             try {
                 out.write(message);
                 out.flush();
@@ -88,23 +95,28 @@ public class FakeClientSocket extends FakeClient implements Runnable {
     }
 
     /**
-     * Il metodo chiude la connessione col client inviandogli un messaggio di notifyFromFakeView e chiudendo la socket.
+     * Il metodo chiude la connessione col client inviandogli un messaggio di notifica e chiudendo la socket.
      */
     @Override
     public void closeConnection() {
         try {
+            isFreezed = true; //Interrompo il loop di lettura.
+            
             out.close(); //Chiudo il buffer di scrittura.
             reader.close(); //Chiudo il buffer di lettura.
             socket.close(); //Chiudo la socket.
-            isOpen = false; //Interrompo il loop di lettura.
         } catch (IOException e) {
             // Il server si disinteressa se la chiusura della connessione non è andata a buon fine perchè da questo momento
             // in poi non comunicherà più tramite questa socket.
         }
     }
 
+    /**
+     * Restituisce un booleano che indica se il fake client che congelato.
+     * @return true se il fake client è congelato.
+     */
     @Override
     public boolean isFreezed() {
-        return !isOpen;
+        return isFreezed;
     }
 }

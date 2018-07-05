@@ -20,7 +20,7 @@ import java.rmi.server.UnicastRemoteObject;
 public class ServerImplementationRMI extends UnicastRemoteObject implements ServerInterface {
 
     private static final int PORT = 1099; //Per RMI si usa la porta standard senza possibilità di scelta da parte dell'utente.
-    private Lobby lobby;
+    private transient Lobby lobby;
 
     /**
      * Costruttore della classe.

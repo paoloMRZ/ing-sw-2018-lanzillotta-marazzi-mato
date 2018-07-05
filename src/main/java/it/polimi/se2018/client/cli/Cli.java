@@ -28,6 +28,17 @@ import static org.fusesource.jansi.Ansi.ansi;
  *
  * In base allo stato in cui si trova la classe i dati forniti dall'utente su standard input acquisiscono uno specifico significato.
  *
+ *
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ *
+ * DIMENSIONI CONSIGLIATE
+ *
+ * Le dimensioni minime per poter giocare sul terminale sono 140X40.
+ * Se dopo aver impostato queste dimensioni le schermate non venissero visualizzate correttamente sarà necessario regolare
+ * "manualmente" il proprio terminale aumentando ancora le dimensioni o diminunendo il font (o entrambe le cose).
+ *
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ *
  * @author Marazzi Paolo
  */
 
@@ -255,9 +266,11 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
         //TODO implementare qualcosa che tolga i white0 dopo l'ultima cella significativa.
 
         ArrayList<ArrayList<DieInfo>> newRoundGrid = new ArrayList<>();
+        ArrayList<List<String>> oldRoundGrid = new ArrayList<>(ClientMessageParser.getInformationsFromUpdateRoundgridMessage(message));
+        oldRoundGrid.remove(oldRoundGrid.size()-1); //L'ultima posizione sarà sempre white0 che indica il round corrente. Non sono interessato a questa informazione.
 
-        //Trasformo ogni round in una lista di info stampabili e l'aggiungo in alla nuova roundgrid.
-        for (List<String> round : ClientMessageParser.getInformationsFromUpdateRoundgridMessage(message)) {
+        //Trasformo ogni round in una lista di info stampabili e l'aggiungo alla nuova roundgrid.
+        for (List<String> round : oldRoundGrid) {
             newRoundGrid.add(new ArrayList<>(Translater.fromMessageToDieInfo(round,false)));
         }
 

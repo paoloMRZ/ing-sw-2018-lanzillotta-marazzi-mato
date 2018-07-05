@@ -13,7 +13,7 @@ public class Server {
 
     private static final int DEFAULT_PORT = 1234;
     private static final int DEFAULT_TIME_LOGIN = 30; //Tempo in secondi.
-    private static final int DEFAULT_TIME_TURN = 180; //Tempo in secondi.
+    private static final int DEFAULT_TIME_TURN = 1000; //Tempo in secondi //todo modificare!!!.
 
 
     private Server(int port, int loginTimer, int turnTime) {

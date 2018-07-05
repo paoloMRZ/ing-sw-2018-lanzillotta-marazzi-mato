@@ -7,11 +7,14 @@ import it.polimi.se2018.client.graphic.RoundLabel;
 import it.polimi.se2018.client.graphic.SideCardLabel;
 import it.polimi.se2018.client.graphic.adapter_gui.AdapterResolution;
 import it.polimi.se2018.client.graphic.alert_box.AlertValidation;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -20,6 +23,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 
 import java.util.*;
 
@@ -76,6 +80,7 @@ public class SelectorContent {
     //UTENSILE6
     private TextField posX = new TextField();
     private TextField posY = new TextField();
+    private String chosen;
 
 
     //UTENSILE11
@@ -187,15 +192,15 @@ public class SelectorContent {
         switch (cardName) {
             case DILUENTEPERPASTASALDA:
 
-                if((toolSide.getPosX()!=null) && (toolSide.getPosY()!=null)) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard) + "bis", new ArrayList<>(Arrays.asList("1",dieChoose,toolSide.getPosX(),toolSide.getPosY()))));
-                else connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard)+ "bis", new ArrayList<>(Arrays.asList("0",dieChoose,toolSide.getPosX(),toolSide.getPosY()))));
+                if((toolSide.getPosX()!=null) && (toolSide.getPosY()!=null)) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard) + "bis", new ArrayList<>(Arrays.asList(chosen,dieChoose,toolSide.getPosX(),toolSide.getPosY()))));
+                else AlertValidation.display("Error", "Seleziona la cella sulla carta!");
                 break;
 
 
             case PENNELLOPERPASTASALDA:
 
-                if(!posX.getText().trim().isEmpty() && !posY.getText().trim().isEmpty()) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard)+ "bis", new ArrayList<>(Arrays.asList("0",posX.getText(),posY.getText()))));
-                else connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard)+ "bis", new ArrayList<>(Arrays.asList("1",posX.getText(),posY.getText()))));
+                if((toolSide.getPosX()!=null) && (toolSide.getPosY()!=null)) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard)+ "bis", new ArrayList<>(Arrays.asList(chosen,toolSide.getPosX(),toolSide.getPosY()))));
+                else AlertValidation.display("Error", "Seleziona la cella sulla carta!");
                 break;
 
 
@@ -319,16 +324,6 @@ public class SelectorContent {
                 node = new VBox(15);
                 node.setAlignment(Pos.TOP_CENTER);
 
-                //Configurazione dei campi inserimento coordinate
-                posX.setPromptText("Riga");
-                posY.setPromptText("Colonna");
-                posX.setPrefSize(100,20);
-                posY.setPrefSize(100,20);
-
-                VBox posDie = new VBox(setFontStyle(new Label("Posizione desiderata"), 20),posX,posY);
-                posDie.setAlignment(Pos.CENTER);
-                posDie.setSpacing(15);
-
                 String dieSelected = reserveLabel.getDieName();
                 ImageView dieExtract = configureImageView("/diePack/die-", dieSelected.replace(dieSelected.charAt(dieSelected.length()-1), bisContent.charAt(0)),".bmp",60,60);
                 VBox imageDie = new VBox(setFontStyle(new Label("Dado estratto"), 20),dieExtract);
@@ -336,9 +331,10 @@ public class SelectorContent {
                 imageDie.setSpacing(15);
 
 
-                HBox labelDie = new HBox(20);
+
+                VBox labelDie = new VBox(15);
                 labelDie.setAlignment(Pos.CENTER);
-                labelDie.getChildren().addAll(imageDie,posDie);
+                labelDie.getChildren().addAll(imageDie,configureToggleGroup("1", "2"));
                 node.getChildren().addAll(setFontStyle(new Label("La tua carta Side"), 20),toolSide.getAnchorPane(), labelDie);
                 break;
 
@@ -375,17 +371,15 @@ public class SelectorContent {
                     optionDie.getChildren().add(button);
                 }
 
-                selectionLabel.getChildren().addAll(setFontStyle(new Label("Scegli il valore del dado estratto e posizionalo:"), 23), optionDie);
+                selectionLabel.getChildren().addAll(setFontStyle(new Label("Scegli il valore del dado estratto\n e se puoi posizionalo:"), 23), optionDie);
                 selectionLabel.setAlignment(Pos.CENTER);
 
-                VBox coordinateLabel = new VBox(15);
-                coordinateLabel.setAlignment(Pos.CENTER);
-                newXFirstDie.setPrefSize(100,20);
-                newYFirstDie.setPrefSize(100,20);
-                coordinateLabel.getChildren().addAll(newXFirstDie,newYFirstDie);
+                RadioButton confirmButton = new RadioButton("Piazza Dado");
+                confirmButton.setFont(Font.font ("Matura MT Script Capitals", 20));
+                RadioButton discardButton = new RadioButton("Scarta");
+                discardButton.setFont(Font.font ("Matura MT Script Capitals", 20));
 
-
-                node.getChildren().addAll(setFontStyle(new Label("La tua carta Side:"), 18),toolSide.getAnchorPane(),selectionLabel,coordinateLabel);
+                node.getChildren().addAll(setFontStyle(new Label("La tua carta Side:"), 18),toolSide.getAnchorPane(),selectionLabel,configureToggleGroup("0", "1"));
                 break;
 
         }
@@ -393,6 +387,42 @@ public class SelectorContent {
         return node;
     }
 
+
+
+    /** Metodo utilizzato per la configurazione dei ToggleButton per la scelta del piazzamento
+     *
+     * @param firstContent Intestazione del primo campo inserimento
+     * @param secondContent Intestazione del primo secondo inserimento
+     * @return Riferimento all'elemento grafico contenente i bottoni configurati
+     */
+
+    private HBox configureToggleGroup(String firstContent, String secondContent){
+
+        RadioButton confirmButton = new RadioButton("Piazza Dado");
+        confirmButton.setFont(Font.font ("Matura MT Script Capitals", 20));
+        RadioButton discardButton = new RadioButton("Scarta");
+        discardButton.setFont(Font.font ("Matura MT Script Capitals", 20));
+
+        ToggleGroup groupChosen = new ToggleGroup();
+        confirmButton.setToggleGroup(groupChosen);
+        confirmButton.setUserData(firstContent);
+        discardButton.setToggleGroup(groupChosen);
+        discardButton.setUserData(secondContent);
+
+        //Listener che valuta le scelte fatte dal client sulla selezione del toggle
+        groupChosen.selectedToggleProperty().addListener((ov, oldTg, newTg) -> {
+            if (groupChosen.getSelectedToggle() != null) {
+                chosen = groupChosen.getSelectedToggle().getUserData().toString();
+            }
+            else Platform.runLater(() -> AlertValidation.display("Error", "Scegli se piazzare o meno\nil dado estratto!"));
+        });
+
+        HBox labelButton = new HBox(15);
+        labelButton.getChildren().addAll(confirmButton, discardButton);
+        labelButton.setAlignment(Pos.CENTER);
+
+        return labelButton;
+    }
 
 
 

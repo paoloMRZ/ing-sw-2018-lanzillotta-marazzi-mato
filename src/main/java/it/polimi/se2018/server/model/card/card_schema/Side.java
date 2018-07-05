@@ -1,9 +1,7 @@
 package it.polimi.se2018.server.model.card.card_schema;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.se2018.server.events.UpdateReq;
 import it.polimi.se2018.server.events.responses.UpdateM;
-import it.polimi.se2018.server.exceptions.InvalidValueException;
 import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.*;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidCoordinatesException;
 import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidFavoursValueException;
@@ -14,7 +12,7 @@ import it.polimi.se2018.server.model.dice_sachet.Dice;
 import java.util.List;
 
 /**
- * La classe rappresenta una facciata di una carta schema, cioè una griglia su cui posizionare i dadi, il
+ * La classe rappresenta una carta schema (o finestra), cioè una griglia su cui posizionare i dadi, il
  * suo nome ed il numero di segnalini favore ad essa associati.
  *
  * @author Marazzi Paolo

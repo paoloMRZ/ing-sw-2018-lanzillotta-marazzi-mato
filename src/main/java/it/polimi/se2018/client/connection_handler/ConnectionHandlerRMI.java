@@ -27,8 +27,12 @@ public class ConnectionHandlerRMI extends ConnectionHandler implements ClientInt
      * Se il nickname scelto dall'utente è già utilizzato da un altro utente connesso sul server la connessione viene chiusa e viene
      * sollevata l'eccezione InvalidNicknameException.
      *
+     * Se il client tenta di connetersi a partita già iniziata con un nickname che non corrisponde ad un giocatore congelato
+     * viene sollevata un'eccezione di GameStartedException.
+     *
      * @param nickname nickname scelto dall'utente.
      * @throws InvalidNicknameException viene sollevata se il nickname scelto è già in uso sul server.
+     * @throws GameStartedException viene sollevata se il client tenta di connettersi a partita già iniziata.
      */
     public ConnectionHandlerRMI(String nickname, ConnectionHandlerObserver view, String host) throws InvalidNicknameException, GameStartedException, NotBoundException, MalformedURLException, RemoteException {
 
@@ -58,7 +62,7 @@ public class ConnectionHandlerRMI extends ConnectionHandler implements ClientInt
 
     /**
      * Metodo richiamato dal server per mandare un messaggio al client tramite l'interfaccia remota di quest'ultimo.
-     * Quando il client riceve un messaggio lo notifyFromFakeView alla view.
+     * Quando il client riceve un messaggio lo notifica alla view.
      * @param message messaggio da inviare.
      */
     @Override
@@ -75,8 +79,8 @@ public class ConnectionHandlerRMI extends ConnectionHandler implements ClientInt
     public void accept(FakeClientRMIInterface fakeClientInterface) {
         this.fakeClientInterface = fakeClientInterface;
 
-        if(this.fakeClientInterface == null)
-            super.notifica(ClientMessageCreator.getServerDisconnectMessage(getNickname()));
+        if(this.fakeClientInterface == null) //Quado il server disconnette il client setta a null il parametro 'fakeClientInterface'
+            super.notifica(ClientMessageCreator.getServerDisconnectMessage(getNickname())); //La view viene notificata della disconnessione appena avvenuta.
 
     }
 

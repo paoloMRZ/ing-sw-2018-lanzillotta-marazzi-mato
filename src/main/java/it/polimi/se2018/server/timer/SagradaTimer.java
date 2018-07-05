@@ -9,7 +9,7 @@ import java.util.Timer;
  * Quando scade l'interevallo di tempo impostato tramite il costruttore della classe tutti gli oggetti che osservano
  * questo timer vengono notificati.
  *
- * Attenzione: qunado il timer scade il cliclo di conteggio ricomincia da capo in modo automatico!
+ * Attenzione: quando il timer scade il ciclo di conteggio ricomincia da capo in modo automatico!
  *
  * Per utilizzare questo timer, dopo aver costruito un nuovo oggetto, bisogna aggiungere tramite il metodo 'add' tutti gli oggetti che deveono
  * essere notificati allo scadere del tempo prestabilito. Questi oggetti devono implementare l'interfaccia 'ObserverTimer' contenuta in questo
@@ -34,14 +34,13 @@ public class SagradaTimer {
      * Costruttore della classe.
      * Nel caso venga passato un valore non valido (cioè <= 0) per il parametro tick il timer
      * viene settato automaticamente a 30 sec.
-     * @param tick intervallo di tempo (in secondi) dopo cui gli osservatori ricevono la receiveNotify.
+     * @param tick intervallo di tempo (in secondi) dopo cui gli osservatori ricevono la notifyFromFakeView.
      */
     public SagradaTimer(int tick){
         if(tick > 0){
             this.lifeTime = tick;
             this.counter = tick;
         }else {
-            //TODO decidere se questo tipo di gestione del valore errato va bene o se è meglio sollevare un'eccezione.
             this.lifeTime = 30;
             this.counter = 30;
         }
@@ -51,7 +50,7 @@ public class SagradaTimer {
     }
 
     /**
-     * Il metodo receiveNotify tutti gli osservatori di questa classe richiamando il metodo timerUpdate di ognuno.
+     * Il metodo notifica tutti gli osservatori di questa classe richiamando il metodo timerUpdate di ognuno.
      */
     private void timerNotify(){
         for(ObserverTimer osservatore : osservatori)
@@ -109,6 +108,10 @@ public class SagradaTimer {
         }
     }
 
+    /**
+     * Il metodo resetta il timer, cioè fa ripartire il conteggio dal valore iniziale.
+     * Ha effetto solo se il timer è in esecuzione.
+     */
     public void reset(){
         if(isStarted) {
             stop();
@@ -133,7 +136,7 @@ public class SagradaTimer {
     }
 
     /**
-     * Metodo di receiveNotify che viene richiamato ogni secondo dal metodo run della classe Clock (TimerTask).
+     * Metodo di notifica che viene richiamato ogni secondo dal metodo run della classe Clock (TimerTask).
      *
      * Si noti che il metodo ha livello di protezione package!
      */
