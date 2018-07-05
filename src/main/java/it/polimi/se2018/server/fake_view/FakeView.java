@@ -12,6 +12,7 @@ import it.polimi.se2018.server.message.server_message.ServerMessageParser;
 import it.polimi.se2018.server.network.Lobby;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -116,7 +117,11 @@ public class FakeView{
                     chat.notifyObserver(new ToolCard11(sender,Integer.parseInt(data.get(0)),Integer.parseInt(data.get(2))));
                     break;
                 case "11bis":
-                    chat.notifyObserver(new ToolCard11Bis(sender,Integer.parseInt(data.get(0)),data.get(2).equals("1"),transformer(data,2)));
+                    int num1= Integer.valueOf(data.get(2));
+                    int num2= Integer.valueOf(data.get(4));
+                    int num3= Integer.valueOf(data.get(5));
+                    chat.notifyObserver(new ToolCard11Bis(sender,Integer.parseInt(data.get(0)),data.get(3).equals("1"),
+                            new ArrayList<>(Arrays.asList(num1,num2,num3))));
                     break;
                 case "12":
                     chat.notifyObserver(new ToolCard12(sender,Integer.parseInt(data.get(0)),transformer(data,2)));

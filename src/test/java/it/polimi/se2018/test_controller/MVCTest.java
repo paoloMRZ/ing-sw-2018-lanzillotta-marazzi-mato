@@ -475,7 +475,52 @@ public class MVCTest {
         assertEquals("/###/secondo/utensil/end/0&5&2&4\n",fake.getMessage());
 
 
-
     }
 
+    @Test
+    public void tool11sim(){
+
+        controller.resetUtensils(new ArrayList<Utensils>(Arrays.asList(new DiluentePerPastaSalda(),
+                new PennelloPerPastaSalda(),
+                new Martelletto())));
+
+        Dice d1 = new Dice(Color.BLUE, 5);
+        Dice d2 = new Dice(Color.GREEN, 2);
+        Dice d3 = new Dice(Color.YELLOW, 5);
+        Dice d4 = new Dice(Color.YELLOW, 1);
+        Dice d5 = new Dice(Color.YELLOW, 1);
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
+        controller.getcAction().resettingReserve(supportReserve);
+        System.out.println("letsput-->letsput-->letsput-->letsput-->letsput-->letsput-->letsput-->letsput-->");
+
+        fake.messageIncoming("/primo/###/update/turn/?");
+
+        fake.messageIncoming("/secondo/###/put/?/0&0&2");
+        assertEquals("/###/secondo/success/put/0&0&2\n",fake.getMessage());
+
+        fake.messageIncoming("/secondo/###/update/turn/?");
+        fake.messageIncoming("/secondo/###/update/turn/?");
+        fake.messageIncoming("/primo/###/update/turn/?");
+        System.out.println("--round2--round2--round2--round2--round2--round2--round2--round2--round2--round2--round2");
+
+        d1 = new Dice(Color.PURPLE, 1);
+        d2 = new Dice(Color.GREEN, 2);
+        d3 = new Dice(Color.BLUE, 5);
+        d4 = new Dice(Color.BLUE, 1);
+        d5 = new Dice(Color.BLUE, 1);
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
+        controller.getcAction().resettingReserve(supportReserve);
+
+
+
+        fake.messageIncoming("/secondo/###/utensil/activate/0");
+
+        fake.messageIncoming("/secondo/###/utensil/use/0&11&0");
+
+        fake.messageIncoming("/secondo/###/utensil/use/0&11bis&2&1&1&2");
+
+        assertEquals("/###/secondo/utensil/end/0&11&2&4\n",fake.getMessage());
+
+
+    }
 }

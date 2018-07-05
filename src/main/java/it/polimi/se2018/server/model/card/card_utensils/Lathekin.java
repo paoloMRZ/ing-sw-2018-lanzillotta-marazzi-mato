@@ -63,15 +63,14 @@ public class Lathekin extends Utensils implements Visitable{
         Dice d1=controller.getcAction().takeALookToDie(name,oldRow,oldCol);
         Dice d2=controller.getcAction().takeALookToDie(name,oldRow2,oldCol2);
 
-        Dice firstFromSide= controller.getPlayerByName(name).sidePick(oldRow,oldCol);
-        controller.setHoldingADiceMoveInProgress(firstFromSide);
+        controller.getPlayerByName(name).sidePick(oldRow,oldCol);
+        controller.setHoldingADiceMoveInProgress(d1);
 
         controller.getcAction()
                 .workOnSide(name,d1,newRow,newCol);
 
-
-        Dice secFromSide= controller.getPlayerByName(name).sidePick(oldRow2,oldCol2);
-        controller.setHoldingResDie(secFromSide);//solo per comodità
+        controller.getPlayerByName(name).sidePick(oldRow2,oldCol2);
+        controller.setHoldingResDie(d2);//solo per comodità
 
         controller.getcAction()
                 .workOnSide(name,d2,newRow2,newCol2);
