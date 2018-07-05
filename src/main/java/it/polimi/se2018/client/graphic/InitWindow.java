@@ -348,7 +348,8 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
                 //MESSAGGIO UPDATE DELLA ROUNDGRID QUANDO EVENTUALMENTE SI CAMBIANO I SUOI DADI (UTILIZZO UTENSILE)
                 if (ClientMessageParser.isUpdateRoundgridMessage(newValue)) {
-                    List<List<String>> roundGridInfo = ClientMessageParser.getInformationsFromUpdateRoundgridMessage(newValue);
+                    ArrayList<List<String>> roundGridInfo = new ArrayList<>(ClientMessageParser.getInformationsFromUpdateRoundgridMessage(newValue));
+                    roundGridInfo.remove(roundGridInfo.size()-1);
                     anchorGame.getChildren().remove(nodeRoundGame);
                     roundLabel = new RoundLabel(adapterResolution);
                     nodeRoundGame = roundLabel.getAnchorRound();
