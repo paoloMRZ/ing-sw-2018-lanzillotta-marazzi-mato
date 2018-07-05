@@ -131,10 +131,10 @@ public class RoundGrid {
                 Dice toSave = new Dice(tmp.getColor(), tmp.getNumber());
                 save.add(toSave);
             }
-            roundDices.add(save);
+            roundDices.add(actualRound-1,save);
 
         }
-        else roundDices.add(new ArrayList<>());
+        else roundDices.add(actualRound-1,new ArrayList<>());
 
         actualRound=actualRound+1;
         setUpdate();

@@ -206,20 +206,21 @@ public class MVCTest {
 
         Dice d1 = new Dice(Color.BLUE, 1);
         Dice d2 = new Dice(Color.BLUE, 1);
-        Dice d3 = new Dice(Color.BLUE, 1);
+        Dice d3 = new Dice(Color.RED, 1);
         Dice d4 = new Dice(Color.BLUE, 1);
         Dice d5 = new Dice(Color.BLUE, 1);
         this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
         controller.getcAction().resettingReserve(supportReserve);
 
         controller.getcAction().putOnGrid(0, new Dice(Color.YELLOW, 4));
+        controller.getcAction().putOnGrid(0, new Dice(Color.GREEN, 6));
 
 
         fake.messageIncoming("/primo/###/utensil/activate/0");
 
         assertEquals("/###/primo/success/activate/0&5&2&5\n",fake.getMessage());
 
-        fake.messageIncoming("/primo/###/utensil/use/0&5&1&0&0");
+        fake.messageIncoming("/primo/###/utensil/use/0&5&2&0&1");
 
         assertEquals("/###/primo/utensil/end/0&5&2&4\n",fake.getMessage());
     }
@@ -433,5 +434,48 @@ public class MVCTest {
 
     }
 
+    @Test
+    public void tool5sim(){
+
+        controller.resetUtensils(new ArrayList<>(Arrays.asList(new TaglierinaCircolare(),
+                new PennelloPerPastaSalda(),
+                new Martelletto())));
+
+        Dice d1 = new Dice(Color.BLUE, 5);
+        Dice d2 = new Dice(Color.GREEN, 2);
+        Dice d3 = new Dice(Color.YELLOW, 5);
+        Dice d4 = new Dice(Color.YELLOW, 1);
+        Dice d5 = new Dice(Color.YELLOW, 1);
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
+        controller.getcAction().resettingReserve(supportReserve);
+        System.out.println("letsput-->letsput-->letsput-->letsput-->letsput-->letsput-->letsput-->letsput-->");
+
+        fake.messageIncoming("/primo/###/put/?/0&0&0");
+        assertEquals("/###/primo/success/put/0&0&0\n",fake.getMessage());
+
+        fake.messageIncoming("/primo/###/update/turn/?");
+        fake.messageIncoming("/secondo/###/update/turn/?");
+        fake.messageIncoming("/secondo/###/update/turn/?");
+        fake.messageIncoming("/primo/###/update/turn/?");
+        System.out.println("--round2--round2--round2--round2--round2--round2--round2--round2--round2--round2--round2");
+         d1 = new Dice(Color.BLUE, 1);
+         d2 = new Dice(Color.GREEN, 2);
+         d3 = new Dice(Color.BLUE, 5);
+         d4 = new Dice(Color.BLUE, 1);
+         d5 = new Dice(Color.BLUE, 1);
+        this.supportReserve = new Reserve(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5)));
+        controller.getcAction().resettingReserve(supportReserve);
+
+        fake.messageIncoming("/secondo/###/utensil/activate/0");
+
+        assertEquals("/###/secondo/success/activate/0&5&2&5\n",fake.getMessage());
+
+        fake.messageIncoming("/secondo/###/utensil/use/0&5&2&0&1");
+
+        assertEquals("/###/secondo/utensil/end/0&5&2&4\n",fake.getMessage());
+
+
+
+    }
 
 }
