@@ -16,6 +16,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import static it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator.*;
+
 
 /**
  * Classe SceneLoading che gestisce la fase di attesa dell'utente in seguito al corretto conseguimento della fase di connessione.
@@ -52,15 +54,15 @@ public class SceneLoading {
         finalLayout.setPadding(new Insets(50,50,50,50));
 
         //Configurazione del BackBotton
-        ButtonLabelCreator buttonLabelCreator = new ButtonLabelCreator(138,71);
-        buttonLabelCreator.getBackButton().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+        ImageView backButton = getBackButton(138,71);
+        backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             init.getConnectionHandler().sendToServer(ClientMessageCreator.getDisconnectMessage(init.getConnectionHandler().getNickname()));
             Platform.runLater(() -> window.setScene(AlertSwitcher.getSceneNickName()));
 
         });
-        finalLayout.getChildren().addAll(layuot,buttonLabelCreator.getBackButton());
+        finalLayout.getChildren().addAll(layuot,backButton);
 
-        sceneLoading = new Scene(finalLayout,480,350);
+        sceneLoading = new Scene(finalLayout,550,500);
     }
 
 

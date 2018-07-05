@@ -20,7 +20,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -33,6 +32,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
+import static it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator.*;
 
 
 /**
@@ -90,6 +90,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
     private List<String> nameOfEnemies;
     private List<String> sideOfEnemies;
     private String action;
+    private String sideSelectedByPlayer;
 
     //Costanti di intestazione delle varie finestra
     private static final String SAGRADA = "Sagrada";
@@ -117,11 +118,10 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
         this.primaryStage = init;
 
         //Configurazione della Schermata di Login
-        primaryStage.setTitle(SAGRADA);
-        primaryStage.getIcons().add(new Image("iconPack/icon-sagrada.png", 10, 10, false, true));
+        setDecoration(primaryStage,SAGRADA,880,750,15,15);
         primaryStage.setOnCloseRequest(e -> closeWindow(primaryStage, e,false));
 
-        ImageView startButton = shadowEffect(configureImageView("", "button-start-game", ".png", 190, 90));
+        ImageView startButton = getStartButton(190,90);
         ComboBox comboBox = setChoiceResolution();
 
         BorderPane borderPane = new BorderPane();
@@ -147,11 +147,6 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
         Scene sceneLogin = new Scene(borderPane, 880,650);
         primaryStage.setScene(sceneLogin);
-        primaryStage.centerOnScreen();
-        primaryStage.setMaxHeight(650);
-        primaryStage.setMaxWidth(880);
-        primaryStage.setMinHeight(650);
-        primaryStage.setMinWidth(880);
         primaryStage.show();
 
 
@@ -178,11 +173,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                         Scene sceneChoice = new Scene(sideChoiceLabel.getSideChoise(), adapterResolution.getSideChoiceLabelSize().get(2).get(0), adapterResolution.getSideChoiceLabelSize().get(2).get(1));
                         Platform.runLater(() -> {
                             alertSwitcher.closeAlert();
-                            primaryStage.setMaxHeight(adapterResolution.getSideChoiceLabelSize().get(2).get(1));
-                            primaryStage.setMaxWidth(adapterResolution.getSideChoiceLabelSize().get(2).get(0));
-                            primaryStage.setMinHeight(adapterResolution.getSideChoiceLabelSize().get(2).get(1));
-                            primaryStage.setMinWidth(adapterResolution.getSideChoiceLabelSize().get(2).get(0));
-                            primaryStage.centerOnScreen();
+                            setDecoration(primaryStage,SAGRADA,adapterResolution.getSideChoiceLabelSize().get(2).get(0),adapterResolution.getSideChoiceLabelSize().get(2).get(1),15,15);
                             primaryStage.setScene(sceneChoice);
                         });
                     }
@@ -192,7 +183,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                         List<String> sideInfo = ClientMessageParser.getInformationsFromMessage(message.getText());
                         nameOfEnemies = sideInfo.stream().filter(s -> (sideInfo.indexOf(s) % 2 == 0)).collect(Collectors.toList());
                         sideOfEnemies = sideInfo.stream().filter(s -> (sideInfo.indexOf(s) % 2 != 0)).collect(Collectors.toList());
-                        sideOfEnemies.remove(nameOfEnemies.indexOf(connectionHandler.getNickname()));
+                        sideSelectedByPlayer = sideOfEnemies.remove(nameOfEnemies.indexOf(connectionHandler.getNickname()));
                         nameOfEnemies.remove(connectionHandler.getNickname());
                         enemiesSide = new SideEnemyLabel(nameOfEnemies, sideOfEnemies, adapterResolution);
                         nodeCardOfEnemies = enemiesSide.getLabelSideEnemy();
@@ -244,7 +235,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                             adapterResolution.putSettingLabel(anchorGame, nodeSetting);
 
                             //Posiziono la carta Side del giocatore
-                            playerSide = new SideCardLabel(sideChoiceLabel.getNameChoice(), connectionHandler.getNickname(), true, false, adapterResolution);
+                            playerSide = new SideCardLabel(sideSelectedByPlayer, connectionHandler.getNickname(), true, false, adapterResolution);
                             nodeSidePlayer = playerSide.getAnchorPane();
                             favours = sideChoiceLabel.getFavours();
                             adapterResolution.putSideLabel(anchorGame, nodeSidePlayer);
@@ -262,12 +253,8 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                             startGame = false;
                             Platform.runLater(() -> {
                                 AlertLoadingGame.closeAlert();
-                                primaryStage.centerOnScreen();
+                                setDecoration(primaryStage,SAGRADA,adapterResolution.getPrimaryStageSize().get(0),adapterResolution.getPrimaryStageSize().get(1),15,15);
                                 primaryStage.setOnCloseRequest(e -> closeWindow(primaryStage, e,true));
-                                primaryStage.setMaxWidth(adapterResolution.getPrimaryStageSize().get(0));
-                                primaryStage.setMaxHeight(adapterResolution.getPrimaryStageSize().get(1));
-                                primaryStage.setMinWidth(adapterResolution.getPrimaryStageSize().get(0));
-                                primaryStage.setMinHeight(adapterResolution.getPrimaryStageSize().get(1));
                                 primaryStage.setScene(sceneGame);
                             });
                         } else {
@@ -424,19 +411,36 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                 //MESSAGGIO SUCCESSO RICHIESTA DI ATTIVAZIONE DI UNA CARTA UTENSILE
                 if (ClientMessageParser.isSuccessActivateUtensilMessage(newValue)) {
 
+                    String check7 = setUpperWord(String.valueOf(cardUtensils.getKeyName().get(Integer.parseInt(alertCardUtensils.getSelection()))));
                     //Blocco gli aggiornamenti relativi a carta Side e Riserva fino alla ricezione del messaggio di End
                     isUseUtensil = true;
 
                     //Lancio la schermata specifica dell'utilizzo della carta Utensile selezionata
-                    alertCardUtensils.launchExecutionUtensil(false,null);
+                    if(!check7.equals(MARTELLETTO)) alertCardUtensils.launchExecutionUtensil(false,null);
+                    else {
+                        //Aggiornamento della griglia Informazioni del giocatore
+                        action = String.valueOf(Integer.parseInt(action)-1);
+                        resetSettingLabel(UTENSIL,newValue);
+
+                        //Chiusura della finestra dedicata alle carte utensili
+                        alertCardUtensils.closeExecutionUtensil();
+
+                        //Aggiornamento della girglia dei bottoni
+                        resetButtonLabel();
+
+                        //Termia azione Attivazione delle Utensili
+                        isUseUtensil = false;
+                        Platform.runLater(() -> AlertValidation.display("Successo", "La carta è stata attivata!!"));
+                    }
+
                 }
 
 
                 //MESSAGGIO SUCCESSO ATTIVAZIONE DI UNA CARTA UTENSILE MULTIPARAMETRO
                 if (ClientMessageParser.isSuccessUseUtensilMessage(newValue)) {
-                    String check7 = setUpperWord(String.valueOf(cardUtensils.getKeyName().get(Integer.parseInt(alertCardUtensils.getSelection()))));
-                    if(!check7.equals(MARTELLETTO)) alertCardUtensils.launchExecutionUtensil(true,newValue);
-                    else connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(),alertCardUtensils.getSelection(), cardUtensils.getDictionaryUtensils().get(String.valueOf(cardUtensils.getKeyName().get(Integer.parseInt(alertCardUtensils.getSelection())))),new ArrayList<>()));
+
+                    alertCardUtensils.launchExecutionUtensil(true,newValue);
+
                 }
             }
 

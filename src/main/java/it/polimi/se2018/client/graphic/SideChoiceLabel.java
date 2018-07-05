@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
+import static it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,9 +76,7 @@ public class SideChoiceLabel{
         Label labelRequest = setFontStyle(new Label("Scegli la tua carta Window:"),sizeNode.get(0));
         labelRequest.setAlignment(Pos.CENTER);
 
-        ImageView continueButton = shadowEffect(configureImageView("","button-continue", ".png",416,202));
-        continueButton.setFitWidth(sizeNode.get(1));
-        continueButton.setFitHeight(sizeNode.get(2));
+        ImageView continueButton = getContinueButton(sizeNode.get(1),sizeNode.get(2));
         continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if(numberChoice==null) AlertValidation.display("Sagrada", "Selezionare una carta!");
             else {

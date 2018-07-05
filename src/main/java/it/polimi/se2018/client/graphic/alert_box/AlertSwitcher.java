@@ -1,14 +1,13 @@
 package it.polimi.se2018.client.graphic.alert_box;
 
 import it.polimi.se2018.client.graphic.InitWindow;
-import it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -16,6 +15,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
+import static it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator.*;
 
 
 /**
@@ -73,11 +73,8 @@ public class AlertSwitcher{
 
         //Configurazione del pannello
         window.initModality(Modality.APPLICATION_MODAL);
-        window.getIcons().add(new Image("iconPack/icon-sagrada.png", 10, 10, false, true));
         window.setOnCloseRequest(Event::consume);
-        window.setTitle(title);
-        window.setMaxWidth(550);
-        window.setMaxHeight(500);
+        setDecoration(window,title,550,500,15,15);
 
         //Label "SCEGLI CONNESSIONE"
         Label labelChooseConnection = setFontStyle(new Label(messagge),22);
@@ -117,9 +114,10 @@ public class AlertSwitcher{
 
 
 
-        //Label "CONTINUE BUTTON" * "BACK BUTTON"
-        ButtonLabelCreator buttonLabelCreator = new ButtonLabelCreator(140,65,110,65);
-        buttonLabelCreator.getContinueButton().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+        //Label "CONTINUE BUTTON" e "BACK BUTTON"
+        ImageView continueButton = getContinueButton(140,65);
+        ImageView backButton = getBackButton(110,65);
+        continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             Platform.runLater(() -> {
                 if(isValidInput(connectionType,interfaceType, textPort.getText(), textIP.getText())) {
                     int portValue = 0;
@@ -132,7 +130,7 @@ public class AlertSwitcher{
 
         });
 
-        buttonLabelCreator.getBackButton().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> window.close());
+        backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> window.close());
 
 
         //Composizione degli elementi
@@ -140,7 +138,7 @@ public class AlertSwitcher{
         HBox labelConnection = new HBox(20);
         HBox labelModality = new HBox(20);
         HBox labelCoordinate = new HBox(20);
-        HBox labelButton = buttonLabelCreator.setInteractLabel(15);
+        HBox labelButton = setInteractLabel(continueButton,backButton,15);
         labelConnection.getChildren().addAll(socketButton, rmiButton);
         labelConnection.setAlignment(Pos.CENTER);
         labelModality.getChildren().addAll(guiButton, cliButton);

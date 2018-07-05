@@ -18,6 +18,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
+import static it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator.*;
 
 import java.util.*;
 
@@ -53,10 +54,10 @@ public class AlertInfoCard {
 
         //Configurazione della finestra
         Stage window = new Stage();
-        window.setWidth(650);
-        window.setHeight(770);
+        setDecoration(window,"Info Carte",650,770,15,15);
         window.initModality(Modality.APPLICATION_MODAL);
         window.setOnCloseRequest(Event::consume);
+
         ImageView back = configureImageView(path, "retro", EXTENSION,700,850);
         back.setOpacity(0.2);
         StackPane root = new StackPane(back);
@@ -201,7 +202,7 @@ public class AlertInfoCard {
      */
 
     private static ImageView setActionOnBack(Stage window,int requestWidth, int requestHeight){
-        ImageView backButton = shadowEffect(configureImageView("","button-back", EXTENSION,requestWidth,requestHeight));
+        ImageView backButton = getBackButton(requestWidth,requestHeight);
         backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> window.close());
         return backButton;
     }

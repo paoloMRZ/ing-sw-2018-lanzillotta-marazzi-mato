@@ -47,6 +47,7 @@ public class SelectorContent {
     private static final String DILUENTEPERPASTASALDA = "Diluente Per Pasta Salda";
     private static final String TAGLIERINAMANUALE = "Taglierina Manuale";
     private static final String TITLERESERVE = "Riserva: ";
+    private static final String ERROR = "Error";
 
     //Elemento che dinamicamente adatta il suo contenuto alla carta Utensile richiesta dal giocatore
     private VBox node;
@@ -55,7 +56,6 @@ public class SelectorContent {
     private ReserveLabel reserveLabel;
     private ConnectionHandler connectionHandler;
     private String cardSelection;
-    private SideCardLabel playerSide;
     private AdapterResolution adapter;
     private SideCardLabel toolSide;
 
@@ -79,10 +79,7 @@ public class SelectorContent {
     private HBox roundDice;
 
     //UTENSILE6
-    private TextField posX = new TextField();
-    private TextField posY = new TextField();
     private String chosen;
-
 
     //UTENSILE11
     private String dieChoose;
@@ -106,7 +103,6 @@ public class SelectorContent {
         this.reserveLabel = reserveLabel;
         this.connectionHandler = connectionHandler;
         this.cardSelection = cardSelection;
-        this.playerSide = playerSide;
         this.adapter = adapterResolution;
         Rectangle rect = new Rectangle(20, 20, 70, 70);
         rect.setFill(Color.TRANSPARENT);
@@ -131,46 +127,51 @@ public class SelectorContent {
 
         switch (cardName){
             case PINZASGROSSATRICE:
-
-                connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(getInfoData(),reserveLabel.getPos()))));
+                if(reserveLabel.getPos()!=null) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(getInfoData(),reserveLabel.getPos()))));
+                else AlertValidation.display(ERROR, "Seleziona il dado dalla Riserva!");
                 break;
 
             case PENNELLOPEREGLOMISE: case ALESATOREPERLALAMINDADIRAME:
 
-                if(!oldXFirstDie.getText().trim().isEmpty() && !oldYFirstDie.getText().trim().isEmpty() && !newXFirstDie.getText().trim().isEmpty() && !newYFirstDie.getText().trim().isEmpty()) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(oldXFirstDie.getText(),oldYFirstDie.getText(),newXFirstDie.getText(),newYFirstDie.getText()))));
-                else AlertValidation.display("Errore", "Inserisci correttamente le coordinate\ndel dado da spostare!");
+                if(checkValidationInput(oldXFirstDie,oldYFirstDie,newXFirstDie,newYFirstDie)) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(oldXFirstDie.getText(),oldYFirstDie.getText(),newXFirstDie.getText(),newYFirstDie.getText()))));
+                else AlertValidation.display(ERROR, "Inserisci correttamente le coordinate\ndel dado da spostare!");
                 break;
 
             case LATHEKIN:
 
+                if(checkValidationInput(oldXFirstDie,oldYFirstDie,newXFirstDie,newYFirstDie) && checkValidationInput(oldXSecondDie,oldYSecondDie,newXSecondDie,newYSecondDie))
                 connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(oldXFirstDie.getText(),oldYFirstDie.getText(),newXFirstDie.getText(),newYFirstDie.getText(),oldXSecondDie.getText(),oldYSecondDie.getText(),newXSecondDie.getText(),newYSecondDie.getText()))));
+                else AlertValidation.display(ERROR, "Inserisci correttamente le coordinate\ndei dadi da spostare!");
                 break;
 
             case TAGLIERINACIRCOLARE:
 
-                connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(reserveLabel.getPos(), String.valueOf(getRoundNumber()), getDieFromRoundSelected()))));
+                if(reserveLabel.getPos()!=null && getDieFromRoundSelected()!=null) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(reserveLabel.getPos(), getRoundNumber(), getDieFromRoundSelected()))));
+                else AlertValidation.display(ERROR, "Non hai selezionato correttamente\ntutti i parametri richiesti!");
                 break;
 
             case PENNELLOPERPASTASALDA: case TAMPONEDIAMANTATO: case DILUENTEPERPASTASALDA:
 
-                connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Collections.singletonList(reserveLabel.getPos()))));
+                if(reserveLabel.getPos()!=null) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Collections.singletonList(reserveLabel.getPos()))));
+                else AlertValidation.display(ERROR, "Seleziona il dado dalla Riserva!");
                 break;
 
             case TAGLIERINAMANUALE:
 
-                if(!oldXFirstDie.getText().trim().isEmpty() && !oldYFirstDie.getText().trim().isEmpty() && !newXFirstDie.getText().trim().isEmpty() && !newYFirstDie.getText().trim().isEmpty()){
-                    if(!oldXSecondDie.getText().trim().isEmpty() && !oldYSecondDie.getText().trim().isEmpty() && !newXSecondDie.getText().trim().isEmpty() && !newYSecondDie.getText().trim().isEmpty())
+                if(checkValidationInput(oldXFirstDie,oldYFirstDie,newXFirstDie,newYFirstDie)){
+                    if(checkValidationInput(oldXSecondDie, oldYSecondDie, newXSecondDie, newYSecondDie))
                         connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(oldXFirstDie.getText(),oldYFirstDie.getText(),newXFirstDie.getText(),newYFirstDie.getText(),oldXSecondDie.getText(),oldYSecondDie.getText(),newXSecondDie.getText(),newYSecondDie.getText()))));
 
                     else connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(oldXFirstDie.getText(),oldYFirstDie.getText(),newXFirstDie.getText(),newYFirstDie.getText()))));
 
                 }
-
-                 break;
+                else AlertValidation.display(ERROR, "Inserisci correttamente almeno le\ncoordinate del primo dado da spostare!");
+                break;
 
             case RIGAINSUGHERO:
 
-                connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(reserveLabel.getPos(), toolSide.getPosX(), toolSide.getPosY()))));
+                if(reserveLabel.getPos()!=null && (toolSide.getPosX()!=null) && (toolSide.getPosY()!=null)) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(reserveLabel.getPos(), toolSide.getPosX(), toolSide.getPosY()))));
+                else AlertValidation.display(ERROR, "Inserisci correttamente tutti\ni parametri richiesti!");
                 break;
         }
 
@@ -194,14 +195,14 @@ public class SelectorContent {
             case DILUENTEPERPASTASALDA:
 
                 if((toolSide.getPosX()!=null) && (toolSide.getPosY()!=null)) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard) + "bis", new ArrayList<>(Arrays.asList(chosen,dieChoose,toolSide.getPosX(),toolSide.getPosY()))));
-                else AlertValidation.display("Error", "Seleziona la cella sulla carta!");
+                else AlertValidation.display(ERROR, "Seleziona la cella sulla carta!");
                 break;
 
 
             case PENNELLOPERPASTASALDA:
 
                 if((toolSide.getPosX()!=null) && (toolSide.getPosY()!=null)) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard)+ "bis", new ArrayList<>(Arrays.asList(chosen,toolSide.getPosX(),toolSide.getPosY()))));
-                else AlertValidation.display("Error", "Seleziona la cella sulla carta!");
+                else AlertValidation.display(ERROR, "Seleziona la cella sulla carta!");
                 break;
 
 
@@ -335,7 +336,7 @@ public class SelectorContent {
 
                 VBox labelDie = new VBox(15);
                 labelDie.setAlignment(Pos.CENTER);
-                labelDie.getChildren().addAll(imageDie,configureToggleGroup("1", "2"));
+                labelDie.getChildren().addAll(imageDie,configureToggleGroup("0", "1"));
                 node.getChildren().addAll(setFontStyle(new Label("La tua carta Side"), 20),toolSide.getAnchorPane(), labelDie);
                 break;
 
@@ -382,7 +383,7 @@ public class SelectorContent {
                 RadioButton discardButton = new RadioButton("Scarta");
                 discardButton.setFont(Font.font ("Matura MT Script Capitals", 20));
 
-                node.getChildren().addAll(setFontStyle(new Label("La tua carta Side:"), 20),toolSide.getAnchorPane(),selectionLabel,configureToggleGroup("0", "1"));
+                node.getChildren().addAll(setFontStyle(new Label("La tua carta Side:"), 20),toolSide.getAnchorPane(),selectionLabel,configureToggleGroup("1", "0"));
                 break;
 
         }
@@ -392,7 +393,7 @@ public class SelectorContent {
 
 
 
-    /** Metodo utilizzato per la configurazione dei ToggleButton per la scelta del piazzamento
+    /** Metodo utilizzato per la configurazione dei ToggleButton per la scelta del piazzamento (carte Utensile 6 e 11)
      *
      * @param firstContent Intestazione del primo campo inserimento
      * @param secondContent Intestazione del primo secondo inserimento
@@ -429,6 +430,31 @@ public class SelectorContent {
 
 
 
+
+
+    /**
+     * Metodo utilizzato per controllare la validità dell'immissione delle coordinate di spostamento dei dadi che si intende muovere durante
+     * l útilizzo delel carte Utensili
+     *
+     * @param oldValueX Campo Immissione coordinata X corrente
+     * @param oldValueY Campo Immissione coordinata Y corrente
+     * @param newValueX Campo Immissione coordinata X di destinazione
+     * @param newValueY Campo Immissione coordinata Y di destinazione
+     * @return Booleano con valore TRUE se l'inserimento non ha prodotto errori, altrimenti FALSE
+     */
+
+    private boolean checkValidationInput(TextField oldValueX, TextField oldValueY, TextField newValueX, TextField newValueY){
+        return ( (oldValueX.getText().trim().equals("") || oldValueX.getText().trim().isEmpty()) &&
+                (oldValueY.getText().trim().equals("") || oldValueY.getText().trim().isEmpty()) &&
+                (newValueX.getText().trim().equals("") || newValueX.getText().trim().isEmpty()) &&
+                (newValueY.getText().trim().equals("") || newValueY.getText().trim().isEmpty()));
+    }
+
+
+
+
+
+
     /**
      * Metodo di supporto per la configurazione del contenuto delle finestre associate alla carte Utensili 2 e 3,le quali richiedono che il giocatore interagisca
      * con la carta Side per lo spostamento di un dado
@@ -448,43 +474,6 @@ public class SelectorContent {
         labelCoordinate.setAlignment(Pos.CENTER);
 
         node.getChildren().addAll(toolSide.getAnchorPane(),labelCoordinate);
-    }
-
-
-
-
-    /**
-     * Metodo di supporto per la configurazione dei campi inserimento coordinate nelle varie finestre dove è richiesto.  In particolare nella carta Utensile 4
-     *
-     */
-
-    private HBox configureCoordinateInput(Double spacingVBox, Double spacingHBox, ArrayList<TextField> coordonateBox, Boolean isDisabled){
-
-        coordonateBox.get(0).setPromptText("Riga");
-        coordonateBox.get(1).setPromptText("Colonna");
-        coordonateBox.get(2).setPromptText("Riga");
-        coordonateBox.get(3).setPromptText("Colonna");
-
-        if(isDisabled){
-            coordonateBox.get(0).setDisable(true);
-            coordonateBox.get(1).setDisable(true);
-            coordonateBox.get(2).setDisable(true);
-            coordonateBox.get(3).setDisable(true);
-        }
-
-        HBox coordinateFirstDie = new HBox(spacingHBox);
-        coordinateFirstDie.setAlignment(Pos.CENTER);
-        ImageView arrow = configureImageView("/iconPack/","icon-arrow-2", ".png", 64,64);
-
-        VBox oldPositionFirstDie = new VBox(spacingVBox);
-        oldPositionFirstDie.getChildren().addAll(coordonateBox.get(0), coordonateBox.get(1));
-
-        VBox newPositionFirstDie = new VBox(spacingVBox);
-        newPositionFirstDie.getChildren().addAll(coordonateBox.get(2),coordonateBox.get(3));
-
-        coordinateFirstDie.getChildren().addAll(oldPositionFirstDie,arrow,newPositionFirstDie);
-        coordinateFirstDie.setAlignment(Pos.CENTER);
-        return coordinateFirstDie;
     }
 
 
@@ -535,6 +524,50 @@ public class SelectorContent {
 
         node.getChildren().addAll(toolSide.getAnchorPane(),labelCoordinate);
     }
+
+
+
+
+    /**
+     * Metodo di supporto per la configurazione dei campi inserimento coordinate nelle varie finestre dove è richiesto.  In particolare nella carta Utensile 4
+     * e 12
+     *
+     * @param spacingVBox Spacing Verticale del Parent root
+     * @param spacingHBox Spacing Orizzontale dell'elemento grafico contenente i campi formattati
+     * @param coordinateBox Collezione dei campoi Immissione da formatatre
+     * @param isDisabled Booleano con valore TRUE se i campi vanno settati disabilitati, altrimenti FALSE
+     * @return Riferimento all'elemento grafico contenente i campi Immissione configurati
+     */
+
+    private HBox configureCoordinateInput(Double spacingVBox, Double spacingHBox, ArrayList<TextField> coordinateBox, Boolean isDisabled){
+
+        coordinateBox.get(0).setPromptText("Riga");
+        coordinateBox.get(1).setPromptText("Colonna");
+        coordinateBox.get(2).setPromptText("Riga");
+        coordinateBox.get(3).setPromptText("Colonna");
+
+        if(isDisabled){
+            coordinateBox.get(0).setDisable(true);
+            coordinateBox.get(1).setDisable(true);
+            coordinateBox.get(2).setDisable(true);
+            coordinateBox.get(3).setDisable(true);
+        }
+
+        HBox coordinateFirstDie = new HBox(spacingHBox);
+        coordinateFirstDie.setAlignment(Pos.CENTER);
+        ImageView arrow = configureImageView("/iconPack/","icon-arrow-2", ".png", 64,64);
+
+        VBox oldPositionFirstDie = new VBox(spacingVBox);
+        oldPositionFirstDie.getChildren().addAll(coordinateBox.get(0), coordinateBox.get(1));
+
+        VBox newPositionFirstDie = new VBox(spacingVBox);
+        newPositionFirstDie.getChildren().addAll(coordinateBox.get(2),coordinateBox.get(3));
+
+        coordinateFirstDie.getChildren().addAll(oldPositionFirstDie,arrow,newPositionFirstDie);
+        coordinateFirstDie.setAlignment(Pos.CENTER);
+        return coordinateFirstDie;
+    }
+
 
 
 

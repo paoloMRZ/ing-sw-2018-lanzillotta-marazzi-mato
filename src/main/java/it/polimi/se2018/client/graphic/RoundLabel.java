@@ -37,6 +37,7 @@ public class RoundLabel{
     private HashMap<StackPane, Boolean> cell = new HashMap<>();
     private Group group;
     private static String dieFromRoundSelected;
+    private static String roundFromPicked;
     private static int roundNumber = 0;
     private AdapterResolution adapter;
 
@@ -158,6 +159,7 @@ public class RoundLabel{
                     }
 
                     dieFromRoundSelected = String.valueOf(dieInfo.indexOf(aDieInfo));
+                    roundFromPicked = String.valueOf(roundNumber-1);
 
                 });
                 hBoxHistory.getChildren().addAll(button);
@@ -221,7 +223,7 @@ public class RoundLabel{
      * @return String contenente il numero del Round selezionato
      */
 
-    public static int getRoundNumber() {
-        return roundNumber-1;
+    public static String getRoundNumber() {
+        return roundFromPicked;
     }
 }

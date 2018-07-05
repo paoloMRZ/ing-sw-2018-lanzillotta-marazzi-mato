@@ -4,7 +4,6 @@ import it.polimi.se2018.client.cli.Cli;
 import it.polimi.se2018.client.connection_handler.ConnectionHandlerRMI;
 import it.polimi.se2018.client.connection_handler.ConnectionHandlerSocket;
 import it.polimi.se2018.client.graphic.InitWindow;
-import it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator;
 import it.polimi.se2018.server.exceptions.GameStartedException;
 import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 import javafx.application.Platform;
@@ -13,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.rmi.NotBoundException;
 
+import static it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator.*;
 import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 
 
@@ -80,17 +81,18 @@ public class SceneNickName {
         grid.getChildren().add(textNick);
 
         //Configurazione griglia bottoni continue/back e check validation
-        ButtonLabelCreator buttonLabelCreator = new ButtonLabelCreator(168,71,138,71);
-        HBox labelButton = buttonLabelCreator.setInteractLabel(20);
+        ImageView continueButton = getContinueButton(168,71);
+        ImageView backButton = getBackButton(138,71);
+        HBox labelButton = setInteractLabel(continueButton,backButton,20);
 
         layout.getChildren().addAll(labelTitle, grid, labelButton);
         layout.setAlignment(Pos.CENTER);
 
         //Configurazione dell'effetto "Switch Back" per ritornare alla schermata di connessione
-        buttonLabelCreator.getBackButton().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> Platform.runLater(() -> window.setScene(sceneConnection)));
+        backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> Platform.runLater(() -> window.setScene(sceneConnection)));
 
         //fase di Controllo per la valiodità dell'inserimento del NickName
-        buttonLabelCreator.getContinueButton().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+        continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             Platform.runLater(() -> {
                 if(isValidInput(textNick.getText(), connectionType, interfaceType, init, port, iP)) {
                     if(interfaceType.equals("Gui")) window.setScene(sceneLoading);

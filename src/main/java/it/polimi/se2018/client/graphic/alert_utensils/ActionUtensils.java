@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
+import static it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator.*;
 
 
 /**
@@ -87,12 +88,10 @@ public class ActionUtensils {
         else bodyContent.getChildren().addAll(cardImage, selectorContent.configureNodeBis(name,infoBis.get(2)));
 
         //Configurazione End Content
-        ImageView continueButton = shadowEffect(configureImageView("","button-continue",EXTENSION,180,90));
-        String finalName = name;
-        String finalPath = keyNameOfCard;
+        ImageView continueButton = getContinueButton(180,90);
         continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
-            if(!isBisEffect) selectorContent.configureMessage(finalName, dictionaryCardUtensils, finalPath);
-            else selectorContent.configureMessageBis(finalName, dictionaryCardUtensils, finalPath);
+            if(!isBisEffect) selectorContent.configureMessage(name, dictionaryCardUtensils, keyNameOfCard);
+            else selectorContent.configureMessageBis(name, dictionaryCardUtensils, keyNameOfCard);
 
         });
 
