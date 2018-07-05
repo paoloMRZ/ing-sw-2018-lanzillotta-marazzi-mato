@@ -12,6 +12,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 import java.util.HashMap;
 import java.util.List;
@@ -207,6 +208,29 @@ public class Utility {
         }
 
         return name;
+    }
+
+
+
+    /**
+     * Metodo di supporto per impostare le caratteristiche decorative dello Stage principale e le sue dimensioni
+     *
+     * @param primaryStage Riferimento allo Stage che si vuole decorare
+     * @param title Titilo dello Stage
+     * @param iconWidth Larghezza dell'icona dello Stage
+     * @param iconHeight Altezza dell'icona dello Stage
+     * @param stageWidth Larghezza dello Stage
+     * @param stageHeight Altezza dello Stage
+     */
+
+    public static void setDecoration(Stage primaryStage, String title, int stageWidth, int stageHeight, int iconWidth, int iconHeight){
+        primaryStage.setTitle(title);
+        primaryStage.getIcons().add(new Image("iconPack/icon-sagrada.png", iconWidth, iconHeight, false, true));
+        primaryStage.centerOnScreen();
+        primaryStage.setMaxHeight(stageHeight);
+        primaryStage.setMaxWidth(stageWidth);
+        primaryStage.setMinHeight(stageHeight);
+        primaryStage.setMinWidth(stageWidth);
     }
 
 }

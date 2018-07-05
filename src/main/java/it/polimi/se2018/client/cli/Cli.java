@@ -13,6 +13,7 @@ import it.polimi.se2018.client.connection_handler.ConnectionHandler;
 import it.polimi.se2018.client.connection_handler.ConnectionHandlerObserver;
 import it.polimi.se2018.client.message.ClientMessageParser;
 import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.io.IOException;
 import java.security.InvalidParameterException;
@@ -63,6 +64,9 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
      * @param myNickname Nickname del giocatore
      */
     public Cli(String myNickname){
+
+        AnsiConsole.systemInstall();
+
 
         if(myNickname != null) {
             Thread inputListner = new Thread(new Input(this));
@@ -261,9 +265,6 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
      * @param message messaggio di aggiornamento della roundgrid.
      */
     private void manageUpdateRoundGridMessage(String message){
-
-        //TODO gestire il caso in cui mi vengono inviati solo white0
-        //TODO implementare qualcosa che tolga i white0 dopo l'ultima cella significativa.
 
         ArrayList<ArrayList<DieInfo>> newRoundGrid = new ArrayList<>();
         ArrayList<List<String>> oldRoundGrid = new ArrayList<>(ClientMessageParser.getInformationsFromUpdateRoundgridMessage(message));

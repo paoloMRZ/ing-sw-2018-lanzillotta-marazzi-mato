@@ -1,6 +1,5 @@
 package it.polimi.se2018.client.graphic.alert_box;
 
-import it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator;
 import it.polimi.se2018.client.graphic.graphic_element.Utility;
 import javafx.event.Event;
 import javafx.geometry.Pos;
@@ -11,6 +10,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import static it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator.*;
 import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 
 /**
@@ -49,20 +50,21 @@ public class AlertCloseButton{
         Label label = Utility.setFontStyle(new Label(message),25);
 
 
-        //Configurazione backButton / continueButton
-        ButtonLabelCreator buttonLabelCreator = new ButtonLabelCreator(178,81,150,80);
-        buttonLabelCreator.getContinueButton().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+        //Label "CONTINUE BUTTON" e "BACK BUTTON"
+        ImageView continueButton = getContinueButton(178,81);
+        ImageView backButton = getBackButton(150,80);
+        continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             answer = true;
             window.close();
         });
 
-        buttonLabelCreator.getBackButton().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+        backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             answer = false;
             window.close();
         });
 
         VBox layout = new VBox(20);
-        HBox layoutButton = buttonLabelCreator.setInteractLabel(15);
+        HBox layoutButton = setInteractLabel(continueButton,backButton,15);
         layout.getChildren().addAll(label, layoutButton);
         layout.setAlignment(Pos.CENTER);
         layout.setBackground(configureBackground("back-init-close", 600, 450));

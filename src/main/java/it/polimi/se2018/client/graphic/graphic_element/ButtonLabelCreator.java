@@ -8,8 +8,8 @@ import javafx.scene.layout.HBox;
 import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 
 /**
- * Classe utilizzata per la creazione della Griglia di bottoni di interazioni "Continue" e "Back" utilizzati nelle varie finestre visualizzate durante la partita.
- * Rende disponibile anche l'aggiunta di azioni specifiche da associare ai due bottoni e la configurazione di elementi grafici che li contenga.
+ * Classe utilizzata per la configurazione dei vari bottoni delle finestre tramite i quali il giocatore può interagire con le stesse. Permettq quindi la personalizzazione
+ * sulle azioni associate ai bottoni e la costruzione di elementi grafici contenenti i bottoni oppurtunatamente configurati
  *
  * @author Simone Lanzillotta
  */
@@ -17,35 +17,47 @@ import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 
 public class ButtonLabelCreator {
 
-    private ImageView continueButton;
-    private ImageView backButton;
+    private static ImageView continueButton;
+    private static ImageView backButton;
+    private static ImageView startButton;
 
 
     /**
-     * Costruttore della classe. Vengono inizializzati gli attributi continueButton e backButton con le rispettive risorse.
+     * Metodo Creator per il bottone "Continue"
      *
      * @param continueWidth Larghezza del bottone "Continue"
      * @param continueHeight Altezza del bottone "Continue"
-     * @param backWidth Larghezza del bottone "Back"
-     * @param backHeight Altezza del bottone "Back"
      */
 
-    public ButtonLabelCreator(int continueWidth, int continueHeight, int backWidth, int backHeight){
-        backButton = shadowEffect(configureImageView("","button-back",".png",backWidth,backHeight));
+    private static void continueButtonCreator(int continueWidth, int continueHeight){
         continueButton = shadowEffect(configureImageView("","button-continue",".png",continueWidth,continueHeight));
     }
 
 
     /**
-     * Costruttore della classe utilizzato per la specifica del solo backButton.
+     * Metoto Creator per il bottone "Back"
      *
      * @param backWidth Larghezza del bottone "Back"
      * @param backHeight Altezza del bottone "Back"
      */
 
-    public ButtonLabelCreator(int backWidth, int backHeight){
+    private static void backButtonCreator(int backWidth, int backHeight){
         backButton = shadowEffect(configureImageView("","button-back",".png",backWidth,backHeight));
     }
+
+
+
+    /**
+     * Metoto Creator per il bottone "Start"
+     *
+     * @param startWidth Larghezza del bottone "Back"
+     * @param startHeight Altezza del bottone "Back"
+     */
+
+    private static void startButtonCreator(int startWidth, int startHeight){
+        startButton = shadowEffect(configureImageView("", "button-start-game", ".png", 190, 90));
+    }
+
 
 
     /**
@@ -55,7 +67,7 @@ public class ButtonLabelCreator {
      * @return Riferimento all'elemento grafico che contiene i due bottoni configurati
      */
 
-    public HBox setInteractLabel(int spacing){
+    public static HBox setInteractLabel(ImageView continueButton, ImageView backButton, int spacing){
         HBox labelButton = new HBox(spacing);
         labelButton.setAlignment(Pos.CENTER);
         labelButton.getChildren().addAll(continueButton, backButton);
@@ -65,24 +77,41 @@ public class ButtonLabelCreator {
 
 
     /**
-     * Metodo getter utilizzato per accedere al ContinueButton
+     * Metodo Getter utilizzato per accedere al ContinueButton
      *
      * @return Riferimento all'elemento grafico continueButton
      */
 
-    public ImageView getContinueButton() {
+    public static ImageView getContinueButton(int continueWidth, int continueHeight) {
+        continueButtonCreator(continueWidth, continueHeight);
         return continueButton;
     }
 
 
 
     /**
-     * Metodo getter utilizzato per accedere al BackButton
+     * Metodo Getter utilizzato per accedere al BackButton
      *
      * @return Riferimento all'elemento grafico backButton
      */
 
-    public ImageView getBackButton() {
+    public static ImageView getBackButton(int backWidth, int backHeight) {
+        backButtonCreator(backWidth, backHeight);
         return backButton;
     }
+
+
+
+
+    /**
+     * Metodo Getter utilizzato per accedere al ContinueButton
+     *
+     * @return Riferimento all'elemento grafico continueButton
+     */
+
+    public static ImageView getStartButton(int startWidth, int startHeight) {
+        startButtonCreator(startWidth, startHeight);
+        return startButton;
+    }
+
 }

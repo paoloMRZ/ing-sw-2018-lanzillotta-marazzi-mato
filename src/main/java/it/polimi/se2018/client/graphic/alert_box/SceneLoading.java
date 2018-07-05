@@ -1,6 +1,5 @@
 package it.polimi.se2018.client.graphic.alert_box;
 
-import it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator;
 import it.polimi.se2018.client.message.ClientMessageCreator;
 import it.polimi.se2018.client.graphic.InitWindow;
 import it.polimi.se2018.client.graphic.graphic_element.Utility;
@@ -15,6 +14,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import static it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator.*;
 
 
 /**
@@ -52,15 +53,15 @@ public class SceneLoading {
         finalLayout.setPadding(new Insets(50,50,50,50));
 
         //Configurazione del BackBotton
-        ButtonLabelCreator buttonLabelCreator = new ButtonLabelCreator(138,71);
-        buttonLabelCreator.getBackButton().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+        ImageView backButton = getBackButton(138,71);
+        backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             init.getConnectionHandler().sendToServer(ClientMessageCreator.getDisconnectMessage(init.getConnectionHandler().getNickname()));
             Platform.runLater(() -> window.setScene(AlertSwitcher.getSceneNickName()));
 
         });
-        finalLayout.getChildren().addAll(layuot,buttonLabelCreator.getBackButton());
+        finalLayout.getChildren().addAll(layuot,backButton);
 
-        sceneLoading = new Scene(finalLayout,480,350);
+        sceneLoading = new Scene(finalLayout,550,500);
     }
 
 

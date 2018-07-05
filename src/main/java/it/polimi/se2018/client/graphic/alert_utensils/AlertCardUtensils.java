@@ -1,7 +1,6 @@
 package it.polimi.se2018.client.graphic.alert_utensils;
 
 import it.polimi.se2018.client.connection_handler.ConnectionHandler;
-import it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator;
 import it.polimi.se2018.client.message.ClientMessageCreator;
 import it.polimi.se2018.client.graphic.CardCreatorLabel;
 import it.polimi.se2018.client.graphic.ReserveLabel;
@@ -28,8 +27,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator.*;
 import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
-import static java.lang.Integer.parseInt;
 
 
 /**
@@ -45,8 +44,6 @@ public class AlertCardUtensils{
 
     //Costanti di intestazione delle varie finestra
     private static final String EXTENSION = ".png";
-    private static final String SUBDIRECTORY = "";
-    private static final String MARTELLETTO = "Martelletto";
 
     private String selection;
     private HashMap<StackPane, Boolean> cardHash = new HashMap<>();
@@ -94,9 +91,7 @@ public class AlertCardUtensils{
         window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.setOnCloseRequest(Event::consume);
-        window.setTitle(title);
-        window.setMaxWidth(1200);
-        window.setMaxHeight(900);
+        setDecoration(window, title, 1200,900,15,15);
 
         StackPane baseWindow = new StackPane();
 
@@ -118,11 +113,13 @@ public class AlertCardUtensils{
         labelText.setAlignment(Pos.CENTER);
 
 
-        //Layout Button
-        ButtonLabelCreator buttonLabelCreator = new ButtonLabelCreator(180,80,160,80);
-        buttonLabelCreator.getBackButton().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> window.close());
-        buttonLabelCreator.getContinueButton().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> connectionHandler.sendToServer(ClientMessageCreator.getActivateUtensilMessage(connectionHandler.getNickname(), selection)));
-        HBox layoutButton = buttonLabelCreator.setInteractLabel(25);
+        //Label "CONTINUE BUTTON" e "BACK BUTTON"
+        ImageView continueButton = getContinueButton(180,80);
+        ImageView backButton = getBackButton(160,80);
+
+        backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> window.close());
+        continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> connectionHandler.sendToServer(ClientMessageCreator.getActivateUtensilMessage(connectionHandler.getNickname(), selection)));
+        HBox layoutButton = setInteractLabel(continueButton,backButton,25);
 
 
         //Layout card

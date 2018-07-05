@@ -46,11 +46,7 @@ public class AlertWinner {
         List<String> pointPlayer = scorePoint.stream().filter(s -> (scorePoint.indexOf(s) % 2 != 0)).collect(Collectors.toList());
 
         window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle(title);
-        window.setMaxWidth(800);
-        window.setMaxHeight(700);
-        window.setMinWidth(800);
-        window.setMinHeight(735);
+        setDecoration(window,title,800,700,15,15);
 
         //Configurazione Header
         Label headerTitle = Utility.setFontStyle(new Label("Complimenti,"), 40);
