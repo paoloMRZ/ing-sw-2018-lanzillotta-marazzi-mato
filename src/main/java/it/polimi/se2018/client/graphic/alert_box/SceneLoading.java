@@ -1,6 +1,5 @@
 package it.polimi.se2018.client.graphic.alert_box;
 
-import it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator;
 import it.polimi.se2018.client.message.ClientMessageCreator;
 import it.polimi.se2018.client.graphic.InitWindow;
 import it.polimi.se2018.client.graphic.graphic_element.Utility;

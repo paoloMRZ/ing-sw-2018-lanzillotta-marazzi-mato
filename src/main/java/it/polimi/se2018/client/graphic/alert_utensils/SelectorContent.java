@@ -133,13 +133,13 @@ public class SelectorContent {
 
             case PENNELLOPEREGLOMISE: case ALESATOREPERLALAMINDADIRAME:
 
-                if(checkValidationInput(oldXFirstDie,oldYFirstDie,newXFirstDie,newYFirstDie)) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(oldXFirstDie.getText(),oldYFirstDie.getText(),newXFirstDie.getText(),newYFirstDie.getText()))));
+                if(!checkValidationInput(oldXFirstDie,oldYFirstDie,newXFirstDie,newYFirstDie)) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(oldXFirstDie.getText(),oldYFirstDie.getText(),newXFirstDie.getText(),newYFirstDie.getText()))));
                 else AlertValidation.display(ERROR, "Inserisci correttamente le coordinate\ndel dado da spostare!");
                 break;
 
             case LATHEKIN:
 
-                if(checkValidationInput(oldXFirstDie,oldYFirstDie,newXFirstDie,newYFirstDie) && checkValidationInput(oldXSecondDie,oldYSecondDie,newXSecondDie,newYSecondDie))
+                if(!checkValidationInput(oldXFirstDie,oldYFirstDie,newXFirstDie,newYFirstDie) && !checkValidationInput(oldXSecondDie,oldYSecondDie,newXSecondDie,newYSecondDie))
                 connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(oldXFirstDie.getText(),oldYFirstDie.getText(),newXFirstDie.getText(),newYFirstDie.getText(),oldXSecondDie.getText(),oldYSecondDie.getText(),newXSecondDie.getText(),newYSecondDie.getText()))));
                 else AlertValidation.display(ERROR, "Inserisci correttamente le coordinate\ndei dadi da spostare!");
                 break;
@@ -158,8 +158,8 @@ public class SelectorContent {
 
             case TAGLIERINAMANUALE:
 
-                if(checkValidationInput(oldXFirstDie,oldYFirstDie,newXFirstDie,newYFirstDie)){
-                    if(checkValidationInput(oldXSecondDie, oldYSecondDie, newXSecondDie, newYSecondDie))
+                if(!checkValidationInput(oldXFirstDie,oldYFirstDie,newXFirstDie,newYFirstDie)){
+                    if(!checkValidationInput(oldXSecondDie, oldYSecondDie, newXSecondDie, newYSecondDie))
                         connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(oldXFirstDie.getText(),oldYFirstDie.getText(),newXFirstDie.getText(),newYFirstDie.getText(),oldXSecondDie.getText(),oldYSecondDie.getText(),newXSecondDie.getText(),newYSecondDie.getText()))));
 
                     else connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(oldXFirstDie.getText(),oldYFirstDie.getText(),newXFirstDie.getText(),newYFirstDie.getText()))));
@@ -444,9 +444,9 @@ public class SelectorContent {
      */
 
     private boolean checkValidationInput(TextField oldValueX, TextField oldValueY, TextField newValueX, TextField newValueY){
-        return ( (oldValueX.getText().trim().equals("") || oldValueX.getText().trim().isEmpty()) &&
-                (oldValueY.getText().trim().equals("") || oldValueY.getText().trim().isEmpty()) &&
-                (newValueX.getText().trim().equals("") || newValueX.getText().trim().isEmpty()) &&
+        return ((oldValueX.getText().trim().equals("") || oldValueX.getText().trim().isEmpty()) ||
+                (oldValueY.getText().trim().equals("") || oldValueY.getText().trim().isEmpty()) ||
+                (newValueX.getText().trim().equals("") || newValueX.getText().trim().isEmpty()) ||
                 (newValueY.getText().trim().equals("") || newValueY.getText().trim().isEmpty()));
     }
 
