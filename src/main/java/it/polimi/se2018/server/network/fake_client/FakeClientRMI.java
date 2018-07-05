@@ -74,6 +74,11 @@ public class FakeClientRMI extends FakeClient implements FakeClientRMIInterface 
         this.isFreeze = true;
     }
 
+
+    /**
+     * Restituisce un booleano che indica se il fake client che congelato.
+     * @return true se il fake client è congelato.
+     */
     @Override
     public boolean isFreezed() {
         return isFreeze;

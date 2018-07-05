@@ -29,9 +29,7 @@ public class ServerImplementationSocket implements Runnable {
 
     /**
      * Loop di gestione delle connessioni sulla socket che deve essere lanciato su un thread dedicato.
-     * Appena un client si connette il server si mette in attesa del suo nickname. Una volta ricevuto crea un fake client
-     * dedicato al client appena connesso e prova ad inserirlo nella lobby. Se esiste già un client con quel nickname
-     * la procedura d'inserimento fallisce, il client ne viene informato e la connessione viene chiusa.
+     * Per ogni nuova connessione viene lanciato un thread che gestisce il login del nuovo giocatore.
      */
     @Override
     public void run() {
@@ -50,6 +48,9 @@ public class ServerImplementationSocket implements Runnable {
 
     }
 
+    /**
+     * Il metodo chiude la socket e interrompe il loop di lettura di essa.
+     */
     public void close(){
 
         try {

@@ -28,6 +28,17 @@ import static org.fusesource.jansi.Ansi.ansi;
  *
  * In base allo stato in cui si trova la classe i dati forniti dall'utente su standard input acquisiscono uno specifico significato.
  *
+ *
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ *
+ * DIMENSIONI CONSIGLIATE
+ *
+ * Le dimensioni minime per poter giocare sul terminale sono 140X40.
+ * Se dopo aver impostato queste dimensioni le schermate non venissero visualizzate correttamente sarà necessario regolare
+ * "manualmente" il proprio terminale aumentando ancora le dimensioni o diminunendo il font (o entrambe le cose).
+ *
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ *
  * @author Marazzi Paolo
  */
 
