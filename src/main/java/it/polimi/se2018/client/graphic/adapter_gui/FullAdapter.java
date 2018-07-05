@@ -41,7 +41,7 @@ public class FullAdapter implements AdapterResolution{
         sizeSidePlayer.add(new ArrayList<>(Arrays.asList(70)));
 
         //Dimensioni del dado da inserire nelle Side avversarie
-        sizeSidePlayer.add(new ArrayList<>(Arrays.asList(35)));
+        sizeSidePlayer.add(new ArrayList<>(Arrays.asList(40)));
 
 
 
@@ -81,10 +81,13 @@ public class FullAdapter implements AdapterResolution{
         sizeSideEnemy.add(new ArrayList<>(Arrays.asList(0d,0d,8d,8d)));
 
         //Dimensioni dell'intestazione con il nome dell'avversario
-        sizeSideEnemy.add(new ArrayList<>(Arrays.asList(20)));
+        sizeSideEnemy.add(new ArrayList<>(Collections.singletonList(20)));
 
         //Dimensioni dell'immagine Segna-Posto in assenza di giocatori
-        sizeSideEnemy.add(new ArrayList<>(Arrays.asList(290,250)));
+        sizeSideEnemy.add(new ArrayList<>(Arrays.asList(310,270)));
+
+        //Spacing Orizzonatale delle carte
+        sizeSideEnemy.add(new ArrayList<>(Collections.singletonList(15)));
 
         return sizeSideEnemy;
     }
@@ -209,7 +212,7 @@ public class FullAdapter implements AdapterResolution{
 
     @Override
     public void putSideEnemyLabel(AnchorPane anchorGame, HBox hBoxEnemies) {
-        configureAnchorPane(anchorGame, hBoxEnemies, 100d, 40d, 840d, 730d);
+        configureAnchorPane(anchorGame, hBoxEnemies, 80d, 40d, 870d, 730d);
     }
 
     @Override

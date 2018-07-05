@@ -46,6 +46,7 @@ public class AlertCardUtensils{
     //Costanti di intestazione delle varie finestra
     private static final String EXTENSION = ".png";
     private static final String SUBDIRECTORY = "";
+    private static final String MARTELLETTO = "Martelletto";
 
     private String selection;
     private HashMap<StackPane, Boolean> cardHash = new HashMap<>();
@@ -210,5 +211,16 @@ public class AlertCardUtensils{
         }
 
 
+    }
+
+
+    /**
+     * Metodo Getter utilizzato per accedere all'informazione sulla selezione del giocatore
+     *
+     * @return Riferimento all'attributo selection
+     */
+
+    public String getSelection(){
+        return selection;
     }
 }

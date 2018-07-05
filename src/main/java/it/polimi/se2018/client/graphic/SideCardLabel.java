@@ -210,7 +210,6 @@ public class SideCardLabel{
                 if (!dicePutHistory.get(k).equals(EMPTYCELL)) {
                     ImageView passed = configureImageView("/diePack/die-", dicePutHistory.get(k),".bmp",imageSize,imageSize);
                     gridPane.add(passed,j,i);
-                    GridPane.setHalignment(passed,HPos.CENTER);
                 }
                 k++;
             }

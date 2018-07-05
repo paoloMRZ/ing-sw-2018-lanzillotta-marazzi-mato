@@ -58,7 +58,8 @@ public class SideEnemyLabel{
      */
 
     private void setSideEnemy(List<String> nameOfPlayers, List<String> sideName){
-        labelSideEnemy = new HBox(0);
+        labelSideEnemy = new HBox((Integer)adapter.getSideEnemyLabelSize().get(5).get(0));
+        labelSideEnemy.setPrefWidth(845);
         labelSideEnemy.setAlignment(Pos.CENTER);
         for(int i=0; i<nameOfPlayers.size();i++){
 

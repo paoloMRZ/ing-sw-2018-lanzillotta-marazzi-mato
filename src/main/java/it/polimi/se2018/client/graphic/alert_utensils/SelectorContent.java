@@ -24,6 +24,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 import java.util.*;
 
@@ -371,7 +372,9 @@ public class SelectorContent {
                     optionDie.getChildren().add(button);
                 }
 
-                selectionLabel.getChildren().addAll(setFontStyle(new Label("Scegli il valore del dado estratto\n e se puoi posizionalo:"), 23), optionDie);
+                Label action = setFontStyle(new Label("Scegli il valore del dado estratto\n e se puoi posizionalo:"), 23);
+                action.setTextAlignment(TextAlignment.CENTER);
+                selectionLabel.getChildren().addAll(action, optionDie);
                 selectionLabel.setAlignment(Pos.CENTER);
 
                 RadioButton confirmButton = new RadioButton("Piazza Dado");
@@ -379,7 +382,7 @@ public class SelectorContent {
                 RadioButton discardButton = new RadioButton("Scarta");
                 discardButton.setFont(Font.font ("Matura MT Script Capitals", 20));
 
-                node.getChildren().addAll(setFontStyle(new Label("La tua carta Side:"), 18),toolSide.getAnchorPane(),selectionLabel,configureToggleGroup("0", "1"));
+                node.getChildren().addAll(setFontStyle(new Label("La tua carta Side:"), 20),toolSide.getAnchorPane(),selectionLabel,configureToggleGroup("0", "1"));
                 break;
 
         }
@@ -712,6 +715,7 @@ public class SelectorContent {
                     root.getChildren().remove(roundDice);
                     roundDice = hBoxCollection.get(finalI);
                     root.getChildren().add(roundDice);
+                    firstClick = true;
                 }
             });
             roundButton.getChildren().add(roundBack);

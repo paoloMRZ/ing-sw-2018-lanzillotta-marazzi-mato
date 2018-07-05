@@ -101,6 +101,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
     private static final String TURN = "TurnUpdate";
     private static final String PUT = "PutUpdate";
     private static final String UTENSIL = "UtensilUpdate";
+    private static final String MARTELLETTO = "Martelletto";
 
 
 
@@ -433,7 +434,9 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
                 //MESSAGGIO SUCCESSO ATTIVAZIONE DI UNA CARTA UTENSILE MULTIPARAMETRO
                 if (ClientMessageParser.isSuccessUseUtensilMessage(newValue)) {
-                    alertCardUtensils.launchExecutionUtensil(true,newValue);
+                    String check7 = setUpperWord(String.valueOf(cardUtensils.getKeyName().get(Integer.parseInt(alertCardUtensils.getSelection()))));
+                    if(!check7.equals(MARTELLETTO)) alertCardUtensils.launchExecutionUtensil(true,newValue);
+                    else connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(),alertCardUtensils.getSelection(), cardUtensils.getDictionaryUtensils().get(String.valueOf(cardUtensils.getKeyName().get(Integer.parseInt(alertCardUtensils.getSelection())))),new ArrayList<>()));
                 }
             }
 

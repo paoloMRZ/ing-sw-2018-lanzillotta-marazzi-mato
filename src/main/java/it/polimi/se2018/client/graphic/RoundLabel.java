@@ -222,6 +222,6 @@ public class RoundLabel{
      */
 
     public static int getRoundNumber() {
-        return roundNumber;
+        return roundNumber-1;
     }
 }

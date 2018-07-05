@@ -81,10 +81,13 @@ public class SmallAdapter implements  AdapterResolution {
         sizeSideEnemy.add(new ArrayList<>(Arrays.asList(0d,0d,8d,8d)));
 
         //Dimensioni dell'intestazione con il nome dell'avversario
-        sizeSideEnemy.add(new ArrayList<>(Arrays.asList(17)));
+        sizeSideEnemy.add(new ArrayList<>(Collections.singletonList(17)));
 
         //Dimensioni dell'immagine Segna-Posto in assenza di giocatori
         sizeSideEnemy.add(new ArrayList<>(Arrays.asList(230,200)));
+
+        //Spacing Orizzonatale delle carte
+        sizeSideEnemy.add(new ArrayList<>(Collections.singletonList(5)));
 
         return sizeSideEnemy;
     }
@@ -204,7 +207,7 @@ public class SmallAdapter implements  AdapterResolution {
 
     @Override
     public void putSideLabel(AnchorPane anchorGame, AnchorPane sidePlayer) {
-        configureAnchorPane(anchorGame, sidePlayer, 835d, 135d, 110d, 300d);
+        configureAnchorPane(anchorGame, sidePlayer, 840d, 135d, 105d, 300d);
     }
 
     @Override

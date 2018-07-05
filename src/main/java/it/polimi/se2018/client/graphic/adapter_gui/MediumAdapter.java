@@ -85,6 +85,9 @@ public class MediumAdapter implements AdapterResolution {
         //Dimensioni dell'immagine Segna-Posto in assenza di giocatori
         sizeSideEnemy.add(new ArrayList<>(Arrays.asList(250,220)));
 
+        //Spacing Orizzonatale delle carte
+        sizeSideEnemy.add(new ArrayList<>(Collections.singletonList(0)));
+
         return sizeSideEnemy;
     }
 
