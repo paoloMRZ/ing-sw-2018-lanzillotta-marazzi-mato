@@ -6,6 +6,7 @@ import it.polimi.se2018.client.cli.game.utensil.UtensilCard;
 import it.polimi.se2018.client.cli.print.components.SidePrinter;
 import it.polimi.se2018.client.cli.print.components.UtensilPrinter;
 import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.security.InvalidParameterException;
 
@@ -75,8 +76,8 @@ public class SideColorScene {
      */
     private void printText(){
 
-        System.out.print(ansi().cursor(TITLE_ROW,TITLE_COL).bold().a(TITLE).boldOff());
-        System.out.print(ansi().cursor(TEXT_ROW,TEXT_COL).a(TEXT_HEAD + text + TEXT_TAIL));
+        AnsiConsole.out.print(ansi().cursor(TITLE_ROW,TITLE_COL).bold().a(TITLE).boldOff());
+        AnsiConsole.out.print(ansi().cursor(TEXT_ROW,TEXT_COL).a(TEXT_HEAD + text + TEXT_TAIL));
     }
     /**
      * Il metodo salva il messaggio di testo che deve essere mostrato a schermo.
@@ -94,12 +95,12 @@ public class SideColorScene {
      */
     public void printScene(){
 
-        System.out.print(ansi().eraseScreen());
+        AnsiConsole.out.print(ansi().eraseScreen());
 
         UtensilPrinter.printUtensil(CARD_ROW, CARD_COL, utensilCard);
         SidePrinter.printSide(SIDE_ROW,SIDE_COL, game.getMyCard(), game.getDiceOnMyCard());
 
-        System.out.print(ansi().cursor(COLOR_ROW,COLOR_COL).bg(this.color).a(FIVE_SPACES)
+        AnsiConsole.out.print(ansi().cursor(COLOR_ROW,COLOR_COL).bg(this.color).a(FIVE_SPACES)
                                                                             .cursorToColumn(COLOR_COL).a(FIVE_SPACES)
                                                                             .cursorToColumn(COLOR_COL).a(FIVE_SPACES).bgDefault());
 

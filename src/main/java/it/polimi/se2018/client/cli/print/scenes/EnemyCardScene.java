@@ -4,6 +4,7 @@ package it.polimi.se2018.client.cli.print.scenes;
 import it.polimi.se2018.client.cli.game.info.DieInfo;
 import it.polimi.se2018.client.cli.game.schema.SideCard;
 import it.polimi.se2018.client.cli.print.components.SidePrinter;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -77,23 +78,23 @@ public class EnemyCardScene {
     private void printMyTurnMenu(){
         int row = MENU_ROW;
 
-        System.out.print(ansi().cursor(row,MENU_COL).bold().a(TEXT0_MENU).boldOff());
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).bold().a(TEXT0_MENU).boldOff());
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT1_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT1_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT2_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT2_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT3_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT3_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT4_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT4_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT5_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT5_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT6_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT6_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT7_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT7_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT8_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT8_MENU));
     }
 
     /**
@@ -102,17 +103,17 @@ public class EnemyCardScene {
     private void printIsNotMyTurnMenu(){
         int row = MENU_ROW;
 
-        System.out.print(ansi().cursor(row,MENU_COL).bold().a(TEXT0_MENU).boldOff());
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).bold().a(TEXT0_MENU).boldOff());
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT1_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT1_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT2_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT2_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT3_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT3_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT4_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT4_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT8_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT8_MENU));
     }
 
     /**
@@ -145,7 +146,7 @@ public class EnemyCardScene {
         int col = COL_NICKNAME;
 
         for(String nickname : nicknames){
-            System.out.print(ansi().cursor(ROW_NICKNAME,col-(nickname.length()/2)).bold().a("[" + nickname + "]").boldOff());
+            AnsiConsole.out.print(ansi().cursor(ROW_NICKNAME,col-(nickname.length()/2)).bold().a("[" + nickname + "]").boldOff());
             col += COL_NEXT_NICKNAME;
         }
     }
@@ -157,7 +158,7 @@ public class EnemyCardScene {
         int col = COL_CARD;
         int i = 0;
 
-        System.out.print(ansi().eraseScreen());
+        AnsiConsole.out.print(ansi().eraseScreen());
 
         for(SideCard card : cards){
             SidePrinter.printSide(ROW_CARD, col,card,dicesOnCards.get(i));
@@ -170,7 +171,7 @@ public class EnemyCardScene {
     public void printScene(){
         printCards();
         printNicknames();
-        System.out.print(ansi().cursor(ROW_TEXT1,COL_TEXT1).bold().a(TEXT1).boldOff());
+        AnsiConsole.out.print(ansi().cursor(ROW_TEXT1,COL_TEXT1).bold().a(TEXT1).boldOff());
         printMenu();
     }
 }

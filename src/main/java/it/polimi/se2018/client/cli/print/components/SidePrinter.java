@@ -6,6 +6,7 @@ import it.polimi.se2018.client.cli.game.info.Info;
 import it.polimi.se2018.client.cli.game.schema.SideCard;
 import it.polimi.se2018.client.cli.print.utils.MarginPrinter;
 import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.security.InvalidParameterException;
 import java.util.List;
@@ -58,7 +59,7 @@ public class SidePrinter {
      */
 
     private static void printOne(int startRow, int startCol) {
-        System.out.print(ansi().bgBright(Ansi.Color.BLACK).cursor(startRow, startCol).bold().a(FIVE_SPACES)
+        AnsiConsole.out.print(ansi().bgBright(Ansi.Color.BLACK).cursor(startRow, startCol).bold().a(FIVE_SPACES)
                 .cursorToColumn(startCol).a("  " + DOT + "  \n")
                 .cursorToColumn(startCol).a(FIVE_SPACES).boldOff().bgDefault());
     }
@@ -72,7 +73,7 @@ public class SidePrinter {
      */
 
     private static void printTwo(int startRow, int startCol) {
-        System.out.print(ansi().bgBright(Ansi.Color.BLACK).cursor(startRow, startCol).bold().a(DOT + "    \n")
+        AnsiConsole.out.print(ansi().bgBright(Ansi.Color.BLACK).cursor(startRow, startCol).bold().a(DOT + "    \n")
                 .cursorToColumn(startCol).a(FIVE_SPACES)
                 .cursorToColumn(startCol).a("    " + DOT + "\n").boldOff().bgDefault());
     }
@@ -85,7 +86,7 @@ public class SidePrinter {
      */
 
     private static void printThree(int startRow, int startCol) {
-        System.out.print(ansi().bgBright(Ansi.Color.BLACK).cursor(startRow, startCol).bold().a(DOT + "    \n")
+        AnsiConsole.out.print(ansi().bgBright(Ansi.Color.BLACK).cursor(startRow, startCol).bold().a(DOT + "    \n")
                 .cursorToColumn(startCol).a("  " + DOT + "  \n")
                 .cursorToColumn(startCol).a("    " + DOT + "\n").boldOff().bgDefault());
     }
@@ -97,7 +98,7 @@ public class SidePrinter {
      * @param startCol colonna su cui si trova l'angolo superiore sinistro della cella.
      */
     private static void printFour(int startRow, int startCol) {
-        System.out.print(ansi().bgBright(Ansi.Color.BLACK).cursor(startRow, startCol).bold().a(DOT + "   " + DOT + "\n")
+        AnsiConsole.out.print(ansi().bgBright(Ansi.Color.BLACK).cursor(startRow, startCol).bold().a(DOT + "   " + DOT + "\n")
                 .cursorToColumn(startCol).a(FIVE_SPACES)
                 .cursorToColumn(startCol).a(DOT + "   " + DOT + "\n").boldOff().bgDefault());
     }
@@ -109,7 +110,7 @@ public class SidePrinter {
      * @param startCol colonna su cui si trova l'angolo superiore sinistro della cella.
      */
     private static void printFive(int startRow, int startCol) {
-        System.out.print(ansi().bgBright(Ansi.Color.BLACK).cursor(startRow, startCol).bold().a(DOT + "   " + DOT + "\n")
+        AnsiConsole.out.print(ansi().bgBright(Ansi.Color.BLACK).cursor(startRow, startCol).bold().a(DOT + "   " + DOT + "\n")
                 .cursorToColumn(startCol).a("  " + DOT + "  \n")
                 .cursorToColumn(startCol).a(DOT + "   " + DOT + "\n").boldOff().bgDefault());
     }
@@ -121,7 +122,7 @@ public class SidePrinter {
      * @param startCol colonna su cui si trova l'angolo superiore sinistro della cella.
      */
     private static void printSix(int startRow, int startCol) {
-        System.out.print(ansi().bgBright(Ansi.Color.BLACK).cursor(startRow, startCol).bold().a(DOT + "   " + DOT + "\n")
+        AnsiConsole.out.print(ansi().bgBright(Ansi.Color.BLACK).cursor(startRow, startCol).bold().a(DOT + "   " + DOT + "\n")
                 .cursorToColumn(startCol).a(DOT + "   " + DOT + "\n")
                 .cursorToColumn(startCol).a(DOT + "   " + DOT + "\n").boldOff().bgDefault());
     }
@@ -135,7 +136,7 @@ public class SidePrinter {
      * @param startCol colonna su cui si trova l'angolo superiore sinistro della cella.
      */
     private static void printCell(int startRow, int startCol) {
-        System.out.print(ansi().bgBright(Ansi.Color.WHITE).cursor(startRow, startCol).a(FIVE_SPACES)
+        AnsiConsole.out.print(ansi().bgBright(Ansi.Color.WHITE).cursor(startRow, startCol).a(FIVE_SPACES)
                 .cursorToColumn(startCol).a(FIVE_SPACES)
                 .cursorToColumn(startCol).a(FIVE_SPACES).bgDefault());
     }
@@ -148,7 +149,7 @@ public class SidePrinter {
      * @param color colore della restrizione.
      */
     private static void printCell(int startRow, int startCol, Ansi.Color color) {
-        System.out.print(ansi().cursor(startRow, startCol).fg(color)
+        AnsiConsole.out.print(ansi().cursor(startRow, startCol).fg(color)
                 .cursorToColumn(startCol).a(TEXTURE + TEXTURE + TEXTURE + TEXTURE + TEXTURE + "\n")
                 .cursorToColumn(startCol).a(TEXTURE + TEXTURE + TEXTURE + TEXTURE + TEXTURE + "\n")
                 .cursorToColumn(startCol).a(TEXTURE + TEXTURE + TEXTURE + TEXTURE + TEXTURE + "\n")
@@ -363,7 +364,7 @@ public class SidePrinter {
 
         //Stampo le coordinate delle righe.
         for(int i= 0; i<5; i++){
-            System.out.print(ansi().cursor(row,col).bold().a(i).boldOff());
+            AnsiConsole.out.print(ansi().cursor(row,col).bold().a(i).boldOff());
             col += NEXT_COL;
         }
 
@@ -371,7 +372,7 @@ public class SidePrinter {
         col = startCol;
 
         for(int i = 0; i<4; i++){
-            System.out.print(ansi().cursor(row,col).bold().a(i).boldOff());
+            AnsiConsole.out.print(ansi().cursor(row,col).bold().a(i).boldOff());
             row += NEXT_ROW;
         }
 
@@ -379,7 +380,7 @@ public class SidePrinter {
 
     private static void printFavours(int startRow, int startCol, int favours){
         for(int i = 0;  i< favours; i++){
-            System.out.print(ansi().cursor(startRow+FAVOURS_ROW, startCol+FAVOURS_COL+i).a(DOT));
+            AnsiConsole.out.print(ansi().cursor(startRow+FAVOURS_ROW, startCol+FAVOURS_COL+i).a(DOT));
         }
     }
 
@@ -408,7 +409,7 @@ public class SidePrinter {
 
             printFavours(startRow,startCol,card.getFavours());
 
-            System.out.print(ansi().cursor(startRow + NAME_ROW, startCol + NAME_COL).bold().a(card.getName()).boldOff());
+            AnsiConsole.out.print(ansi().cursor(startRow + NAME_ROW, startCol + NAME_COL).bold().a(card.getName()).boldOff());
 
         }
         else
@@ -436,7 +437,7 @@ public class SidePrinter {
 
             printFavours(startRow,startCol,card.getFavours());
 
-            System.out.print(ansi().cursor(startRow + NAME_ROW, startCol + NAME_COL).bold().a(card.getName()).boldOff());
+            AnsiConsole.out.print(ansi().cursor(startRow + NAME_ROW, startCol + NAME_COL).bold().a(card.getName()).boldOff());
         }
         else
             throw new InvalidParameterException();

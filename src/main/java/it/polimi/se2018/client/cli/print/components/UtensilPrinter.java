@@ -4,6 +4,7 @@ package it.polimi.se2018.client.cli.print.components;
 import it.polimi.se2018.client.cli.game.utensil.UtensilCard;
 import it.polimi.se2018.client.cli.print.utils.MarginPrinter;
 import it.polimi.se2018.client.cli.print.utils.TextPrinter;
+import org.fusesource.jansi.AnsiConsole;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -56,7 +57,7 @@ public class UtensilPrinter {
      * @param prize prezzo.
      */
     private static void printPrize(int startRow, int startCol, int prize){
-        System.out.print(ansi().cursor(startRow+HIGH, startCol+1).bold().a("Costo: " + prize).boldOff());
+        AnsiConsole.out.print(ansi().cursor(startRow+HIGH, startCol+1).bold().a("Costo: " + prize).boldOff());
     }
 
     /**
@@ -70,8 +71,8 @@ public class UtensilPrinter {
 
         printMargin(startRow,startCol);
 
-        System.out.print(ansi().cursor(startRow+SECOND_ROW, startCol+NUMBER_COL).bold().a(utensilCard.getNumber()).boldOff());
-        System.out.print(ansi().cursor(startRow+TITLE_ROW, startCol + ( (LEN - 1 - utensilCard.getName().length() ) / 2) ).bold().a(utensilCard.getName()).boldOff());
+        AnsiConsole.out.print(ansi().cursor(startRow+SECOND_ROW, startCol+NUMBER_COL).bold().a(utensilCard.getNumber()).boldOff());
+        AnsiConsole.out.print(ansi().cursor(startRow+TITLE_ROW, startCol + ( (LEN - 1 - utensilCard.getName().length() ) / 2) ).bold().a(utensilCard.getName()).boldOff());
 
         printPrize(startRow, startCol, utensilCard.getPrize());
 

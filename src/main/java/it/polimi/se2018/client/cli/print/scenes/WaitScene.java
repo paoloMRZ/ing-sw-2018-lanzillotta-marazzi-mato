@@ -1,5 +1,7 @@
 package it.polimi.se2018.client.cli.print.scenes;
 
+import org.fusesource.jansi.AnsiConsole;
+
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
@@ -46,7 +48,7 @@ public class WaitScene {
         int col = MESSAGES_COL +1;
 
         for(String message: messages){
-            System.out.print(ansi().cursor(row,col).a(message));
+            AnsiConsole.out.print(ansi().cursor(row,col).a(message));
             row++;
         }
     }
@@ -55,9 +57,9 @@ public class WaitScene {
      * Il metodo stampa a schermo la scena.
      */
     public void printScene(){
-        System.out.print(ansi().eraseScreen());
+        AnsiConsole.out.print(ansi().eraseScreen());
 
-        System.out.print(ansi().cursor(TEXT_ROW,TEXT_COL).bold().a(text).boldOff());
+        AnsiConsole.out.print(ansi().cursor(TEXT_ROW,TEXT_COL).bold().a(text).boldOff());
 
         printMessages();
     }

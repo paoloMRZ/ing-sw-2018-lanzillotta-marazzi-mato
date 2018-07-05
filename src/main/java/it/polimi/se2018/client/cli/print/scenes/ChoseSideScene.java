@@ -4,6 +4,7 @@ package it.polimi.se2018.client.cli.print.scenes;
 import it.polimi.se2018.client.cli.game.schema.SideCard;
 import it.polimi.se2018.client.cli.print.components.SidePrinter;
 import it.polimi.se2018.client.cli.print.utils.MarginPrinter;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ public class ChoseSideScene {
      * @param number numero da stampare.
      */
     private void printNumber(int starRow, int startCol, int number){
-        System.out.print(ansi().cursor(starRow,startCol).bold().a("[" + number + "]").boldOff());
+        AnsiConsole.out.print(ansi().cursor(starRow,startCol).bold().a("[" + number + "]").boldOff());
     }
 
     /**
@@ -100,7 +101,7 @@ public class ChoseSideScene {
 
     private void printMessages(){
 
-        System.out.print(ansi().cursor(MESSAGES_ROW,MESSAGES_COL+1).bold().a(MESSAGE_TEXT).boldOff());
+        AnsiConsole.out.print(ansi().cursor(MESSAGES_ROW,MESSAGES_COL+1).bold().a(MESSAGE_TEXT).boldOff());
 
         //Stampo i margini verticali.
         MarginPrinter.printColMargin(MESSAGES_ROW+1, MESSAGES_COL, MESSAGES_HIGH);
@@ -114,7 +115,7 @@ public class ChoseSideScene {
         int offset = 2;
 
         for(String message : messages){
-            System.out.print(ansi().cursor(MESSAGES_ROW+offset, MESSAGES_COL+1).a(MESSAGE_HEAD + message));
+            AnsiConsole.out.print(ansi().cursor(MESSAGES_ROW+offset, MESSAGES_COL+1).a(MESSAGE_HEAD + message));
             offset++;
         }
 
@@ -126,9 +127,9 @@ public class ChoseSideScene {
     public void printScene() {
 
 
-        System.out.print(ansi().eraseScreen()); //Pulisco lo schermo.
+        AnsiConsole.out.print(ansi().eraseScreen()); //Pulisco lo schermo.
 
-        System.out.print(ansi().cursor(TEXT_ROW, TEXT_COL).a(TEXT)); //Stampo il testo.
+        AnsiConsole.out.print(ansi().cursor(TEXT_ROW, TEXT_COL).a(TEXT)); //Stampo il testo.
 
         //Stampo le carte.
         SidePrinter.printSide(ROW_CARD1, COL_CARD1, cards.get(0));
@@ -141,7 +142,7 @@ public class ChoseSideScene {
         //Stampo la casella dei messagggi.
         printMessages();
 
-        System.out.print(ansi().cursor(TEXT_ROW, TEXT_COL + TEXT.length() + 1)); //Poiziono il cursore alla fine del testo.
+        AnsiConsole.out.print(ansi().cursor(TEXT_ROW, TEXT_COL + TEXT.length() + 1)); //Poiziono il cursore alla fine del testo.
 
     }
 

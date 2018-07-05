@@ -623,7 +623,7 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
                 this.connectionHandler.sendToServer(response); //Invio al server.
 
                 if(ClientMessageParser.isClientDisconnectedMessage(response)) { //Se ho appena inviato un messaggio di disconnessione termino il gioco.
-                    System.out.print(ansi().eraseScreen());
+                    AnsiConsole.out.print(ansi().eraseScreen());
                     System.exit(0);
                 }
 

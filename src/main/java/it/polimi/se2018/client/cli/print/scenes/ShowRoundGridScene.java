@@ -2,6 +2,7 @@ package it.polimi.se2018.client.cli.print.scenes;
 
 import it.polimi.se2018.client.cli.game.info.DieInfo;
 import it.polimi.se2018.client.cli.print.components.RoundGrindPrinter;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -56,23 +57,23 @@ public class ShowRoundGridScene {
     private void printMyTurnMenu(){
         int row = MENU_ROW;
 
-        System.out.print(ansi().cursor(row,MENU_COL).bold().a(TEXT0_MENU).boldOff());
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).bold().a(TEXT0_MENU).boldOff());
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT1_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT1_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT2_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT2_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT3_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT3_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT4_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT4_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT5_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT5_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT6_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT6_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT7_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT7_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT8_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT8_MENU));
     }
     /**
      * Il metodo gestisce la stampa del menù visibile durante turno di gioco degli avversari.
@@ -80,17 +81,17 @@ public class ShowRoundGridScene {
     private void printIsNotMyTurnMenu(){
         int row = MENU_ROW;
 
-        System.out.print(ansi().cursor(row,MENU_COL).bold().a(TEXT0_MENU).boldOff());
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).bold().a(TEXT0_MENU).boldOff());
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT1_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT1_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT2_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT2_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT3_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT3_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT4_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT4_MENU));
         row++;
-        System.out.print(ansi().cursor(row,MENU_COL).a(TEXT8_MENU));
+        AnsiConsole.out.print(ansi().cursor(row,MENU_COL).a(TEXT8_MENU));
     }
 
     /**
@@ -120,9 +121,9 @@ public class ShowRoundGridScene {
      * Il metodo stampa a schermo la scena.
      */
     public void printScene(){
-        System.out.print(ansi().eraseScreen());
+        AnsiConsole.out.print(ansi().eraseScreen());
         RoundGrindPrinter.printRoundGrid(ROW_ROUNDGRID,COL_ROUNDGRID,rounds);
-        System.out.print(ansi().cursor(ROW_TEXT,COL_TEXT).bold().a(TEXT1).boldOff());
+        AnsiConsole.out.print(ansi().cursor(ROW_TEXT,COL_TEXT).bold().a(TEXT1).boldOff());
         printMenu();
     }
 }

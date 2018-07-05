@@ -1,5 +1,7 @@
 package it.polimi.se2018.client.cli.print.scenes;
 
+import org.fusesource.jansi.AnsiConsole;
+
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,13 +41,13 @@ public class EndGameScene {
      */
     public void printScene(){
 
-        System.out.print(ansi().eraseScreen());
-        System.out.print(ansi().cursor(3,5).bold().a(TITLE).boldOff());
+        AnsiConsole.out.print(ansi().eraseScreen());
+        AnsiConsole.out.print(ansi().cursor(3,5).bold().a(TITLE).boldOff());
 
         int row = 8;
 
         for(String nickname : nicknames){
-            System.out.print(ansi().cursor(row,3).a(nickname + "\t\t\t" + scores.get(nicknames.indexOf(nickname))));
+            AnsiConsole.out.print(ansi().cursor(row,3).a(nickname + "\t\t\t" + scores.get(nicknames.indexOf(nickname))));
             row++;
         }
     }

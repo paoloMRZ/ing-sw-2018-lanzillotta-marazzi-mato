@@ -4,6 +4,7 @@ import it.polimi.se2018.client.cli.game.info.DieInfo;
 import it.polimi.se2018.client.cli.game.info.Info;
 import it.polimi.se2018.client.cli.print.utils.MarginPrinter;
 import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.security.InvalidParameterException;
 import java.util.List;
@@ -65,7 +66,7 @@ public class ReservePrinter {
         int col = startCol + NUMBER_COL;
 
         for(int i = 0; i< numberOfDice; i++){
-            System.out.print(ansi().cursor(startRow+NUMBER_ROW, col).bold().a(i).boldOff());
+            AnsiConsole.out.print(ansi().cursor(startRow+NUMBER_ROW, col).bold().a(i).boldOff());
             col += NUMBER_NEXT_COL;
         }
     }
@@ -97,7 +98,7 @@ public class ReservePrinter {
             MarginPrinter.printRowMargin(startRow+1 + HIGH-1, startCol, (5*dice.size()) + dice.size() + 1);
 
             //Stampo i nome.
-            System.out.print(ansi().cursor(startRow+NAME_ROW, startCol+ NAME_COL).bold().a(TEXT_NAME).boldOff());
+            AnsiConsole.out.print(ansi().cursor(startRow+NAME_ROW, startCol+ NAME_COL).bold().a(TEXT_NAME).boldOff());
 
             //Stampo i numeri.
             printNumbers(startRow, startCol, dice.size());

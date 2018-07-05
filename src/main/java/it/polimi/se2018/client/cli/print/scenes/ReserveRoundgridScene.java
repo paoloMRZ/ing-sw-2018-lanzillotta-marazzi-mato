@@ -6,6 +6,7 @@ import it.polimi.se2018.client.cli.game.utensil.UtensilCard;
 import it.polimi.se2018.client.cli.print.components.ReservePrinter;
 import it.polimi.se2018.client.cli.print.components.RoundGrindPrinter;
 import it.polimi.se2018.client.cli.print.components.UtensilPrinter;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.security.InvalidParameterException;
 
@@ -58,7 +59,7 @@ public class ReserveRoundgridScene {
      * Il metodo stampa un messaggio di testo.
      */
     private void printText(){
-        System.out.print(ansi().cursor(TEXT_ROW,TEXT_COL).a(TEXT_HEAD + text + TEXT_TAIL));
+        AnsiConsole.out.print(ansi().cursor(TEXT_ROW,TEXT_COL).a(TEXT_HEAD + text + TEXT_TAIL));
     }
 
     /**
@@ -76,7 +77,7 @@ public class ReserveRoundgridScene {
      * Il metodo stampa a schermo la scena.
      */
     public void printScene(){
-        System.out.print(ansi().eraseScreen());
+        AnsiConsole.out.print(ansi().eraseScreen());
 
         RoundGrindPrinter.printRoundGrid(ROUNDGRID_ROW,ROUNDGRID_COL,game.getRoundgrid());
         ReservePrinter.printReserve(RESERVE_ROW,RESERVE_COL,game.getReserve());

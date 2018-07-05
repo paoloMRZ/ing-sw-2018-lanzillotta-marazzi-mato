@@ -3,6 +3,7 @@ package it.polimi.se2018.client.cli.print.components;
 
 import it.polimi.se2018.client.cli.game.info.DieInfo;
 import it.polimi.se2018.client.cli.print.utils.MarginPrinter;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,13 +42,13 @@ public class RoundGrindPrinter {
 
         if(numberOfRoundPlayed == 0) { //Se non è ancora stato giocato nessun round.
             MarginPrinter.printColMargin(startRow + 1, col - 1, 4); //Stampo il margine verticale sinistro.
-            System.out.print(ansi().cursor(startRow+TEXT_NAME_ROW, startCol+TEXT_NAME_COL-1).bold().a(TEXT_NAME).boldOff());//Stampo il nome.
+            AnsiConsole.out.print(ansi().cursor(startRow+TEXT_NAME_ROW, startCol+TEXT_NAME_COL-1).bold().a(TEXT_NAME).boldOff());//Stampo il nome.
 
         }
 
         while(counter <= 10){
 
-            System.out.print(ansi().cursor(startRow, col+2).bold().a(counter).boldOff());
+            AnsiConsole.out.print(ansi().cursor(startRow, col+2).bold().a(counter).boldOff());
 
             MarginPrinter.printColMargin(startRow+1, col+5, 4); //Stampo il margine verticale destro.
             MarginPrinter.printRowMargin(startRow+1, col-1,7); //Stampo il margine orizzontale superiore.
@@ -78,7 +79,7 @@ public class RoundGrindPrinter {
 
         for(ArrayList<DieInfo> dice: rounds){
 
-            System.out.print(ansi().cursor(row-2, col+2).bold().a(counter).boldOff()); //Stampo il numero del round.
+            AnsiConsole.out.print(ansi().cursor(row-2, col+2).bold().a(counter).boldOff()); //Stampo il numero del round.
 
             MarginPrinter.printColMargin(row-1, col-1, (3*dice.size()) + dice.size()); //Stampo il margine verticale sinistro.
             MarginPrinter.printColMargin(row-1, col+5, (3*dice.size()) + dice.size()); //Stampo il margine verticale destro.
@@ -123,7 +124,7 @@ public class RoundGrindPrinter {
 
         for(ArrayList<DieInfo> dice: rounds){
 
-            System.out.print(ansi().cursor(row-2, col+2).bold().a(counter).boldOff()); //Stampo il numero del round.
+            AnsiConsole.out.print(ansi().cursor(row-2, col+2).bold().a(counter).boldOff()); //Stampo il numero del round.
 
             MarginPrinter.printColMargin(row-1, col-1, 4); //Stampo il margine verticale sinistro.
             MarginPrinter.printColMargin(row-1, col+5, 4); //Stampo il margine verticale destro.
@@ -140,7 +141,7 @@ public class RoundGrindPrinter {
             counter ++; //Incremento il numero del round da stampare.
 
             //Stampo il nome.
-            System.out.print(ansi().cursor(startRow+TEXT_NAME_ROW, startCol+TEXT_NAME_COL).bold().a(TEXT_NAME).boldOff());
+            AnsiConsole.out.print(ansi().cursor(startRow+TEXT_NAME_ROW, startCol+TEXT_NAME_COL).bold().a(TEXT_NAME).boldOff());
         }
 
 

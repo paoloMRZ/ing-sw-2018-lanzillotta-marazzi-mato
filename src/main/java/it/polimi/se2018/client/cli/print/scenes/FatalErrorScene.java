@@ -1,6 +1,7 @@
 package it.polimi.se2018.client.cli.print.scenes;
 
 import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.security.InvalidParameterException;
 
@@ -31,10 +32,10 @@ public class FatalErrorScene {
      */
     public void printScene(){
 
-        System.out.print(ansi().eraseScreen());
+        AnsiConsole.out.print(ansi().eraseScreen());
 
-        System.out.print(ansi().cursor(1,1).a("Si è verificato un errore di sistema! Verificare l'integrità dell'archivio JAR.\n\n"));
+        AnsiConsole.out.print(ansi().cursor(1,1).a("Si è verificato un errore di sistema! Verificare l'integrità dell'archivio JAR.\n\n"));
 
-        System.out.print(ansi().fg(Ansi.Color.RED).a(e.toString()).fgDefault());
+        AnsiConsole.out.print(ansi().fg(Ansi.Color.RED).a(e.toString()).fgDefault());
     }
 }
