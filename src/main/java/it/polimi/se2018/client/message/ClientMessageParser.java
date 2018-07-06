@@ -394,6 +394,8 @@ public class ClientMessageParser {
             }
 
             if(isNetworkMessage(message)) value = false;
+
+            if(isWinnerMessage(message)) value = false;
         }
 
         //Gestione dei messaggi non broadcast per la partita ma da non valiutare nella riconnessione
