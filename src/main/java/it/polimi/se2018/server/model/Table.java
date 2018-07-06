@@ -469,6 +469,19 @@ public class Table {
     }
 
     /**
+     * Messaggio che lancia un messaggio personale a un giocatore sulla variazione dei suoi favori.
+     * @param player nome del giocatore
+     * @throws InvalidValueException lanciato se il giocatore richiesto non esiste
+     */
+    public void setUpdateFavours(String player) throws InvalidValueException {
+        if(player!=null){
+            String message= updateFavours(player);
+            launchCommunication(new UpdateM(player,"favours",message,false));
+        }
+
+    }
+
+    /**
      * Metodo che lancia una serie di messaggi che permette al giocatore che si riconnette di essere aggiornato sullo
      * status della partita.
      * @param player nome del player che si riconnette.
@@ -482,8 +495,10 @@ public class Table {
         String message = showEnemiesChoice();
         launchCommunication(new UpdateM(player,"side_list",message,false));
         sendOthersSideStatus(player);
+        setUpdateFavours(player);
         launchCommunication(new UpdateM(player,"reserve",reserve.toString(),false));
         launchCommunication(new UpdateM(player,"RoundGrid",roundGrid.toString(),false));
+        launchCommunication((new UpdateM(player,"price",updateCostUtensils(),false)));
         launchCommunication(new UpdateM(player,"turn",playerTurnante(),false));
 
     }
@@ -662,6 +677,23 @@ public class Table {
             if(i!=utensilsDeck.size()-1) message= message.concat("&");
         }
         return message.concat("\n");
+    }
+
+    /**
+     * Metodo che crea il contenuto di un messaggio di update favors.
+     * @param player nome del giocatore
+     * @return stringa contenuto
+     * @throws InvalidValueException se il gicatore richiesto non esiste.
+     */
+    private String updateFavours(String player) throws InvalidValueException {
+        if(player!=null) {
+            String message = "";
+            Player p = callPlayerByName(player);
+            message = message.concat(player+"&");
+            message= message.concat(String.valueOf(p.getFavours()));
+            return message.concat("\n");
+        }
+        return null;
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 

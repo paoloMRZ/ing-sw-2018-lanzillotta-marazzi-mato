@@ -352,7 +352,14 @@ public class ClientMessageParser {
         return message.split("/")[3].equals(UPDATE) && message.split("/")[4].equals("price");
     }
 
-
+    /**
+     * Il metodo controlla se il messaggio è un messaggio che notifica i favori di un giocatore.
+     * @param message messaggio
+     * @return se è vero o falso
+     */
+    public static boolean isUpdateFavoursMessage(String message){
+        return message.split("/")[3].equals(UPDATE) && message.split("/")[4].equals("favours");
+    }
     /**
      * Metodo che ritorna il destinatario del mesaggio
      *

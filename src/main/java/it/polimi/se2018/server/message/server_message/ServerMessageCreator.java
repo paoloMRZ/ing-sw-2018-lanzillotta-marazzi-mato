@@ -414,5 +414,30 @@ public class ServerMessageCreator {
         }
         else return  null;
     }
+    /**
+     * Il metodo restituisce il messaggio da mandare a un client per aggiornarlo sui costi delle carte utensile.
+     * @param costs stringa con i costi delle utensili
+     * @param dest destinatario
+     * @return messaggio.
+     */
+    public static String getUpdatePriceMessage(String costs,String dest){
+        if(costs!=null && dest!=null) {
+            return "/###/"+dest+"/update/price/" + costs;
+        }
+        else return  null;
+    }
+
+    /**
+     * Il metodo si occupa di inviare n messaggio privato a un giocatore aggiornandolo sui suoi favori.
+     * @param favs numero favori
+     * @param dest destinatario
+     * @return messaggio privato
+     */
+    public static String getUpdateFavsMessage(String favs,String dest){
+        if(favs!=null && dest!=null) {
+            return "/###/"+dest+"/update/favours/" + favs;
+        }
+        else return  null;
+    }
 
 }

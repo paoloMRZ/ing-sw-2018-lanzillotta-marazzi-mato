@@ -290,10 +290,16 @@ public class Player {
      * @throws NearDiceInvalidException viene lanciata quando al Cella individuata da (newRow, newCol) non ha Celle adiacenti con un Dado
      */
 
-    public void putDiceIgnoreColor(int oldRow, int oldCol,int newRow, int newCol) throws InvalidValueException, NoDicesNearException, NotEmptyCellException, InvalidShadeException, NearDiceInvalidException {
+    public void putDiceIgnoreColor(int oldRow, int oldCol,int newRow, int newCol) throws InvalidValueException, NoDicesNearException, NotEmptyCellException, InvalidShadeException, NearDiceInvalidException, InvalidColorException {
         Dice d=mySide.pick(oldRow,oldCol);
         if(d==null) throw new InvalidValueException();
-        mySide.putIgnoringColor(newRow,  newCol,  d  );
+        try{
+            mySide.putIgnoringColor(newRow,  newCol,  d  );
+        }
+        catch(Exception e){
+            mySide.put(oldRow,oldCol,d);
+            throw e;
+        }
         launchCommunication(mySide.setUpdate());
     }
 
@@ -312,10 +318,16 @@ public class Player {
      * @throws NearDiceInvalidException viene lanciata quando al Cella individuata da (newRow, newCol) non ha Celle adiacenti con un Dado
      */
 
-    public void putDiceIgnoreValue(int oldRow, int oldCol,int newRow, int newCol) throws InvalidValueException, NoDicesNearException, NotEmptyCellException, InvalidColorException, NearDiceInvalidException {
+    public void putDiceIgnoreValue(int oldRow, int oldCol,int newRow, int newCol) throws InvalidValueException, NoDicesNearException, NotEmptyCellException, InvalidColorException, NearDiceInvalidException, InvalidShadeException {
         Dice d=mySide.pick(oldRow,oldCol);
         if(d==null) throw  new InvalidValueException();
-        mySide.putIgnoringShade(newRow,  newCol,  d  );
+        try {
+            mySide.putIgnoringShade(newRow, newCol, d);
+        }
+        catch(Exception e){
+            mySide.put(oldRow,oldCol,d);
+            throw e;
+        }
         launchCommunication(mySide.setUpdate());
     }
 

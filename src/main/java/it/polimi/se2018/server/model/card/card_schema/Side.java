@@ -253,6 +253,7 @@ public class Side {
                 if (areNotEdgeCoordinates(row,col))
                     throw new InvalidCoordinatesException();
             }
+
             matrix[row][col].putDiceIgnoringColor(d);
 
             numberOfDice++; //Questa istruzione deve sempre essere l'ultima di questo metodo.
