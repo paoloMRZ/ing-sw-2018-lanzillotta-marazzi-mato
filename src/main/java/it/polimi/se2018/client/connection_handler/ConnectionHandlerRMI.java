@@ -7,10 +7,10 @@ import it.polimi.se2018.server.exceptions.InvalidNicknameException;
 import it.polimi.se2018.server.network.fake_client.FakeClientRMIInterface;
 import it.polimi.se2018.server.network.implementation.ServerInterface;
 
-import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 /**
@@ -34,13 +34,13 @@ public class ConnectionHandlerRMI extends ConnectionHandler implements ClientInt
      * @throws InvalidNicknameException viene sollevata se il nickname scelto è già in uso sul server.
      * @throws GameStartedException viene sollevata se il client tenta di connettersi a partita già iniziata.
      */
-    public ConnectionHandlerRMI(String nickname, ConnectionHandlerObserver view, String host) throws InvalidNicknameException, GameStartedException, NotBoundException, MalformedURLException, RemoteException {
+    public ConnectionHandlerRMI(String nickname, ConnectionHandlerObserver view, String host) throws InvalidNicknameException, GameStartedException, NotBoundException, RemoteException {
 
         super(view, nickname);
 
-        ServerInterface serverInterface;
+        Registry registry = LocateRegistry.getRegistry(host);
 
-        serverInterface = (ServerInterface) Naming.lookup("//"+ host + "/MyServer");
+        ServerInterface serverInterface = (ServerInterface) registry.lookup("MyServer");
         ClientInterface remoteRef = (ClientInterface) UnicastRemoteObject.exportObject(this, 0); //Lo faccio perchè non posso far estendere unicast a questa classe visto che ne estende già una.
 
         serverInterface.add(remoteRef, nickname);

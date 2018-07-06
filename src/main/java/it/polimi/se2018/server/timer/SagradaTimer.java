@@ -141,7 +141,6 @@ public class SagradaTimer {
      * Si noti che il metodo ha livello di protezione package!
      */
     void clockNotify(){
-        System.out.print(counter); //TODO da rimuovere!
         counter--;
 
         if(counter== -1){

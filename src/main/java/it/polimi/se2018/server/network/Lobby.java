@@ -12,9 +12,12 @@ import it.polimi.se2018.server.network.fake_client.FakeClient;
 import it.polimi.se2018.server.network.fake_client.FakeClientObserver;
 import it.polimi.se2018.server.timer.ObserverTimer;
 import it.polimi.se2018.server.timer.SagradaTimer;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.fusesource.jansi.Ansi.ansi;
 
 /**
  * Questa classe rappresenta una stanza di gioco ed ha il compito di raccogliere tutti i fake client che gestiscono le connessioni dei client connessi
@@ -32,42 +35,48 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
     private SagradaTimer timer;
     private boolean isOpen; //Indica lo stato della lobby, cioè se un client può connettersi o no.
 
+    private boolean verbose; //Indica se stampare a schermo i messaggi di rete.
+
     private static Lobby instance = null;
 
     private int turnTime;
 
     /**
-     * Metodo di costruzione della classe.
+     * Costruisce un'istanza della classe con i parametri specificati solo se non ne esiste già una.
      *
      * @param lifeTime intervallo di tempo per cui la lobby accetta connessioni per una nuova partita.
      * @param turnTime durata massima di un turno di gioco.
-     * @return istanza della classe.
+     * @param verbose indica se stampare a schermo i messaggi in ingresso e uscita.
      */
-    public static Lobby factoryLobby(int lifeTime, int turnTime){
+    public static void factoryLobby(int lifeTime, int turnTime, boolean verbose){
         if(instance == null)
-            instance = new Lobby(lifeTime, turnTime);
-
-        return instance;
+            instance = new Lobby(lifeTime, turnTime, verbose);
     }
 
     /**
-     * Metodo di costruzione della lobby.
+     * Restituisce un'istanza della classe. Se non è presente nessuna istanza ne crea una con i parametri di default.
      * @return istanza della classe.
      */
-    public static Lobby factoryLobby(){
+    public static Lobby getLobby(){
         if(instance == null)
-            instance = new Lobby(30, 180); //Default = 30 sec.
+            instance = new Lobby(30, 180, false); //Default = 30 sec.
 
         return instance;
     }
 
     /**
      * Costruttore della classe.
+     *
+     * @param lifeTime intervallo di tempo per cui la lobby accetta connessioni per una nuova partita.
+     * @param turnTime durata massima di un turno di gioco.
+     * @param verbose indica se stampare a schermo i messaggi in ingresso e uscita.
      */
-    private Lobby(int lifeTime, int turnTime) {
+    private Lobby(int lifeTime, int turnTime, boolean verbose) {
 
         timer = new SagradaTimer(lifeTime);
         this.turnTime = turnTime;
+
+        this.verbose = verbose;
 
         timer.add(this); //Mi aggiungo alla lista degli osservatori del timer.
         isOpen = true;
@@ -93,8 +102,8 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
             controller.START();
         } catch (Exception e) {
             clearLobby(); //Disconnetto tutti i giocatori.
-            System.out.println("[*]ERRORE: Impossibile avviare la partita."); //Notifico a schermo.
-            System.out.print(e.toString());
+            AnsiConsole.out.println(ansi().fgRed().a("[*]ERRORE: Impossibile avviare la partita.").fgDefault()); //Notifico a schermo.
+            AnsiConsole.out.print(ansi().fgRed().a(e.toString()).fgDefault());
             System.exit(0); //Termino il processo.
         }
 
@@ -336,7 +345,9 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
      */
     @Override
     public synchronized void notifyFromFakeClient (String message){
-        System.out.println(message); //TODO è da rimuovere!
+
+        if(verbose)
+            AnsiConsole.out.println(ansi().fgBlue().a(message).fgDefault()); //I messaggi d'ingresso sono di colore blu.
 
         if(NetworkMessageParser.isDisconnectMessage(message)){ //Controllo se il messaggio ricevuto è una richiesta di disconnessione.
             if(isOpen)// Se la lobby è ancora aperta (quindi la partita non è stata avviata) rimuovo il giocatore
@@ -361,7 +372,9 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
      */
 
     public void notifyFromFakeView(String message){
-        System.out.println(message); //TODO è da rimuovere!
+
+        if(verbose)
+            AnsiConsole.out.println(ansi().fgGreen().a(message).fgDefault()); //I messaggi d'uscita sono di colore verde..
 
         if(NetworkMessageParser.isFreezeMessage(message)) //Se ricevo un messaggio di congelamento congelo il fake client associato.
             freezeFakeClient(NetworkMessageParser.getMessageInfo(message));
