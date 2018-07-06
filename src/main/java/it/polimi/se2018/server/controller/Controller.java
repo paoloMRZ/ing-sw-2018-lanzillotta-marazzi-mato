@@ -368,11 +368,13 @@ public class Controller{
 
     /**
      * Metodo che congela un giocaotre a richiesta della Lobby.
+     * E passa il turno.
      * @param m messaggio contenente il nome del giocatore richiesto.
      */
     public void freezer(Freeze m){
         try {
             lobby.callPlayerByName(m.getPlayer()).forget();
+            passTurn(new PassTurn(m.getPlayer()));
         } catch (InvalidValueException e) {
             cChat.notifyObserver(new ErrorSomethingNotGood(e));
         }
