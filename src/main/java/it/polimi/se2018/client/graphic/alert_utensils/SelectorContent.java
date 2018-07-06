@@ -158,14 +158,11 @@ public class SelectorContent {
 
             case TAGLIERINAMANUALE:
 
-                if(!checkValidationInput(oldXFirstDie,oldYFirstDie,newXFirstDie,newYFirstDie)){
-                    if(!checkValidationInput(oldXSecondDie, oldYSecondDie, newXSecondDie, newYSecondDie))
-                        connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(oldXFirstDie.getText(),oldYFirstDie.getText(),newXFirstDie.getText(),newYFirstDie.getText(),oldXSecondDie.getText(),oldYSecondDie.getText(),newXSecondDie.getText(),newYSecondDie.getText()))));
+                if(!checkValidationInput(oldXFirstDie,oldYFirstDie,newXFirstDie,newYFirstDie) && !checkValidationInput(oldXSecondDie, oldYSecondDie, newXSecondDie, newYSecondDie) && getDieFromRoundSelected()!=null)
+                        connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(getRoundNumber(), getDieFromRoundSelected(),oldXFirstDie.getText(),oldYFirstDie.getText(),newXFirstDie.getText(),newYFirstDie.getText(),oldXSecondDie.getText(),oldYSecondDie.getText(),newXSecondDie.getText(),newYSecondDie.getText()))));
 
-                    else connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard), new ArrayList<>(Arrays.asList(oldXFirstDie.getText(),oldYFirstDie.getText(),newXFirstDie.getText(),newYFirstDie.getText()))));
+                    else  AlertValidation.display(ERROR, "Inserisci correttamente tutti i\nparametri richiesti!");
 
-                }
-                else AlertValidation.display(ERROR, "Inserisci correttamente almeno le\ncoordinate del primo dado da spostare!");
                 break;
 
             case RIGAINSUGHERO:
@@ -189,23 +186,27 @@ public class SelectorContent {
      * @param keyNameOfCard Chiave per la ricerca del numero della carta Utensile selezionata all'interno del dizionario
      */
 
-    public void configureMessageBis(String cardName, Map<String, String> dictionaryUtensils, String keyNameOfCard){
+    public void configureMessageBis(String cardName, Map<String, String> dictionaryUtensils, String keyNameOfCard) {
 
         switch (cardName) {
             case DILUENTEPERPASTASALDA:
 
-                if((toolSide.getPosX()!=null) && (toolSide.getPosY()!=null)) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard) + "bis", new ArrayList<>(Arrays.asList(dieChoose,chosen,toolSide.getPosX(),toolSide.getPosY()))));
+                if ((toolSide.getPosX() != null) && (toolSide.getPosY() != null))
+                    connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard) + "bis", new ArrayList<>(Arrays.asList(dieChoose, chosen, toolSide.getPosX(), toolSide.getPosY()))));
                 else AlertValidation.display(ERROR, "Seleziona la cella sulla carta!");
                 break;
 
 
             case PENNELLOPERPASTASALDA:
 
-                if((toolSide.getPosX()!=null) && (toolSide.getPosY()!=null)) connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard)+ "bis", new ArrayList<>(Arrays.asList(chosen,toolSide.getPosX(),toolSide.getPosY()))));
-                else AlertValidation.display(ERROR, "Seleziona la cella sulla carta!");
-                break;
-
-
+                if (chosen.equals("1"))
+                    connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard) + "bis", new ArrayList<>(Arrays.asList(chosen, toolSide.getPosX(), toolSide.getPosY()))));
+                else {
+                    if ((toolSide.getPosX() != null) && (toolSide.getPosY() != null))
+                        connectionHandler.sendToServer(ClientMessageCreator.getUseUtensilMessage(connectionHandler.getNickname(), cardSelection, dictionaryUtensils.get(keyNameOfCard) + "bis", new ArrayList<>(Arrays.asList(chosen, toolSide.getPosX(), toolSide.getPosY()))));
+                    else AlertValidation.display(ERROR, "Seleziona la cella sulla carta!");
+                    break;
+                }
         }
     }
 
@@ -251,7 +252,7 @@ public class SelectorContent {
                 node = new VBox(30);
                 node.setAlignment(Pos.TOP_CENTER);
                 node.getChildren().addAll(setFontStyle(new Label(TITLERESERVE),30),reserveLabel.callReserve(), setFontStyle(new Label("Dadi disponibili nel tracciato: "), 20));
-                node.getChildren().add(configureActionOnRound());
+                node.getChildren().add(configureActionOnRound(40d));
                 break;
 
             case PENNELLOPERPASTASALDA:
@@ -273,18 +274,11 @@ public class SelectorContent {
 
             case TAGLIERINAMANUALE:
 
-                node = new VBox(10);
+                node = new VBox(5);
                 node.setAlignment(Pos.CENTER);
 
-                oldXFirstDie.setPrefSize(100,20);
-                oldYFirstDie.setPrefSize(100,20);
-                oldXSecondDie.setPrefSize(100,20);
-                oldYSecondDie.setPrefSize(100,20);
-
-                newXFirstDie.setPrefSize(100,20);
-                newYFirstDie.setPrefSize(100,20);
-                newXSecondDie.setPrefSize(100,20);
-                newYSecondDie.setPrefSize(100,20);
+                configureSizeTextField(oldXFirstDie,oldYFirstDie,newXFirstDie,newYFirstDie,100, 20);
+                configureSizeTextField(oldXSecondDie,oldYSecondDie,newXSecondDie,newYSecondDie,100, 20);
 
                 ArrayList<TextField> coordinateBoxFirstDie = new ArrayList<>(Arrays.asList(oldXFirstDie,oldYFirstDie,newXFirstDie, newYFirstDie));
                 ArrayList<TextField> coordinateBoxSecondDie = new ArrayList<>(Arrays.asList(oldXSecondDie, oldYSecondDie, newXSecondDie,newYSecondDie));
@@ -298,7 +292,7 @@ public class SelectorContent {
                 HBox labelCoordinate = new HBox(firstDie, secondDie);
                 labelCoordinate.setSpacing(20d);
                 labelCoordinate.setAlignment(Pos.CENTER);
-                node.getChildren().addAll(toolSide.getAnchorPane(), setFontStyle(new Label(TITLERESERVE), 20), reserveLabel.callReserve(),labelCoordinate);
+                node.getChildren().addAll(setFontStyle(new Label("Tracciato Round:"),15),configureActionOnRound(15d), setFontStyle(new Label("La tua Side:"),15), toolSide.getAnchorPane(),labelCoordinate);
                 break;
 
         }
@@ -489,25 +483,10 @@ public class SelectorContent {
         node = new VBox(10);
         node.setAlignment(Pos.CENTER);
 
-        oldXFirstDie.setPromptText("Riga");
-        oldYFirstDie.setPromptText("Colonna");
-        newXFirstDie.setPromptText("Riga");
-        newYFirstDie.setPromptText("Colonna");
-
-        oldXSecondDie.setPromptText("Riga");
-        oldYSecondDie.setPromptText("Colonna");
-        newXSecondDie.setPromptText("Riga");
-        newYSecondDie.setPromptText("Colonna");
-
-        oldXFirstDie.setPrefSize(100,20);
-        oldYFirstDie.setPrefSize(100,20);
-        oldXSecondDie.setPrefSize(100,20);
-        oldYSecondDie.setPrefSize(100,20);
-
-        newXFirstDie.setPrefSize(100,20);
-        newYFirstDie.setPrefSize(100,20);
-        newXSecondDie.setPrefSize(100,20);
-        newYSecondDie.setPrefSize(100,20);
+        configurePromptTextField(oldXFirstDie,oldYFirstDie,newXFirstDie,newYFirstDie,"Riga", "Colonna");
+        configurePromptTextField(oldXSecondDie,oldYSecondDie,newXSecondDie,newYSecondDie,"Riga", "Colonna");
+        configureSizeTextField(oldXFirstDie,oldYFirstDie,newXFirstDie,newYFirstDie,100, 20);
+        configureSizeTextField(oldXSecondDie,oldYSecondDie,newXSecondDie,newYSecondDie,100, 20);
 
         ArrayList<TextField> coordinateBoxFirstDie = new ArrayList<>(Arrays.asList(oldXFirstDie,oldYFirstDie,newXFirstDie, newYFirstDie));
         ArrayList<TextField> coordinateBoxSecondDie = new ArrayList<>(Arrays.asList(oldXSecondDie, oldYSecondDie, newXSecondDie,newYSecondDie));
@@ -524,6 +503,49 @@ public class SelectorContent {
 
         node.getChildren().addAll(toolSide.getAnchorPane(),labelCoordinate);
     }
+
+
+    /**
+     * Metodo utilizzato per impostare la dimensione dei campi Immissioni per i vari spostamenti dei dadi dovuti all'utilizzo di particoalri carte Utensili
+     *
+     * @param oldValueX Campo Immissione coordinata X corrente
+     * @param oldValueY Campo Immissione coordinata Y corrente
+     * @param newValueX Campo Immissione coordinata X di destinazione
+     * @param newValueY Campo Immissione coordinata Y di destinazione
+     * @param prefWidth Larghezza desiderata del campo Immissione
+     * @param prefHight Altezza desiderata del campo Immissione
+     */
+
+    private void configureSizeTextField(TextField oldValueX, TextField oldValueY, TextField newValueX, TextField newValueY, int prefWidth, int prefHight){
+        oldValueX.setPrefSize(prefWidth,prefHight);
+        oldValueY.setPrefSize(prefWidth,prefHight);
+        newValueX.setPrefSize(prefWidth,prefHight);
+        newValueY.setPrefSize(prefWidth,prefHight);
+    }
+
+
+
+
+
+    /**
+     * Metodo utilizzato per impostare il testo Prompt dei campi Immissioni per i vari spostamenti dei dadi dovuti all'utilizzo di particoalri carte Utensili
+     *
+     * @param oldValueX Campo Immissione coordinata X corrente
+     * @param oldValueY Campo Immissione coordinata Y corrente
+     * @param newValueX Campo Immissione coordinata X di destinazione
+     * @param newValueY Campo Immissione coordinata Y di destinazione
+     * @param firstPrompt Contenuto prompt del primo campo Immissione (coordinata X -> "Riga")
+     * @param secondPrompt Contenuto prompt del secondo campo Immissione (coordinata Y -> "Colonna")
+     */
+
+    private void configurePromptTextField(TextField oldValueX, TextField oldValueY, TextField newValueX, TextField newValueY, String firstPrompt, String secondPrompt){
+        oldValueX.setPromptText(firstPrompt);
+        oldValueY.setPromptText(secondPrompt);
+        newValueX.setPromptText(firstPrompt);
+        newValueY.setPromptText(secondPrompt);
+    }
+
+
 
 
 
@@ -718,19 +740,23 @@ public class SelectorContent {
 
 
     /**
-     * Metodo di supporto per la configurazione del contenuto informativo della finestra dedicata alla carta Utensile 5.
+     * Metodo di supporto per la configurazione del contenuto informativo della finestra dedicata alla carta Utensile 5 e 12.
      *
      * @return Riferimento al Parent della finestra
      */
 
-    private VBox configureActionOnRound(){
+    private VBox configureActionOnRound(Double spacing){
 
+        //Prelevo la collezione di elementi grafici contenenti i dadi da ripristinare
         ArrayList<HBox> hBoxCollection = (ArrayList<HBox>)RoundLabel.callRoundLable();
+
         HBox layoutRound = new HBox(5);
         layoutRound.setAlignment(Pos.CENTER);
+
         VBox root = new VBox(layoutRound);
         root.setAlignment(Pos.CENTER);
-        root.setSpacing(40d);
+        root.setSpacing(spacing);
+
         for(int i=0; i<hBoxCollection.size(); i++){
             StackPane roundButton = new StackPane();
             roundButton.setPrefSize(60,60);
@@ -738,6 +764,7 @@ public class SelectorContent {
             roundBack.setFitHeight(60);
             roundBack.setFitWidth(60);
             int finalI = i;
+
             roundBack.addEventHandler(MouseEvent.MOUSE_CLICKED, e->{
                 if(firstClick) {
                     roundDice = hBoxCollection.get(finalI);
@@ -748,7 +775,6 @@ public class SelectorContent {
                     root.getChildren().remove(roundDice);
                     roundDice = hBoxCollection.get(finalI);
                     root.getChildren().add(roundDice);
-                    firstClick = true;
                 }
             });
             roundButton.getChildren().add(roundBack);

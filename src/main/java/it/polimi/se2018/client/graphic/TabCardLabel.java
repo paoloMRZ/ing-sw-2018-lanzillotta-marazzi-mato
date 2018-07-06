@@ -96,13 +96,9 @@ public class TabCardLabel {
 
         //Configurazione dell'icona della TAB
         ImageView imageView = configureImageView(subDirectory, nameResources, extension, imageSize,imageSize);
-        imageView.setFitHeight(imageSize);
-        imageView.setFitWidth(imageSize);
 
         //Configurazione del testo della TAB
         Label label = setFontStyle(new Label(title),tabSize.get(1));
-        label.setAlignment(Pos.CENTER);
-        label.setTextAlignment(TextAlignment.CENTER);
         label.setStyle("-fx-background-color: transparent;");
 
         //Unione dell'icona e dele testo della TAB

@@ -82,7 +82,7 @@ public class ActionUtensils {
         //Configurazione Body Content
         HBox bodyContent = new HBox(100);
         bodyContent.setAlignment(Pos.CENTER);
-        ImageView cardImage = configureImageView(SUBDIRECTORY,keyNameOfCard,EXTENSION, 300,450);
+        ImageView cardImage = configureImageView(SUBDIRECTORY,keyNameOfCard,EXTENSION, 320,450);
         SelectorContent selectorContent = new SelectorContent(this.reserveLabel, connectionHandler,selection, playerSide,adapterResolution);
         if(!isBisEffect) bodyContent.getChildren().addAll(cardImage, selectorContent.configureNode(name));
         else bodyContent.getChildren().addAll(cardImage, selectorContent.configureNodeBis(name,infoBis.get(2)));

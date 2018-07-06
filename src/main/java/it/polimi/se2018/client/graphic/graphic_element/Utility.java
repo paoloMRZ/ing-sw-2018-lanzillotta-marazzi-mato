@@ -12,6 +12,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
@@ -129,6 +130,7 @@ public class Utility {
     public static Label setFontStyle(Label header, int size){
         header.setFont(Font.font(FONT, size));
         header.setAlignment(Pos.CENTER);
+        header.setTextAlignment(TextAlignment.CENTER);
         return header;
     }
 
@@ -145,11 +147,11 @@ public class Utility {
 
         if(!hashMap.get(button)){
             button.getChildren().add(group);
-            hashMap.replace(button, false, true);
+            hashMap.put(button, true);
         }
         else {
             button.getChildren().remove(group);
-            hashMap.replace(button, true, false);
+            hashMap.put(button, false);
         }
     }
 

@@ -38,8 +38,8 @@ public class AlertWinner {
         Stage window = new Stage();
         BorderPane borderPane = new BorderPane();
         AnchorPane anchorWinner = new AnchorPane();
-        anchorWinner.setMaxSize(800,700);
-        anchorWinner.setMinSize(800,700);
+        anchorWinner.setMaxSize(800,800);
+        anchorWinner.setMinSize(800,800);
 
 
         List<String> namePlayer = scorePoint.stream().filter(s -> (scorePoint.indexOf(s) % 2 == 0)).collect(Collectors.toList());
@@ -51,7 +51,7 @@ public class AlertWinner {
         //Configurazione Header
         Label headerTitle = Utility.setFontStyle(new Label("Complimenti,"), 40);
         headerTitle.setTextAlignment(TextAlignment.CENTER);
-        Label headerName = Utility.setFontStyle(new Label(namePlayer.get(namePlayer.size()-1)), 50);
+        Label headerName = Utility.setFontStyle(new Label(namePlayer.remove(namePlayer.size()-1)), 50);
         headerName.setTextAlignment(TextAlignment.CENTER);
         Label headerInfo = Utility.setFontStyle(new Label("Per la tua coloratissima vittoria  al gioco Sagrada!"), 32);
         headerName.setTextAlignment(TextAlignment.CENTER);
@@ -108,7 +108,7 @@ public class AlertWinner {
 
         anchorWinner.getChildren().add(borderPane);
         configureAnchorPane(anchorWinner,scoreGrid,100d,130d,100d,100d);
-        Scene scene = new Scene(anchorWinner,800,700);
+        Scene scene = new Scene(anchorWinner,800,800);
 
         window.setScene(scene);
         window.showAndWait();
