@@ -2,6 +2,8 @@ package it.polimi.se2018.test_controller;
 
 import it.polimi.se2018.server.controller.Controller;
 import it.polimi.se2018.server.exceptions.InvalidValueException;
+import it.polimi.se2018.server.exceptions.invalid_cell_exceptios.*;
+import it.polimi.se2018.server.exceptions.invalid_value_exceptios.InvalidSomethingWasNotDoneGood;
 import it.polimi.se2018.server.fake_view.FakeView;
 import it.polimi.se2018.server.model.Color;
 import it.polimi.se2018.server.model.Player;
@@ -494,10 +496,10 @@ public class MVCTest {
         System.out.println("letsput-->letsput-->letsput-->letsput-->letsput-->letsput-->letsput-->letsput-->");
 
         fake.messageIncoming("/primo/###/update/turn/?");
-
+    /*
         fake.messageIncoming("/secondo/###/put/?/0&0&2");
         assertEquals("/###/secondo/success/put/0&0&2\n",fake.getMessage());
-
+    */
         fake.messageIncoming("/secondo/###/update/turn/?");
         fake.messageIncoming("/secondo/###/update/turn/?");
         fake.messageIncoming("/primo/###/update/turn/?");
@@ -517,10 +519,9 @@ public class MVCTest {
 
         fake.messageIncoming("/secondo/###/utensil/use/0&11&0");
 
-        fake.messageIncoming("/secondo/###/utensil/use/0&11bis&2&1&1&2");
+        fake.messageIncoming("/secondo/###/utensil/use/0&11bis&5&1&0&0");
 
         assertEquals("/###/secondo/utensil/end/0&11&2&4\n",fake.getMessage());
-
-
     }
+
 }

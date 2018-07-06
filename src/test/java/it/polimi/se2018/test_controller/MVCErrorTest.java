@@ -144,7 +144,7 @@ public class MVCErrorTest{
             //errore di selezione viene riflettuto con un error/use/index
             controller.resetUtensils(new ArrayList<>(Arrays.asList(new PinzaSgrossatrice(),
                     new PennelloPerEglomise(),
-                    new AlesatorePerLaminaDiRame())));
+                    new PennelloPerEglomise())));
 
             Dice d1 = new Dice(Color.BLUE, 4);
             Dice d2 = new Dice(Color.GREEN, 4);
@@ -156,20 +156,22 @@ public class MVCErrorTest{
 
             fake.messageIncoming("/primo/###/put/?/0&0&2");
 
-            assertEquals("/###/primo/success/put/0&0&2\n",fake.getMessage());
+            fake.messageIncoming("/primo/###/utensil/activate/2");
 
-            fake.messageIncoming("/primo/###/utensil/activate/1");
+            assertEquals("/###/primo/success/activate/2&2&2&5\n",fake.getMessage());
 
-            assertEquals("/###/primo/success/activate/1&2&2&5\n",fake.getMessage());
+            fake.messageIncoming("/primo/###/utensil/use/2&2&0&2&0&0");
 
-            fake.messageIncoming("/primo/###/utensil/use/1&2&0&2&0&6");//errore sulla posizione
+            assertEquals("/###/primo/error/use/2\n",fake.getMessage());
 
-            assertEquals("/###/primo/error/use/1\n",fake.getMessage());
+            fake.messageIncoming("/primo/###/utensil/use/2&2&0&2&0&3");
+
+            assertEquals("/###/primo/utensil/end/2&2&2&4\n",fake.getMessage());
+
+
         }
         @Test
         public void tool3Error() throws Exception {
-
-
 
             controller.resetUtensils(new ArrayList<>(Arrays.asList(new PinzaSgrossatrice(),
                     new PennelloPerEglomise(),
@@ -191,9 +193,14 @@ public class MVCErrorTest{
 
             assertEquals("/###/primo/success/activate/2&3&2&5\n",fake.getMessage());
 
-            fake.messageIncoming("/primo/###/utensil/use/2&3&0&2&0&9");
+            fake.messageIncoming("/primo/###/utensil/use/2&3&0&2&0&3");
 
             assertEquals("/###/primo/error/use/2\n",fake.getMessage());
+
+            fake.messageIncoming("/primo/###/utensil/use/2&3&0&2&0&0");
+            assertEquals("/###/primo/utensil/end/2&3&2&4\n",fake.getMessage());
+
+
         }
         @Test
         public void tool4Error() throws Exception {
@@ -399,8 +406,6 @@ public class MVCErrorTest{
         @Test
         public void tool11Error() throws Exception {
 
-
-
             controller.resetUtensils(new ArrayList<>(Arrays.asList(new TaglierinaCircolare(),
                     new DiluentePerPastaSalda(),
                     new TaglierinaManuale())));
@@ -419,10 +424,7 @@ public class MVCErrorTest{
 
             fake.messageIncoming("/primo/###/utensil/use/1&11&1");
             System.out.println(fake.getMessage());
-            fake.messageIncoming("/primo/###/utensil/use/1&11bis&1&5&0&10");
-            System.out.println(fake.getMessage());
-            System.out.println(controller.getcAction().getReserve().toString());
-            System.out.println(controller.getPlayerByName("primo").getMySide().toString());
+            fake.messageIncoming("/primo/###/utensil/use/1&11bis&6&1&0&0");
 
             assertEquals("/###/primo/error/use/1\n",fake.getMessage());
         }
