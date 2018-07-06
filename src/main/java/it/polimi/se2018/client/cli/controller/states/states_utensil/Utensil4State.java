@@ -25,7 +25,7 @@ public class Utensil4State implements StateInterface {
     private static final String TEXT3 = "Cella 1 (riga)";
     private static final String TEXT4 = "Cella 1 (colonna)";
 
-    private static final String TEXT5 = "Dado 2 (colonna)";
+    private static final String TEXT5 = "Dado 2 (riga)";
     private static final String TEXT6 = "Dado 2 (colonna)";
 
     private static final String TEXT7 = "Cella 2 (riga)";

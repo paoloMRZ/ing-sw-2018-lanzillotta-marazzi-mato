@@ -146,6 +146,14 @@ public class Utensil89State implements StateInterface {
         }
     }
 
+    /**
+     * Il metodo pulisce lo schermo ristampando la scena.
+     * @return messaggio di default.
+     */
+    private String refreshScreen(){
+        sideReserverScene.printScene(); //pulisco lo schermo.
+        return DEFAULT_MESSAGE;
+    }
 
     /**
      * Il metodo gestisce l'input immesso dall'utente.
@@ -164,10 +172,7 @@ public class Utensil89State implements StateInterface {
 
             case 2: return selectCol(request);  //Seleziono colonna.
 
-            default:{
-                sideReserverScene.printScene(); //pulisco lo schermo.
-                return DEFAULT_MESSAGE;
-            }
+            default: return refreshScreen();
         }
 
     }

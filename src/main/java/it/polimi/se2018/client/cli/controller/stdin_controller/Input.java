@@ -36,6 +36,22 @@ public class Input implements Runnable {
     }
 
     /**
+     * Il metodo controlla se la stringa immessa da stdin corrisponde ad una delle stringhe accettabili.
+     *
+     * @param stringRequest stringa da controllare.
+     */
+    private void controlString(String stringRequest ){
+
+        if(stringRequest.equals(INPUT_STR_EXIT)) //Controllo se è stata immessa una richiesta di chiusura.
+            observer.inputRequest(EXIT_REQUEST);
+
+        if(stringRequest.equals(INPUT_STR_BACK_MENU)) //Se la stringa letta è il carattere 'q' invio al gestore il numero di richiesta del menù principale.
+            observer.inputRequest(INPUT_INT_BACK_MENU);
+        else
+            observer.inputRequest(INPUT_ERROR);
+    }
+
+    /**
      * Il seguente metodo (che va lanciato su un thread dedicato) è in ascolto sullo standard input ed ogni volta che riceve
      * un valore (eventualmente lo converte in un intero) lo passa all'osservatore.
      */
@@ -56,24 +72,11 @@ public class Input implements Runnable {
                 if (input.hasNext()) { //Se ho qualcosa (che per forza non sarà un intero) lo leggo come stringa.
 
                     stringRequest = input.next();
-
-                    if(stringRequest.equals(INPUT_STR_EXIT)) //Controllo se è stata immessa una richiesta di chiusura.
-                        observer.inputRequest(EXIT_REQUEST);
-
-                    if(stringRequest.equals(INPUT_STR_BACK_MENU)) //Se la stringa letta è il carattere 'q' invio al gestore il numero di richiesta del menù principale.
-                        observer.inputRequest(INPUT_INT_BACK_MENU);
-                    else
-                        observer.inputRequest(INPUT_ERROR);
+                    controlString(stringRequest);
                 }
             }
-
-            //NB-> Non uso l'eccezione InputMismatchException perché mi dava problemi.
         }
 
         input.close();
-    }
-
-    public void stop() {
-        this.loop = false;
     }
 }

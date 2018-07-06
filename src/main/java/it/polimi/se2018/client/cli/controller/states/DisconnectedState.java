@@ -1,5 +1,7 @@
 package it.polimi.se2018.client.cli.controller.states;
 
+import org.fusesource.jansi.AnsiConsole;
+
 import static org.fusesource.jansi.Ansi.ansi;
 
 /**
@@ -19,7 +21,7 @@ public class DisconnectedState implements StateInterface{
      */
     public DisconnectedState(){
 
-        System.out.print(ansi().eraseScreen().cursor(3,5).bold().a(TITLE).boldOff());
+        AnsiConsole.out.print(ansi().eraseScreen().cursor(3,5).bold().a(TITLE).boldOff());
     }
 
     /**
@@ -29,7 +31,7 @@ public class DisconnectedState implements StateInterface{
      */
     @Override
     public String handleInput(int request) {
-        System.out.print(ansi().eraseScreen().cursor(3,5).bold().a(TITLE).boldOff());
+        AnsiConsole.out.print(ansi().eraseScreen().cursor(3,5).bold().a(TITLE).boldOff());
         return DEFAULT_MESSAGE;
     }
 

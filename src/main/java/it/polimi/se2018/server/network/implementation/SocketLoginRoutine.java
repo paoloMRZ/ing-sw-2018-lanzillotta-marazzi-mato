@@ -21,7 +21,7 @@ public class SocketLoginRoutine implements Runnable {
 
 
     private Socket socket;
-    private Lobby lobby = Lobby.factoryLobby();
+    private Lobby lobby = Lobby.getLobby();
 
     private BufferedReader reader;
     private OutputStreamWriter out;

@@ -169,6 +169,14 @@ public class Utensil5State implements StateInterface {
         }
     }
 
+    /**
+     * Il metodo pulisce lo schermo ristampando la scena.
+     * @return messaggio di default.
+     */
+    private String refreshScreen(){
+        reserveRoundgridScene.printScene();
+        return DEFAULT_MESSAGE;
+    }
 
     /**
      * Il metodo gestisce l'input immesso dall'utente.
@@ -189,10 +197,7 @@ public class Utensil5State implements StateInterface {
 
             case 2: return selectDieFromRound(request);
 
-            default:{
-                reserveRoundgridScene.printScene();
-                return DEFAULT_MESSAGE;
-            }
+            default: return refreshScreen();
         }
     }
 

@@ -20,7 +20,7 @@ public abstract class FakeClient {
      */
     FakeClient(String nickname) {
         if (nickname != null) {
-            this.lobby = Lobby.factoryLobby();
+            this.lobby = Lobby.getLobby();
             this.nickname = nickname;
         }
     }

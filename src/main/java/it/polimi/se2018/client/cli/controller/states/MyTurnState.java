@@ -136,6 +136,41 @@ public class MyTurnState  implements StateInterface{
 
 
     /**
+     * Il metodo gestice i passaggi di selezione che l'utente deve compiere per poter posizionare un dado.
+     * @return eventuale messaggio da mandare al server.
+     */
+
+    private String managePutSteps(){
+
+        if(putDieCounter == 0){ //Devo mostrare il menù di scelta del dado dalla riserva.
+            puttingDie = true;
+            gameScene.setSelectDieMenu();
+            gameScene.printScene();
+        }
+
+        if(putDieCounter == 1){ //Devo mostrare il menù di scelta della riga.
+            gameScene.setSelectRowMenu();
+            gameScene.printScene();
+        }
+
+        if(putDieCounter == 2){ //Devo mostrare il menù di scelta della colonna.
+            gameScene.setSelectColMenu();
+            gameScene.printScene();
+        }
+
+        if(putDieCounter == 3){ //Devo inviare il messaggio.
+            this.putDieCounter = 0; //Resetto.
+            puttingDie = false;
+            gameScene.setMyTurnMenu();
+            gameScene.printScene();
+            return ClientMessageCreator.getPutDiceMessage(game.getMyNickname(),String.valueOf(this.putDieIndex), String.valueOf(this.putDieRow), String.valueOf(this.putDieCol));
+        }
+
+        this.putDieCounter++;
+        return DEFAULT_MESSAGE;
+    }
+
+    /**
      * Il metodo gestisce l'input immesso dal giocatore per selezionare una carta utensile.
      * @param request input immesso dal giocatore.
      * @return step da eseguire nel "metodo principale"
@@ -151,6 +186,27 @@ public class MyTurnState  implements StateInterface{
         }
         else
             return INPUT_ERROR;
+    }
+
+    /**
+     * Il metodo gestice i passaggi di selezione che l'utente deve compiere per poter selezionare una carta.
+     * @return eventuale messaggio da mandare al server.
+     */
+    private String manageSelectionUtensilSteps(){
+
+        if(!selectionUtensil){
+            gameScene.setShowUtensils();
+            gameScene.setSelectUtensilMenu();
+            gameScene.printScene();
+
+            selectionUtensil = true;
+
+            return DEFAULT_MESSAGE;
+        }else {
+
+            selectionUtensil = false;
+            return ClientMessageCreator.getActivateUtensilMessage(game.getMyNickname(), String.valueOf(game.getUtensilIndexFromNumber(utensilSelected)));
+        }
     }
 
     /**
@@ -237,50 +293,9 @@ public class MyTurnState  implements StateInterface{
 
             case 4: showRoundgrid(); break; //Visualizzo la roundgrid.
 
-            case 5:{ //Getione della put.
+            case 5: return managePutSteps(); //Posizionamento dado.
 
-                if(putDieCounter == 0){ //Devo mostrare il menù di scelta del dado dalla riserva.
-                    puttingDie = true;
-                    gameScene.setSelectDieMenu();
-                    gameScene.printScene();
-                }
-
-                if(putDieCounter == 1){ //Devo mostrare il menù di scelta della riga.
-                    gameScene.setSelectRowMenu();
-                    gameScene.printScene();
-                }
-
-                if(putDieCounter == 2){ //Devo mostrare il menù di scelta della colonna.
-                    gameScene.setSelectColMenu();
-                    gameScene.printScene();
-                }
-
-                if(putDieCounter == 3){ //Devo inviare il messaggio.
-                    this.putDieCounter = 0; //Resetto.
-                    puttingDie = false;
-                    gameScene.setMyTurnMenu();
-                    gameScene.printScene();
-                    return ClientMessageCreator.getPutDiceMessage(game.getMyNickname(),String.valueOf(this.putDieIndex), String.valueOf(this.putDieRow), String.valueOf(this.putDieCol));
-                }
-
-                this.putDieCounter++;
-
-            }break;
-
-            case 6:{ //Scelta dell'utensile.
-
-                if(!selectionUtensil){
-                    gameScene.setShowUtensils();
-                    gameScene.setSelectUtensilMenu();
-                    gameScene.printScene();
-
-                    selectionUtensil = true;
-                }else {
-
-                    selectionUtensil = false;
-                    return ClientMessageCreator.getActivateUtensilMessage(game.getMyNickname(), String.valueOf(game.getUtensilIndexFromNumber(utensilSelected)));
-                }
-            }break;
+            case 6: return manageSelectionUtensilSteps(); //Scelta dell'utensile.
 
             case 7: return ClientMessageCreator.getPassTurnMessage(game.getMyNickname()); //Passa turno.
 

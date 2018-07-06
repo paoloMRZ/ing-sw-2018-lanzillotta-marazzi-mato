@@ -17,23 +17,24 @@ import java.rmi.server.UnicastRemoteObject;
 /**
  * La classe implementa la gestione delle connessioni che avvengono sull'interfaccia remota esposta dal server.
  */
-public class ServerImplementationRMI extends UnicastRemoteObject implements ServerInterface {
+public class ServerImplementationRMI  implements ServerInterface {
 
     private static final int PORT = 1099; //Per RMI si usa la porta standard senza possibilità di scelta da parte dell'utente.
-    private transient Lobby lobby;
+    private Lobby lobby;
 
     /**
      * Costruttore della classe.
      *
      * @throws RemoteException viene lanciata se il nickname passato è già utilizzato da un'altro client nella lobby.
      */
-    public ServerImplementationRMI() throws RemoteException, MalformedURLException {
-        super(0);
+    public ServerImplementationRMI() throws RemoteException, MalformedURLException{
 
         LocateRegistry.createRegistry(PORT);
-        Naming.rebind("//localhost/MyServer", this);
 
-        this.lobby = Lobby.factoryLobby();
+        ServerInterface stub = (ServerInterface) UnicastRemoteObject.exportObject(this, 0);
+        Naming.rebind("//localhost/MyServer", stub);
+
+        this.lobby = Lobby.getLobby();
     }
 
     /**
