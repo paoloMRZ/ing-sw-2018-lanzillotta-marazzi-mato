@@ -46,7 +46,7 @@ public class AlertWinner {
         List<String> pointPlayer = scorePoint.stream().filter(s -> (scorePoint.indexOf(s) % 2 != 0)).collect(Collectors.toList());
 
         window.initModality(Modality.APPLICATION_MODAL);
-        setDecoration(window,title,800,700,15,15);
+        setDecoration(window,title,800,800,15,15);
 
         //Configurazione Header
         Label headerTitle = Utility.setFontStyle(new Label("Complimenti,"), 40);
@@ -71,8 +71,8 @@ public class AlertWinner {
         //Configurazione Body Content (classifica parziale)
         GridPane scoreGrid = new GridPane();
         scoreGrid.setAlignment(Pos.CENTER);
-        scoreGrid.setMaxSize(800,700);
-        scoreGrid.setMinSize(800,700);
+        scoreGrid.setMaxSize(800,800);
+        scoreGrid.setMinSize(800,800);
         scoreGrid.setPadding(new Insets(15));
         int i= namePlayer.size();
         int k=0;
@@ -100,8 +100,8 @@ public class AlertWinner {
         });
 
 
-        borderPane.setMaxSize(800,700);
-        borderPane.setMinSize(800,700);
+        borderPane.setMaxSize(800,800);
+        borderPane.setMinSize(800,800);
         borderPane.setBottom(backButton);
 
         BorderPane.setAlignment(backButton,Pos.BOTTOM_CENTER);

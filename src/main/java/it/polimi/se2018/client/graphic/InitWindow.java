@@ -545,8 +545,6 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                     List<String> infoFavours = ClientMessageParser.getInformationsFromMessage(message);
                     favours = infoFavours.get(1);
                     action = "2";
-                    settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", favours, ClientMessageParser.getInformationsFromMessage(message).get(0), adapterResolution);
-                    nodeSetting = settingLabel.getSettingLabel();
                 }
 
 
@@ -603,6 +601,8 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                     adapterResolution.putRoundGridLabel(anchorGame, nodeRoundGame);
 
                     //Posiziono la griglia con le informazioni sul giocatore
+                    settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", favours, ClientMessageParser.getInformationsFromMessage(message).get(0), adapterResolution);
+                    nodeSetting = settingLabel.getSettingLabel();
                     adapterResolution.putSettingLabel(anchorGame, nodeSetting);
 
                     //Posiziono la carta Side del giocatore
@@ -617,6 +617,8 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                     //Posiziono la griglia dei pulsanti
                     setButtonLabel(message);
                     adapterResolution.putButtonLabel(anchorGame, nodeButton);
+
+
 
                     Scene sceneGame = new Scene(anchorGame, 1880, 1073);
                     startGame = false;
