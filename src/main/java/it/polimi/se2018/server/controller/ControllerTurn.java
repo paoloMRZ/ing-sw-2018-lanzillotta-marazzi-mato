@@ -365,7 +365,7 @@ public class ControllerTurn implements ObserverTimer {
     protected void freezer(String name) throws Exception {
         lobby.callPlayerByName(name).forget();
         controller.getcChat().notifyObserver(new Freeze(name));
-        if(lobby.peopleCounter()<2)  controller.finalizeTheGame();
+        if(lobby.activeCounter()<=1)  controller.finalizeTheGame();
     }
     /**
      * Allo scattare del timer decide come chiudere il turno del giocatore in base che si stia attendendo la scelta di una carta

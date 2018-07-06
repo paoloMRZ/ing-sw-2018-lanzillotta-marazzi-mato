@@ -373,7 +373,7 @@ public class Controller{
      */
     public void freezer(Freeze m) throws Exception {
         try {
-            passTurn(new PassTurn(m.getPlayer()));
+            cTurn.passTurn(new PassTurn(m.getPlayer()));
             cTurn.freezer(m.getPlayer());
         } catch (InvalidValueException e) {
             cChat.notifyObserver(new ErrorSomethingNotGood(e));

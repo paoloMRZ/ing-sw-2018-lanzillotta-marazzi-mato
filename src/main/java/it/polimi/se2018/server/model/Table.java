@@ -331,6 +331,17 @@ public class Table {
     }
 
     /**
+     * ,etodo che ritorna quanto gioactori sono scongelati durante la prtita.
+     * @return numero di giocatori attivi
+     */
+    public int activeCounter(){
+        int i=0;
+        for(Player p: playersList){
+            if(p.canYouPlay()) i++;
+        }
+        return i;
+    }
+    /**
      * Metodo che ritorna istanza del comuicator del model.
      * @return cominucatore del model.
      */
