@@ -324,7 +324,7 @@ public class Lobby implements ObserverTimer, FakeClientObserver {
 
                 numberOfClient++; //Incremento il contatore dei client.
 
-                notifyFromFakeView(NetworkMessageCreator.getConnectMessage(connection.getNickname())); //Notifico tutti i client già presenti della connessione di un nuovo giocatore.
+                sendBroadcast(NetworkMessageCreator.getConnectMessage(connection.getNickname())); //Notifico tutti i client già presenti della connessione di un nuovo giocatore.
 
                 if (numberOfClient == 4) { //Se è stato raggiunto il numero massimo di giocatori viene fermato il timer, chiusa la lobby e avviata la partita.
                     createGame(); //Creazione della partita.
