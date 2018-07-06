@@ -370,4 +370,45 @@ public class ClientMessageParser {
     public static String extractReceiver(String message){
         return message.split("/")[2];
     }
+
+
+    /**
+     * Metodo che controlal se il messaggio è un messaggio di riconnessione inviato per l'allinemaneto del giocatore con la partita
+     *
+     * @param message messaggio da controllare
+     * @return true se è un messaggio di riconnessione, altriemnto false.
+     */
+
+    public static boolean isRiconnectMessage(String message){
+
+        boolean value = true;
+
+        //Gestione messaggi di broadcast utili per la partita ma da non valutare nella riconnessione
+        if(extractReceiver(message).equals("!")){
+            if(isUpdateMessage(message)){
+                if(isUpdateTurnMessage(message) || isUpdateReserveMessage(message) || isUpdateRoundgridMessage(message) || isUpdatePriceMessage(message) || isUpdateSideMessage(message)) value = false;
+            }
+
+            if(isStartMessage(message)){
+                if(isStartPublicObjectiveMessage(message) || isStartUtensilMessage(message) || isStartSideListMessage(message)) value= false;
+            }
+
+            if(isNetworkMessage(message)) value = false;
+        }
+
+        //Gestione dei messaggi non broadcast per la partita ma da non valiutare nella riconnessione
+        else {
+            if(isStartMessage(message)) {
+                if(isStartChoseSideMessage(message)) value = false;
+                if(isStartPrivateObjectiveMessage(message)) value = false;
+            }
+            if(isErrorMessage(message)) value =  false;
+            if(isSuccessMessage(message)) value = false;
+            if(isUseUtensilEndMessage(message)) value = false;
+            if(isNetworkMessage(message)) value = false;
+        }
+
+        return value;
+    }
+
 }

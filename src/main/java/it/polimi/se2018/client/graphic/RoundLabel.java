@@ -60,11 +60,11 @@ public class RoundLabel{
 
         //Configurazione effetto Focus
         Rectangle rect = new Rectangle(20, 20, sizeRect.get(0), sizeRect.get(0));
-        group = new Group(rect);
+        group = new Group();
         rect.setFill(Color.TRANSPARENT);
         rect.setStroke(Color.RED);
         rect.setStrokeWidth(2d);
-
+        group.getChildren().add(rect);
 
     }
 
@@ -126,51 +126,53 @@ public class RoundLabel{
         ContextMenu contextMenu = new ContextMenu();
         passed.addEventHandler(MouseEvent.MOUSE_CLICKED, e-> contextMenu.show(passed, Side.BOTTOM, e.getScreenX(),e.getScreenY()));
 
+        //Creo le collezioni di elementi che andranno nella RoundGrid e nelle carte Utensili che operano sulla roundGrid
         HBox hBox = new HBox(5);
         HBox hBoxHistory = new HBox(5);
         hBox.setAlignment(Pos.CENTER);
         hBoxHistory.setAlignment(Pos.CENTER);
+
         for (String aDieInfo : dieInfo) {
 
+            //Estraggo l'informazione del dado da aggiungere nella roundGrid
+            String lowerDieInfo = aDieInfo.toLowerCase(Locale.ENGLISH);
+
             //Controllo che il contenuto residuo della riserva da aggiungere alla RoundGrid non sia vuoto
+            ImageView imageDie;
+            ImageView elementHistory;
+            if (!lowerDieInfo.equals("white0")) {
+                imageDie = configureImageView("/diePack/die-", lowerDieInfo, ".bmp", sizeProceed.get(2), sizeProceed.get(2));
+                elementHistory = shadowEffect(configureImageView("/diePack/die-", lowerDieInfo, ".bmp", sizeProceed.get(3), sizeProceed.get(3)));
+            }
+            else {
+                imageDie = configureImageView("/iconPack/", "icon-empty", ".png", sizeProceed.get(2), sizeProceed.get(2));
+                elementHistory = configureImageView("/iconPack/", "icon-empty", ".png", sizeProceed.get(3), sizeProceed.get(3));
+            }
 
-                String lowerDieInfo = aDieInfo.toLowerCase(Locale.ENGLISH);
-                ImageView imageDie;
-                if (!lowerDieInfo.equals("white0")) imageDie = configureImageView("/diePack/die-", lowerDieInfo, ".bmp", sizeProceed.get(2), sizeProceed.get(2));
-                else imageDie = configureImageView("/iconPack/", "icon-empty", ".png", sizeProceed.get(2), sizeProceed.get(2));
-                imageDie.setFitWidth(sizeProceed.get(2));
-                imageDie.setFitHeight(sizeProceed.get(2));
-                hBox.getChildren().add(imageDie);
+            //Aggiungo il dado all'elemento grafico da porre nella roundGrid
+            hBox.getChildren().add(imageDie);
 
-                ImageView elementHistory;
-                if (!aDieInfo.equals("white0")) elementHistory = shadowEffect(configureImageView("/diePack/die-", lowerDieInfo, ".bmp", 177, 177));
-                else elementHistory = shadowEffect(configureImageView("/iconPack/", "icon-empty", ".png", 177, 177));
-                elementHistory.setFitWidth(sizeProceed.get(3));
-                elementHistory.setFitHeight(sizeProceed.get(3));
-                StackPane button = new StackPane(elementHistory);
-                cell.put(button, false);
-                elementHistory.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-                    if (!cell.get(button)) {
-                        button.getChildren().add(group);
-                        cell.replace(button, false, true);
-                    } else {
-                        button.getChildren().remove(group);
-                        cell.replace(button, true, false);
-                    }
-
+            StackPane button = new StackPane(elementHistory);
+            button.setStyle("-fx-border-color: transparent; -fx-border-width: 2; -fx-background-radius: 0; -fx-background-color: transparent;");
+            cell.put(button, false);
+            elementHistory.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+                    setFocusStyle(cell,button,group);
                     dieFromRoundSelected = String.valueOf(dieInfo.indexOf(aDieInfo));
                     roundFromPicked = String.valueOf(roundNumber-1);
+            });
 
-                });
-                hBoxHistory.getChildren().addAll(button);
-
+            //Aggiungo il dado formattato nell'elemento grafico da porre nella finestra di utilizzo delle carte Utensili
+            hBoxHistory.getChildren().add(button);
         }
+
+        //Aggiungo l'elemento graficoalla collezione di ripristino
         roundHistory.add(hBoxHistory);
+
+        //Incremento il contatore di Round
         roundNumber++;
+
         MenuItem item = new MenuItem("", hBox);
         contextMenu.getItems().add(item);
-        passed.setFitHeight(60d);
-        passed.setFitWidth(60d);
         labelRoundGrid.add(passed, 9 - column, 0);
         column++;
     }

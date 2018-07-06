@@ -1,6 +1,5 @@
 package it.polimi.se2018.client.graphic.alert_box;
 
-import it.polimi.se2018.client.graphic.graphic_element.Utility;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,8 +13,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import static it.polimi.se2018.client.graphic.graphic_element.Utility.configureImageView;
-import static it.polimi.se2018.client.graphic.graphic_element.Utility.setFrameWindow;
+import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 
 
 /**
@@ -49,17 +47,14 @@ public class AlertLoadingGame {
         window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.initStyle(StageStyle.TRANSPARENT);
-        window.setTitle(title);
-        window.setWidth(450);
-        window.setHeight(250);
+        setDecoration(window,title,450,250,15,15);
 
         //Configurazione Cornice della finestra
         StackPane stackLoading = new StackPane();
         stackLoading.getChildren().add(setFrameWindow(stackLoading));
 
         //Configurazione Body Content
-        Label label = Utility.setFontStyle(new Label(message), 20);
-        label.setTextAlignment(TextAlignment.CENTER);
+        Label label = setFontStyle(new Label(message), 20);
         ImageView loading = configureImageView("","big-ajax-loader",".gif",50,50);
 
         HBox layuot = new HBox(10);

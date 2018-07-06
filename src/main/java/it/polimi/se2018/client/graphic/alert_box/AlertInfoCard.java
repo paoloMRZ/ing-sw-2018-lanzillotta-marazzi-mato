@@ -70,7 +70,6 @@ public class AlertInfoCard {
             imageCard.add(configureImageView(path, card, EXTENSION,300,450));
             String name = setUpperWord(card);
             Label item = setFontStyle(new Label(name), 40);
-            item.setAlignment(Pos.CENTER);
             nameCard.add(name);
             labelName.add(item);
         }

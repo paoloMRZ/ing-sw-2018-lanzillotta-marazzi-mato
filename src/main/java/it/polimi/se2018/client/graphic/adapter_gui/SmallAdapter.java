@@ -144,7 +144,7 @@ public class SmallAdapter implements  AdapterResolution {
         //Dimensioni Dado da posizionare sulla roungGrid
         //Dimensioni Dado per la visualizzazione dei dadi posizionati sulla roundGrid
 
-        sizeRoundLabel.add(new ArrayList<>(Arrays.asList(115, 70, 40, 55)));
+        sizeRoundLabel.add(new ArrayList<>(Arrays.asList(70, 70, 40, 55)));
 
         return sizeRoundLabel;
     }
@@ -207,7 +207,7 @@ public class SmallAdapter implements  AdapterResolution {
 
     @Override
     public void putSideLabel(AnchorPane anchorGame, AnchorPane sidePlayer) {
-        configureAnchorPane(anchorGame, sidePlayer, 840d, 135d, 105d, 300d);
+        configureAnchorPane(anchorGame, sidePlayer, 825d, 135d, 120d, 300d);
     }
 
     @Override

@@ -91,6 +91,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
     private List<String> sideOfEnemies;
     private String action;
     private String sideSelectedByPlayer;
+    private String turnOf;
 
     //Costanti di intestazione delle varie finestra
     private static final String SAGRADA = "Sagrada";
@@ -110,6 +111,17 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
         launch(args);
     }
 
+
+    /**
+     * Metodo utilizzato per l'inizializzazione dell"interfaccia grafica dell'utente. Gestisce l'altgernanza tra le varie fase di gioco:
+     *
+     *  -> Fase di Login: viene visualizzata la schermata che gestisce le scelte del giocatore tra tipologia di connessione e preferenze di interfaccia, nonchè la scelta
+     *     del nickname;
+     *  -> Fase di scelta Carta Side: viene visualizzata la schermata che permette al gicatore la scelta della carta Side con la quale giocare la partita
+     *  -> Fase di gioco: viene visualizzata la schermata di gioco con tutti gli elementi configurati e posizionati
+     *
+     * @param init Riferimento alla PrimaryStage
+     */
 
     @Override
     public void start(Stage init) {
@@ -159,65 +171,44 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
         //Listener per il cambio di scena e valutazione del messaggio
         message.textProperty().addListener((obs, oldText, newText) -> {
             if (!newText.equals("")) {
+                if (!ClientMessageParser.isRiconnectMessage(message.getText())) {
 
-                //TODO: MESSAGGI DI TIPO START
-                if (ClientMessageParser.isStartMessage(message.getText())) {
+                    //MESSAGGI DI TIPO START
+                    if (ClientMessageParser.isStartMessage(message.getText())) {
 
-                    //MESSAGGIO START PER LA SCELTA DELLE CARTE SIDE
-                    if (ClientMessageParser.isStartChoseSideMessage(message.getText())) {
+                        //MESSAGGIO START PER LA SCELTA DELLE CARTE SIDE
+                        if (ClientMessageParser.isStartChoseSideMessage(message.getText())) {
 
-                        //TODO: SCHERMATA SCELTA SIDE
-                        List<String> sideSelection = ClientMessageParser.getInformationsFromMessage(message.getText());
-                        sideChoiceLabel = new SideChoiceLabel(sideSelection, connectionHandler,adapterResolution);
+                            //SCHERMATA SCELTA SIDE
+                            List<String> sideSelection = ClientMessageParser.getInformationsFromMessage(message.getText());
+                            sideChoiceLabel = new SideChoiceLabel(sideSelection, connectionHandler, adapterResolution);
 
-                        Scene sceneChoice = new Scene(sideChoiceLabel.getSideChoise(), adapterResolution.getSideChoiceLabelSize().get(2).get(0), adapterResolution.getSideChoiceLabelSize().get(2).get(1));
-                        Platform.runLater(() -> {
-                            alertSwitcher.closeAlert();
-                            setDecoration(primaryStage,SAGRADA,adapterResolution.getSideChoiceLabelSize().get(2).get(0),adapterResolution.getSideChoiceLabelSize().get(2).get(1),15,15);
-                            primaryStage.setScene(sceneChoice);
-                            favours = sideChoiceLabel.getFavours();
-                        });
-                    }
-
-                    //MESSAGGIO START PER L'ASSEGNAMENTO DELLE CARTE SIDE AVVERSARIE
-                    if (ClientMessageParser.isStartSideListMessage(message.getText())) {
-                        List<String> sideInfo = ClientMessageParser.getInformationsFromMessage(message.getText());
-                        nameOfEnemies = sideInfo.stream().filter(s -> (sideInfo.indexOf(s) % 2 == 0)).collect(Collectors.toList());
-                        sideOfEnemies = sideInfo.stream().filter(s -> (sideInfo.indexOf(s) % 2 != 0)).collect(Collectors.toList());
-                        sideSelectedByPlayer = sideOfEnemies.remove(nameOfEnemies.indexOf(connectionHandler.getNickname()));
-                        nameOfEnemies.remove(connectionHandler.getNickname());
-                        enemiesSide = new SideEnemyLabel(nameOfEnemies, sideOfEnemies, adapterResolution);
-                        nodeCardOfEnemies = enemiesSide.getLabelSideEnemy();
-                        adapterResolution.putSideEnemyLabel(anchorGame,nodeCardOfEnemies);
-                    }
+                            Scene sceneChoice = new Scene(sideChoiceLabel.getSideChoise(), adapterResolution.getSideChoiceLabelSize().get(2).get(0), adapterResolution.getSideChoiceLabelSize().get(2).get(1));
+                            Platform.runLater(() -> {
+                                alertSwitcher.closeAlert();
+                                setDecoration(primaryStage, SAGRADA, adapterResolution.getSideChoiceLabelSize().get(2).get(0), adapterResolution.getSideChoiceLabelSize().get(2).get(1), 15, 15);
+                                primaryStage.setScene(sceneChoice);
+                            });
+                        }
 
 
-                    //MESSAGGIO START PER L'ASSEGNAMENTO DELLA CARTA OBBIETTIVO PRIVATA
-                    if (ClientMessageParser.isStartPrivateObjectiveMessage(message.getText())) {
-                        privateObjective = new CardCreatorLabel(ClientMessageParser.getInformationsFromMessage(message.getText()), null, true, null,adapterResolution);
-                        adapterResolution.putPrivateObjectiveLabel(anchorGame, privateObjective.getCardObjective());
+                        //MESSAGGIO START PER L'ASSEGNAMENTO DELLE CARTE SIDE AVVERSARIE
+                        if (ClientMessageParser.isStartSideListMessage(message.getText())) setEnemiesSide(message.getText());
+
+                        //MESSAGGIO START PER L'ASSEGNAMENTO DELLA CARTA OBBIETTIVO PRIVATA
+                        if (ClientMessageParser.isStartPrivateObjectiveMessage(message.getText())) setPrivateObjective(message.getText());
+
+                        //MESSAGGIO START PER L'ASSEGNAMENTO DELLE CARTE OBBIETTIVO PUBBLICHE
+                        if (ClientMessageParser.isStartPublicObjectiveMessage(message.getText())) setTabObjective(message.getText());
+
+                        //MESSSAGGIO START PER L'ASSEGNAMENTO DELLE CARTE UTENSILI
+                        if (ClientMessageParser.isStartUtensilMessage(message.getText())) setTabUtensils(message.getText());
 
                     }
 
 
-                    //MESSAGGIO START PER L'ASSEGNAMENTO DELLE CARTE OBBIETTIVO PUBBLICHE
-                    if (ClientMessageParser.isStartPublicObjectiveMessage(message.getText())) {
-                        List<String> objectivePublicInfo = ClientMessageParser.getInformationsFromMessage(message.getText());
-                        publicObjective = new CardCreatorLabel(objectivePublicInfo, null, false, "/cardObjective/",adapterResolution);
-                        tabCardLabel.configureTabObjective(publicObjective.getCardObjective());
-                    }
-
-                    //MESSSAGGIO START PER L'ASSEGNAMENTO DELLE CARTE UTENSILI
-                    if (ClientMessageParser.isStartUtensilMessage(message.getText())) {
-                        List<String> cardUtensilsInfo = ClientMessageParser.getInformationsFromMessage(message.getText());
-                        cardUtensils = new CardCreatorLabel(cardUtensilsInfo, createDictionary(cardUtensilsInfo), false, "/cardUtensils/",adapterResolution);
-                        tabCardLabel.configureTabUtensils(cardUtensils.getCardObjective());
-                    }
-                }
-
-
-                //TODO: MESSAGGI DI TIPO UPDATE
-                else if (ClientMessageParser.isUpdateTurnMessage(message.getText())) {
+                    //TODO: MESSAGGI DI TIPO UPDATE
+                    else if (ClientMessageParser.isUpdateTurnMessage(message.getText())) {
                         if (startGame) {
 
                             //TODO: SCHERMATA DI GIOCO
@@ -227,13 +218,17 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                             //Posiziono la roundGrid
                             roundLabel = new RoundLabel(adapterResolution);
                             nodeRoundGame = roundLabel.getAnchorRound();
-                            adapterResolution.putRoundGridLabel(anchorGame,nodeRoundGame);
+                            adapterResolution.putRoundGridLabel(anchorGame, nodeRoundGame);
 
-                            //Posiziono la griglia con le informazioni sul giocatore
+                            //Posiziono la SettingLabel
+                            favours = sideChoiceLabel.getFavours();
                             settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", favours, ClientMessageParser.getInformationsFromMessage(message.getText()).get(0), adapterResolution);
                             nodeSetting = settingLabel.getSettingLabel();
                             action = "2";
                             adapterResolution.putSettingLabel(anchorGame, nodeSetting);
+
+                            //Posiziono le carte Side avversarie
+                            adapterResolution.putSideEnemyLabel(anchorGame, nodeCardOfEnemies);
 
                             //Posiziono la carta Side del giocatore
                             playerSide = new SideCardLabel(sideSelectedByPlayer, connectionHandler.getNickname(), true, false, adapterResolution);
@@ -241,21 +236,17 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                             adapterResolution.putSideLabel(anchorGame, nodeSidePlayer);
 
                             //Posiziono la griglia dei pulsanti
-                            costUtensilHistory = new ArrayList<>(Arrays.asList("1","1","1"));
-                            buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils, costUtensilHistory,adapterResolution);
-                            buttonGameLabel.checkPermission(connectionHandler.getNickname(),ClientMessageParser.getInformationsFromMessage(message.getText()).get(0));
-                            nodeButton = buttonGameLabel.getLabelButtonGame();
-                            alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
+                            costUtensilHistory = new ArrayList<>(Arrays.asList("1", "1", "1"));
+                            setButtonLabel(message.getText());
                             adapterResolution.putButtonLabel(anchorGame, nodeButton);
 
 
                             Scene sceneGame = new Scene(anchorGame, 1880, 1073);
                             startGame = false;
                             Platform.runLater(() -> {
-                                if(!connectionHandler.getNickname().equals(ClientMessageParser.extractReceiver(message.getText()))) AlertLoadingGame.closeAlert();
-                                else alertSwitcher.closeAlert();
-                                setDecoration(primaryStage,SAGRADA,adapterResolution.getPrimaryStageSize().get(0),adapterResolution.getPrimaryStageSize().get(1),15,15);
-                                primaryStage.setOnCloseRequest(e -> closeWindow(primaryStage, e,true));
+                                AlertLoadingGame.closeAlert();
+                                setDecoration(primaryStage, SAGRADA, adapterResolution.getPrimaryStageSize().get(0), adapterResolution.getPrimaryStageSize().get(1), 15, 15);
+                                primaryStage.setOnCloseRequest(e -> closeWindow(primaryStage, e, true));
                                 primaryStage.setScene(sceneGame);
                             });
                         } else {
@@ -266,26 +257,33 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
 
                     //MESSAGGIO UPDATE DELLA RISERVA
-                else if (ClientMessageParser.isUpdateReserveMessage(message.getText())) {
+                    else if (ClientMessageParser.isUpdateReserveMessage(message.getText())) {
                         reserve = new ReserveLabel(ClientMessageParser.getInformationsFromMessage(message.getText()), adapterResolution);
                         if (isInitReserve) {
                             nodeReserve = reserve.getHBox();
                             adapterResolution.putReserveLabel(anchorGame, nodeReserve);
                             isInitReserve = false;
                         } else {
-                            updateGUI(newText,primaryStage);
+                            updateGUI(newText, primaryStage);
                         }
+                    } else updateGUI(newText, primaryStage);
                 }
 
-                else updateGUI(newText,primaryStage);
+                else configureReconnectedPlayer(message.getText());
             }
         });
     }
 
 
-
-
-
+    /**
+     * Metodo utilizzato per l'update dei vari elementi grafici nel momento in cui subiscono variazioni per le giocate dei vari player. Si è deciso di inglobare la
+     * gestione degli update in un'unico metodo gestiti dalla classe Platform , per evitare problemi di multithreading. Infatti la messagistica di aggiornamento è gestita
+     * come messagistica BroadCast, pertanto più processi (in questo caso le interfacce grafiche degli utenti) sono interessati alle varie modifiche, pertanto si è ritenuto
+     * necessario monitorare il tutto e renderlo l'interazione sequenziale.
+     *
+     * @param newValue Nuovo messaggio di update da analizzare
+     * @param primaryStage Finestra principale di riferimento
+     */
 
     private void updateGUI(String newValue, Stage primaryStage) {
 
@@ -294,11 +292,13 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
             //MESSAGGI DI TIPO UPDATE
             if (ClientMessageParser.isUpdateMessage(newValue)) {
 
+
                 //MESSAGGIO UPDATE PER IL CAMBIO DEL TURNO
                 if (ClientMessageParser.isUpdateTurnMessage(newValue)) {
 
                     //Aggiornamento della Griglia informativa del Giocatore
-                    resetSettingLabel(TURN,newValue);
+                    turnOf = ClientMessageParser.getInformationsFromMessage(newValue).get(0);
+                    resetSettingLabel(TURN);
 
                     //Aggiornamento della Griglia dei bottoni Azione
                     resetButtonLabel();
@@ -331,7 +331,8 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                     adapterResolution.putButtonLabel(anchorGame, nodeButton);
 
                     //Aggiornamento della griglia Informazione del giocatore
-                    resetSettingLabel(ROUND,newValue);
+                    turnOf = roundInfo.get(0);
+                    resetSettingLabel(ROUND);
                 }
 
 
@@ -383,7 +384,9 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                     adapterResolution.putReserveLabel(anchorGame, nodeReserve);
 
                     //Aggiornamento del riferimento del ButtonGameLabel -> in caso di utilizzo di un utensile, questa operazione va fatta solamente nel messaggio di END ACTIVATE
-                    if(!isUseUtensil) resetButtonLabel();
+                    if(!isUseUtensil) {
+                        resetButtonLabel();
+                    }
                 }
 
 
@@ -404,7 +407,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                 //MESSAGGIO SUCCESSO PER IL PIAZZAMENTO DEI DADI
                 if (ClientMessageParser.isSuccessPutMessage(newValue)) {
                     action = String.valueOf(Integer.parseInt(action)-1);
-                    resetSettingLabel(PUT,newValue);
+                    resetSettingLabel(PUT);
                     AlertValidation.display(SAGRADA, "La tua azione è andata\n a buon fine!");
                 }
 
@@ -421,7 +424,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                     else {
                         //Aggiornamento della griglia Informazioni del giocatore
                         action = String.valueOf(Integer.parseInt(action)-1);
-                        resetSettingLabel(UTENSIL,newValue);
+                        resetSettingLabel(UTENSIL);
 
                         //Chiusura della finestra dedicata alle carte utensili
                         alertCardUtensils.closeExecutionUtensil();
@@ -453,7 +456,8 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
                 //Aggiornamento della griglia Informazioni del giocatore
                 action = String.valueOf(Integer.parseInt(action)-1);
-                resetSettingLabel(UTENSIL,newValue);
+                favours = ClientMessageParser.getInformationsFromMessage(newValue).get(3);
+                resetSettingLabel(UTENSIL);
 
                 //Chiusura della finestra dedicata alle carte utensili
                 alertCardUtensils.closeExecutionUtensil();
@@ -477,7 +481,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                     AlertValidation.display("Disconnessione", ClientMessageParser.getInformationsFromMessage(newValue) + "si è disconnesso");
                 if (ClientMessageParser.isUnauthorizedPutMessage(newValue))
                     AlertValidation.display(ERROR, "Hai già effettutato\nquesta azione!");
-                if(ClientMessageParser.isErrorUseUtensilMessage(newValue))
+                if (ClientMessageParser.isErrorUseUtensilMessage(newValue))
                     AlertValidation.display(ERROR, "Non hai inserito correttamente\ni parametri richiesti!");
             }
 
@@ -493,6 +497,226 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
 
 
 
+    /**
+     * Metodo utilizzato per la configurazione dell' interfaccia grafica qualora un giocatore si disconnettesse e in seguito di riconnetta. È necessario quindi che la
+     * schermata di gioco sia impostata con i valori aggiornati al momento della riconnessione. in particolare si richiede la ricezione dei seguenti messaggi update:
+     *
+     *  -> Carte Utensili estratte per la partita
+     *  -> Carte Obbiettivo Pubbliche estratte per la partita
+     *  -> Obbiettivo Privato del giocatore
+     *  -> Lista dei giocatori avversari
+     *  -> Segnalini Favore del giocatore
+     *  -> Riserva disponibile al momento della riconnessione
+     *  -> RoundGrid (con l'informazione dei dadi posti al suo interno)
+     *  -> Prezzo delle carte Utensili
+     *  -> Informazioni sul turnante
+     *
+     * Il metodo analizza gli stessi messaggi utilizzati nella normale connessione, ma resi diretti al giocatore che si è riconnesso (Non più in broadcast). La
+     * motivazione della scelta implementativa è dovuta alla possibilità che insorgano problemi di sovrapposizione con la gestione dei messaggi in broadcast: i giocatori
+     * avversari infatti devono essere ignari dei messaggi di riconnessione utilizzato per configurare la schermata di gioco del giocatore appena riconnesso.
+     *
+     *
+     * @param message Messaggio da analizzare e da cui prelevare le varie informazione suddette
+     */
+
+    private void configureReconnectedPlayer(String message){
+        Platform.runLater(() -> {
+
+            //MESSAGGI DI TIPO START
+            if(ClientMessageParser.isStartMessage(message)){
+
+                //MESSSAGGIO START PER L'ASSEGNAMENTO DELLE CARTE UTENSILI
+                if (ClientMessageParser.isStartUtensilMessage(message)) setTabUtensils(message);
+
+
+                //MESSAGGIO START PER L'ASSEGNAMENTO DELLE CARTE OBBIETTIVO PUBBLICHE
+                if (ClientMessageParser.isStartPublicObjectiveMessage(message)) setTabObjective(message);
+
+
+                //MESSAGGIO START PER L'ASSEGNAMENTO DELLE CARTE SIDE AVVERSARIE
+                if (ClientMessageParser.isStartSideListMessage(message)) setEnemiesSide(message);
+            }
+
+            //MESSAGGI DI TIPO UPDATE
+            if(ClientMessageParser.isUpdateMessage(message)){
+
+                //MESSAGGIO DI UPDATE PER IL RIPRISTINO DEI SEGNALINI FAVORE
+                if (ClientMessageParser.isUpdateFavoursMessage(message)){
+                    List<String> infoFavours = ClientMessageParser.getInformationsFromMessage(message);
+                    favours = infoFavours.get(1);
+                    action = "2";
+                    settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", favours, ClientMessageParser.getInformationsFromMessage(message).get(0), adapterResolution);
+                    nodeSetting = settingLabel.getSettingLabel();
+                }
+
+
+                //MESSAGGIO UPDATE DELLA RISERVA
+                if (ClientMessageParser.isUpdateReserveMessage(message)) {
+                    reserve = new ReserveLabel(ClientMessageParser.getInformationsFromMessage(message), adapterResolution);
+                    nodeReserve = reserve.getHBox();
+                }
+
+
+                //MESSAGGIO UPDATE DELLA ROUNDGRID QUANDO EVENTUALMENTE SI CAMBIANO I SUOI DADI (UTILIZZO UTENSILE)
+                if (ClientMessageParser.isUpdateRoundgridMessage(message)) {
+                    ArrayList<List<String>> roundGridInfo = new ArrayList<>(ClientMessageParser.getInformationsFromUpdateRoundgridMessage(message));
+                    roundGridInfo.remove(roundGridInfo.size()-1);
+                    roundLabel = new RoundLabel(adapterResolution);
+                    nodeRoundGame = roundLabel.getAnchorRound();
+
+                    //Ripristino dei dadiposizionati sulla roundGrid
+                    for (List<String> dieInfo : roundGridInfo) {
+                        roundLabel.proceedRound(dieInfo);
+                    }
+                }
+
+
+                //MESSAGGIO UPDATE DELLE CARTE SIDE
+                if (ClientMessageParser.isUpdateSideMessage(message)) {
+                    List<String> infoSide = ClientMessageParser.getInformationsFromMessage(message);
+                    if(infoSide.get(0).equals(connectionHandler.getNickname())) {
+                        playerSide = new SideCardLabel(sideSelectedByPlayer, connectionHandler.getNickname(), true, false,adapterResolution);
+                        playerSide.updateSideAfterPut(ClientMessageParser.getInformationsFromMessage(message));
+                        nodeSidePlayer = playerSide.getAnchorPane();
+                    }
+                    else {
+                        enemiesSide.updateSideEnemies(infoSide);
+                        nodeCardOfEnemies = enemiesSide.getLabelSideEnemy();
+                    }
+                }
+
+
+                //MESSAGGIO UPDATE DEL COSTO DEGLI UTENSILI
+                if(ClientMessageParser.isUpdatePriceMessage(message)){
+                    //Aggiorno la lista storica dei costi delle Utensili
+                    costUtensilHistory = (ArrayList<String>)ClientMessageParser.getInformationsFromMessage(message);
+                }
+
+
+                //MESSAGGIO UPDATE PER IL TURNO
+                if (ClientMessageParser.isUpdateTurnMessage(message)) {
+
+                    //Posiziono le carte Utensili e Pubbliche
+                    adapterResolution.putTabPaneLabel(anchorGame, tabCardLabel.getGroupPane());
+
+                    //Posiziono la roundGrid
+                    adapterResolution.putRoundGridLabel(anchorGame, nodeRoundGame);
+
+                    //Posiziono la griglia con le informazioni sul giocatore
+                    adapterResolution.putSettingLabel(anchorGame, nodeSetting);
+
+                    //Posiziono la carta Side del giocatore
+                    adapterResolution.putSideLabel(anchorGame,nodeSidePlayer);
+
+                    //Posiziono la Riserva
+                    adapterResolution.putReserveLabel(anchorGame, nodeReserve);
+
+                    //Posizono le carte Side degli avversari
+                    adapterResolution.putSideEnemyLabel(anchorGame,nodeCardOfEnemies);
+
+                    //Posiziono la griglia dei pulsanti
+                    setButtonLabel(message);
+                    adapterResolution.putButtonLabel(anchorGame, nodeButton);
+
+                    Scene sceneGame = new Scene(anchorGame, 1880, 1073);
+                    startGame = false;
+
+                    Platform.runLater(() -> {
+                        alertSwitcher.closeAlert();
+                        setDecoration(primaryStage, SAGRADA, adapterResolution.getPrimaryStageSize().get(0), adapterResolution.getPrimaryStageSize().get(1), 15, 15);
+                        primaryStage.setOnCloseRequest(e -> closeWindow(primaryStage, e, true));
+                        primaryStage.setScene(sceneGame);
+                    });
+                }
+            }
+        });
+
+    }
+
+
+
+
+
+    /**
+     * Metodo utilizzato in fase di avvio per la configurazione della Griglia pulsanti. Viene anche utilizzato per il ripristino nel caso in cui un giocatore si
+     * disconnetta.
+     *
+     * @param message Informazioni per il settaggio dell'attributo sideOfEnemies
+     */
+
+    private void setButtonLabel(String message){
+        turnOf = ClientMessageParser.getInformationsFromMessage(message).get(0);
+        buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils, costUtensilHistory, adapterResolution);
+        buttonGameLabel.checkPermission(connectionHandler.getNickname(), turnOf);
+        nodeButton = buttonGameLabel.getLabelButtonGame();
+        alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
+    }
+
+
+
+
+    /**
+     * Metodo utilizzato in fase di avvio per la configurazione della carta Obbiettivo Privata. Viene anche utilizzato per il ripristino nel caso in cui un giocatore si
+     * disconnetta.
+     *
+     * @param message Informazioni per il settaggio dell'attributo sideOfEnemies
+     */
+
+    private void setPrivateObjective(String message){
+        privateObjective = new CardCreatorLabel(ClientMessageParser.getInformationsFromMessage(message), null, true, null, adapterResolution);
+        adapterResolution.putPrivateObjectiveLabel(anchorGame, privateObjective.getCardObjective());
+    }
+
+
+
+
+    /**
+     * Metodo utilizzato in fase di avvio per la configurazione della Tab per le carte Obbiettivo Pubbliche. Viene anche utilizzato per il ripristino nel caso in cui un
+     * giocatore si disconnetta.
+     *
+     * @param message Informazioni per il settaggio dell'attributo sideOfEnemies
+     */
+
+    private void setTabUtensils(String message){
+        List<String> cardUtensilsInfo = ClientMessageParser.getInformationsFromMessage(message);
+        cardUtensils = new CardCreatorLabel(cardUtensilsInfo, createDictionary(cardUtensilsInfo), false, "/cardUtensils/", adapterResolution);
+        tabCardLabel.configureTabUtensils(cardUtensils.getCardObjective());
+    }
+
+
+
+    /**
+     * Metodo utilizzato in fase di avvio per la configurazione della Tab per le carte Utensili. Viene anche utilizzato per il ripristino nel caso in cui un giocatore si
+     * disconnetta.
+     *
+     * @param message Informazioni per il settaggio dell'attributo sideOfEnemies
+     */
+
+    private void setTabObjective(String message){
+        List<String> objectivePublicInfo = ClientMessageParser.getInformationsFromMessage(message);
+        publicObjective = new CardCreatorLabel(objectivePublicInfo, null, false, "/cardObjective/", adapterResolution);
+        tabCardLabel.configureTabObjective(publicObjective.getCardObjective());
+    }
+
+
+
+
+    /**
+     * Metodo utilizzato in fase di avvio per la configurazione delle carte Side avversarie. Viene anche utilizzato per il ripristino nel caso in cui un giocatore si
+     * disconnetta.
+     *
+     * @param message Informazioni per il settaggio dell'attributo sideOfEnemies
+     */
+
+    private void setEnemiesSide(String message){
+        List<String> sideInfo = ClientMessageParser.getInformationsFromMessage(message);
+        nameOfEnemies = sideInfo.stream().filter(s -> (sideInfo.indexOf(s) % 2 == 0)).collect(Collectors.toList());
+        sideOfEnemies = sideInfo.stream().filter(s -> (sideInfo.indexOf(s) % 2 != 0)).collect(Collectors.toList());
+        sideSelectedByPlayer = sideOfEnemies.remove(nameOfEnemies.indexOf(connectionHandler.getNickname()));
+        nameOfEnemies.remove(connectionHandler.getNickname());
+        enemiesSide = new SideEnemyLabel(nameOfEnemies, sideOfEnemies, adapterResolution);
+        nodeCardOfEnemies = enemiesSide.getLabelSideEnemy();
+    }
 
 
 
@@ -505,12 +729,12 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
      *  -> Fase di aggiornamento Azione -> richiama updateAction()
      */
 
-    private void resetSettingLabel(String typeUpdate, String infoUpdate){
+    private void resetSettingLabel(String typeUpdate){
 
         anchorGame.getChildren().remove(nodeSetting);
         switch (typeUpdate){
             case ROUND:
-                settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", favours, ClientMessageParser.getInformationsFromMessage(infoUpdate).get(0),adapterResolution);
+                settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", favours, turnOf,adapterResolution);
                 break;
 
             case PUT:
@@ -518,13 +742,12 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
                 break;
 
             case TURN:
-                settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", favours, ClientMessageParser.getInformationsFromMessage(infoUpdate).get(0),adapterResolution);
-                settingLabel.updateTurn(ClientMessageParser.getInformationsFromMessage(infoUpdate).get(0));
+                settingLabel = new SettingLabel(connectionHandler.getNickname(), "2", favours, turnOf,adapterResolution);
+                settingLabel.updateTurn(turnOf);
                 break;
 
             case UTENSIL:
                 settingLabel.updateAction(action);
-                favours = ClientMessageParser.getInformationsFromMessage(infoUpdate).get(3);
                 settingLabel.updateFavours(favours);
 
         }
@@ -546,6 +769,7 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
     private void resetButtonLabel(){
         anchorGame.getChildren().remove(nodeButton);
         buttonGameLabel = new ButtonGameLabel(connectionHandler, reserve, playerSide, cardUtensils, costUtensilHistory, adapterResolution);
+        buttonGameLabel.checkPermission(connectionHandler.getNickname(),turnOf);
         alertCardUtensils = buttonGameLabel.getAlertCardUtensils();
         nodeButton = buttonGameLabel.getLabelButtonGame();
         adapterResolution.putButtonLabel(anchorGame, nodeButton);

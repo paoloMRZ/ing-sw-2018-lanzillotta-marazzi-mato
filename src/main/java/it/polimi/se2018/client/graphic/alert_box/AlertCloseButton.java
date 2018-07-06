@@ -44,10 +44,7 @@ public class AlertCloseButton{
         Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.setOnCloseRequest(Event::consume);
-        window.setTitle(title);
-        window.setWidth(500);
-        window.setHeight(400);
-        Label label = Utility.setFontStyle(new Label(message),25);
+        setDecoration(window,title,500,400,15,15);
 
 
         //Label "CONTINUE BUTTON" e "BACK BUTTON"
@@ -65,7 +62,7 @@ public class AlertCloseButton{
 
         VBox layout = new VBox(20);
         HBox layoutButton = setInteractLabel(continueButton,backButton,15);
-        layout.getChildren().addAll(label, layoutButton);
+        layout.getChildren().addAll(setFontStyle(new Label(message),25), layoutButton);
         layout.setAlignment(Pos.CENTER);
         layout.setBackground(configureBackground("back-init-close", 600, 450));
         Scene scene = new Scene(layout);

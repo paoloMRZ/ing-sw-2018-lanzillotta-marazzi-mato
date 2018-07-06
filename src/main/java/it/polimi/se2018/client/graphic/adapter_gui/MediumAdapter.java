@@ -142,7 +142,7 @@ public class MediumAdapter implements AdapterResolution {
         //Dimensioni Dado da posizionare sulla roungGrid
         //Dimensioni Dado per la visualizzazione dei dadi posizionati sulla roungGrid
 
-        sizeRoundLabel.add(new ArrayList<>(Arrays.asList(120, 70, 40, 55)));
+        sizeRoundLabel.add(new ArrayList<>(Arrays.asList(70,70, 40, 55)));
 
         return sizeRoundLabel;
     }
