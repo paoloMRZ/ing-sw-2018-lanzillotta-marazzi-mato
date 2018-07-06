@@ -227,14 +227,6 @@ public class ControllerAction {
         return lobby.getDiceSachet().getDiceFromSachet();
     }
 
-    /**
-     * Metodo che ritorna semplicemente quanti giocatori ci sono nella partita attuale.
-     * @return numero di giocatori.
-     */
-    public int peopleCounter(){
-        return lobby.peopleCounter();
-    }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

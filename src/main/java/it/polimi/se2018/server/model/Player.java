@@ -1,6 +1,5 @@
 package it.polimi.se2018.server.model;
 
-import it.polimi.se2018.server.events.UpdateReq;
 import it.polimi.se2018.server.events.responses.AskPlayer;
 import it.polimi.se2018.server.events.responses.UpdateM;
 import it.polimi.se2018.server.exceptions.InvalidCellException;
