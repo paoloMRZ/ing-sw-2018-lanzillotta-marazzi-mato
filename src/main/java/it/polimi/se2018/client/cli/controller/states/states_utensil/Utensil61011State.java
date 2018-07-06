@@ -20,7 +20,7 @@ public class Utensil61011State implements StateInterface {
 
     private static final String DEFAULT_MESSAGE = "NONE";
 
-    private static final String text = "Seleziona un dado dalla riserva";
+    private static final String TEXT = "Seleziona un dado dalla riserva";
 
     private UtensilCard utensilCard;
     private UtensilReserveScene utensilReserveScene;
@@ -44,7 +44,7 @@ public class Utensil61011State implements StateInterface {
             this.utensilCard = game.getUtensils().get(indexOfCard);
 
             utensilReserveScene = new UtensilReserveScene(utensilCard);
-            utensilReserveScene.setText(text);
+            utensilReserveScene.setText(TEXT);
             utensilReserveScene.printScene();
         }else
             throw new InvalidParameterException();

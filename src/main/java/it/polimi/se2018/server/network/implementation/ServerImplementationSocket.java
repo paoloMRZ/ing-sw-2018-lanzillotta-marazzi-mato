@@ -1,8 +1,12 @@
 package it.polimi.se2018.server.network.implementation;
 
+import org.fusesource.jansi.AnsiConsole;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.security.InvalidParameterException;
+
+import static org.fusesource.jansi.Ansi.ansi;
 
 /**
  * La classe gestisce tutte le richieste di connessione che avvengono sulla socket aperta dal server.
@@ -41,7 +45,7 @@ public class ServerImplementationSocket implements Runnable {
                 new Thread(new SocketLoginRoutine(serverSocket.accept())).start(); //Appena si connette un client avvio una routine di connessione su un thread dedicato.
             } catch (IOException e) {
                 isOpen = false;
-                System.out.println("[*] ERRORE di IO, chiusura della socket");
+                AnsiConsole.out.println(ansi().fgRed().a("[*] ERRORE di IO, chiusura della socket").fgDefault());
             }
 
         }
