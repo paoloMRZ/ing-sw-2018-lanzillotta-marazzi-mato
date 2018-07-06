@@ -184,7 +184,7 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
             manageUpdatePriceMessage(message);
 
         if(ClientMessageParser.isUpdateFavoursMessage(message))
-            game.setFavours(Integer.parseInt(ClientMessageParser.getInformationsFromMessage(message).get(0))); //Estraggo i segnalini favore dal messaggio li converto in un intero e li salvo in gama.
+            game.setFavours(Integer.parseInt(ClientMessageParser.getInformationsFromMessage(message).get(1))); //Estraggo i segnalini favore dal messaggio li converto in un intero e li salvo in gama.
 
     }
 
