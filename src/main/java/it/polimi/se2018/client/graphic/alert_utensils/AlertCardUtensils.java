@@ -21,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -153,7 +154,7 @@ public class AlertCardUtensils{
         try {
             actionUtensils = new ActionUtensils(cardUtensils.getDictionaryUtensils(),String.valueOf(cardUtensils.getKeyName().get(Integer.parseInt(selection))),reserve,connectionHandler,selection, playerSide,adapter,bisContent,isBisActivate);
         } catch (IOException e1) {
-            e1.printStackTrace();
+            AnsiConsole.out().println(e1.toString());
         }
 
         window.setWidth(1200);
