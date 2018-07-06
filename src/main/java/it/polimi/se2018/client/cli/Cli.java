@@ -183,6 +183,9 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
         if(ClientMessageParser.isUpdatePriceMessage(message))
             manageUpdatePriceMessage(message);
 
+        if(ClientMessageParser.isUpdateFavoursMessage(message))
+            game.setFavours(Integer.parseInt(ClientMessageParser.getInformationsFromMessage(message).get(0))); //Estraggo i segnalini favore dal messaggio li converto in un intero e li salvo in gama.
+
     }
 
     /**
@@ -565,9 +568,6 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
             else
                 utensilActivation(game.getUtensilNumberbyIndex(utensilIndex), utensilIndex); //Riattivo lo stato di prima fase che ha generato errore.
         }
-
-        if(ClientMessageParser.isUnauthorizedPutMessage(message)) //Gestione del messaggio che notifica che la mossa selezionata è già stata fatta in questo turno.
-            state.handleNetwork(message);
     }
 
     /**
@@ -666,6 +666,9 @@ public class Cli implements InputObserver, ConnectionHandlerObserver  {
 
                 if(ClientMessageParser.isWinnerMessage(message))
                     manageWinnerMessage(message);
+
+                if(ClientMessageParser.isUnauthorizedPutMessage(message)) //Gestione del messaggio che notifica che la mossa selezionata è già stata fatta in questo turno.
+                    state.handleNetwork(message);
 
             } catch (IOException | NullPointerException | ClassNotFoundException e) {
                 this.fatalError = true;
