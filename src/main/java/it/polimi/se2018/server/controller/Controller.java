@@ -371,9 +371,9 @@ public class Controller{
      * E passa il turno.
      * @param m messaggio contenente il nome del giocatore richiesto.
      */
-    public void freezer(Freeze m){
+    public void freezer(Freeze m) throws Exception {
         try {
-            lobby.callPlayerByName(m.getPlayer()).forget();
+            cTurn.freezer(m.getPlayer());
             passTurn(new PassTurn(m.getPlayer()));
         } catch (InvalidValueException e) {
             cChat.notifyObserver(new ErrorSomethingNotGood(e));

@@ -35,7 +35,11 @@ public class ControllerChat implements ControllerAsObserver,ControllerAsObservab
      * @param mex evento di congelamento utente
      */
     public void update(Freeze mex){
-        controller.freezer(mex);
+        try {
+            controller.freezer(mex);
+        } catch (Exception e) {
+            notifyObserver(new ErrorSomethingNotGood(e));
+        }
     }
 
     /**

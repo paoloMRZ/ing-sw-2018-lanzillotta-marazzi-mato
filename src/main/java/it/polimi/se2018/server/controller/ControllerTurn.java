@@ -163,8 +163,7 @@ public class ControllerTurn implements ObserverTimer {
                 closeTimer();
 
                 if (!getTurn().getDidPlayDie() && !getTurn().getDidPlayCard()) {
-                    getTurn().forget();
-                    controller.getcChat().notifyObserver(new Freeze(turnOf));
+                    freezer(turnOf);
                 }
             }
             howToClose();
@@ -358,6 +357,16 @@ public class ControllerTurn implements ObserverTimer {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Metodo che si occupa del congelamento di un giocatore e della segnalazione al server.
+     * @param name giocatore da congelare
+     * @throws Exception dalla finalizzazione del gioco
+     */
+    protected void freezer(String name) throws Exception {
+        lobby.callPlayerByName(name).forget();
+        controller.getcChat().notifyObserver(new Freeze(name));
+        if(lobby.peopleCounter()<2)  controller.finalizeTheGame();
+    }
     /**
      * Allo scattare del timer decide come chiudere il turno del giocatore in base che si stia attendendo la scelta di una carta
      * o sia la fine di un turno del gioco.
