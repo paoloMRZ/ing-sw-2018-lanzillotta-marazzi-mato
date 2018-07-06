@@ -17,6 +17,7 @@ public interface FakeClientRMIInterface extends Remote{
      * passare l'informazione ai destinatari.
      *
      * @param message messaggio da inviare.
+     * @throws RemoteException viene sollevata se l'interfaccia remota del client non è raggiungibile.
      */
     void sendToserver(String message) throws RemoteException;
 }

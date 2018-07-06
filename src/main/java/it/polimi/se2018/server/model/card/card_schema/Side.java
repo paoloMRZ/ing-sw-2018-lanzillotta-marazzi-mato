@@ -393,6 +393,7 @@ public class Side {
      * @param row coordinata relativa alla riga.
      * @param col coordinata relativa alla colonna.
      * @throws InvalidCoordinatesException viene sollevata se le coordinate passate non sono valide.
+     * @throws InvalidShadeException viene sollevata se il dado non rispetta la restrizione di sfumatura imposta dalla cella.
      */
     public Cell showCell(int row, int col) throws InvalidCoordinatesException, InvalidShadeValueException {
         if(areValidcoordinates(row,col)) {

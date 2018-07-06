@@ -37,6 +37,7 @@ public abstract class FakeClient {
      * Il metodo ha il compito di aggiornare il vero client tramite un messaggio dedicato.
      *
      * @param message messaggio da inviare al client.
+     * @throws ConnectionCloseException Sollevata se la connessione risulta chiusa.
      */
     public abstract void update(String message) throws ConnectionCloseException;
 

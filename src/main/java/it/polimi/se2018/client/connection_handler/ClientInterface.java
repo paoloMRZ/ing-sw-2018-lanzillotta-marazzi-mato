@@ -8,13 +8,13 @@ import java.rmi.RemoteException;
 
 /**
  * Interfaccia remota implementata dal gestore di connessioni RMI.
- *
  */
 public interface ClientInterface extends Remote {
     /**
      * Metodo richiamato dal server per mandare un messaggio al client tramite l'interfaccia remota di quest'ultimo.
      * Quando il client riceve un messaggio lo notifyFromFakeView alla view.
      * @param message messaggio da inviare.
+     * @throws RemoteException Sollevata se l'interfaccia remota non è raggiungibile.
      */
     void sendToClient(String message) throws RemoteException;
 
@@ -22,6 +22,8 @@ public interface ClientInterface extends Remote {
      * Questo metodo viene richiamato dal fake client sul server per passare al vero client con cui comunica (cioè queso oggetto) la sua interfaccia remota
      * in modo da creare una comunicazione diretta tra client e fake client.
      * @param fakeClientInterface interfaccia remota del fake client che chiama questo metodo.
+     * @throws RemoteException Sollevata se l'interfaccia remota non è raggiungibile.
+
      */
     void accept(FakeClientRMIInterface fakeClientInterface) throws RemoteException;
 }
