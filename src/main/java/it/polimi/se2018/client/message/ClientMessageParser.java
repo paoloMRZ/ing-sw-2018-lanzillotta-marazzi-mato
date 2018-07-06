@@ -386,7 +386,7 @@ public class ClientMessageParser {
         //Gestione messaggi di broadcast utili per la partita ma da non valutare nella riconnessione
         if(extractReceiver(message).equals("!")){
             if(isUpdateMessage(message)){
-                if(isUpdateTurnMessage(message) || isUpdateReserveMessage(message) || isUpdateRoundgridMessage(message) || isUpdatePriceMessage(message) || isUpdateSideMessage(message)) value = false;
+                if(isUpdateTurnMessage(message) || isUpdateReserveMessage(message) || isUpdateRoundgridMessage(message) || isUpdatePriceMessage(message) || isUpdateSideMessage(message) || isUpdateRoundMessage(message)) value = false;
             }
 
             if(isStartMessage(message)){
