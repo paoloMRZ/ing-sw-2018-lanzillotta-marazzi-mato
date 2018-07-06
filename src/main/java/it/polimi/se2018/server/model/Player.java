@@ -174,6 +174,7 @@ public class Player {
     /**
      * Metodo che reimposta il numero di segnalini favore del giocatore in base al costo della crta utensile attivata
      *
+     * @param cost segnalini favore associate alla carta Side
      */
     public void resetFavours(int cost){favours= favours-cost;}
 
@@ -307,7 +308,7 @@ public class Player {
     /**
      * Metodo che permette il posizionamento di un Dado senza considerare la vincolazione della Cella riguardo la sfumatura, comprese quelle forzate
      * delle celle adiacenti. Si noti che il metodo seleziona un Dado già posizionato sulla carta Side, quindi va inteso come uno spostamento
-     *
+
      * @param oldRow riferimento alla riga di partenza da cui prelevare il Dado
      * @param oldCol riferimento alla colonna di partenza da cui prelevare il Dado
      * @param newRow riferimento alla riga di destinazione da cui prelevare il Dado
@@ -316,6 +317,8 @@ public class Player {
      * @throws NoDicesNearException viene lanciata quando la Cella individuata da (oldRow, oldCol) non ha Celle adiacenti con un Dado
      * @throws NotEmptyCellException viene lanciata quando al Cella individuata da (newRow, newCol) ha gia un Dado posizionatovi
      * @throws NearDiceInvalidException viene lanciata quando al Cella individuata da (newRow, newCol) non ha Celle adiacenti con un Dado
+     * @throws NearDiceInvalidException viene lanciata quando non si hanno dadi vicini
+     * @throws InvalidShadeException viene lanciata quando la sfumatura non è rispettata
      */
 
     public void putDiceIgnoreValue(int oldRow, int oldCol,int newRow, int newCol) throws InvalidValueException, NoDicesNearException, NotEmptyCellException, InvalidColorException, NearDiceInvalidException, InvalidShadeException {

@@ -37,7 +37,7 @@ public class SpecificColorVariety extends VarietyAlgorithm implements StrategyAl
 
     /**
      * Metodo che implementa l'algoritmo associato alla carta Obbiettivo: a seconda del valore in ingresso di righe o colonna,
-     * effettua una ricerca per righe se maxRow<maxCol, altrimenti effettua una ricerca per colonne.
+     * effettua una ricerca per righe se maxRow minore di maxCol, altrimenti effettua una ricerca per colonne.
      *
      * @param player riferimento alla classe Player (quindi alla Side su cui si sta applicando la carta obbiettivo)
      * @return i segnalini guadagnati dal Player su cui si è applicata la carta Obbiettivo

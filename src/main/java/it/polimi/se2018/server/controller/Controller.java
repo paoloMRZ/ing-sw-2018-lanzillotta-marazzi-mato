@@ -249,7 +249,9 @@ public class Controller{
     /**
      * Metodo che restituisce il riferimento al Player tramite una ricerca per nome
      *
+     * @param name Nome del giocatore
      * @return riferimento a Table
+     * @throws InvalidValueException eccezione lanciata nel caso si cerchi di settare la scelta di un giocatore inesistente
      */
 
     public Player getPlayerByName(String name) throws InvalidValueException {
@@ -321,6 +323,7 @@ public class Controller{
      *Metodo tunnel per l'attuazione di un piazzamento.
      * Controlla inoltre che le mosse a disposizione nel turno siano state fatte tutte, dopo aver piazzato.
      * @param mex messaggio di piazzamento
+     * @throws InvalidValueException eccezione lanciata nel caso si cerchi di settare la scelta di un giocatore inesistente
      */
     public void simpleMove(SimpleMove mex) throws InvalidValueException {
         if(lobby.callPlayerByName(mex.getPlayer()).getDidPlayDie()) cChat.notifyObserver(new IgnoreMex(mex.getPlayer()));
@@ -370,6 +373,7 @@ public class Controller{
      * Metodo che congela un giocaotre a richiesta della Lobby.
      * E passa il turno.
      * @param m messaggio contenente il nome del giocatore richiesto.
+     * @throws Exception eccezione lanciata nel caso si cerchi di settare la scelta di un giocatore inesistente
      */
     public void freezer(Freeze m) throws Exception {
         try {

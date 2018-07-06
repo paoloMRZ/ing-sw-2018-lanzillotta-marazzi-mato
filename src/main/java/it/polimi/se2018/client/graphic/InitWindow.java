@@ -115,10 +115,10 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
     /**
      * Metodo utilizzato per l'inizializzazione dell"interfaccia grafica dell'utente. Gestisce l'altgernanza tra le varie fase di gioco:
      *
-     *  -> Fase di Login: viene visualizzata la schermata che gestisce le scelte del giocatore tra tipologia di connessione e preferenze di interfaccia, nonchè la scelta
+     *  - Fase di Login: viene visualizzata la schermata che gestisce le scelte del giocatore tra tipologia di connessione e preferenze di interfaccia, nonchè la scelta
      *     del nickname;
-     *  -> Fase di scelta Carta Side: viene visualizzata la schermata che permette al gicatore la scelta della carta Side con la quale giocare la partita
-     *  -> Fase di gioco: viene visualizzata la schermata di gioco con tutti gli elementi configurati e posizionati
+     *  - Fase di scelta Carta Side: viene visualizzata la schermata che permette al gicatore la scelta della carta Side con la quale giocare la partita
+     *  - Fase di gioco: viene visualizzata la schermata di gioco con tutti gli elementi configurati e posizionati
      *
      * @param init Riferimento alla PrimaryStage
      */
@@ -501,15 +501,15 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
      * Metodo utilizzato per la configurazione dell' interfaccia grafica qualora un giocatore si disconnettesse e in seguito di riconnetta. È necessario quindi che la
      * schermata di gioco sia impostata con i valori aggiornati al momento della riconnessione. in particolare si richiede la ricezione dei seguenti messaggi update:
      *
-     *  -> Carte Utensili estratte per la partita
-     *  -> Carte Obbiettivo Pubbliche estratte per la partita
-     *  -> Obbiettivo Privato del giocatore
-     *  -> Lista dei giocatori avversari
-     *  -> Segnalini Favore del giocatore
-     *  -> Riserva disponibile al momento della riconnessione
-     *  -> RoundGrid (con l'informazione dei dadi posti al suo interno)
-     *  -> Prezzo delle carte Utensili
-     *  -> Informazioni sul turnante
+     *  - Carte Utensili estratte per la partita
+     *  - Carte Obbiettivo Pubbliche estratte per la partita
+     *  - Obbiettivo Privato del giocatore
+     *  - Lista dei giocatori avversari
+     *  - Segnalini Favore del giocatore
+     *  - Riserva disponibile al momento della riconnessione
+     *  - RoundGrid (con l'informazione dei dadi posti al suo interno)
+     *  - Prezzo delle carte Utensili
+     *  - Informazioni sul turnante
      *
      * Il metodo analizza gli stessi messaggi utilizzati nella normale connessione, ma resi diretti al giocatore che si è riconnesso (Non più in broadcast). La
      * motivazione della scelta implementativa è dovuta alla possibilità che insorgano problemi di sovrapposizione con la gestione dei messaggi in broadcast: i giocatori
@@ -776,10 +776,10 @@ public class InitWindow extends Application implements ConnectionHandlerObserver
     }
 
 
-
     /**
      * Metodo Setter che imposta il riferimento al ConnectionHandler rappresentante del giocatore
      *
+     * @param connectionHandler Riferimento all'oggetto rappresentante il player
      */
 
     public void setConnectionHandler(ConnectionHandler connectionHandler) {

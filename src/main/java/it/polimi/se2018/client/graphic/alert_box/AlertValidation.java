@@ -20,7 +20,7 @@ import static it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator
  * Classe AlertValidation utilizzata per mostrare tramite PoPup messaggi informativi durante la sessione di gioco. In particolare per visualizzare a monitor
  * i seguenti contenuti:
  *
- *  -> Notifiche Successo/Errore relativi al gioco (Piazzamenti errati, utilizzi invalidi di carte Utensili ecc.
+ *  - Notifiche Successo/Errore relativi al gioco (Piazzamenti errati, utilizzi invalidi di carte Utensili ecc.
  *
  * @author Simone Lanzillotta
  */

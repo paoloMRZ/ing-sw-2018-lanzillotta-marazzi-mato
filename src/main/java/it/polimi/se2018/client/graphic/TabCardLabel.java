@@ -38,6 +38,7 @@ public class TabCardLabel {
      * Costruttore della classe. Inizializza il TabPane che ospiterà le varie finestra con le carte Utensili e Obbiettivo Pubblico disponibili
      * per la partita in corso
      *
+     * @param adapterResolution Riferimento all'adapter per il ridimensionamento
      */
 
 

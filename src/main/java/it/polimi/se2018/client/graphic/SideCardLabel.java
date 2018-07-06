@@ -226,6 +226,7 @@ public class SideCardLabel{
      * @param nickName Nome del giocatore a cui è associata la carta
      * @param includeShadowGrid Booleano che indica la richiesta di aggiunta dell'effetto "Evidenzia Cella" (TRUE)
      * @param adapterResolution Riferimento all'adapter per il dimensionamento
+     * @param isCallUtensil Booleano che indica la chiamata dallútilizzo di una carta Utensile (TRUE)
      * @return Riferimento all'elemento SideCardLabel creato
      */
 

@@ -66,6 +66,8 @@ public class AlertCardUtensils{
      * @param connectionHandler Riferimento all'oggetto ConnectionHandler rappresentante il giocatore
      * @param reserve Riferimento alla riserva attuale
      * @param playerSide Riferimento alla carta Side del giocatore
+     * @param updateCostUtensil Riferimento al costo delle utensili aggiornato
+     * @param adapterResolution Riferimento all'adapter per il dimensionamento
      */
 
     public AlertCardUtensils(CardCreatorLabel cardUtensils, ConnectionHandler connectionHandler, ReserveLabel reserve, SideCardLabel playerSide, List<String> updateCostUtensil, AdapterResolution adapterResolution){
@@ -142,6 +144,8 @@ public class AlertCardUtensils{
     /**
      * Metodo richiamato a seguito della convalida da parte del server dell'utilizzo della carta Utensile selezionata
      *
+     * @param isBisActivate Booleano del valore TRUE se è necessario attivare una bis Utensile, altrimenti FALSE
+     * @param bisContent Eventuale contenuto per l'utilizzo della carta Utensile Bis
      */
 
     public void launchExecutionUtensil(Boolean isBisActivate, String bisContent){

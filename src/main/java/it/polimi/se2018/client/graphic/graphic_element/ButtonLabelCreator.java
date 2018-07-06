@@ -59,10 +59,11 @@ public class ButtonLabelCreator {
     }
 
 
-
     /**
      * Metodo utilizzato per la creazione del Label utilizzato nelle varie finestre visualizzate durante la partita.
      *
+     * @param continueButton Riferimento all'elemento grafico del "continueButton"
+     * @param backButton Riferimento all'elemento grafico del "backButton"
      * @param spacing Spacing orizzontale fra i due bottoni
      * @return Riferimento all'elemento grafico che contiene i due bottoni configurati
      */
@@ -75,10 +76,12 @@ public class ButtonLabelCreator {
     }
 
 
-
     /**
+     * /**
      * Metodo Getter utilizzato per accedere al ContinueButton
      *
+     * @param continueWidth Larghezza del bottone "Continue"
+     * @param continueHeight Altezza del bottone "Continue"
      * @return Riferimento all'elemento grafico continueButton
      */
 
@@ -92,6 +95,8 @@ public class ButtonLabelCreator {
     /**
      * Metodo Getter utilizzato per accedere al BackButton
      *
+     * @param backWidth Larghezza del bottone "Back"
+     * @param backHeight Altezza del bottone "Back"
      * @return Riferimento all'elemento grafico backButton
      */
 
@@ -106,6 +111,8 @@ public class ButtonLabelCreator {
     /**
      * Metodo Getter utilizzato per accedere al ContinueButton
      *
+     * @param startWidth Larghezza del bottone "Back"
+     * @param startHeight Altezza del bottone "Back"
      * @return Riferimento all'elemento grafico continueButton
      */
 
