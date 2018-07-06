@@ -65,7 +65,7 @@ public class FakeView{
  *
  */
     public void messageIncoming(String m){
-        System.out.println(m);
+
         String sender= ServerMessageParser.getSender(m);
 
         if(ServerMessageParser.isActivateUtensilMessage(m)){
@@ -164,7 +164,7 @@ public class FakeView{
      * @param mex stringa messaggio del protocollo.
      */
     public void messageOutBox(String mex){
-        System.out.println(mex);
+
         if(toOut!=null) toOut.notifyFromFakeView(mex);
         message=mex;
     }
