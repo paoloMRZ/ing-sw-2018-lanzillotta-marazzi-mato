@@ -26,7 +26,6 @@ public class Utensil12State implements StateInterface {
     private static final String TEXT4 = "Seleziona dado (colonna)";
     private static final String TEXT5 = "Seleziona cella (riga)";
     private static final String TEXT6 = "Seleziona cella (colonna)";
-    private static final String TEXT7 = "Vuoi spostare un altro dado? (1 = SI | 0 = NO)";
 
 
 
@@ -179,23 +178,6 @@ public class Utensil12State implements StateInterface {
             sideRoundgridScene.printScene();
     }
 
-    /**
-     * Il metodo gestisce l'input immesso dal giocatore indicare se muovere o no un altro dado.
-     * @param request input immesso dal giocatore.
-     */
-    private void anotherDie(int request){
-
-        if(request == 0 || request == 1) { //Controllo se è stata inserita una risosta valida.
-
-            if (request == 1) { //Controllo se il giocatore vuole spostare un'altro dado
-                stepCounter++; //Se si vado allo step successivo.
-                printText(TEXT3); //Stampo il testo dello step successivo.
-            } else
-                stepCounter = 11; //In caso contrario vado allo step che invia il messaggio.
-
-        }else
-            sideRoundgridScene.printScene();
-    }
 
     /**
      * Il metodo gestisce l'input immesso dall'utente.
@@ -218,22 +200,21 @@ public class Utensil12State implements StateInterface {
 
             case 4: selectRow(request,TEXT6); break; //Seleziona cella (riga).
 
-            case 5: selectCol(request, TEXT7); break; //Seleziona cella (colonna).
+            case 5: selectCol(request, TEXT3); break; //Seleziona cella (colonna).
 
-            case 6: anotherDie(request); break; //Vuoi spostare un altro dado?
+            case 6: selectRow(request,TEXT4);break; //Seleziona dado (riga).
 
-            case 7: selectRow(request,TEXT4);break; //Seleziona dado (riga).
+            case 7: selectCol(request, TEXT5); break; //Seleziona dado (colonna).
 
-            case 8: selectCol(request, TEXT5); break; //Seleziona dado (colonna).
+            case 8: selectRow(request,TEXT6); break; //Seleziona cella (riga).
 
-            case 9: selectRow(request,TEXT6); break; //Seleziona cella (riga).
-
-            case 10: selectCol(request, TEXT7); break; //Seleziona cella (colonna).
+            case 9: selectCol(request, TEXT3); break; //Seleziona cella (colonna).
 
             default: sideRoundgridScene.printScene(); //Pulisco la scena.
         }
 
-        if(stepCounter == 11){
+
+        if(stepCounter == 10){
             stepCounter++;
             printText("");
             return ClientMessageCreator.getUseUtensilMessage(game.getMyNickname(), String.valueOf(indexOfUtensil), String.valueOf(utensilCard.getNumber()), paramList);

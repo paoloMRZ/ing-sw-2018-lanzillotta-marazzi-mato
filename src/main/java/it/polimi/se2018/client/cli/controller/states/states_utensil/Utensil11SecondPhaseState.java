@@ -90,16 +90,25 @@ public class Utensil11SecondPhaseState implements StateInterface {
 
         if(request == 0 || request == 1){
 
-            paramList.add(String.valueOf(request)); //Aggiungo la scelta fatta alla lista dei parametri da includere nel messagio.
+
 
             if (request == 1){ //Piazza dado.
+
+                paramList.add(String.valueOf(request)); //Aggiungo la scelta fatta alla lista dei parametri da includere nel messagio.
                 stepCounter ++; //Passo allo step successivo.
 
                 sideColorScene.setText(TEXT2); //Stampo le informazioni per lo step successivo.
                 sideColorScene.printScene();
 
-            }else //Non piazza il dado.
+            }else {//Non piazza il dado.
+
+                paramList.add("0"); //Valore che verrà ignorato dal server.
+                paramList.add(String.valueOf(request)); //Aggiungo la scelta fatta alla lista dei parametri da includere nel messagio.
+                paramList.add("0"); //Valore che verrà ignorato dal server.
+                paramList.add("0"); //Valore che verrà ignorato dal server.
+
                 stepCounter = 4; //Vado allo step che invia il messaggio.
+            }
         }else
             sideColorScene.printScene(); //Pulisco lo schermo.
     }
