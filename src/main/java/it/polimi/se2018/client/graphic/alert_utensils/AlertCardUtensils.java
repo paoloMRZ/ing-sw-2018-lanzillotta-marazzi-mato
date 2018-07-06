@@ -160,8 +160,11 @@ public class AlertCardUtensils{
         window.setHeight(900);
         window.centerOnScreen();
 
-        Scene scene = new Scene(actionUtensils.getWindow());
-        Platform.runLater(() -> window.setScene(scene));
+
+        Scene scene = null;
+        if(actionUtensils!=null) scene = new Scene(actionUtensils.getWindow());
+        Scene finalScene = scene;
+        Platform.runLater(() -> window.setScene(finalScene));
 
     }
 
