@@ -331,7 +331,7 @@ public class Table {
     }
 
     /**
-     * ,etodo che ritorna quanto gioactori sono scongelati durante la prtita.
+     * Metodo che ritorna quanto gioactori sono scongelati durante la prtita.
      * @return numero di giocatori attivi
      */
     public int activeCounter(){
