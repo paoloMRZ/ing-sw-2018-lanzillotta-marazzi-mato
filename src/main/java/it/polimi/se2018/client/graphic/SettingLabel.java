@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import org.fusesource.jansi.AnsiConsole;
 
 import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 import static java.lang.Integer.parseInt;
@@ -29,7 +30,6 @@ public class SettingLabel implements ChangeListener<String> {
     private TextField turnOf = new TextField();
     private TextField favours = new TextField();
     private TextField action = new TextField();
-    private AdapterResolution adaptee;
     private int imageSize;
     private int textSize;
     private int spacing;
@@ -39,7 +39,6 @@ public class SettingLabel implements ChangeListener<String> {
         this.action.setText(action);
         this.favours.setText(favours);
         this.turnOf.setText(turnOf);
-        this.adaptee = adaptee;
 
         imageSize = adaptee.getSettingLabelSize().get(0);
         textSize = adaptee.getSettingLabelSize().get(1);
@@ -83,7 +82,7 @@ public class SettingLabel implements ChangeListener<String> {
                 settingHBox.setStyle(STYLELABEL);
             }
         }catch (Exception e){
-            e.printStackTrace();
+            AnsiConsole.out().println(e.toString());
         }
     }
 

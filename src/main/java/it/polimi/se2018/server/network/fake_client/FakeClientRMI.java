@@ -44,6 +44,7 @@ public class FakeClientRMI extends FakeClient implements FakeClientRMIInterface 
      * Questo metodo si occupa di aggiornare il client tramite un messaggio.
      * La comunicazione col client avviene tramite RMI.
      * @param message messaggio da inviare al client.
+     * @throws ConnectionCloseException viene lanciata se la connessione è chiusa.
      */
     @Override
     public void update(String message) throws ConnectionCloseException {

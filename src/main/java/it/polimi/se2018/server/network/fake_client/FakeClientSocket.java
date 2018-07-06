@@ -29,6 +29,7 @@ public class FakeClientSocket extends FakeClient implements Runnable {
      *
      * @param socket socket del client di cui la classe deve gestire la comunicazione.
      * @param nickname nickname scelto dal giocatore.
+     * @throws IOException Viene lanciata in caso di errore di lettura/scrittura dal buffer della socket.
      */
     public FakeClientSocket(Socket socket, String nickname) throws IOException {
         super(nickname); //Richiamo il costruttore padre.

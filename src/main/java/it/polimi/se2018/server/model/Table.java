@@ -209,8 +209,8 @@ public class Table {
      * Metodo che simula l'estrazione delle carte Side da assegnare al Player che, in un secondo momento, dovrà sceglierne una per giocare
      *
      * Si noti che per estrazione si intende una composizione di due fasi:
-     *      -> una prima estrazione randomica di una carta Side (quindi di un lato della carta completa)
-     *      -> una seconda estrazione vincolata a quella precedente (per completare la carta e simularne il corretto pescaggio)
+     *      - una prima estrazione randomica di una carta Side (quindi di un lato della carta completa)
+     *      - una seconda estrazione vincolata a quella precedente (per completare la carta e simularne il corretto pescaggio)
      *
      * All'intenro del metodo si utilizza anche la libreria Jackson per l'acquisizione della mappatura delle carte Side dal file myJSON.json
      *
@@ -454,6 +454,8 @@ public class Table {
     /**
      * Metodo che crea il contenuto del messaggio di aggiornamento che diverrà un messaggio di start contente
      * le carta obiettivo privata chiamando il metodo creatore relativo al topic del messaggio.
+     *
+     * @throws InvalidValueException lanciata quando il  valore in ingresso (nome in questo caso) non è valido ai fini della ricerca
      */
     public void setShowPrivate(String turner) throws InvalidValueException {
         if(turner!=null){

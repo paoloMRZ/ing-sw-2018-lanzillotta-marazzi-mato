@@ -8,9 +8,9 @@ import it.polimi.se2018.server.model.dice_sachet.Dice;
  * Rappresenta l'incapsulamento dell'algoritmo relativo alle carte della tipologia CoupleOfShades che, a seconda della coppia di valori
  * in ingresso, istanzia una delle seguenti tipologia di carta:
  *
- * "Sfumature Chiare" : "Set di 1 & 2 ovunque", Punti Favore: 2
- * "Sfumature Medie" : "Set di 3 & 4 ovunque", Punti Favore: 2
- * "Sfumature Scure" : "Set di 5 & 6 ovunque", Punti Favore: 2
+ *  - Sfumature Chiare, Set di 1 e 2 ovunque, Punti Favore 2
+ *  - Sfumature Medie, Set di 3 e 4 ovunque, Punti Favore 2
+ *  - Sfumature Scure, Set di 5 e 6 ovunque, Punti Favore 2
  *
  * @author Simone Lanzillotta
  */

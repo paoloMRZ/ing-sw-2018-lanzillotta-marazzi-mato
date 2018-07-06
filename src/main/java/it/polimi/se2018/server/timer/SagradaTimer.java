@@ -32,7 +32,7 @@ public class SagradaTimer {
 
     /**
      * Costruttore della classe.
-     * Nel caso venga passato un valore non valido (cioè <= 0) per il parametro tick il timer
+     * Nel caso venga passato un valore non valido (cioè minore uguale a zero) per il parametro tick il timer
      * viene settato automaticamente a 30 sec.
      * @param tick intervallo di tempo (in secondi) dopo cui gli osservatori ricevono la notifyFromFakeView.
      */

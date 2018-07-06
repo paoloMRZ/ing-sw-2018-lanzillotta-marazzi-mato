@@ -18,9 +18,9 @@ import static it.polimi.se2018.client.graphic.graphic_element.Utility.*;
 
 /**
  * Classe ButtonGameLabel utilizzata per la configurazione dei bottoni interattivi tramite i quali il giocatore può effettuare le seguenti azioni:
- *  -> Piazzare un dado
- *  -> Passare il turno
- *  -> Utilizzare una carta Utensile
+ *  - Piazzare un dado
+ *  - Passare il turno
+ *  - Utilizzare una carta Utensile
  *
  * @author Simone Lanzillotta
  */
@@ -48,6 +48,7 @@ public class ButtonGameLabel {
      * @param playerSide Riferimento alla carta Side associata al giocatore
      * @param cardUtensils Riferimento alla collezione di carte Utensili disponibile nella partita corrente
      * @param adapterResolution Riferimento all'adapter per il dimensionamento
+     * @param updateCostUtensil Riferimento ai costi aggiroanti delle carte Utensili
      */
 
     public ButtonGameLabel(ConnectionHandler connectionHandler, ReserveLabel reserve, SideCardLabel playerSide, CardCreatorLabel cardUtensils, List<String> updateCostUtensil, AdapterResolution adapterResolution){

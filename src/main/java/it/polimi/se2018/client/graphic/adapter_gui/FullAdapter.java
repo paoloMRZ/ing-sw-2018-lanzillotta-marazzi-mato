@@ -32,7 +32,7 @@ public class FullAdapter implements AdapterResolution{
         sizeSidePlayer.add(new ArrayList<>(Arrays.asList(435, 380)));
 
         //Posizionamento della griglia sulla Side (Top, Right, Left, Bottom)
-        sizeSidePlayer.add(new ArrayList<>(Arrays.asList(0d, 0d, 0d, 24d)));
+        sizeSidePlayer.add(new ArrayList<>(Arrays.asList(0d, 0d, 0d, 26d)));
 
         //Dimensioni della cornice per l'effetto Focused
         sizeSidePlayer.add(new ArrayList<>(Arrays.asList(85d, 86d)));
@@ -41,7 +41,7 @@ public class FullAdapter implements AdapterResolution{
         sizeSidePlayer.add(new ArrayList<>(Arrays.asList(70)));
 
         //Dimensioni del dado da inserire nelle Side avversarie
-        sizeSidePlayer.add(new ArrayList<>(Arrays.asList(40)));
+        sizeSidePlayer.add(new ArrayList<>(Arrays.asList(45)));
 
 
 
@@ -72,13 +72,13 @@ public class FullAdapter implements AdapterResolution{
         ArrayList<List<? extends Number>> sizeSideEnemy = new ArrayList<>();
 
         //Dimensioni della Griglia posta sopra la Side
-        sizeSideEnemy.add(new ArrayList<>(Arrays.asList(37,36)));
+        sizeSideEnemy.add(new ArrayList<>(Arrays.asList(55,55)));
 
         //Dimensioni della carta
         sizeSideEnemy.add(new ArrayList<>(Arrays.asList(265,220)));
 
         //Posizionamento della griglia sulla Side (Right, Top, Left, Bottom)
-        sizeSideEnemy.add(new ArrayList<>(Arrays.asList(0d,0d,8d,8d)));
+        sizeSideEnemy.add(new ArrayList<>(Arrays.asList(0d,0d,17d,8d)));
 
         //Dimensioni dell'intestazione con il nome dell'avversario
         sizeSideEnemy.add(new ArrayList<>(Collections.singletonList(20)));
@@ -138,13 +138,13 @@ public class FullAdapter implements AdapterResolution{
 
         //Posizione della Grid sull'AnchorPane (Right, Top, Left, Bottom)
 
-        sizeRoundLabel.add(new ArrayList<>(Arrays.asList(95d, 0d, 0d, 0d)));
+        sizeRoundLabel.add(new ArrayList<>(Arrays.asList(120d, 0d, 0d, 0d)));
 
         //Dimensioni immagine "Divieto" per il procedere dei round
         //Dimensioni Dado da posizionare sulla roungGrid
         //Dimensioni Dado per la visualizzazione dei dadi posizionati sulla roundGrid
 
-        sizeRoundLabel.add(new ArrayList<>(Arrays.asList(300, 200, 70, 60)));
+        sizeRoundLabel.add(new ArrayList<>(Arrays.asList(85, 85, 70, 60)));
 
         return sizeRoundLabel;
     }
@@ -212,7 +212,7 @@ public class FullAdapter implements AdapterResolution{
 
     @Override
     public void putSideEnemyLabel(AnchorPane anchorGame, HBox hBoxEnemies) {
-        configureAnchorPane(anchorGame, hBoxEnemies, 80d, 40d, 870d, 730d);
+        configureAnchorPane(anchorGame, hBoxEnemies, 80d, 40d, 865d, 730d);
     }
 
     @Override

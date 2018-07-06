@@ -31,8 +31,12 @@ public class ConnectionHandlerRMI extends ConnectionHandler implements ClientInt
      * viene sollevata un'eccezione di GameStartedException.
      *
      * @param nickname nickname scelto dall'utente.
+     * @param view osservatore della classe.
+     * @param host server a cui connettersi
      * @throws InvalidNicknameException viene sollevata se il nickname scelto è già in uso sul server.
      * @throws GameStartedException viene sollevata se il client tenta di connettersi a partita già iniziata.
+     * @throws RemoteException viene sollevata se l'interfaccia remota del client non è raggiungibile.
+       @throws NotBoundException viene sollevata se l'interfaccia remota del client non è raggiungibile.
      */
     public ConnectionHandlerRMI(String nickname, ConnectionHandlerObserver view, String host) throws InvalidNicknameException, GameStartedException, NotBoundException, RemoteException {
 

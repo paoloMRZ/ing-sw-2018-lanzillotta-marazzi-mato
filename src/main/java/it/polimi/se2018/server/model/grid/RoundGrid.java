@@ -11,17 +11,18 @@ import java.util.Iterator;
 
 /**
  * Classe che si occupa della raccolta dei dadi alla fine del round.
- * Si può fare una immisione e un prevelievo.
+ * Si può fare una immisione e un prelievo.
  * L'immisione può essere singola o multipla.
  * Se si tenta di prelevare un Dice dall'ArrayList, le eccezioni che potrebbero insorgere riguardano
- *una posizione p tale che p>10 or p<1 (ovvero si richiede un dado in una posizione che non esiste)
- *oppure quando si sceglie una posizione in cui non c'è un Dice
+ * una posizione p tale che p sia maggiore di 10 oppure  sia minore di 1 (ovvero si richiede un dado in una posizione che non esiste)
+ * oppure quando si sceglie una posizione in cui non c'è un Dice
  *
- *Pertanto la prima eccezione riguarda il range dell'Array -> ArrayOutOfBoundsException
- *La seconda eccezione se la cella dell'array selezionata sia null -> NullPointerException
- *le gestisco lanciando una eccezione InvalidValue.
+ * Pertanto la prima eccezione riguarda il range dell'Array (ArrayOutOfBoundsException)
+ * La seconda eccezione se la cella dell'array selezionata sia null (NullPointerException)
+ * le gestisco lanciando una eccezione InvalidValue.
  * @author Kevin Mato
  */
+
 public class RoundGrid {
     private ArrayList<ArrayList<Dice>> roundDices;
     private int actualRound;

@@ -13,22 +13,22 @@ import java.util.List;
  * riuscire ad interagire con l'interfaccia grafica in modo semplice e maggiormente comprensibile, soprattutto senza intaccara la User Experience. Le risoluzioni
  * supportate sono le seguenti:
  *
- *  -> 1920 x 1080
- *  -> 1400 x 900
- *  -> 1366 x 768
+ *  - 1920 x 1080
+ *  - 1400 x 900
+ *  - 1366 x 768
  *
  *  L'interfaccia obbliga quindi le classi che la implementano a specificare le dimensioni dei seguenti elementi grafici:
  *
- *  -> Griglia delle informazioni riguardanti la partita in corso (Nome Giocatore, Segnalini Azione, Segnalini Favore, Nome del Turnante)
- *  -> Carta Side del giocatore
- *  -> Griglia di bottini per l'interazione da parte dell'utente
- *  -> Riserva disponibile nel turno
- *  -> Griglia delle carte Side dei rispettivi avversari
- *  -> Carta Obbiettivo Privata
- *  -> Griglia contenente le carte Utensili e le carte Obbiettivo Pubbliche
- *  -> Griglia dei Round
- *  -> Finestra di selezione della carta Side
- *  -> Finestra di interazione con le carte Utensili
+ *  - Griglia delle informazioni riguardanti la partita in corso (Nome Giocatore, Segnalini Azione, Segnalini Favore, Nome del Turnante)
+ *  - Carta Side del giocatore
+ *  - Griglia di bottini per l'interazione da parte dell'utente
+ *  - Riserva disponibile nel turno
+ *  - Griglia delle carte Side dei rispettivi avversari
+ *  - Carta Obbiettivo Privata
+ *  - Griglia contenente le carte Utensili e le carte Obbiettivo Pubbliche
+ *  - Griglia dei Round
+ *  - Finestra di selezione della carta Side
+ *  - Finestra di interazione con le carte Utensili
  *
  */
 

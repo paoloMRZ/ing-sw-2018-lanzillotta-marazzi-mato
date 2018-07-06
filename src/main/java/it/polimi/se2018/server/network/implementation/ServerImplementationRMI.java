@@ -26,6 +26,7 @@ public class ServerImplementationRMI  implements ServerInterface {
      * Costruttore della classe.
      *
      * @throws RemoteException viene lanciata se il nickname passato è già utilizzato da un'altro client nella lobby.
+     * @throws MalformedURLException viene lanciata se l'indirizzo per fare il bind dell'interfaccia non è ben costruito.
      */
     public ServerImplementationRMI() throws RemoteException, MalformedURLException{
 

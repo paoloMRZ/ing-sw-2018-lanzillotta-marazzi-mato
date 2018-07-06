@@ -52,13 +52,15 @@ public class Utility {
     }
 
 
-
     /**
+     * /**
      * Metodo che crea un elemento ImageView
      *
      * @param nameResources Nome della risorsa
      * @param requestedWidth Larghezza richiesta
      * @param requestedHeight Altezza richiesta
+     * @param subDirectory Peroorso interno alla cartella resources
+     * @param extension Estensione della risorsa da prelevare
      * @return Riferimento all'oggetto ImageView contenente l'immagine desiderata
      */
 

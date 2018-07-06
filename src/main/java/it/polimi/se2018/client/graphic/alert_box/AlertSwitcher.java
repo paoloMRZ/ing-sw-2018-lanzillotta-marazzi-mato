@@ -22,9 +22,9 @@ import static it.polimi.se2018.client.graphic.graphic_element.ButtonLabelCreator
  * La classe identifica l'insieme delle schermate per la gestione del login da parte dei giocatori. Si tratta di una clsse che gestisce lo switch delle scene per quanto
  * riguarda lo stage principale nell'ordine seguente:
  *
- *  -> Scene Connection
- *  -> Scene NickName
- *  -> Scene Loading
+ *  - Scene Connection
+ *  - Scene NickName
+ *  - Scene Loading
  *
  *  @author Simone Lanzillotta
  *

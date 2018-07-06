@@ -18,8 +18,9 @@ public interface ServerInterface extends Remote {
      * Il metodo permette ad un client di aggiungersi alla lobby.
      * @param clientInterface interfaccia remota del client che si vuole aggiungere alla lobby.
      * @param nickname nickname scelto dal client.
-     * @throws RemoteException
+     * @throws RemoteException Viene lanciata se l'interfaccia remota non è raggiungibile.
      * @throws InvalidNicknameException viene sollevata se il nickname scelto non è valido o è già utilizzato da un altro client presente nella lobby.
+     * @throws GameStartedException viene sollevata se si tenta una connessione a partita iniziata.
      */
     void add(ClientInterface clientInterface, String nickname) throws RemoteException, InvalidNicknameException, GameStartedException;
 }

@@ -34,7 +34,12 @@ public class ConnectionHandlerSocket extends  ConnectionHandler implements Runna
      *
      * Invece se il nickaname non è già utilizzato la creazione dell'oggetto viene completata e il client risulta connesso al server.
      * @param nickname nickname con cui collegarsi al server.
+     * @param view osservatore della classe.
+     * @param host ip server.
+     * @param port porta del server
      * @throws InvalidNicknameException viene sollevata quando il nickanme scelto è già utilizzato da un'altro client connesso al server.
+     * @throws GameStartedException viene sollevata quando si tenta una connessione a partita già avviata.
+     * @throws IOException viene sollevata se non è possibile leggere/scrivere sul buffer della socket.
      */
     public ConnectionHandlerSocket(String nickname, ConnectionHandlerObserver view, String host, int port) throws InvalidNicknameException, GameStartedException, IOException {
 

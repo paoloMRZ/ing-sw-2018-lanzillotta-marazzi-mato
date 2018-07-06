@@ -21,6 +21,9 @@ public class ServerImplementationSocket implements Runnable {
 
     /**
      * Costruttore della classe. Ha il compito di aprire la socket.
+     *
+     * @param port porta su cui aprire la socket.
+     * @throws IOException Viene lanciata in caso di errore di lettura/scrittura dal buffer della socket.
      */
     public ServerImplementationSocket(int port) throws IOException {
 
